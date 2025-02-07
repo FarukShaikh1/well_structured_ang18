@@ -1,0 +1,52 @@
+<div mat-dialog-title>Collection Coin Details</div>
+<form [formGroup]="currencyCoinDetailsForm" (ngSubmit)="submitCurrencyCoinDetails()" enctype="multipart/form-data">
+    <div class="container">
+        <div class="form-container">
+            <div class="row">
+                <div style="display: none;">
+                    <label>collectionCoinId</label>
+                    <input formControlName="collectionCoinId">
+                    <input formControlName="assetId">
+                </div>
+
+                <div appearance="outline">
+                    <label>Collection Coin Name</label>
+                    <input formControlName="collectionCoinName">
+                </div>
+                <div appearance="outline">
+                    <label>Country</label>
+                    <select formControlName="countryId">
+                        <option *ngFor="let item of countryList"
+                            [value]="item.CommonListItemId">{{item.ListItemName}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div appearance="outline">
+                    <label>Mobile Number</label>
+                    <input formControlName="mobileNumber">
+                </div>
+                <div appearance="outline">
+                    <label>Contact Number</label>
+                    <input formControlName="mobileNumber2">
+                </div>
+            </div>
+            <div>
+                <div class="example-full-width">
+                    <label>Address of a person</label>
+                    <textarea placeholder="" formControlName="address"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="image-container">
+            <input type="file" (change)="onFileSelected($event)" accept="image/*" formControlName="image">
+            <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+                <div id="image">
+                    <img [src]="selectedImage">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div mat-dialog-actions class="action">
+    </div>
+</form>

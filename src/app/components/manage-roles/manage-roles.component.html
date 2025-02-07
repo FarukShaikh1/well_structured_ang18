@@ -1,0 +1,83 @@
+<!-- <div class="main-body">
+    <div style="width: 49%; float: left;">
+        <div style="text-align: right;">
+            <button >ADD</button>
+            <button >Delete</button>
+        </div>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;"></th>
+                        <th style="width: 20%;">Sr.No.</th>
+                        <th style="width: 30%">
+                            <span>Role Name</span>
+                            <i class="bi bi-arrow-down-up inlinebox" (click)="onSortClick($event, 'name')"></i>
+                        </th>
+                        <th style="width: 40%;">Role Description</th>
+                        <th style="width: 10%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="height:20px" *ngFor=" let item of rolesDataSource index as i"
+                        (onclick)="rowClicked(item.RoleName)">
+                        <td></td>
+                        <td data-label="Sr.No."> {{i+1}}</td>
+                        <td data-label="">{{ item.RoleName }}</td>
+                        <td data-label="">{{ item.RoleDescription }}</td>
+                        <td class="action-buttons">
+                            <button span-button color="warn" (click)="deleteRole(item.RoleId)" class="td-action"
+                                title="Delete item">
+                                <span> delete</span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            @if(rolesDataSource != null){
+                <div class="pagination-holder">
+                <div class="results-info">Showing {{ itemcount() }} Out Of {{ rolesDataSource.length }}
+                    results </div>
+                <div class="form-field" style="margin-left: 20px;">
+                    <label for="pageSizeSelect"> Items per page:</label>
+                    <select id="pageSizeSelect">
+                        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+                    </select>
+                </div>
+                <div>
+
+                    <div previousLabel="Prev" nextLabel="Next"></div>
+                </div>
+
+            </div>
+        }
+        </div>
+    </div>
+    <div style="width: 49%; float: right;">
+        <div style="text-align: right; display: flex;">
+            <div style="text-align: left;">
+                Role : <input>
+            </div>
+            <div style="float: right;">
+                <button >ADD</button>
+                <button >Delete</button>
+            </div>
+        </div>
+        <div class="table-container">
+            <ul>
+                @for()
+                <li *ngFor="let node of nodes">
+                    <input type="checkbox" [checked]="node.checked" [indeterminate]="node.indeterminate"
+                        (change)="onParentChange(node)">
+                    {{node.label}}
+                    <ul *ngIf="node.children?.length">
+                        <li *ngFor="let child of node.children">
+                            <input type="checkbox" [checked]="child.checked" (change)="onChildChange(node, child)">
+                            {{child.label}}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div> -->

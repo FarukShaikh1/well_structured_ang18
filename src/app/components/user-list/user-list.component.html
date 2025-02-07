@@ -1,0 +1,63 @@
+@if(globalService.isAccessible(Modules.USER, Module_Actions.VIEW)) {
+<div class="px-md-4 px-2 mt-4">
+  <div class="row mt-4 mb-4">
+    <div class="col-2 d-flex justify-content-between list-heading-color">
+      <h4><strong>Users</strong></h4>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-md-6 d-flex">
+      <!-- Search box -->
+      <div class="input-group w-100 me-3 search-holder">
+        <span class="rounded-button rounded-button-left rounded-button-small">
+          <img src="assets/icons/search_icon.svg" alt="Search Icon" />
+        </span>
+        <input
+          class="form-control rounded-button rounded-button-right rounded-button-small"
+          type="text"
+          #searchInput
+          placeholder="Search by Name, Email, Role or Status"
+          aria-label="Search Something"
+          (input)="searchByText($event)"
+        />
+      </div> 
+    </div>
+    <div class="col-md-6 d-flex justify-content-end">
+      @if(globalService.isAccessible(Modules.USER, Module_Actions.ADD)) {
+
+        <button
+          class="btn btn-danger rounded-button rounded-button-small"
+          type="button"
+          (click)="openUserDetailsPopup('')"
+          data-bs-toggle="modal"
+          data-bs-target="#userDetailsPopup"
+        >
+          <i class="bi bi-plus-lg"></i>
+          Add User
+        </button>
+        }
+    </div>
+  </div>
+
+  <!-- <div class="table-container"> -->
+  <div class="mb-2">
+    <app-tabulator-grid
+      [tableData]="filteredTableData"
+      [columnConfig]="columnConfig"
+      [height]="'320px'"
+      [paginationSize]="paginationSize"
+      [filterColumns]="filterColumns"
+      [allowCSVExport]="allowCSVExport"
+      [noDataMessage]="noDataMessage"
+      [noMatchingDataMessage]="noMatchingDataMessage"
+    >
+    </app-tabulator-grid>
+  </div>
+  <!-- </div> -->
+</div>
+}
+<app-toaster></app-toaster>
+<app-user-details></app-user-details>
+<app-confirmation-dialog
+  (outputAction)="handleConfirmResult($event)"
+></app-confirmation-dialog>

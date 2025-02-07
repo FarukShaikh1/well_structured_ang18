@@ -1,0 +1,160 @@
+<div class="main-body">
+    <div class="row form-fields-container">
+        <div appearance="outline" class="form-field">
+            <label>Search by name</label>
+            <input (input)="filterGridSearchText($event)">
+        </div>
+    </div>
+    <div class="table-container">
+        <div *ngIf="daySelected.length > 0" style="display: flex; align-items: center;">
+            <p style="margin: 0;">
+                {{ daySelected.length }} Rows Selected
+            </p>
+            <button  style="margin-left: auto;">
+                Action
+            </button>
+        </div>
+        <table class="styled-table" [ngStyle]="{'margin-top': daySelected.length > 0 ? '0px' : '20px'}">
+            <thead>
+                <tr>
+                    <th class="check-box" data-label="Select All">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" [checked]="isAllChecked"
+                                (change)="checkUncheckAll($event, page)" id="table-row-1" />
+                            <label class="checkbox-label font-opensans fs-14 body-text-color" for="table-row-1"></label>
+                        </div>
+                    </th>
+                    <th>User Id</th>
+                    <th>
+                        <span>Person Name</span>
+                        <i class="bi bi-arrow-down-up inlinebox" (click)="onSortClick($event, 'name')"></i>
+                    </th>
+                    <th>User Name</th>
+                    <th>Email Id</th>
+                    <th>Role Name</th>
+                    <th>Modified By</th>
+                    <th>Modified On</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor=" let item of filteredDataSource 
+;                index as i
+                ">
+                    <td data-label="Select">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" [checked]="item.selected"
+                                (change)="isAllSelected($event, item, i, page)" id="table-row-2" />
+                            <label class="checkbox-label font-opensans fs-14 body-text-color" for="table-row-2"></label>
+                        </div>
+                    </td>
+                    <td data-label="userId">{{ item.UserId }}</td>
+                    <td data-label="personName">{{ item.FirstName +' ' +item.LastName }}</td>
+                    <td data-label="mobileNumber">{{ item.UserName }}</td>
+                    <td data-label="emailId">{{ item.EmailAddress }}</td>
+                    <td data-label="address">{{ item.RoleName}}</td>
+                    <td data-label="address">{{ item.ModifiedBy}}</td>
+                    <td data-label="birthdate">{{ item.ModifiedOn }}</td>
+                    <td data-label="ACTION" class="td-action">
+                        <button *ngIf="item.IsLocked" span-button color="primary" (click)="unlockUser(item.userId)"
+                            title="Unlock User" class="action-buttons">
+                            <span>done</span>
+                        </button>
+                        <button span-button color="primary" (click)="editUser(item.userId)" title="Edit User"
+                            class="action-buttons">
+                            <span>edit </span>
+                        </button>
+                        <button span-button color="warn" (click)="deleteUser(item.UserId)" title="Delete User"
+                            class="action-buttons">
+                            <span> delete</span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div *ngIf="filteredDataSource != null" class="pagination-holder">
+            <div class="results-info">Showing {{ itemcount() }} Out Of {{ filteredDataSource.length }}
+                results </div>
+            <div class="form-field" style="margin-left: 20px;">
+                <label for="pageSizeSelect"> Items per page:</label>
+                <select id="pageSizeSelect" (change)="onPageSizeChange($event)">
+                    <option 3*ngFor="let size of pageSizeOptions" >size</option>
+                </select>
+            </div>
+            <div>
+
+                <div previousLabel="Prev" nextLabel="Next"
+                    (pageChange)="onTableDataChange($event)"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="table-container">
+        <table divle [dataSource]="usersDataSource" matSort>
+
+            <ng-container matColumnDef="userId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> User Id</th>
+                <td mat-cell *matCellDef="let row"> {{row.UserId}} </td>
+            </ng-container>
+            <ng-container matColumnDef="personName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Person Name </th>
+                <td mat-cell *matCellDef="let row"> {{row.FirstName +' ' +row.LastName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="userName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> User Name </th>
+                <td mat-cell *matCellDef="let row"> {{row.UserName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="emailAddress">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Email Address </th>
+                <td mat-cell *matCellDef="let row"> {{row.EmailAddress}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="roleName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Role Name </th>
+                <td mat-cell *matCellDef="let row"> {{row.RoleName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="modifiedBy">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Modified By</th>
+                <td mat-cell *matCellDef="let row"> {{row.ModifiedBy}} </td>
+            </ng-container>
+            <ng-container matColumnDef="modifiedOn">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Modified On</th>
+                <td mat-cell *matCellDef="let row"> {{row.ModifiedOn |date:"dd-MMM-YYY hh:mm:ss"}} </td>
+            </ng-container>
+            <ng-container matColumnDef="isLocked">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 4%;"> </th>
+                <td mat-cell *matCellDef="let row">
+                    <button span-button color="primary" *ngIf="row.IsLocked" (click)="unlockUser(row.userId)"
+                        title="Unlock User">
+                        <span>done</span>
+                    </button>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="edit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 4%;"> </th>
+                <td mat-cell *matCellDef="let row">
+                    <button span-button color="primary" (click)="editUser(row.userId)" title="Edit User">
+                        <span>edit </span>
+                    </button>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 4%;"> </th>
+                <td mat-cell *matCellDef="let row">
+                    <button span-button color="warn" (click)="deleteUser(row.UserId)" title="Delete User">
+                        <span> delete</span>
+                    </button>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedUserColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedUserColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">No data is available.</td>
+            </tr>
+        </table>
+        <div [pageSizeOptions]="[7,1,10, 15, 25, 100,1000]" aria-label="Select page of users"></div>
+    </div> -->
+</div>

@@ -1,0 +1,289 @@
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { GlobalService } from '../../../services/global/global.service';
+import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
+import { LogoutService } from '../../../services/logout/logout.service';
+// import { SignalRService } from '../../../services/signal-r/signal-r.service';
+import { formatDistanceToNow } from 'date-fns';
+import { SystemNotifications } from '../../../interfaces/system-notifications';
+import { NotificationSignalRService } from '../../../services/notification-signal-r/notification-signal-r.service';
+import { NotificationService } from '../../../services/notification/notification.service';
+import {
+  NavigationURLs,
+  ApplicationConstants,
+  ApplicationModuleActions,
+  ApplicationModules,
+  ApplicationRoles,
+} from '../../../../utils/application-constants';
+import { ConfirmBoxComponent } from '../confirm-box/confirm-box.component';
+
+@Component({
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  imports: [CommonModule, ConfirmBoxComponent],
+  styleUrls: ['./header.component.css'],
+  standalone: true,
+})
+export class HeaderComponent implements OnInit, OnDestroy {
+  @ViewChild('notificationDropdown') notificationDropdown!: ElementRef;
+  showNotifications = false;
+  NOTIFICATION_INITIAL_PAGE_NO = 1;
+  NOTIFICATION_INITIAL_PAGE_SIZE = 5;
+  notifications: SystemNotifications[] = [];
+  notificationTotalUnreadCount: number = 0;
+  showNotificationList: boolean = false;
+
+  @ViewChild(ConfirmBoxComponent)
+  confirmationPopupComponent!: ConfirmBoxComponent;
+  Modules = ApplicationModules;
+  Module_Actions = ApplicationModuleActions;
+  NavigationURLs = NavigationURLs;
+  roles = ApplicationRoles;
+  loginDisplay = false;
+  loggedInUsername: string = '';
+
+  notificationsCount: number = 0;
+  alreadyLoggedIn: boolean = true;
+  profilePicUrl: string = '../../../assets/icons/user1icon.png';
+  ApplicationRoles = ApplicationRoles;
+  // profilePicUrl: string = '';
+
+  constructor(
+    private router: Router,
+    private localStorageService: LocalStorageService,
+    public globalService: GlobalService,
+    // private signalRService: SignalRService,
+    private logoutService: LogoutService,
+    private notificationService: NotificationService,
+    private signalRService: NotificationSignalRService
+  ) {
+    this.globalService.getReloadObservable().subscribe(() => {
+      this.alreadyLoggedIn = localStorageService.isAuthenticated();
+    });
+  }
+
+  isActiveMenu(urlEndPoint: string): boolean {
+    const routePath = this.router.url;
+    return routePath.includes(urlEndPoint);
+  }
+  ngOnDestroy(): void {
+    this.loggedInUsername = '';
+    // Unsubscribe SignalR
+    this.signalRService.closeConnection();
+  }
+
+  ngOnInit(): void {
+    this.setLoginDisplay();
+    this.alreadyLoggedIn = this.localStorageService.isAuthenticated();
+
+    this.signalRService.NotificationReceived$.subscribe((message) => {
+      console.log('Inside this.signalRService.NotificationReceived$.subscribe');
+
+      if (message) {
+        this.fetchAllSystemNotifications();
+      }
+    });
+
+    this.fetchAllSystemNotifications();
+
+    // Schedule notification fetching
+    // this.notificationsSubscription = interval(ApplicationConstants.SYSTEM_NOTIFICATION_FETCHING_FREQUENCY).subscribe(() => {
+    //   this.fetchAllSystemNotifications();
+    // });
+
+    // this.signalRService.unreadMessageCount$.subscribe((count: number) => {
+    //   this.notificationsCount = count;
+    // });
+  }
+
+  setLoginDisplay() {
+    // this.loginDisplay =
+    //   this.ssoInitializationService.authService.instance.getAllAccounts()
+    //     .length > 0;
+  }
+
+  isUserAuthorized(): boolean {
+    return this.localStorageService.isUserAuthorized();
+  }
+
+  goToProfilePage() {
+    this.router.navigate([NavigationURLs.USER_PROFILE]);
+  }
+
+  logout() {
+    this.confirmationPopupComponent.openConfirmModal(
+      'Confirmation',
+      'Are you sure you want to log out?'
+    );
+  }
+
+  handleConfirmResult(result: any) {
+    if (result) {
+      this.notificationsCount = 0;
+      this.logoutService.logout();
+    }
+  }
+
+  showNotificationIcon(): boolean {
+    if (
+      (this.alreadyLoggedIn || this.loginDisplay) &&
+      this.isUserAuthorized()
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  showSettingsIcon(): boolean {
+    if (
+      (this.alreadyLoggedIn || this.loginDisplay) &&
+      this.isUserAuthorized()
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  showLogoutButton(): boolean {
+    if (this.alreadyLoggedIn || this.loginDisplay) {
+      return true;
+    }
+    return false;
+  }
+
+  getLoggedInUserName(): string {
+    return this.localStorageService.getLoggedInUserData()?.username;
+  }
+
+  customerList() {
+    this.router.navigate([NavigationURLs.CUSTOMER_LIST]);
+  }
+
+  redirectToHome() {
+    this.router.navigate([NavigationURLs.HOME]);
+  }
+
+  userList() {
+    this.router.navigate([NavigationURLs.USER_LIST]);
+  }
+
+  roleModuleMapping() {
+    this.router.navigate([NavigationURLs.ROLE_MODULE_MAPPING]);
+  }
+
+  goToPrograms() {
+    this.router.navigate([NavigationURLs.PROGRAMS]);
+  }
+
+  chatSystem() {
+    // this.router.navigate([NavigationURLs.NAV_CHAT_PANEL]);
+  }
+
+  getUserNameInitials(): string {
+    const fullName = this.getLoggedInUserName();
+    if (!fullName) {
+      return '';
+    }
+
+    const nameParts = fullName.split(' ').filter((part) => part.trim());
+
+    if (nameParts.length === 1) {
+      return nameParts[0][0].toUpperCase();
+    } else if (nameParts.length >= 2) {
+      const firstInitial = nameParts[0][0];
+      const secondInitial = nameParts[1][0];
+      return (firstInitial + secondInitial).toUpperCase();
+    }
+
+    return '';
+  }
+
+  goToChangePasswordPage() {
+    this.router.navigate([NavigationURLs.CHANGE_PASSWORD]);
+  }
+
+  /* ********************** System notification *********************** */
+
+  fetchAllSystemNotifications() {
+    this.notificationService
+      .getAllNotifications(
+        this.NOTIFICATION_INITIAL_PAGE_NO,
+        this.NOTIFICATION_INITIAL_PAGE_SIZE
+      )
+      .subscribe((notifications) => {
+        if (notifications.data.data) {
+          this.notifications = notifications.data.data
+            .sort(
+              (
+                a: { createdOn: string | number | Date },
+                b: { createdOn: string | number | Date }
+              ) =>
+                new Date(b.createdOn).getTime() -
+                new Date(a.createdOn).getTime()
+            )
+            .slice(0, ApplicationConstants.NUMBER_OF_TOP_SYSTEM_NOTIFICATIONS_TO_SHOW);
+
+          this.notificationTotalUnreadCount =
+            notifications.data.unreadNotificationCount;
+
+          // Update the unread notification count in the shared service
+          this.notificationService.updateUnreadNotificationCount(
+            this.notificationTotalUnreadCount
+          );
+        }
+      });
+  }
+
+  toggleSystemNotificationList() {
+    this.showNotificationList = !this.showNotificationList;
+  }
+
+  closeSystemNotificationList() {
+    this.showNotificationList = false;
+  }
+
+  @HostListener('document:click', ['$event.target'])
+  onClickOutside(targetElement: HTMLElement) {
+    if (
+      this.notificationDropdown &&
+      !this.notificationDropdown.nativeElement.contains(targetElement)
+    ) {
+      this.closeSystemNotificationList();
+    }
+  }
+
+  markSystemNotificationAsRead(notification: SystemNotifications) {
+    if (notification.hasRead || notification.isLoading) {
+      return; // Already marked as read, no action needed
+    }
+
+    notification.isLoading = true;
+    this.notificationService.markAsRead(notification.notificationId).subscribe({
+      next: () => {
+        this.fetchAllSystemNotifications(); // Refresh notifications
+        notification.isLoading = false;
+      },
+      error: (err) => {
+        notification.isLoading = false;
+        console.error(`Failed to mark notification as read: ${err.message}`);
+      },
+    });
+  }
+
+  viewAllSystemNotifications() {
+    this.router.navigate([NavigationURLs.ALL_NOTIFICATIONS]);
+    this.closeSystemNotificationList();
+  }
+
+  getRelativeTime(createdOn: Date): string {
+    return formatDistanceToNow(createdOn, { addSuffix: true });
+  }
+}

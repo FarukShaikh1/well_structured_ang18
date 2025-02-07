@@ -1,0 +1,373 @@
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import * as forms from '@angular/forms';
+import { Router } from '@angular/router';
+import { CellComponent, ColumnDefinition } from 'tabulator-tables';
+import { GlobalService } from '../../services/global/global.service';
+import { LoaderService } from '../../services/loader/loader.service';
+import { UserService } from '../../services/user/user.service';
+import {
+  Messages,
+  ApplicationModuleActions,
+  ApplicationModules,
+  ApplicationTableConstants,
+} from '../../../utils/application-constants';
+import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
+import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
+import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { UserDetailsComponent } from '../user-details/user-details.component';
+@Component({
+  selector: 'app-user-list',
+  standalone: true,
+  imports: [
+    forms.ReactiveFormsModule,
+    ToasterComponent,
+    UserDetailsComponent,
+    TabulatorGridComponent,
+    ConfirmationDialogComponent,
+  ],
+  templateUrl: './user-list.component.html',
+  styleUrl: './user-list.component.css',
+  providers: [],
+})
+export class UserListComponent implements OnInit, AfterViewInit {
+  @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  public filteredTableData: Record<string, unknown>[] = [];
+  public tableData: Record<string, unknown>[] = [];
+  public columnConfig: ColumnDefinition[] = [];
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
+  public allowCSVExport = false;
+  public filterColumns: ColumnDefinition[] = [];
+  searchText: string = '';
+  noDataMessage = 'No Data Exists.';
+  noMatchingDataMessage = 'No Data Exists.';
+  idForDeactivation: string = '';
+  isdeactivate: boolean = false;
+  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
+  @ViewChild(UserDetailsComponent) userDetailsComponent!: UserDetailsComponent;
+  @ViewChild(ConfirmationDialogComponent)
+  confirmModalComponent!: ConfirmationDialogComponent;
+  Modules = ApplicationModules;
+  Module_Actions = ApplicationModuleActions;
+
+  constructor(
+    private userService: UserService,
+    public globalService: GlobalService,
+    private loaderService: LoaderService,
+    private router: Router
+  ) { }
+
+  ngOnInit() {
+    this.columnConfig = [
+      {
+        title: 'Name',
+        field: 'userName',
+        sorter: 'string',
+        formatter: this.nameFormatter.bind(this),
+        titleFormatter(_cell, _formatterParams, onRendered) {
+          onRendered(() => { });
+          return `
+          <div class="user-name-header">
+          Name
+          </div>
+        `;
+        },
+      },
+      { title: 'Email', field: 'email', sorter: 'string' },
+      { title: 'Role', field: 'role', sorter: 'string' },
+      {
+        title: 'Status',
+        field: 'isDeactivated',
+        sorter: 'string',
+        formatter: this.statusFormatter.bind(this),
+      },
+      {
+        title: '',
+        field: 'options',
+        maxWidth: 100,
+        formatter: this.threeDotsFormatter.bind(this),
+        hozAlign: 'left',
+        headerSort: false,
+      },
+    ];
+
+    // Define which columns are available for filtering
+    this.filterColumns = this.columnConfig.filter((col) =>
+      ['userName', 'email', 'role'].includes(col.field ?? '')
+    );
+
+    this.loadGrid();
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.USER) {
+        this.loadGrid();
+      }
+    });
+    this.globalService.refreshList$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.USER) {
+        this.applySearch();
+      }
+    });
+  }
+
+  threeDotsFormatter(cell: CellComponent) {
+    const rowData = cell.getRow().getData();
+    const rowId = rowData['id'];
+    const optionsMenu = this.generateOptionsMenu(rowData); // Generate dynamic menu for row
+
+    // If no menu items to show
+    if (optionsMenu.length === 0) {
+      return '';
+      // Use this if need to show disabled three dots
+      // return '<button class="action-buttons disabled" title="No Actions Available" disabled><i class="bi bi-three-dots"></i></button>';
+    }
+
+    return `
+        <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-three-dots"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end options-menu" aria-labelledby="dropdownMenu${rowId}" id="dropdownMenuItems${rowId}">
+        </ul>
+      `;
+  }
+
+  generateOptionsMenu(rowData: Record<string, any>) {
+    const menu = [];
+    if (
+      rowData['id'] &&
+      !rowData['isDeactivated'] &&
+      this.globalService.isAccessible(ApplicationModules.USER, ApplicationModuleActions.EDIT)
+    ) {
+      menu.push({
+        label: `<a class="dropdown-item btn-link options-menu-item"
+          data-bs-toggle="modal" data-bs-target="#userDetailsPopup">
+              <i class="bi bi-pencil"></i>
+                &nbsp;Edit
+              </a>
+              `,
+        action: () => this.editUser(rowData['id']),
+      });
+    }
+
+    if (
+      rowData['id'] &&
+      !rowData['isDeactivated'] &&
+      this.globalService.isAccessible(
+        ApplicationModules.USER,
+        ApplicationModuleActions.DELETE
+      )
+    ) {
+      menu.push({
+        label: `<a class="dropdown-item btn-link options-menu-item"
+              data-bs-toggle="modal" data-bs-target="#confirmModal">
+                  <i class="bi bi-trash"></i>
+                    &nbsp;Deactivate
+                  </a>
+                  `,
+        action: () => this.deactivateUser(rowData['id'], true),
+      });
+    }
+    // Code for future development reactive user
+    // else if (rowData['id'] && rowData['isDeactivated'] &&
+    //   this.globalService.isAccessible(
+    //     ApplicationModules.USER,
+    //     ApplicationModuleActions.ADD
+    //   )
+    // ) {
+    //   menu.push({
+    //     label: `<a class="dropdown-item btn-link"
+    //         data-bs-toggle="modal" data-bs-target="#confirmModal">
+    //             <i class="bi bi-trash"></i>
+    //               &nbsp;Activate
+    //             </a>
+    //             `,
+    //             action: () => this.deactivateUser(rowData['id'],false),
+    //   });
+    // }
+    return menu;
+  }
+
+  nameFormatter(cell: CellComponent) {
+    return `<span class="name-col-values">${cell.getValue()}</span>`;
+  }
+
+  statusFormatter(cell: CellComponent) {
+    const statusValue = cell.getValue();
+    if (statusValue) {
+      this.columnConfig[4].visible = false;
+      return '<span style="color:gray">Inactive</span>';
+    } else {
+      return '<span style="color:#ff7a00">Active</span>';
+    }
+  }
+
+  ngAfterViewInit() {
+    document.addEventListener('click', (event: Event) => {
+      const target = event.target as HTMLElement;
+      const viewProjectsBtn = target.closest('.view-projects-btn');
+      if (viewProjectsBtn) {
+        const userId = viewProjectsBtn.getAttribute('data-user-id');
+        this.viewUserProfile(userId);
+      }
+      // For options menu on three dots
+      else if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+        const button = target.closest(
+          '.OPTIONS_MENU_THREE_DOTS'
+        ) as HTMLElement;
+        const rowId = button.getAttribute('data-row-id');
+        if (rowId) {
+          const rowData = this.tableData.find((row) => row['id'] === rowId);
+          if (rowData) {
+            this.populateOptionsMenu(rowData, rowId);
+          }
+        }
+      }
+    });
+  }
+
+  populateOptionsMenu(rowData: any, rowId: string) {
+    const menuElement = document.getElementById(`dropdownMenuItems${rowId}`);
+    if (!menuElement) {
+      return;
+    }
+
+    menuElement.innerHTML = '';
+    const menuOptions = this.generateOptionsMenu(rowData);
+
+    menuOptions.forEach((option: any) => {
+      const menuItem = document.createElement('li');
+      menuItem.innerHTML = `
+        <a class="dropdown-item" href="#">${option.label}</a>
+      `;
+      menuItem.addEventListener('click', (event) => {
+        event.preventDefault();
+        option.action();
+      });
+      menuElement.appendChild(menuItem);
+    });
+  }
+
+  viewUserProfile(id: string | null | undefined) {
+    if (id) {
+      this.router.navigate(['home/user-profile']);
+    }
+  }
+
+  editUser(id: string) {
+    if (id) {
+      this.openUserDetailsPopup(id);
+    }
+  }
+
+  deactivateUser(id: string, isdeactivate: boolean) {
+    if (id) {
+      this.idForDeactivation = id;
+      this.isdeactivate = isdeactivate;
+      // Logic to handle user deactivation
+      if (isdeactivate) {
+        this.confirmModalComponent.openConfirmationPopup(
+          'Confirmation',
+          'Are you sure you want to deactivate this user? Once deactivated, the user will no longer be able to log in.'
+        );
+      } else {
+        this.confirmModalComponent.openConfirmationPopup(
+          'Confirmation',
+          'Are you sure you want to reactivate this user?'
+        );
+      }
+    } else {
+      this.idForDeactivation = '';
+    }
+  }
+
+  handleConfirmResult(result: boolean) {
+    if (result) {
+      this.loaderService.showLoader();
+      this.userService
+        .deactivateUser(this.idForDeactivation, this.isdeactivate)
+        .subscribe({
+          next: (result : any) => {
+            if (result?.data) {
+              this.loadGrid();
+              if (this.isdeactivate) {
+                this.toaster.showMessage(
+                  Messages.USER_DEACTIVATED_SUCCESS,
+                  'success'
+                );
+              } else {
+                this.toaster.showMessage(
+                  Messages.USER_REACTIVATED_SUCCESS,
+                  'success'
+                );
+              }
+            } else {
+              console.error(Messages.ERROR_IN_DEACTIVATING_USER);
+              this.loaderService.hideLoader();
+              this.toaster.showMessage(
+                Messages.ERROR_IN_DEACTIVATING_USER,
+                'error'
+              );
+            }
+          },
+          error: (error : any) => {
+            console.error(Messages.ERROR_IN_DEACTIVATING_USER, error);
+            this.loaderService.hideLoader();
+          },
+        });
+    }
+  }
+
+  loadGrid() {
+    this.loaderService.showLoader();
+    this.userService.getAllUsers().subscribe({
+      next: (result : any) => {
+        if (result?.data) {
+          this.tableData = result.data;
+          this.filteredTableData = result.data;
+        } else {
+          console.error(Messages.ERROR_IN_FETCH_USER);
+          this.toaster.showMessage(Messages.ERROR_IN_FETCH_USER, 'error');
+        }
+        this.loaderService.hideLoader();
+      },
+      error: (error : any) => {
+        console.error(Messages.ERROR_IN_FETCH_USER, error);
+        this.loaderService.hideLoader();
+      },
+    });
+  }
+
+  searchByText(event: any) {
+    this.searchText = event.target.value?.toLowerCase();
+    this.applySearch();
+  }
+
+  applySearch() {
+    this.filteredTableData = this.tableData.filter((row: any) => {
+      const userNameMatch = row.userName?.toLowerCase().includes(this.searchText);
+      const emailMatch = row.email?.toLowerCase().includes(this.searchText);
+      const roleMatch = row.role?.toLowerCase().includes(this.searchText);
+      let userStatus = '';
+      if (row.isDeactivated) {
+        userStatus = 'inactive';
+      }
+      else {
+        userStatus = 'active';
+      }
+      const statusMatch = userStatus.includes(this.searchText);
+      return userNameMatch || emailMatch || roleMatch || statusMatch;
+    });
+
+    if(this.filteredTableData && this.filteredTableData.length) {
+      this.tabulatorGrid.clearEmptyCellSelection();
+    }
+    
+    setTimeout(() => {
+      this.searchInput.nativeElement.focus();
+    }, 0);
+    // this.tabulatorGrid.applySearch(this.searchText);
+  }
+
+  openUserDetailsPopup(id: string) {
+    this.userDetailsComponent.openUserDetailsPopup(id, null);
+  }
+}

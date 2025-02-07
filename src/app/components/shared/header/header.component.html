@@ -1,0 +1,172 @@
+<header class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm">
+  <div class="d-flex align-items-center flex-shrink-0">
+    <img src="../../../assets/images/pharmteco-logo-240x84.png" alt="Project Logo"
+      class="logo me-2 img-fluid d-none d-sm-block" />
+  </div>
+  <div class="d-flex align-items-center flex-grow-1 justify-content-end">
+    <div class="d-flex align-items-center position-relative me-3 flex-shrink-0">
+      <button (click)="redirectToHome()" class="font-weight-bold text-decoration-none p-2" [ngClass]="{
+          'active-link':
+            isActiveMenu(NavigationURLs.HOME_CLIENTS) ||
+            isActiveMenu(NavigationURLs.PROJECT_LIST)
+        }">
+        Home
+      </button>
+
+      <!-- @if(globalService.isAccessible(Modules.CUSTOMER, Module_Actions.VIEW)) {
+      <button
+        (click)="customerList()"
+        class="font-weight-bold text-link text-decoration-none btn p-2"
+        [ngClass]="{
+          'active-link': isActiveMenu(NavigationURLs.CUSTOMER_LIST)
+        }"
+      >
+        Customers
+      </button>
+      }  -->
+
+      <!-- @if(globalService.isAccessible(Modules.ROLE_MODULE_MAPPING,
+      Module_Actions.VIEW)) {
+      <button
+        (click)="roleModuleMapping()"
+        class="font-weight-bold text-link text-decoration-none btn p-2"
+        [ngClass]="{
+          'active-link': isActiveMenu(NavigationURLs.ROLE_MODULE_MAPPING)
+        }"
+      >
+        Role Module Mapping
+      </button>
+      }  -->
+
+      <!-- @if(globalService.isAccessible(Modules.PROGRAM, Module_Actions.VIEW)) {
+      <button
+        (click)="goToPrograms()"
+        class="font-weight-bold text-link text-decoration-none btn p-2"
+        [ngClass]="{ 'active-link': isActiveMenu(NavigationURLs.PROGRAMS) }"
+      >
+        Programs
+      </button>
+      } -->
+      @if(globalService.isAccessible(Modules.USER, Module_Actions.VIEW)) {
+      <button (click)="userList()" class="font-weight-bold text-decoration-none p-2"
+        [ngClass]="{ 'active-link': isActiveMenu(NavigationURLs.USER_LIST) }">
+        Users
+      </button>
+      }
+
+      <!-- @if(isUserAuthorized()) {
+      <button
+        (click)="chatSystem()"
+        class="font-weight-bold text-link text-decoration-none btn p-2"
+        [ngClass]="{
+          'active-link': isActiveMenu(NavigationURLs.NAV_CHAT_PANEL)
+        }"
+      >
+        Chat
+      </button>
+      }  -->
+
+      <!-- @if(showNotificationIcon() && notificationsCount > 0) { -->
+
+      @if(showNotificationIcon()) {
+      <!-- For Notifications -->
+      <div class="position-relative" #notificationDropdown>
+        <button class="btn p-0 position-relative notification-btn" (click)="toggleSystemNotificationList()">
+          <i class="bi bi-bell"></i>
+          @if(notificationTotalUnreadCount > 0) {
+          <span class="notification position-absolute translate-middle btn-danger">
+            {{ notificationTotalUnreadCount }}
+          </span>
+          }
+        </button>
+
+        @if(showNotificationList) {
+        <ul class="dropdown-menu dropdown-menu-notification dropdown-menu-end show">
+          <div class="d-flex justify-content-between align-items-center px-3 py-2 pb-2 border-bottom">
+            <span><strong>Notifications</strong></span>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemNotificationList()"></button>
+          </div>
+          @if(notifications.length === 0) {
+          <li class="text-center p-2">
+            <span class="text-muted">No notifications</span>
+          </li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+          }
+
+          @for(notification of notifications; track $index;) {
+          <li class="dropdown-item notification-item" [ngClass]="notification.hasRead ? 'read-notification' : 'unread-notification'">
+            <button class="btn notification-item text-start" (click)="markSystemNotificationAsRead(notification)">
+              <div>{{ notification.notificationMessage }}</div>
+              <small>{{
+                getRelativeTime(notification.createdOn)
+                }}</small>
+              <!-- Spinner (optional) -->
+              <div *ngIf="notification.isLoading" class="spinner-border spinner-border-sm notification-spinner mt-2"
+                role="status"></div>
+            </button>
+          </li>
+          @if($index < notifications.length ) { <li>
+            <hr class="dropdown-divider" />
+            </li>
+            }
+            }
+            @if(notifications.length) {
+            <li class="text-center">
+              <button class="dropdown-item view-all-btn py-2" (click)="viewAllSystemNotifications()"
+                [disabled]="notifications.length === 0">
+                View All
+              </button>
+            </li>
+            }
+        </ul>
+        }
+      </div>
+      <!-- End of Notifications section -->
+      }
+    </div>
+    <!-- @if(showSettingsIcon()) { -->
+    <div class="dropdown flex-shrink-0 me-4">
+      <button class="btn dropdown-toggle p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+        <div class="profile-circle">
+          <!-- @if(profilePicUrl!=''){
+          <img [src]="profilePicUrl" alt="Profile Picture" class="icon img-fluid" />
+          } @else{ <span>{{ getLoggedInUserName().charAt(0) }}</span>
+          } -->
+          <span title="{{ getLoggedInUserName() }}">{{ getUserNameInitials() }}</span>
+        </div>
+        <!-- <img src="../../../assets/icons/settings-svgrepo-com.svg" class="icon img-fluid" /> -->
+      </button>
+      
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+          <!-- <li class="top-dropdown-item">
+      <a class="dropdown-item logout-btn" (click)="goToProfilePage()">
+        <img
+          alt="Profile Picture"
+          style="width: 20px"
+          src="../../../assets/icons/user1icon.png"
+        />&nbsp;My Profile</a
+      >
+    </li> -->
+          <li class="top-dropdown-item">
+              <a class="dropdown-item logout-btn" (click)="goToChangePasswordPage()">
+                  <i class="bi bi-pencil-square"></i>
+                  &nbsp;Change Password
+              </a>
+          </li>
+
+          <li class="top-dropdown-item">
+              <a class="dropdown-item logout-btn" (click)="logout()" data-bs-toggle="modal" data-bs-target="#confirmBox">
+                  <i class="bi bi-box-arrow-right"></i>
+                  &nbsp;Log Out
+              </a>
+          </li>
+
+      </ul>
+    </div>
+    <!-- } -->
+  </div>
+</header>
+<app-confirm-box (onClose)="handleConfirmResult($event)"></app-confirm-box>

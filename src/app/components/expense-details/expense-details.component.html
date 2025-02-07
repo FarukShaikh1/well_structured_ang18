@@ -1,0 +1,98 @@
+<div class="modal fade modal-md" id="expenseDetailsPopup" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Expense</h4>
+                <button #btnCloseExpenseDetailsPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="expenseDetailsForm" (ngSubmit)="submitExpenseDetails()">
+                    <div>
+
+                        <div style="display: none;">
+                            <p>expenseId</p>
+                            <input formControlName="expenseId">
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                Choose a date
+                                <input id="expenseDate" class="form-control form-control-lg text-dark bg-transparent"
+                                    type="date" placeholder="DD/MM/YYYY" appearance="outline"
+                                    formControlName="expenseDate" />
+                            </div>
+
+                            <div class="col-6">
+                                <label>Source or reason</label>
+                                <input type="text" placeholder="Type something" aria-label="Source and reasons" matInput
+                                    class="form-control form-control-lg text-dark bg-transparent"
+                                    formControlName="sourceOrReason" (input)="onSourceReasonChange($event)">
+                                <!-- @for (option of sourceOrReasonList; track $index) {
+                                <option [value]="option.Name">
+                                    {{option.Name}}
+                                </option>
+                                } -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label>SBI Account</label>
+                                <input formControlName="sbiAccount"
+                                    class="form-control form-control-lg text-dark bg-transparent"
+                                    (keydown)="validateAmount($event)">
+                            </div>
+                            <div class="col-6">
+                                <label>Cash</label>
+                                <input formControlName="cash" (keydown)="validateAmount($event)"
+                                    class="form-control form-control-lg text-dark bg-transparent">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label>CBI Account</label>
+                                <input formControlName="cbiAccount" (keydown)="validateAmount($event)"
+                                    class="form-control form-control-lg text-dark bg-transparent">
+                            </div>
+                            <div class="col-6">
+                                <label>Other Amount</label>
+                                <input formControlName="otherAmount" (keydown)="validateAmount($event)"
+                                    class="form-control form-control-lg text-dark bg-transparent">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label>Purpose </label>
+                                <input type="text" placeholder="Type something" aria-label="purpose" matInput
+                                    formControlName="purpose" (input)="onPurposeChange($event)"
+                                    class="form-control form-control-lg text-dark bg-transparent">
+                                <div>
+                                    @for (option of purposeList; track $index) {
+                                    <option [value]="option.Name">
+                                        {{option.Name}}
+                                    </option>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-6">
+
+
+                                <label>Description </label>
+                                <textarea formControlName="description"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12">
+                                <div class="action d-flex justify-content-end">
+                                    <button class="btn btn-secondary" type="button"> Cancel</button>
+                                    <button class="btn btn-danger" type="reset"> Reset</button>
+                                    <button class="btn btn-primary" type="submit">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<app-toaster></app-toaster>

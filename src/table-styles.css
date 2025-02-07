@@ -1,0 +1,302 @@
+.table-container {
+  background-color: #fffefe;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  border: 1px solid #f5f2ee;
+}
+
+.styled-table {
+  width: 100%;
+  margin: 0 0 3 0;
+}
+
+.styled-table thead tr {
+  background-color: #3f51b5;
+  color: #ffffff;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 6px 8px;
+}
+
+.styled-table .first-th {
+  border-top-left-radius: 8px;
+}
+
+.styled-table .last-th {
+  border-top-right-radius: 10px;
+}
+
+.styled-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid #3f51b5;
+}
+
+.styled-table tfoot tr {
+  background-color: #3f51b5;
+  color: white;
+  font-weight: bold;
+}
+
+.styled-table tfoot td {
+  padding: 6px 8px;
+}
+
+.text-end {
+  text-align: right;
+}
+
+.results-info {
+  font-size: 14px;
+}
+
+.td-action {
+  text-align: right;
+}
+
+.action-buttons {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.action-buttons i {
+  font-size: 20px;
+  /* color: #007bff; */
+  /* Default color for primary actions */
+}
+
+.action-buttons i.fa-check {
+  color: green;
+}
+
+.action-buttons i.fa-edit {
+  color: #007bff;
+}
+
+.action-buttons i.fa-trash {
+  color: red;
+}
+
+.action-buttons:focus {
+  outline: none;
+}
+
+.page-link {
+  padding: 0%;
+  height: 30px;
+  width: 30px;
+  color: #FF7A00;
+}
+
+.page-link.active {
+  background-color: #FF7A00;
+}
+
+/* For screens smaller than 450px xxs like mobile phones */
+@media (max-width: 450px) {
+  .table-container {
+    padding: 0px;
+  }
+
+  .results-info {
+    text-align: right;
+    width: 100%;
+  }
+
+  .items-per-page {
+    width: 100%;
+  }
+
+  .pagination-number {
+    text-align: right;
+    width: 100%;
+  }
+}
+
+/* For screens size between 450px and 576px sm */
+@media (min-width: 450.01px) and (max-width: 576px) {
+  .table-container {
+    padding: 5px;
+  }
+}
+
+/* For screens greater than 576px md*/
+@media (min-width: 576.01px) and (max-width: 768px) {
+  .table-container {
+    padding: 10px;
+  }
+}
+
+/* For screens between 767px and 992px lg*/
+@media (min-width: 768.01px) and (max-width: 992px) {
+  .table-container {
+    padding: 15px;
+  }
+}
+
+/* =========== For Tabulator ================== */
+
+.blank-lims-id {
+  margin-left: 10px
+}
+
+/* tabulator table column header */
+/* .tabulator .tabulator-header {
+  background-color: #DEE0E5;
+} */
+
+/* Tabulator column color/font */
+/* .tabulator-col {
+  text-align: left;
+  font: normal normal medium 12px/15px;
+  letter-spacing: 0px;
+  color: #363636;
+  text-transform: capitalize;
+  opacity: 1;
+} */
+
+/* Table background */
+/* .tabulator .tabulator-tableholder {
+  background-color: #FFFFFF !important;
+} */
+
+/* Tabulator footer */
+/* .tabulator .tabulator-footer  {
+  background-color: #fffdfd !important;
+} */
+
+/* Even rows of the table */
+/* .tabulator .tabulator-row.tabulator-row-even {
+  background-color: #fdfefe !important;
+} */
+
+/* Cell hover */
+.tabulator-row .tabulator-cell:hover {
+  border: 1px solid rgb(208, 208, 237);
+}
+
+/* For three dots option menu */
+.tabulator-cell[tabulator-field="options"] {
+  overflow: visible !important;
+  text-align: center;
+}
+
+.options-menu {
+  padding: 0x;
+  background-color: #FFFFFF;
+  border: 1px solid #c9cccf;
+  box-shadow: 0 0 3px #ccc;
+}
+
+.options-menu-item {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.grid-col-note-text {
+  display: block;
+  font-size: 10px;
+  color: #303662;
+  margin-left: 2px;
+  margin-top: 2px;
+}
+
+/* .tabulator .tabulator-paginator select
+{
+  margin: 0 10px !important;
+} */
+
+/* .tabulator .tabulator-footer .tabulator-footer-contents .tabulator-paginator button
+{
+  margin: 0 3px !important;
+} */
+
+/* For pagination buttons */
+/* .tabulator .tabulator-footer .tabulator-page.active {
+  background-color: #FF7A00;
+  border-color: #FF7A00;
+  color: #ffffff;
+} */
+
+/* For disabled pagination buttons */
+/* .tabulator .tabulator-footer .tabulator-page:disabled {
+  background-color: #DEE0E5;
+  border-color: #43403d;
+  color: #3c3a3a;
+} */
+
+/* .tabulator .tabulator-footer .tabulator-page:not(.disabled):hover {
+  background-color: #DEE0E5;
+  border-color: #282624;
+  color: #363636;
+} */
+
+/* .tabulator .tabulator-footer .tabulator-page:not(.active):hover {
+  background-color: #2727D5;
+  border-color: #0e3096;
+  color: #ffffff;
+} */
+
+
+/* .tabulator-col-title[tabulator-field="Project ID"] {
+  text-align: center;
+  background-color: red;
+} */
+
+.tabulator-row .tabulator-cell {
+  border-right: none;
+  padding: 5px;
+  vertical-align: middle;
+}
+
+/* Project table headers */
+.project-id-header {
+  text-align: left;
+  white-space: normal;
+  padding-left: 5px
+}
+
+.client-name-header {
+  text-align: left;
+  white-space: normal;
+  padding-left: 3px
+}
+
+/* Sample form list table headers */
+.form-id-header {
+  text-align: left;
+  white-space: normal;
+  padding-left: 10px
+}
+
+.lims-project-id-header {
+  text-align: left;
+  white-space: normal;
+  padding-left: 5px
+}
+
+.add-lims-id-btn {
+  padding-left: 8px;
+}
+
+/* User Table headers */
+.user-name-header {
+  text-align: left;
+  white-space: normal;
+  padding-left: 5px
+}
+
+.name-col-values {
+  padding-left: 5px;
+}

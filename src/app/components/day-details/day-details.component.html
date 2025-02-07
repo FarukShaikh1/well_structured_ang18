@@ -1,0 +1,136 @@
+<div class="modal fade" id="dayDetailsPopup" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Expense</h4>
+                <button class="btn-close" (click)="closePopup()" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="dayDetailsForm" (ngSubmit)="submitDayDetails()" enctype="multipart/form-data">
+                    <div class="container">
+                        <div style="display: none;">
+                            <label>dayId</label>
+                            <input formControlName="dayId">
+                            <input formControlName="assetId">
+                        </div>
+                        <div class="form-container">
+                            <div class="row">
+                                <div class="col">
+                                    <label>Person Name</label>
+                                    <input formControlName="personName"
+                                        class="form-control form-control-lg text-dark bg-transparent">
+                                </div>
+                                <div class="col">
+                                    <label>Select Relation</label>
+                                    <select formControlName="relationId"
+                                        class="form-control form-control-lg text-dark bg-transparent select">
+                                        @for(item of relation;track $index){
+                                        <option [value]="item.CommonListItemId">
+                                            {{item.ListItemName}}
+                                        </option>
+                                    }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label>Day Type</label>
+                                    <select formControlName="dayTypeId"
+                                        class="form-control form-control-lg text-dark bg-transparent select">
+                                        @for(item of dayType; track $index){
+                                        <option [value]="item.CommonListItemId">
+                                            {{item.ListItemName}}
+
+                                        </option>
+                                    }
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label>Choose a date</label>
+                                    <input id="birthdate" class="form-control form-control-lg text-dark bg-transparent"
+                                        type="date" placeholder="DD/MM/YYYY" appearance="outline"
+                                        formControlName="birthdate" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label>Mobile Number</label>
+                                    <input formControlName="mobileNumber"
+                                        class="form-control form-control-lg text-dark bg-transparent">
+                                </div>
+                                <div class="col">
+                                    <label>Contact Number</label>
+                                    <input formControlName="mobileNumber2"
+                                        class="form-control form-control-lg text-dark bg-transparent">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label>Email Id</label>
+                                    <input formControlName="emailId"
+                                        class="form-control form-control-lg text-dark bg-transparent">
+                                </div>
+                                <div class="col">
+                                    <label>Address of a person</label>
+                                    <textarea placeholder="" formControlName="address"
+                                        class="form-control form-control-lg text-dark bg-transparent"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 col-sm-6 col-xxl-12">
+                                </div>
+                            </div>
+                            @if(IsApprovable && !IsVerified){
+                            <div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>Created By</label>
+                                        <input formControlName="createdBy"
+                                            class="form-control form-control-lg text-dark bg-transparent">
+                                    </div>
+                                    <div class="col">
+                                        <label>Created on</label>
+                                        <input formControlName="createdOn"
+                                            class="form-control form-control-lg text-dark bg-transparent">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>Modified on</label>
+                                        <input formControlName="modifiedOn"
+                                            class="form-control form-control-lg text-dark bg-transparent">
+
+                                    </div>
+                                    <div class="col">
+                                        <label>Modified By</label>
+                                        <input formControlName="modifiedBy"
+                                            class="form-control form-control-lg text-dark bg-transparent">
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        <div class="image-container">
+                            <input type="file" (change)="onFileSelected($event)" accept="image/*"
+                                formControlName="image">
+                            <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+                                <div id="image">
+                                    <img [src]="selectedImage">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div mat-dialog-actions class="action">
+                        <button  color="primary" type="submit">Save</button>
+                        @if(IsApprovable && !IsVerified){
+                        <button  color="orange" type="submit">Approve</button>
+                        }
+                        <button  type="button">Cancel</button>
+                        <button  type="reset">Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

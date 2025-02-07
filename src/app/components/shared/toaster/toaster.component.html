@@ -1,0 +1,22 @@
+@if(isVisible)
+{
+  <div class="parent-toaster-div" [style.animationDuration]="timeout+ 'ms'"
+  (mouseenter)="isHovered=true" 
+  (mouseleave)="isHovered=false"
+  [ngClass]="{ 'parent-toaster-div-normal': isHovered,'parent-toaster-div': !isHovered }">
+<div class="toast show" [ngClass]="{ 'bg-success': isSuccess, 'bg-danger': !isSuccess }">
+  <div class="toast-header">
+    <span class="me-2" [ngClass]="{
+        'bi-check-circle-fill': isSuccess,
+        'bi-exclamation-circle-fill': !isSuccess
+      }"></span>
+    <strong class="me-auto">@if(isSuccess){Success}@else{Error}</strong>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeToaster()"></button>
+  </div>
+  <div class="toast-body text-white">
+    {{ message }}
+  </div>
+  <div class="toast-progress" [style.animationDuration]="timeout+ 'ms'" (animationend)="onProgressAnimationEnd()"></div>
+</div>
+</div>
+}

@@ -1,0 +1,50 @@
+<div class="container-fluid px-md-4 px-2 mt-4">
+  <ng-container *ngFor="let dateKey of objectKeys(categorizedNotifications)">
+    <div>
+      <div class="mt-4 mb-2">
+        <h4>
+          <strong>{{ dateKey }}</strong>
+        </h4>
+      </div>
+
+      <ul class="table">
+          <ng-container
+            *ngFor="let notification of categorizedNotifications[dateKey]"
+          >
+            <li (click)="markSystemNotificationAsRead(notification)">
+              <div class="notification-row">
+                <div [ngClass]="{ 'text-dark': !notification.hasRead }">
+                  <div>
+                    {{ notification.notificationMessage }}
+                  </div>
+                  <div class="small text-muted">
+                    {{ getRelativeTime(notification.createdOn) }}
+                    <span
+                    *ngIf="notification.isLoading"
+                    class="spinner-border spinner-border-sm ml-2 notification-spinner"
+                    role="status"
+                  ></span>
+                  </div>
+
+                  <!-- Spinner (optional) -->
+                 
+                </div>
+              </div>
+            </li>
+          </ng-container>
+      </ul>
+    </div>
+  </ng-container>
+
+  <!-- "View More" Button -->
+  <div class="text-center mt-4 mb-4">
+    <button
+      *ngIf="hasMoreDown && !isLoadingInitialPage"
+      class="btn notification-view-more-button"
+      [disabled]="isLoading"
+      (click)="onViewMore()"
+    >
+      {{ isLoading ? "Loading..." : "View More" }}
+    </button>
+  </div>
+</div>

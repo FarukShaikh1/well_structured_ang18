@@ -1,0 +1,107 @@
+<button class="back-btn" (click)="onBackToLogin()">
+  <img src="../../../assets/images/backbtn.png" alt="Back" />
+</button>
+<div class="otp-card">
+  <div class="text-center mb-4">
+    <h4 class="fw-bold">OTP Verification</h4>
+  </div>
+  <span class="otp-label mb-4"
+    >Enter OTP sent on <strong>{{ maskedEmail || "-" }}</strong></span
+  >
+  <form [formGroup]="otpForm" (ngSubmit)="onVerifyOtp()">
+    <div class="otp-inputs">
+      <!-- <input
+        *ngFor="let controlName of otpForm.controls | keyvalue; let i = index"
+        id="otp{{ i }}"
+        #otp0="otp0 ? i === 0 : null"
+        type="text"
+        maxlength="1"
+        class="otp-box"
+        [formControlName]="controlName.key"
+        (input)="onOtpInput($event, i)"
+        (paste)="onOtpPaste($event, i)"
+        (keydown)="onOtpKeydown($event, i)"
+      /> -->
+
+      <input
+        *ngFor="let controlName of otpForm.controls | keyvalue; let i = index"
+        id="otp{{ i }}"
+        #firstOtpInput
+        type="text"
+        maxlength="1"
+        class="otp-box"
+        [formControlName]="controlName.key"
+        (input)="onOtpInput($event, i)"
+        (paste)="onOtpPaste($event, i)"
+        (keydown)="onOtpKeydown($event, i)"
+        [attr.autofocus]="i === 0 ? '' : null"
+      />
+    </div>
+
+    @if(invalidOtp){
+    <div class="text-danger invalid-otp-msg">
+      <small>Incorrect OTP.<br /></small>
+    </div>
+    } @else {
+      <div class="blank"></div>
+    }
+
+    <!-- <div class="timer-section">
+    @if(timerActive) {
+    <span class="resend-text">
+      Resend OTP in
+      <span class="timer-text"> {{ timerDisplay }} </span> minute(s)
+    </span>
+    } @else {
+    <button
+      type="button"
+      class="font-weight-bold text-link p-0"
+      (click)="onResendOtp()"
+    >
+      Resend OTP
+    </button>
+    }
+  </div> -->
+
+    <div class="timer-section">
+      @if(timerActive) {
+      <span class="resend-text">
+        OTP will expire in
+        <span class="timer-text"> {{ timerDisplay || "-" }} </span> minute(s)
+      </span>
+      }
+    </div>
+
+    <div class="mt-4 mb-4">
+      <button
+        type="submit"
+        tabindex="3"
+        [disabled]="!isOtpEntered"
+        class="btn btn-danger verify-btn rounded-button"
+      >
+        Verify OTP
+      </button>
+    </div>
+  </form>
+
+  @if(!timerActive && !otpResent) {
+  <span class="resend-text">
+    Did not receive OTP?
+    <button
+      type="button"
+      class="font-weight-bold text-link p-0"
+      (click)="onResendOtp()"
+    >
+      Resend OTP
+    </button>
+  </span>
+  }
+  
+  <!-- <div class="dont-refresh">
+  <span >
+    Please do not refresh the page, it will redirect back to the Login page.
+  </span>
+</div> -->
+</div>
+
+<app-toaster></app-toaster>
