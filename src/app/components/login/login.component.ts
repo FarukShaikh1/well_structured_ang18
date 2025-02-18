@@ -8,11 +8,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  standalone:true,
+  standalone: true,
   imports: [
     ReactiveFormsModule, // Add this
     // other imports
-  ],  templateUrl: './login.component.html',
+  ], templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
@@ -60,20 +60,22 @@ export class LoginComponent {
           return;
         }
 
-        if (this.data[0] != null && this.data[0].email != null && this.data[0].email.length > 0) {
+        if (this.data[0] != null && this.data[0].emailAddr != null && this.data[0].emailAddr.length > 0) {
+
+          localStorage.setItem("user", JSON.stringify(this.data[0])); // Convert object to string
           localStorage.setItem("currentUser", "true")
-          localStorage.setItem("email", this.data[0].email)
-          localStorage.setItem("userId", this.data[0].UserId)
+          localStorage.setItem("email", this.data[0].emailAddr)
+          localStorage.setItem("userId", this.data[0].userId)
           //this._globalService.openSnackBar("Log in successfully")
           this.reload();
           if (this.data[0].RoleName == 'super admin')
-            this.router.navigate(["/manage-users/"]);//, this.data[0].UserId]);
+            this.router.navigate(["/home/manage-users/"]);//, this.data[0].UserId]);
           else
-            this.router.navigate(["/day/"]);//, this.data[0].UserId]);
+            this.router.navigate(["/home/day/"]);//, this.data[0].UserId]);
         }
       }
       else {
-        //this._globalService.openSnackBar("Invalid credentials, Please check the details correctly.");
+        // this.toaster("Invalid credentials, Please check the details correctly.");
       }
     });
   }

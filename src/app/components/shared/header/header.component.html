@@ -134,7 +134,7 @@
           <img [src]="profilePicUrl" alt="Profile Picture" class="icon img-fluid" />
           } @else{ <span>{{ getLoggedInUserName().charAt(0) }}</span>
           } -->
-          <span title="{{ getLoggedInUserName() }}">{{ getUserNameInitials() }}</span>
+          <span title="{{ loggedInUserName }}">{{ userNameInitials }}</span>
         </div>
         <!-- <img src="../../../assets/icons/settings-svgrepo-com.svg" class="icon img-fluid" /> -->
       </button>

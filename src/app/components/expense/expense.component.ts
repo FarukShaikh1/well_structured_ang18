@@ -19,10 +19,10 @@ export interface Task {
 
 @Component({
   selector: 'app-expense',
-  standalone:true,
+  standalone: true,
   imports: [CommonModule, TabulatorGridComponent, ExpenseDetailsComponent, ConfirmationDialogComponent],
   templateUrl: './expense.component.html',
-  providers: [DatePipe,DateUtils],
+  providers: [DatePipe, DateUtils],
   styleUrls: ['./expense.component.scss']
 })
 
@@ -30,8 +30,8 @@ export class ExpenseComponent implements OnInit {
   @ViewChild('searchInput') searchInput!: ElementRef;
   @ViewChild('minInput') minInput!: any;
   @ViewChild('maxInput') maxInput!: any;
-    @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
-    @ViewChild(ToasterComponent) toaster!: ToasterComponent;
+  @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
+  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(ExpenseDetailsComponent)
   expenseDetailsComponent!: ExpenseDetailsComponent;
   @ViewChild(ConfirmationDialogComponent, { static: false })
@@ -42,7 +42,7 @@ export class ExpenseComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  latestDate:Date=new Date();
+  latestDate: Date = new Date();
   index: number = 0;
   expenseDataSource!: any;
   filteredExpenseDataSource!: any;
@@ -109,14 +109,14 @@ export class ExpenseComponent implements OnInit {
       },
     },
   ];
-  expenseId: string='';
+  expenseId: string = '';
 
-  constructor(private expenseService: ExpenseService, 
-    private _globalService: GlobalService, 
-    public datePipe: DatePipe,    
+  constructor(private expenseService: ExpenseService,
+    private _globalService: GlobalService,
+    public datePipe: DatePipe,
     private loaderService: LoaderService,
     private dateUtil: DateUtils
-    
+
   ) {
     // this._httpClient.get(_globalService.getCommonListItems(constants.MODEOFTRANSACTION)).subscribe(res => {
     //   this.modeOfTransactionList = res;
@@ -141,38 +141,38 @@ export class ExpenseComponent implements OnInit {
     });
 
   }
-  expenseColumnConfiguration(){
+  expenseColumnConfiguration() {
     this.expenseColumnConfig = [
       {
         title: 'Expense Date',
-        field: 'ExpenseDate',
+        field: 'expenseDate',
         sorter: 'alphanum',
         formatter: this.uploadedDateFormatter.bind(this),
       },
       {
         title: 'Source/Reason',
-        field: 'SourceOrReason',
+        field: 'sourceOrReason',
         sorter: 'alphanum',
       },
       {
         title: 'Description',
-        field: 'Description',
+        field: 'description',
         sorter: 'alphanum',
-        width:400,
+        width: 400,
       },
       {
         title: 'ModeOfTransaction',
-        field: 'ModeOfTransaction',
+        field: 'modeOfTransaction',
         sorter: 'alphanum',
       },
       {
         title: 'Debit',
-        field: 'Debit',
+        field: 'debit',
         sorter: 'alphanum',
       },
       {
         title: 'Credit',
-        field: 'Credit',
+        field: 'credit',
         sorter: 'alphanum',
       },
       {
@@ -248,7 +248,7 @@ export class ExpenseComponent implements OnInit {
       }
     });
   }
-  
+
   // getTotalCost() {
   //   return this.filteredDataSource.map((t: { debit: any; }) => t.debit).reduce((credit: any, value: any) => credit + value, 0);
   // }
@@ -271,7 +271,6 @@ export class ExpenseComponent implements OnInit {
   }
 
   LoadGrid() {
-    debugger;
     this.loaderService.showLoader();
     this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate)
     this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate)
@@ -311,9 +310,9 @@ export class ExpenseComponent implements OnInit {
       const maxAmountCondition = this.maxAmount == 0 || (item.Debit !== 0 && Math.abs(item.Debit) <= this.maxAmount) || (item.Credit !== 0 && Math.abs(item.Credit) <= this.maxAmount);
       return searchText && minAmountCondition && maxAmountCondition;
     });
-  this.latestDate = this.getLatestExpenseDate();
-  console.log('this.latestDate : ',this.latestDate);
-  
+    this.latestDate = this.getLatestExpenseDate();
+    console.log('this.latestDate : ', this.latestDate);
+
   }
 
   getLatestExpenseDate(): Date {
@@ -322,7 +321,7 @@ export class ExpenseComponent implements OnInit {
     }
     return this.filteredExpenseDataSource[0].ExpenseDate
   }
-  
+
   // hideExpense(expenseId: number) {
   //   this.onTableDataChange(1);
   //   this.filteredDataSource = this.filteredDataSource.filter((item: any) => {
@@ -345,21 +344,15 @@ export class ExpenseComponent implements OnInit {
     this.loaderService.showLoader();
     this.expenseColumnConfiguration();
     this.filterColumns = this.expenseColumnConfig.filter((col) =>
-      ['SourceOrReason','emailId'].includes(col.field ?? '')
+      ['SourceOrReason', 'emailId'].includes(col.field ?? '')
     );
-    console.log('this.fromDt : ',this.formattedFromDate);
-    console.log('this.toDt : ',this.formattedToDate);
-
-    console.log('this.fromDate : ',this.fromDate);
-    console.log('this.toDate : ',this.toDate);
-
     this.expenseService.getExpenseList(this.formattedFromDate, this.formattedToDate, this.SpecificSourceOrReason, 0, 0, this.modeOfTransaction).subscribe((res) => {
       this.expenseDataSource = res;
       this.filteredExpenseDataSource = res;
-    this.loaderService.hideLoader();
+      this.loaderService.hideLoader();
 
-      console.log('this.filteredExpenseDataSource : ',this.filteredExpenseDataSource);
-      
+      console.log('this.filteredExpenseDataSource : ', this.filteredExpenseDataSource);
+
     },
     )
   }
@@ -370,13 +363,12 @@ export class ExpenseComponent implements OnInit {
   }
 
   expenseDetails(data: any) {
-  console.log('expenseDetails clicked data : ',data);
-  this.loaderService.showLoader();
-      this.expenseDetailsComponent.openDetailsPopup(data);
+    this.loaderService.showLoader();
+    this.expenseDetailsComponent.openDetailsPopup(data);
   }
 
 
-  deleteExpense(expenseId:string) {
+  deleteExpense(expenseId: string) {
     if (expenseId) {
       this.expenseId = expenseId;
       this.confirmationDialog.openConfirmationPopup(
@@ -386,14 +378,14 @@ export class ExpenseComponent implements OnInit {
     }
   }
 
-  handleConfirmResult(isConfirmed:boolean){
+  handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
     this.expenseService.deleteExpense(this.expenseId).subscribe((res) => {
       if (res) {
         this.LoadGrid();
       }
     },
-  );    
+    );
   }
   addExpense(expense: any) {
     this.expenseService.addExpense(expense).subscribe((res) => {
@@ -432,10 +424,10 @@ export class ExpenseComponent implements OnInit {
 
   filterGridByMinAmount(data: any) {
     this.minAmount = data.target.value;
-//           this.messageInput.nativeElement.focus();
-setTimeout(() => {
-  this.minInput.nativeElement.focus();
-}, 0);
+    //           this.messageInput.nativeElement.focus();
+    setTimeout(() => {
+      this.minInput.nativeElement.focus();
+    }, 0);
 
     this.applyFilters();
   }
@@ -450,7 +442,7 @@ setTimeout(() => {
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
     }, 0);
-    
+
     this.applyFilters();
   }
 

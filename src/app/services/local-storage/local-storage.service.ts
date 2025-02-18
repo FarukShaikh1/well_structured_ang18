@@ -16,7 +16,7 @@ export class LocalStorageService {
   }
 
   setCurrentUser(user: any, isUserLoggedIn: boolean, isSsoLogin: boolean) {
-    localStorage.setItem('user', JSON.stringify(user));
+    // localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('isUserLoggedIn', JSON.stringify(isUserLoggedIn));
     localStorage.setItem('isSsoLogin', JSON.stringify(isSsoLogin));
     this.currentUserSource.next(user);

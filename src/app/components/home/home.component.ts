@@ -1,25 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 // import { SignalRService } from '../../services/signal-r/signal-r.service';
 import { RouterModule } from '@angular/router';
-import { ClientResponse } from '../../interfaces/client-response';
-import { ProjectResponse } from '../../interfaces/project-response';
-import { LocalStorageService } from '../../services/local-storage/local-storage.service';
-import { NotificationService } from '../../services/notification/notification.service';
 import {
-    Messages,
-    NavigationURLs,
     ApplicationModuleActions,
     ApplicationModules,
     ApplicationRoles,
+    NavigationURLs
 } from '../../../utils/application-constants';
+import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import { NotificationService } from '../../services/notification/notification.service';
 import { HeaderComponent } from '../shared/header/header.component';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { distinctUntilChanged, take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-home',
@@ -54,10 +50,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     formDetails: any;
     unreadSystemNotificationCount = 0;
 
-    oldClientId = '';
-    oldProjectId = '';
-    oldFormId = '';
-    ssfAccessBySomeOne: string='';
 
     constructor(
         private route: ActivatedRoute,
@@ -79,7 +71,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.notificationService.unreadNotificationCount$.subscribe((count) => {
             this.unreadSystemNotificationCount = count;
         });
-
         // this.signalRService.getUnreadChatCountForNotification();
         this.getBannerData();
         this.getLoggedInUserData();
@@ -125,7 +116,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     getLoggedInUserData() {
         const userData = this.localStorageService.getLoggedInUserData();
         if (userData) {
-            this.userName = userData.username;
+            this.userName = userData.firstName + ' ' + userData.lastName;
             this.roleName = userData.role;
         }
     }
@@ -153,7 +144,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     /**
      * currently not in use. Will be used if the new method causes any issue (below implemented)
      */
-    getBannerDataOld() {    }
+    getBannerDataOld() { }
 
     getBannerData() {
     }

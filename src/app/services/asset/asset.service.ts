@@ -1,14 +1,11 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs/internal/Observable';
-import * as constants from '../../../utils/constants';
-import { environmentDev } from '../../../environments/environment.dev';
+import { Injectable } from '@angular/core';
+import { API_URL } from '../../../utils/api-url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssetService {
-  baseUrl = environmentDev.serverUrl;
   loggedInUserId: number;
 
   constructor(private http: HttpClient) {
@@ -19,7 +16,7 @@ export class AssetService {
     const params = new HttpParams()
       .set('userid', Number(localStorage.getItem("userId")))
       .set('assetId', assetId)
-    return this.http.get(this.baseUrl + constants.ASSETURL + 'getAssetDetail', { params: params })
+    return this.http.get(API_URL.GET_ASSET_DETAILS, { params: params })
 
   }
 

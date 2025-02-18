@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { ApplicationTableConstants } from '../../../utils/application-constants';
 import { TableUtils } from '../../../utils/table-utils';
-import { DayDetailsComponent } from '../day-details/day-details.component';
 import { DayService } from '../../services/day/day.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
+import { DayDetailsComponent } from '../day-details/day-details.component';
 import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 
@@ -20,10 +20,10 @@ export interface Task {
 
 @Component({
   selector: 'app-day',
-  standalone:true,
+  standalone: true,
   templateUrl: './day.component.html',
   styleUrls: ['./day.component.scss'],
-imports:[TabulatorGridComponent,CommonModule,DayDetailsComponent]
+  imports: [TabulatorGridComponent, CommonModule, DayDetailsComponent]
 })
 
 export class DayComponent implements OnInit {
@@ -31,7 +31,7 @@ export class DayComponent implements OnInit {
   @ViewChild('typeInput', { static: true }) typeInput: any;
   @ViewChild('monthInput', { static: true }) monthInput: any;
   @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
-    @ViewChild(ToasterComponent) toaster!: ToasterComponent;
+  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(DayDetailsComponent)
   dayDetailsComponent!: DayDetailsComponent;
   public tableData: Record<string, unknown>[] = [];
@@ -39,7 +39,7 @@ export class DayComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  
+
   index: number = 0;
   dataSource!: any;
   filteredDataSource!: any;
@@ -70,10 +70,10 @@ export class DayComponent implements OnInit {
   itemsPerPage = 10;
 
   constructor(private _dayService: DayService, private _globalService: GlobalService,
-      private _httpClient: HttpClient,public tableUtils: TableUtils,
-      public globalService: GlobalService,
-      private loaderService: LoaderService,
-      private router: Router
+    private _httpClient: HttpClient, public tableUtils: TableUtils,
+    public globalService: GlobalService,
+    private loaderService: LoaderService,
+    private router: Router
   ) {
     // this._httpClient.get(_globalService.getCommonListItems(constants.MONTH)).subscribe(res => {
     //   this.monthList = res;
@@ -90,49 +90,55 @@ export class DayComponent implements OnInit {
     this.loaderService.showLoader()
     this.itemCountList = this.itemcount();
     console.log(' this.itemCountList :', this.itemCountList);
-this.columnConfiguration();
+    this.columnConfiguration();
     // Define which columns are available for filtering
     this.filterColumns = this.columnConfig.filter((col) =>
-      ['personName','emailId'].includes(col.field ?? '')
+      ['personName', 'emailId'].includes(col.field ?? '')
     );
 
     this.getDayList();
   }
   getDayList() {
-    this._dayService.getDayList(this.month, this.dayType, this.searchText, this.isToday, this.isTomorrow, this.isYesterday).subscribe((res) => {
-      this.dataSource = res;
-      this.filteredDataSource = res;
-      console.log('this.filteredDataSource : ',this.filteredDataSource);
-      this.loaderService.hideLoader();
-    },
-    )
+    this._dayService.getDayList(this.month, this.dayType, this.searchText, this.isToday, this.isTomorrow, this.isYesterday).subscribe(
+      {
+        next: (res: any) => {
+          this.dataSource = res.data;
+          this.filteredDataSource = res.data;
+          console.log('this.filteredDataSource : ', this.filteredDataSource);
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
 
-  columnConfiguration(){
+  columnConfiguration() {
     this.columnConfig = [
       {
         title: 'Birth date',
-        field: 'Birthdate',
+        field: 'birthdate',
         sorter: 'alphanum',
       },
       {
         title: 'Person Name',
-        field: 'PersonName',
+        field: 'personName',
         sorter: 'alphanum',
       },
       {
         title: 'Email Id',
-        field: 'EmailId',
+        field: 'emailId',
         sorter: 'alphanum',
       },
       {
         title: 'Address',
-        field: 'Address',
+        field: 'address',
         sorter: 'alphanum',
       },
       {
         title: 'Type',
-        field: 'Type',
+        field: 'type',
         sorter: 'alphanum',
       },
       {
@@ -143,7 +149,7 @@ this.columnConfiguration();
       {
         title: 'Person Name',
         titleFormatter(_cell, _formatterParams, onRendered) {
-          onRendered(() => {});
+          onRendered(() => { });
           return `
             <div class="client-name-header">
               Person Name
@@ -151,7 +157,7 @@ this.columnConfiguration();
           `;
         },
 
-        field: 'PersonName',
+        field: 'personName',
         sorter: 'string',
         formatter: this.personNameFormatter.bind(this),
       },
@@ -212,12 +218,12 @@ this.columnConfiguration();
   ];
 
   openPopup() {
-    console.log('dayDetails clicked');    
+    console.log('dayDetails clicked');
     this.dayDetailsComponent.openDetailsPopup();
 
   }
 
-  hideDay(BirthdayId:number) {
+  hideDay(BirthdayId: number) {
     this.onTableDataChange(1);
     this.filteredDataSource = this.filteredDataSource.filter((item: any) => {
       const includeDay = item.BirthdayId != BirthdayId;

@@ -849,6 +849,7 @@ input {
   border-radius: 20px;
   font-size: 14px;
   vertical-align: super;
+  margin:5px;
 }
 
 .rounded-button-small {

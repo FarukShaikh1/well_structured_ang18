@@ -96,3 +96,7 @@ body {
   color: #333;
   width: fit-content;
 }
+
+.home-container{
+  margin: 10px;
+}

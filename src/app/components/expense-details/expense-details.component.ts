@@ -183,7 +183,6 @@ export class ExpenseDetailsComponent  {
         }
 
         const selectedDate1 = new Date(this.expenseDetailsForm.value['expenseDate']);
-        debugger;
         // // Ensure the date is valid
         if (!isNaN(selectedDate1.getTime())) {
           const day = selectedDate1.getDate().toString().padStart(2, '0');

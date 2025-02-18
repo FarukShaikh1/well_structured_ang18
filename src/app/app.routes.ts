@@ -1,21 +1,15 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './guards/auth.guard';
-import { moduleAccessGuard } from './guards/module-access.guard';
-import { publicGuard } from './guards/public.guard';
 import { ApplicationModules } from '../utils/application-constants';
-import { LoginComponent } from './components/login/login.component';
-import { routeAccessGuard } from './guards/route-access.guard';
-import { NgModule } from '@angular/core';
-import { ExpenseComponent } from './components/expense/expense.component';
-import { ExpenseSummaryComponent } from './components/expense-summary/expense-summary.component';
-import { ExpenseReportComponent } from './components/expense-report/expense-report.component';
 import { CurrencyCoinDetailsComponent } from './components/currency-coin-details/currency-coin-details.component';
 import { CurrencyCoinComponent } from './components/currency-coin/currency-coin.component';
 import { DayDetailsComponent } from './components/day-details/day-details.component';
 import { DayComponent } from './components/day/day.component';
 import { ExpenseDetailsComponent } from './components/expense-details/expense-details.component';
+import { ExpenseReportComponent } from './components/expense-report/expense-report.component';
+import { ExpenseSummaryComponent } from './components/expense-summary/expense-summary.component';
+import { ExpenseComponent } from './components/expense/expense.component';
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'login',
     title: 'Login',
@@ -53,17 +47,17 @@ export const routes: Routes = [
       { path: 'expense-details', component: ExpenseDetailsComponent },
       { path: 'currency-coin', component: CurrencyCoinComponent },
       { path: 'currency-coin-details', component: CurrencyCoinDetailsComponent },
+      {
+        path: 'manage-users',
+        title: 'Users',
+        loadComponent: () =>
+          import('./components/user-list/user-list.component').then(
+            (m) => m.UserListComponent
+          ),
+        // canActivate: [moduleAccessGuard],
+        data: { moduleName: ApplicationModules.USER },
+      },
     ]
-  },
-  {
-    path: 'user',
-    title: 'Users',
-    loadComponent: () =>
-      import('./components/user-list/user-list.component').then(
-        (m) => m.UserListComponent
-      ),
-    // canActivate: [moduleAccessGuard],
-    data: { moduleName: ApplicationModules.USER },
   },
   {
     path: 'role-module-mapping',

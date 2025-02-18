@@ -13,15 +13,15 @@ import { LocalStorageService } from '../../../services/local-storage/local-stora
 import { LogoutService } from '../../../services/logout/logout.service';
 // import { SignalRService } from '../../../services/signal-r/signal-r.service';
 import { formatDistanceToNow } from 'date-fns';
-import { SystemNotifications } from '../../../interfaces/system-notifications';
-import { NotificationService } from '../../../services/notification/notification.service';
 import {
-  NavigationURLs,
   ApplicationConstants,
   ApplicationModuleActions,
   ApplicationModules,
   ApplicationRoles,
+  NavigationURLs,
 } from '../../../../utils/application-constants';
+import { SystemNotifications } from '../../../interfaces/system-notifications';
+import { NotificationService } from '../../../services/notification/notification.service';
 import { ConfirmBoxComponent } from '../confirm-box/confirm-box.component';
 
 @Component({
@@ -53,6 +53,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   alreadyLoggedIn: boolean = true;
   profilePicUrl: string = '../../../assets/icons/user1icon.png';
   ApplicationRoles = ApplicationRoles;
+  loggedInUserName: string = '';
+  userNameInitials: string = '';
   // profilePicUrl: string = '';
 
   constructor(
@@ -80,6 +82,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setLoginDisplay();
     this.alreadyLoggedIn = this.localStorageService.isAuthenticated();
+    this.loggedInUserName = this.getLoggedInUserName();
+    this.userNameInitials = this.getUserNameInitials();
   }
 
   setLoginDisplay() {
@@ -138,7 +142,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getLoggedInUserName(): string {
-    return this.localStorageService.getLoggedInUserData()?.username;
+    return this.localStorageService.getLoggedInUserData()?.userName;
   }
 
   customerList() {
@@ -166,7 +170,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getUserNameInitials(): string {
-    const fullName = this.getLoggedInUserName();
+    const fullName = this.localStorageService.getLoggedInUserData()?.firstName + ' ' + this.localStorageService.getLoggedInUserData()?.lastName;
     if (!fullName) {
       return '';
     }
