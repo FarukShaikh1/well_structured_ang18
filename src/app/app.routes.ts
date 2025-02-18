@@ -6,6 +6,14 @@ import { ApplicationModules } from '../utils/application-constants';
 import { LoginComponent } from './components/login/login.component';
 import { routeAccessGuard } from './guards/route-access.guard';
 import { NgModule } from '@angular/core';
+import { ExpenseComponent } from './components/expense/expense.component';
+import { ExpenseSummaryComponent } from './components/expense-summary/expense-summary.component';
+import { ExpenseReportComponent } from './components/expense-report/expense-report.component';
+import { CurrencyCoinDetailsComponent } from './components/currency-coin-details/currency-coin-details.component';
+import { CurrencyCoinComponent } from './components/currency-coin/currency-coin.component';
+import { DayDetailsComponent } from './components/day-details/day-details.component';
+import { DayComponent } from './components/day/day.component';
+import { ExpenseDetailsComponent } from './components/expense-details/expense-details.component';
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
@@ -15,7 +23,7 @@ export const routes: Routes = [
       import('./components/login/login.component').then(
         (m) => m.LoginComponent
       ),
-    canActivate: [publicGuard],
+    // canActivate: [publicGuard],
   },
   {
     path: 'logout',
@@ -27,71 +35,83 @@ export const routes: Routes = [
   {
     path: 'home',
     title: 'Home',
-    data: { breadcrumb: 'Home' },
     loadComponent: () =>
       import('./components/home/home.component').then((m) => m.HomeComponent),
-    canActivate: [authGuard],
+    // canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'redirect-home', pathMatch: 'full' },
+      { path: '', redirectTo: 'expense', pathMatch: 'full' },
       {
-        path: 'user',
-        title: 'Users',
-        loadComponent: () =>
-          import('./components/user-list/user-list.component').then(
-            (m) => m.UserListComponent
-          ),
-        canActivate: [moduleAccessGuard],
-        data: { moduleName: ApplicationModules.USER, breadcrumb: 'Users' },
+        path: 'day',
+        children: [
+          { path: '', component: DayComponent },
+          { path: 'day-details', component: DayDetailsComponent },
+        ]
       },
-      {
-        path: 'role-module-mapping',
-        loadComponent: () =>
-          import(
-            './components/role-module-mapping/role-module-mapping.component'
-          ).then((m) => m.RoleModuleMappingComponent),
-        canActivate: [moduleAccessGuard],
-        data: { moduleName: ApplicationModules.ROLE_MODULE_MAPPING },
-      },
-      {
-        path: 'user-details',
-        loadComponent: () =>
-          import('./components/user-details/user-details.component').then(
-            (m) => m.UserDetailsComponent
-          ),
-      },
-      {
-        path: 'change-password',
-        title: 'Change Password',
-        loadComponent: () =>
-          import('./components/change-password/change-password.component').then(
-            (m) => m.ChangePasswordComponent
-          ),
-      },
-      // {
-      //   path: 'nav-chat-panel',
-      //   title: 'Chat Panel',
-      //   loadComponent: () =>
-      //     import('./components/nav-chat-panel/nav-chat-panel.component').then(
-      //       (m) => m.NavChatPanelComponent
-      //     ),
-      // },
-      {
-        path: 'unauthorised',
-        title: 'Unauthorised User',
-        loadComponent: () =>
-          import(
-            './components/shared/unauthorised-error-page/unauthorised-error.component'
-          ).then((m) => m.UnauthorisedErrorComponent),
-      },
-      {
-        path: 'notifications',
-        title: 'Notifications',
-        loadComponent: () =>
-          import('./components/notification-list/notification-list.component').then((m) => m.NotificationListComponent),
-      },
-      { path: '**', redirectTo: 'pagenotfound' },
-    ],
+      { path: 'expense', component: ExpenseComponent },
+      { path: 'expense-summary', component: ExpenseSummaryComponent },
+      { path: 'expense-report', component: ExpenseReportComponent },
+      { path: 'expense-details', component: ExpenseDetailsComponent },
+      { path: 'currency-coin', component: CurrencyCoinComponent },
+      { path: 'currency-coin-details', component: CurrencyCoinDetailsComponent },
+    ]
   },
+  {
+    path: 'user',
+    title: 'Users',
+    loadComponent: () =>
+      import('./components/user-list/user-list.component').then(
+        (m) => m.UserListComponent
+      ),
+    // canActivate: [moduleAccessGuard],
+    data: { moduleName: ApplicationModules.USER },
+  },
+  {
+    path: 'role-module-mapping',
+    loadComponent: () =>
+      import(
+        './components/role-module-mapping/role-module-mapping.component'
+      ).then((m) => m.RoleModuleMappingComponent),
+    // canActivate: [moduleAccessGuard],
+    data: { moduleName: ApplicationModules.ROLE_MODULE_MAPPING },
+  },
+  {
+    path: 'user-details',
+    loadComponent: () =>
+      import('./components/user-details/user-details.component').then(
+        (m) => m.UserDetailsComponent
+      ),
+  },
+  {
+    path: 'change-password',
+    title: 'Change Password',
+    loadComponent: () =>
+      import('./components/change-password/change-password.component').then(
+        (m) => m.ChangePasswordComponent
+      ),
+  },
+  // {
+  //   path: 'nav-chat-panel',
+  //   title: 'Chat Panel',
+  //   loadComponent: () =>
+  //     import('./components/nav-chat-panel/nav-chat-panel.component').then(
+  //       (m) => m.NavChatPanelComponent
+  //     ),
+  // },
+  {
+    path: 'unauthorised',
+    title: 'Unauthorised User',
+    loadComponent: () =>
+      import(
+        './components/shared/unauthorised-error-page/unauthorised-error.component'
+      ).then((m) => m.UnauthorisedErrorComponent),
+  },
+  {
+    path: 'notifications',
+    title: 'Notifications',
+    loadComponent: () =>
+      import('./components/notification-list/notification-list.component').then((m) => m.NotificationListComponent),
+  },
+  { path: '**', redirectTo: 'pagenotfound' },
   {
     path: 'reset-password',
     title: 'Reset Password',
@@ -116,12 +136,11 @@ export const routes: Routes = [
         './components/shared/unauthorised-error-page/unauthorised-error.component'
       ).then((m) => m.UnauthorisedErrorComponent),
   },
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'expenses' },
 ];
 // {
 //     path: 'home',
 //     title: 'Home',
-//     data: { breadcrumb: 'Home' },
 //     loadComponent: () =>
 //       import('./components/home/home.component').then((m) => m.HomeComponent),
 //     canActivate: [authGuard],
@@ -135,7 +154,7 @@ export const routes: Routes = [
 //           (m) => m.UserListComponent
 //         ),
 //       canActivate: [moduleAccessGuard],
-//       data: { moduleName: ApplicationModules.USER, breadcrumb: 'Users' },
+//       data: { moduleName: ApplicationModules.USER},
 //     },
 //   {
 //     path: 'role-module-mapping',

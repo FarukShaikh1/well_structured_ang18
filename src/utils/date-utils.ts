@@ -174,4 +174,24 @@ static formatDateToDateTime(inputDate: string): string {
 
   return isoDateTime;
 }
+
+convertDDMMYYYYToDate(dateString: string): Date {
+  const [day, mon, year] = dateString.split('/').map(Number);
+  // Months are 0-based in JavaScript Date objects, so subtract 1 from month
+  return new Date(year, mon - 1, day);
+}
+  formatDateToMMDDYYYY(date: Date): string {
+    // Check if the provided date is valid
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    date = new Date();
+    // If invalid, set date to 60 days ago
+    // date.setDate(date.getDate() - 60);
+  }
+    const mm = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
+    const dd = ('0' + date.getDate()).slice(-2);
+    const yyyy = date.getFullYear();
+    return `${mm}/${dd}/${yyyy}`;
+  }
+
+
 }

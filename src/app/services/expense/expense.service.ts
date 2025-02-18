@@ -60,6 +60,7 @@ export class ExpenseService {
 
    getExpenseList(fromDate:string, toDate:string,sourceOrReason:string,minAmount:number,maxAmount:number,
      modeOfTransaction:string): Observable<any> {
+      debugger
     const params=new HttpParams()
     .set('userid', this.loggedInUserId)
     .set('fromDate', fromDate)

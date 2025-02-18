@@ -2,95 +2,15 @@
 
 <div class="home-banner">
     <div class="row w-100">
-        @if(isUrlContains(NavigationURLs.ALL_NOTIFICATIONS)) {
         <div class="col-md-12 pb-0 h4">
             <div class="banner-text d-flex justify-content-between">
                 Hello {{ userName }}!
-                @if(globalService.isPermitted([roles.Client_Representative])) {
-                <button class="close-button" (click)="navigateFromNotification()">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="24"
-                         height="24"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="white"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
-                }
-            </div>
-            <span class="notification-text">
-                You've received
-                {{ unreadSystemNotificationCount }} new notification(s).
-            </span>
-        </div>
-        } @else{
-        <div class="col-md-5">
-
-            @if(roleName!==roles.Client_Representative &&(projectId||clientId)){
-            <div class="mb-2">
-            </div>
-            } @else if(roleName===roles.Client_Representative && projectId){
-            <div class="mb-2">
-            </div>
-            }
-        </div>
-        } @if(projectId && !formId){
-        <div class="col-md-7 d-flex justify-content-end">
-        </div>
-    }
-    @if(ssfAccessBySomeOne)
-    {
-        <div class="col-md-7 d-flex justify-content-end">
-            <div class="alert-box">
-                <span class="icon" title="Another user is also working on same form." >ℹ️</span>
-                <span>{{ssfAccessBySomeOne}}.</span>
             </div>
         </div>
-    }
+        <app-loader></app-loader>
+        <router-outlet></router-outlet>
 
-
-
-        <div>
-            <ul class="nav nav-tabs pb-0 pt-0" style="border-bottom: none">
-                <li class="nav-item">
-                    <button class="nav-link"
-                            [ngClass]="{
-              active: isUrlContains(NavigationURLs.PROJECT_LIST)
-            }">
-                        Projects
-                    </button>
-                </li>
-                @if(!globalService.isPermitted([roles.Client_Representative])) {
-                <li class="nav-item">
-                    <button class="nav-link">
-                        Internal Project
-                    </button>
-                </li>}
-               
-            </ul>
-        </div>
+        <!-- <app-footer></app-footer> -->
+        <app-toaster></app-toaster>
     </div>
 </div>
-
-<app-loader></app-loader>
-<router-outlet></router-outlet>
-
-@if(displayFeedback){
-<div class="fixed-right-component col-4">
-    <div class="scrollable-content">
-        <div class="d-flex justify-content-between"
-             style="border-left: 2px solid #e9ecef">
-            <h4 style="padding-left: 10px" class="">Feedbacks</h4>
-            <button class="btn-close" (click)="closeFeedback()"></button>
-        </div>
-    </div>
-</div>
-}
-
-<!-- <app-footer></app-footer> -->
-<app-toaster></app-toaster>

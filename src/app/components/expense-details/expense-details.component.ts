@@ -1,16 +1,12 @@
-import { Component, ElementRef,Renderer2, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
-import { ExpenseService } from '../../services/expense/expense.service';
-import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalService } from '../../services/global/global.service';
 import { DatePipe } from '@angular/common';
+import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import flatpickr from 'flatpickr';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { ApplicationConstants, ApplicationModules } from '../../../utils/application-constants';
-import { DateUtils } from '../../../utils/date-utils';
+import { ExpenseService } from '../../services/expense/expense.service';
+import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
+import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 @Component({
   selector: 'app-expense-details',
@@ -20,9 +16,10 @@ import { LoaderService } from '../../services/loader/loader.service';
   styleUrls: ['./expense-details.component.scss'],
 })
 
-export class ExpenseDetailsComponent implements OnInit {
+export class ExpenseDetailsComponent  {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild('btnCloseExpenseDetailsPopup') btnCloseExpensePopup!: ElementRef;
+  @Input() expenseDate!: Date; // Receiving latestDate from parent
   [x: string]: any;
   startDate = new Date();
   expenseDetailsForm: FormGroup;
@@ -35,9 +32,6 @@ export class ExpenseDetailsComponent implements OnInit {
 
   constructor(private _details: FormBuilder,
     private _expenseService: ExpenseService,
-    private _httpClient: HttpClient,
-    private route: ActivatedRoute,
-    private router: Router,
     private expenseService: ExpenseService,
     private _globalService: GlobalService,
     private loaderService: LoaderService,
@@ -79,18 +73,19 @@ export class ExpenseDetailsComponent implements OnInit {
     this.getPurposeList(valueToFilter.target.value, '')
   }
 
-  openDetailsPopup(expenseId:string) {
+  openDetailsPopup(expenseId: string) {
     this.expenseDetailsForm?.reset();
     this.loaderService.showLoader();
     const model = document.getElementById('expenseDetailsPopup');
     if (model !== null) {
       model.style.display = 'block';
     }
-    if(expenseId){
+    if (expenseId) {
       this.getExpenseDetails(expenseId);
     }
-    else{
-      this.loaderService.hideLoader();
+    else {
+    this.expenseDetailsForm.controls['expenseDate'].patchValue(this.datepipe.transform(this.expenseDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT));
+    this.loaderService.hideLoader();
     }
   }
   closePopup() {
@@ -106,10 +101,6 @@ export class ExpenseDetailsComponent implements OnInit {
 
   onPurposeChange(valueToFilter: any) {
     this.getPurposeList('', valueToFilter.target.value)
-  }
-
-  ngOnInit(): void {
-    this.expenseDetailsForm.controls['expenseDate'].patchValue(this.datepipe.transform(this.startDate, ApplicationConstants.GLOBAL_DATE_FORMAT));
   }
 
   ngAfterViewInit() {
@@ -148,7 +139,7 @@ export class ExpenseDetailsComponent implements OnInit {
     )
   }
 
-  getExpenseDetails(expenseId:string) {
+  getExpenseDetails(expenseId: string) {
     this.expenseService.getExpenseDetails(expenseId).subscribe((res: any) => {
       console.log('res : ', res);
       this.patchValues(res);
@@ -158,7 +149,7 @@ export class ExpenseDetailsComponent implements OnInit {
 
   patchValues(res: any) {
     this.expenseDetailsForm.controls['expenseId'].patchValue(res['ExpenseId']);
-    this.expenseDetailsForm.controls['expenseDate'].patchValue(this.datepipe.transform(res['ExpenseDate'], ApplicationConstants.GLOBAL_DATE_FORMAT));
+    this.expenseDetailsForm.controls['expenseDate'].patchValue(this.datepipe.transform(res['ExpenseDate'], ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT));
     this.expenseDetailsForm.controls['sourceOrReason'].patchValue(res['SourceOrReason']);
     this.expenseDetailsForm.controls['purpose'].patchValue(res['Purpose']);
     this.expenseDetailsForm.controls['description'].patchValue(res['Description']);
@@ -183,80 +174,92 @@ export class ExpenseDetailsComponent implements OnInit {
     if (this.sbiValid || this.cbiValid || this.cashValid || this.otherValid) {
       if (!this.expenseDetailsForm.valid) {
         this.toaster.showMessage('Please fill valid details.', 'error');
+        this.loaderService.hideLoader();
         return;
       }
-      else {
-        try {
-          if (!this.expenseDetailsForm.value['description']) {
-              this.expenseDetailsForm.value['description'] = this.expenseDetailsForm.value['purpose'];
-          }
-
-          const selectedDate1 = new Date(this.expenseDetailsForm.value['expenseDate']);
-
-          // Ensure the date is valid
-          if (!isNaN(selectedDate1.getTime())) {
-            const day = selectedDate1.getDate().toString().padStart(2, '0');
-            const month = (selectedDate1.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
-            const year = selectedDate1.getFullYear();
-          
-            // Format the date as DD/MM/YYYY
-            this.expenseDetailsForm.value['expenseDate']= `${day}/${month}/${year}`;          
-          }
-          else{
-
-          // Split the string and create a Date object in 'yyyy-MM-dd' format.
-          const [day, month, year] = this.expenseDetailsForm.value['expenseDate'].split('/').map(Number);
-          const selectedDate = new Date(Date.UTC(year, month - 1, day)); // month is 0-indexed
-          this.expenseDetailsForm.value['expenseDate'] = selectedDate;
-          // this.expenseDetailsForm.value['expenseDate'] = DateUtils.formatDateStringToYYYYMMDD(this.expenseDetailsForm.value['expenseDate'])
+      try {
+        if (!this.expenseDetailsForm.value['description']) {
+          this.expenseDetailsForm.value['description'] = this.expenseDetailsForm.value['purpose'];
         }
 
-          if (this.expenseDetailsForm.value['expenseId'] > 0) {
-            this._expenseService.updateExpense(this.expenseDetailsForm.value).subscribe((result) => {
-              if (result) {
-                //this._globalService.openSnackBar('Record Updated Successfully');
-                this.toaster.showMessage('Record Updated Successfully.', 'success');
-                this.renderer
-                  .selectRootElement(this.btnCloseExpensePopup?.nativeElement)
-                  .click();
+        const selectedDate1 = new Date(this.expenseDetailsForm.value['expenseDate']);
+        debugger;
+        // // Ensure the date is valid
+        if (!isNaN(selectedDate1.getTime())) {
+          const day = selectedDate1.getDate().toString().padStart(2, '0');
+          const month = (selectedDate1.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+          const year = selectedDate1.getFullYear();
+
+          // Format the date as DD/MM/YYYY
+          this.expenseDetailsForm.value['expenseDate'] = `${day}/${month}/${year}`;
+        }
+        else {
+
+        // Split the string and create a Date object in 'yyyy-MM-dd' format.
+        const [day, month, year] = this.expenseDetailsForm.value['expenseDate'].split('/').map(Number);
+        const selectedDate = new Date(Date.UTC(year, month - 1, day)); // month is 0-indexed
+        this.expenseDetailsForm.value['expenseDate'] = selectedDate;
+        // this.expenseDetailsForm.value['expenseDate'] = DateUtils.formatDateStringToYYYYMMDD(this.expenseDetailsForm.value['expenseDate'])
+        }
+
+        if (this.expenseDetailsForm.value['expenseId'] > 0) {
+          this._expenseService.updateExpense(this.expenseDetailsForm.value).subscribe(
+            {
+              next: (result: any) => {
+                if (result) {
+                  //this._globalService.openSnackBar('Record Updated Successfully');
+                  this.toaster.showMessage('Record Updated Successfully.', 'success');
                   this.loaderService.hideLoader();
+                  this.renderer
+                    .selectRootElement(this.btnCloseExpensePopup?.nativeElement)
+                    .click();
                   this._globalService.triggerGridReload(ApplicationModules.EXPENSE);
-        
-              }
-              else {
+
+                }
+                else {
                   this.loaderService.hideLoader();
                   this.toaster.showMessage('Some issue is in update the data.', 'error');
-                //this._globalService.openSnackBar('some issue is in update the data');
-                return;
-              }
-            });
-          }
-          else {
-            this._expenseService.addExpense(this.expenseDetailsForm.value).subscribe((result) => {
+                  //this._globalService.openSnackBar('some issue is in update the data');
+                  return;
+                }
+              },
+              error: (error: any) => {
+                this.loaderService.hideLoader();
+                this.toaster.showMessage(error?.message, 'error');
+              },
+            })
+        }
+        else {
+          this._expenseService.addExpense(this.expenseDetailsForm.value).subscribe({
+            next: (result: any) => {
               if (result) {
                 this.loaderService.hideLoader();
                 this.toaster.showMessage('Record Added Successfully.', 'success');
                 this.renderer
                   .selectRootElement(this.btnCloseExpensePopup?.nativeElement)
                   .click();
-                  this._globalService.triggerGridReload(ApplicationModules.EXPENSE);
-        
+                this._globalService.triggerGridReload(ApplicationModules.EXPENSE);
+              } else {
+                this.loaderService.hideLoader();
+                this.toaster.showMessage('Some issue is in adding the data.', 'error');
               }
-              else {
-                  this.loaderService.hideLoader();
-                  this.toaster.showMessage('Some issue is in adding the data.', 'error');
-                return;
-              }
-            });
-          }
-        } catch (error) {
-          //this._globalService.openSnackBar("Error in adding data : " + error);
-          this.toaster.showMessage('Erroooorrrr issue is in adding the data.', 'error');
+            },
+            error: (error: any) => {
+              this.toaster.showMessage(error?.message, 'error');
+              this.loaderService.hideLoader();
+            }
+          });
         }
+      } catch (error) {
+        alert('Inside catch block expense details line 263');
+        //this._globalService.openSnackBar("Error in adding data : " + error);
+        this.loaderService.hideLoader();
+        this.toaster.showMessage('Erroooorrrr issue is in adding the data.', 'error');
       }
     }
     else {
       //this._globalService.openSnackBar('Amount can not be blank or 0');
+      this.loaderService.hideLoader();
       return;
     }
   }

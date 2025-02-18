@@ -1,18 +1,16 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import flatpickr from 'flatpickr';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { ApplicationConstants, ApplicationModules, ApplicationTableConstants } from '../../../utils/application-constants';
+import { DateUtils } from '../../../utils/date-utils';
 import { ExpenseService } from '../../services/expense/expense.service';
 import { GlobalService } from '../../services/global/global.service';
-import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
-import { ExpenseDetailsComponent } from '../expense-details/expense-details.component';
-import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { LoaderService } from '../../services/loader/loader.service';
+import { ExpenseDetailsComponent } from '../expense-details/expense-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import { getDate } from 'date-fns';
+import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
+import { ToasterComponent } from '../shared/toaster/toaster.component';
 export interface Task {
   name: string;
   completed: boolean;
@@ -24,7 +22,7 @@ export interface Task {
   standalone:true,
   imports: [CommonModule, TabulatorGridComponent, ExpenseDetailsComponent, ConfirmationDialogComponent],
   templateUrl: './expense.component.html',
-  providers: [DatePipe],
+  providers: [DatePipe,DateUtils],
   styleUrls: ['./expense.component.scss']
 })
 
@@ -44,8 +42,7 @@ export class ExpenseComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  public dateFormat = ApplicationConstants.GLOBAL_DATE_FORMAT;
-  
+  latestDate:Date=new Date();
   index: number = 0;
   expenseDataSource!: any;
   filteredExpenseDataSource!: any;
@@ -53,8 +50,8 @@ export class ExpenseComponent implements OnInit {
   // @ViewChild(MatSort) sort!: MatSort;
   fromDate = new Date();
   toDate = new Date();
-  fromDt: any;
-  toDt: any;
+  formattedFromDate: any;
+  formattedToDate: any;
   sourceOrReason: string = '';
   SpecificSourceOrReason: string = '';
   minAmount: number = 0;
@@ -114,9 +111,11 @@ export class ExpenseComponent implements OnInit {
   ];
   expenseId: string='';
 
-  constructor(private expenseService: ExpenseService, private _httpClient: HttpClient,
-    private _globalService: GlobalService, private sanitizer: DomSanitizer,
-    public datePipe: DatePipe,    private loaderService: LoaderService,
+  constructor(private expenseService: ExpenseService, 
+    private _globalService: GlobalService, 
+    public datePipe: DatePipe,    
+    private loaderService: LoaderService,
+    private dateUtil: DateUtils
     
   ) {
     // this._httpClient.get(_globalService.getCommonListItems(constants.MODEOFTRANSACTION)).subscribe(res => {
@@ -125,7 +124,7 @@ export class ExpenseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.fromDate.setDate(this.toDate.getDate() - 62);
+    this.fromDate.setDate(this.toDate.getDate() - 60);
     // this.fromDt = this.datepipe.transform(this.fromDate, 'dd/MM/yyyy');
     // this.toDt = this.datepipe.transform(this.toDate, 'dd/MM/yyyy');
     this.getSourceOrReasonList();
@@ -196,7 +195,7 @@ export class ExpenseComponent implements OnInit {
     if (dateColumn) {
       return `<span>${this.datePipe.transform(
         dateColumn,
-        this.dateFormat
+        ApplicationConstants.GLOBAL_DATE_FORMAT
       )}</span>`;
     }
     const nullDate = '';
@@ -204,37 +203,52 @@ export class ExpenseComponent implements OnInit {
   }
 
 
-  formatDateToMMDDYYYY(date: Date): string {
-    const mm = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
-    const dd = ('0' + date.getDate()).slice(-2);
-    const yyyy = date.getFullYear();
-    return `${mm}/${dd}/${yyyy}`;
-  }
   ngAfterViewInit() {
+
     flatpickr('#fromDate', {
-      dateFormat: 'd/m/Y', // Adjust the date format as per your requirement
-      defaultDate: this.fromDate,
-      onChange: (selectedDates, dateStr, instance) => {
-        // this.fromDt = dateStr;
-        if(dateStr){
-          dateStr = this.datePipe.transform(Date.now(),this.dateFormat)??'';
-        }
+      dateFormat: 'd/m/Y',
+      // defaultDate: new Date(new Date().getTime() - 90 * 24 * 60 * 60 * 1000),
+      defaultDate: (() => {
+        let date = new Date(); // Get the current date
+        date.setDate(date.getDate() - 90); // Subtract 90 days
+        return date;
+      })(),
+      onChange: (selectedDates, dateStr) => {
+        // // this.fromDt = dateStr;
+        // if(dateStr){
+        //   dateStr = this.datePipe.transform(Date.now(),ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT)??'';
+        // }
         this.filterGridByFromDate(dateStr);
       }
+
     });
+    this.loaderService.hideLoader();
+
+    // flatpickr('#fromDate', {
+    //   dateFormat: 'd/m/Y', // Adjust the date format as per your requirement
+    //   defaultDate: this.fromDate,
+    //   onChange: (selectedDates, dateStr, instance) => {
+    //     // this.fromDt = dateStr;
+    //     if(dateStr){
+    //       dateStr = this.datePipe.transform(Date.now(),ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT)??'';
+    //     }
+    //     this.filterGridByFromDate(dateStr);
+    //   }
+    // });
 
     flatpickr('#toDate', {
       dateFormat: 'd/m/Y', // Adjust the date format as per your requirement
       defaultDate: this.toDate,
-      onChange: (selectedDates, dateStr, instance) => {
+      onChange: (selectedDates, dateStr) => {
         // this.toDt = dateStr;
-        if(dateStr){
-          dateStr = this.datePipe.transform(Date.now(),this.dateFormat)??'';
-        }
+        // if(dateStr){
+        //   dateStr = this.datePipe.transform(Date.now(),ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT)??'';
+        // }
         this.filterGridByToDate(dateStr);
       }
     });
   }
+  
   // getTotalCost() {
   //   return this.filteredDataSource.map((t: { debit: any; }) => t.debit).reduce((credit: any, value: any) => credit + value, 0);
   // }
@@ -257,9 +271,11 @@ export class ExpenseComponent implements OnInit {
   }
 
   LoadGrid() {
+    debugger;
     this.loaderService.showLoader();
-    this.fromDt = this.formatDateToMMDDYYYY(this.fromDate)
-    this.toDt = this.formatDateToMMDDYYYY(this.toDate)
+    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate)
+    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate)
+
     this.getExpenseList();
     if (this.searchInput) {
       this.searchInput.nativeElement.value = '';
@@ -273,10 +289,10 @@ export class ExpenseComponent implements OnInit {
   }
 
   getSourceOrReasonList() {
-    this.fromDt = this.formatDateToMMDDYYYY(this.fromDate)
-    this.toDt = this.formatDateToMMDDYYYY(this.toDate)
+    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate)
+    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate)
     this.expenseService.getSourceOrReasonList(
-      this.fromDt, this.toDt, this.sourceOrReason
+      this.fromDate.toString(), this.toDate.toString(), this.sourceOrReason
     ).subscribe(
       (res) => {
         this.sourceOrReasonList = res;
@@ -295,8 +311,18 @@ export class ExpenseComponent implements OnInit {
       const maxAmountCondition = this.maxAmount == 0 || (item.Debit !== 0 && Math.abs(item.Debit) <= this.maxAmount) || (item.Credit !== 0 && Math.abs(item.Credit) <= this.maxAmount);
       return searchText && minAmountCondition && maxAmountCondition;
     });
+  this.latestDate = this.getLatestExpenseDate();
+  console.log('this.latestDate : ',this.latestDate);
+  
   }
 
+  getLatestExpenseDate(): Date {
+    if (!this.filteredExpenseDataSource || this.filteredExpenseDataSource.length === 0) {
+      return new Date(); // Return null if no data is available
+    }
+    return this.filteredExpenseDataSource[0].ExpenseDate
+  }
+  
   // hideExpense(expenseId: number) {
   //   this.onTableDataChange(1);
   //   this.filteredDataSource = this.filteredDataSource.filter((item: any) => {
@@ -321,10 +347,17 @@ export class ExpenseComponent implements OnInit {
     this.filterColumns = this.expenseColumnConfig.filter((col) =>
       ['SourceOrReason','emailId'].includes(col.field ?? '')
     );
+    console.log('this.fromDt : ',this.formattedFromDate);
+    console.log('this.toDt : ',this.formattedToDate);
 
-    this.expenseService.getExpenseList(this.fromDt, this.toDt, this.SpecificSourceOrReason, 0, 0, this.modeOfTransaction).subscribe((res) => {
+    console.log('this.fromDate : ',this.fromDate);
+    console.log('this.toDate : ',this.toDate);
+
+    this.expenseService.getExpenseList(this.formattedFromDate, this.formattedToDate, this.SpecificSourceOrReason, 0, 0, this.modeOfTransaction).subscribe((res) => {
       this.expenseDataSource = res;
       this.filteredExpenseDataSource = res;
+    this.loaderService.hideLoader();
+
       console.log('this.filteredExpenseDataSource : ',this.filteredExpenseDataSource);
       
     },
@@ -362,7 +395,7 @@ export class ExpenseComponent implements OnInit {
     },
   );    
   }
-  addExpense(expense: any, item: any) {
+  addExpense(expense: any) {
     this.expenseService.addExpense(expense).subscribe((res) => {
       if (res) {
         this.LoadGrid();
@@ -371,28 +404,23 @@ export class ExpenseComponent implements OnInit {
     )
   }
 
-  expenseAdjustment(data: any) {
+  expenseAdjustment() {
   }
 
-  convertDDMMYYYYToDate(dateString: string): Date {
-    const [day, mon, year] = dateString.split('/').map(Number);
-    // Months are 0-based in JavaScript Date objects, so subtract 1 from month
-    return new Date(year, mon - 1, day);
-  }
 
   filterGridByFromDate(date: any) {
     console.log('fromDate : ', this.fromDate);
 
-    this.fromDate = this.convertDDMMYYYYToDate(date);;// this.datepipe.transform(data.value, 'MM-dd-yyyy');
+    this.fromDate = this.dateUtil.convertDDMMYYYYToDate(date);;// this.datepipe.transform(data.value, 'MM-dd-yyyy');
     console.log('fromDate : ', this.fromDate);
-    this.fromDt = this.formatDateToMMDDYYYY(this.fromDate);
+    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
     this.getSourceOrReasonList();
     this.LoadGrid();
   }
 
   filterGridByToDate(date: any) {
-    this.toDate = this.convertDDMMYYYYToDate(date);;// this.datepipe.transform(data.value, 'MM-dd-yyyy');
-    this.toDt = this.formatDateToMMDDYYYY(this.toDate);
+    this.toDate = this.dateUtil.convertDDMMYYYYToDate(date);;// this.datepipe.transform(data.value, 'MM-dd-yyyy');
+    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
     this.getSourceOrReasonList();
     this.LoadGrid();
   }

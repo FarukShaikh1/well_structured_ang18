@@ -25,29 +25,14 @@ export class LoginComponent {
   }
   loginForm: FormGroup;
 
-  userList: any;// {id:number,userName:string,password:string};
+  userList: any;// {id:number,email:string,password:string};
   constructor(private fb: FormBuilder, private router: Router, private userService: UserServiceService,
     private http: HttpClient, private _globalService: GlobalService) {
     localStorage.setItem("currentUser", "false")
     this.loginForm = this.fb.group(
       {
-        userId: -10000,
-        personId: -10000,
-        username: '',
-        lastName: '',
-        firstName: '',
+        email: '',
         password: '',
-        emailAddress: '',
-        mobileNumber: '',
-        emailAddr: '',
-        isLocked: false,
-        roleId: 0,
-        returnErrorMsg: '',
-        msg: '',
-        passwordLastChangeDate: null,
-        isActive: false,
-        assetId: 0
-
       }
     )
   }
@@ -55,8 +40,8 @@ export class LoginComponent {
 
   data: any;
   submitLogin() {
-    if (this.loginForm.value["username"] != null && this.loginForm.value["username"].length <= 0) {
-      //this._globalService.openSnackBar("Username should not be blank")
+    if (this.loginForm.value["email"] != null && this.loginForm.value["email"].length <= 0) {
+      //this._globalService.openSnackBar("email should not be blank")
       return;
     }
     if (this.loginForm.value["password"].length <= 0) {
@@ -69,15 +54,15 @@ export class LoginComponent {
         if (this.data.length <= 0) {
           //this._globalService.openSnackBar("Invalid credentials, Please check the details correctly.");
           // localStorage.setItem("currentUser", "false");
-          // localStorage.setItem("userName","")
+          // localStorage.setItem("email","")
           // localStorage.setItem("userId","")
           localStorage.clear();
           return;
         }
 
-        if (this.data[0] != null && this.data[0].UserName != null && this.data[0].UserName.length > 0) {
+        if (this.data[0] != null && this.data[0].email != null && this.data[0].email.length > 0) {
           localStorage.setItem("currentUser", "true")
-          localStorage.setItem("userName", this.data[0].UserName)
+          localStorage.setItem("email", this.data[0].email)
           localStorage.setItem("userId", this.data[0].UserId)
           //this._globalService.openSnackBar("Log in successfully")
           this.reload();

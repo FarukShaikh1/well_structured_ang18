@@ -25,7 +25,8 @@ export const ApplicationConstants = {
     SYSTEM_NOTIFICATION_FETCHING_FREQUENCY: 30000, // 30 second
     NUMBER_OF_TOP_SYSTEM_NOTIFICATIONS_TO_SHOW: 5,
 
-    GLOBAL_DATE_FORMAT: 'dd-MMM-yyyy', // 02 Dec 2024
+    GLOBAL_NUMERIC_DATE_FORMAT: 'dd/MM/yyyy', // 22/12/2024
+    GLOBAL_DATE_FORMAT: 'dd-MMM-yyyy', // 22-Dec-2024
     GLOBAL_DATE_TIME_FORMAT_WITH_MINUTES: 'dd-MMM-yyyy HH:mm', // 02-Dec-2024 13:59
     GLOBAL_DATE_TIME_FORMAT: 'dd-MMM-yyyy HH:mm:ss', // 02 Dec 2024 13:59:59
 
@@ -265,7 +266,7 @@ export const Messages = {
 };
 
 export const ApplicationModules = {
-    PROGRAM: 'Programs',
+    EXPENSE: 'Expense',
     USER: 'AUTH',
     PROJECT: 'Project',
     REPORT: 'Project',

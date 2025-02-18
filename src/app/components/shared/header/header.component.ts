@@ -14,7 +14,6 @@ import { LogoutService } from '../../../services/logout/logout.service';
 // import { SignalRService } from '../../../services/signal-r/signal-r.service';
 import { formatDistanceToNow } from 'date-fns';
 import { SystemNotifications } from '../../../interfaces/system-notifications';
-import { NotificationSignalRService } from '../../../services/notification-signal-r/notification-signal-r.service';
 import { NotificationService } from '../../../services/notification/notification.service';
 import {
   NavigationURLs,
@@ -63,7 +62,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     // private signalRService: SignalRService,
     private logoutService: LogoutService,
     private notificationService: NotificationService,
-    private signalRService: NotificationSignalRService
   ) {
     this.globalService.getReloadObservable().subscribe(() => {
       this.alreadyLoggedIn = localStorageService.isAuthenticated();
@@ -77,31 +75,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.loggedInUsername = '';
     // Unsubscribe SignalR
-    this.signalRService.closeConnection();
   }
 
   ngOnInit(): void {
     this.setLoginDisplay();
     this.alreadyLoggedIn = this.localStorageService.isAuthenticated();
-
-    this.signalRService.NotificationReceived$.subscribe((message) => {
-      console.log('Inside this.signalRService.NotificationReceived$.subscribe');
-
-      if (message) {
-        this.fetchAllSystemNotifications();
-      }
-    });
-
-    this.fetchAllSystemNotifications();
-
-    // Schedule notification fetching
-    // this.notificationsSubscription = interval(ApplicationConstants.SYSTEM_NOTIFICATION_FETCHING_FREQUENCY).subscribe(() => {
-    //   this.fetchAllSystemNotifications();
-    // });
-
-    // this.signalRService.unreadMessageCount$.subscribe((count: number) => {
-    //   this.notificationsCount = count;
-    // });
   }
 
   setLoginDisplay() {

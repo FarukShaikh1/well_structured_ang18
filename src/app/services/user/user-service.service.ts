@@ -3,6 +3,7 @@ import * as constants from '../../../utils/constants';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environmentDev } from '../../../environments/environment.dev';
+import { UserLoginRequest } from '../../interfaces/user-login-request';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,9 @@ export class UserServiceService {
     this.loggedInUserId = Number(localStorage.getItem("userId"));
   }
 
-  getUser(userLoginRequest: any) {
-    return this.http.get(this.baseUrl + constants.USERURL + 'getUser?username=' + userLoginRequest.username + '&password=' + userLoginRequest.password);
+  getUser(userLoginRequest: UserLoginRequest) {
+    debugger
+    return this.http.post(this.baseUrl + constants.USERURL + 'getUser',userLoginRequest);
   }
 
   updateUserDetails(userDetailsForm: any): Observable<any> {
