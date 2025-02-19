@@ -913,6 +913,9 @@ input {
   /* width: 600px; */
 }
 
+.txt-btn{
+  background-color: rgba(0, 0, 0, 0);
+}
 .btn-link {
   color: #FF7A00;
   text-decoration: none;

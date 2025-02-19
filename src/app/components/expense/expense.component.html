@@ -10,7 +10,7 @@
         Expense Adjustment
     </button>
     <div class="row pb-2">
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
+        <div class="col-6 col-sm-4  col-lg col-xl">
             <!-- From Date: <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate"
                 placeholder="DD/MM/YYYY" [value]="fromDt" /> -->
 
@@ -18,21 +18,21 @@
             From Date: <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate"
                 placeholder="DD/MM/YYYY" />
         </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
+        <div class="col-6 col-sm-4  col-lg col-xl">
             To Date: <input class="form-control form-control-lg text-dark bg-transparent" type="Date" id="toDate"
                 placeholder="DD/MM/YYYY" />
         </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
+        <div class="col-6 col-sm-4  col-lg col-xl">
             Min Amount <input class="form-control form-control-lg text-dark bg-transparent" type="text"
                 placeholder="Min Amount" aria-label="Min Amount" #minInput (input)="filterGridByMinAmount($event)"
                 (keydown)="validateAmount($event)">
         </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
+        <div class="col-6 col-sm-4  col-lg col-xl">
             Max Amount <input class="form-control form-control-lg text-dark bg-transparent" type="text"
                 placeholder="Max Amount" aria-label="Max Amount" #maxInput (input)="filterGridByMaxAmount($event)"
                 (keydown)="validateAmount($event)">
         </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
+        <div class="col-6 col-sm-4  col-lg col-xl">
             Source/Reason <input class="form-control form-control-lg text-dark bg-transparent" type="text"
                 placeholder="Search Something" aria-label="Search Something" #searchInput
                 (keyup)="filterGridBySearch($event);onSourceOrReasonChange($event)">
@@ -42,13 +42,6 @@
                     {{option.Name}}
                 </option> -->
             </div>
-        </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
-            Mode of transaction
-            <select class="form-control form-control-lg  bg-transparent" (selectionChange)="filterGridByMode($event)">
-                <option *ngFor="let item of modeOfTransactionList" [value]="item.ListItemName">{{item.ListItemName}}
-                </option>
-            </select>
         </div>
 
     </div>
