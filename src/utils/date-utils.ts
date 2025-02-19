@@ -176,6 +176,11 @@ static formatDateToDateTime(inputDate: string): string {
 }
 
 convertDDMMYYYYToDate(dateString: string): Date {
+  if(dateString==""){
+    dateString = this.formatDateToMMDDYYYY(new Date)
+    const [mon, day, year] = dateString.split('/').map(Number);
+    return new Date(year, mon - 1, day);
+    }
   const [day, mon, year] = dateString.split('/').map(Number);
   // Months are 0-based in JavaScript Date objects, so subtract 1 from month
   return new Date(year, mon - 1, day);

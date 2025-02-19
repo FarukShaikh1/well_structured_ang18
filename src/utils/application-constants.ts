@@ -71,27 +71,27 @@ export const NavigationURLs = {
     ROLE_MODULE_MAPPING: '/home/role-module-mapping',
     PROGRAMS: '/home/program',
     HOME: '/home',
-    HOME_CLIENTS: '/home/clients',
+    DAY_LIST: '/home/day',
     HOME_PROJECTS: '/home/projects',
     FORGOT_PASSWORD: '/forgot-password',
-    USER_LIST: '/home/user',
+    USER_LIST: '/home/manage-users',
     USER_PROFILE: '/home/user-profile',
     CHANGE_PASSWORD: '/home/change-password',
     NAV_CHAT_PANEL: '/home/nav-chat-panel',
-    CLIENT_LIST: '/home/clients/client',
-    ACTIVE_PROJECT_LIST: '/home/clients/projects/project',
+    EXPENSE_LIST: '/home/expense',
+    ACTIVE_PROJECT_LIST: '/home/expenses/projects/project',
     PROJECT_LIST: '/home/projects/project',
     INTERNAL_PROJECT_LIST: '/home/internalproject',
-    ACTIVE_INTERNAL_PROJECT_LIST: '/home/clients/projects/internalproject',
-    REPORT_LIST: '/home/clients/reports',
-    SAMPLE_FORM_LIST: '/home/clients/projects/forms',
-    SAMPLE_SUBMISSION_FORM: '/home/clients/projects/form-home',
+    ACTIVE_INTERNAL_PROJECT_LIST: '/home/expenses/projects/internalproject',
+    REPORT_LIST: '/home/expenses/reports',
+    SAMPLE_FORM_LIST: '/home/expenses/projects/forms',
+    SAMPLE_SUBMISSION_FORM: '/home/expenses/projects/form-home',
     SAMPLE_SUBMISSION_FORM_STEPS: '/home/sample-submission',
-    DOCUMENT_LIST: '/home/clients/projects/document',
-    TESTING_AND_RESULTS: '/home/clients/projects/testing-and-results',
-    PROJECT_USER: '/home/clients/projects/project-user',
+    DOCUMENT_LIST: '/home/expenses/projects/document',
+    TESTING_AND_RESULTS: '/home/expenses/projects/testing-and-results',
+    PROJECT_USER: '/home/expenses/projects/project-user',
     ALL_NOTIFICATIONS: '/home/notifications',
-    REPORT: '/home/clients/projects/report'
+    REPORT: '/home/expenses/projects/report'
 };
 
 export const SampleSubmissionFormNotes = {
@@ -101,7 +101,7 @@ export const SampleSubmissionFormNotes = {
     SECTION_B_INFECTIOUS_AGENTS_YES: 'Please Provide All Applicable Testing Results. If None are Available. Please Contact CBM Prior To Sending Samples.',
     SECTION_C_TEMPLATE_TO_BE_RETURNED: 'Extra charges may apply – please provide your courier acc. # for returns.',
     SECTION_C_RETURN_SHIPPING_CONTAINER: 'Extra charges may apply – please provide your courier acc. # for returns.',
-    SECTION_D_CLIENT_SAMPLE_ID: 'Will Appear on the Testing Certificate as entered.',
+    SECTION_D_EXPENSE_SAMPLE_ID: 'Will Appear on the Testing Certificate as entered.',
     SECTION_D_SAMPLE_DESCRIPTION: 'Will Appear on the Testing Certificate as entered.',
     SECTION_D_SAMPLE_LOT_NO: 'Will Appear on the Testing Certificate as entered.',
     SECTION_E_I_AGREE_PRE_CONTENTS: 'This Sample Submission Form Must Accompany Each Submitted Sample And Acts As An Official Record For The Testing Services Being Performed By SK pharmteco With Respect To The Sample Or Samples Listed Herein. Failure To Provide Timely And Complete Information Could Result In Testing Delays Or Other Issues, For Which SK pharmteco Shall Not Be Liable. Services Requested In This Form Shall Be Governed In Accordance With SK pharmteco’s Terms And Conditions. To The Extent SK pharmteco’s Terms And Conditions Are In Conflict With An Applicable Agreement (Agreement) Between Customer Listed In This Form And SK pharmteco, Such Agreement Will Govern.'
@@ -119,10 +119,10 @@ export const Messages = {
     ERROR_IN_FETCHING_USER_PROFILE: 'Error in fetching user profile.',
     CUSTOMERS_FETCHED_SUCCESS: 'customers fetched successfully.',
     ERROR_IN_FETCH_CUSTOMER: 'Error in fetching customers.',
-    CLIENTS_FETCHED_SUCCESS: 'Clients fetched successfully.',
-    CLIENT_ADDED_SUCCESS: 'Client details added successfully.',
-    CLIENT_UPDATED_SUCCESS: 'Client details updated successfully.',
-    ERROR_IN_FETCH_CLIENT: 'Unable to load client data. Please try again later.',
+    EXPENSES_FETCHED_SUCCESS: 'EXPENSES fetched successfully.',
+    EXPENSE_ADDED_SUCCESS: 'Expense details added successfully.',
+    EXPENSE_UPDATED_SUCCESS: 'Expense details updated successfully.',
+    ERROR_IN_FETCH_EXPENSE: 'Unable to load expense data. Please try again later.',
     ERROR_IN_FETCH_ROLE_MODULE_MAPPINGS: 'Error fetching role-module-mappings',
 
     ERROR_IN_FETCH_PROGRAM: 'Error fetching programs',
@@ -161,15 +161,15 @@ export const Messages = {
     PASSWORD_CREATION_FAILED :'Password creation failed.',
     PASSWORD_RESET_FAILED :'Password reset failed.',
 
-    CLIENT_NAME_VALIDATION_MSG: 'Name should contain only alphabetic characters.',
-    ERROR_IN_FETCH_CLIENT_DATA: 'Error fetching client data',
+    EXPENSE_NAME_VALIDATION_MSG: 'Name should contain only alphabetic characters.',
+    ERROR_IN_FETCH_EXPENSE_DATA: 'Error fetching expense data',
     LOCATION_VALIDATION_MSG: 'Please enter a valid location.',
     UNABLE_TO_LOAD_THE_DATA: 'Unable to load the data. Please try again later.',
 
     NAME_VALIDATION_MSG:
         'Name can only contain alphabetic characters, underscores (_), hyphens (-), and spaces.',
 
-    UNABLE_TO_LOAD_CLIENTS: 'Unable to load client list',
+    UNABLE_TO_LOAD_EXPENSES: 'Unable to load expense list',
 
     PROJECTS_FETCHED_SUCCESS: 'Projects fetched successfully.',
     PROJECT_ADDED_SUCCESS: 'Project details added successfully.',
@@ -215,7 +215,7 @@ export const Messages = {
     ERROR_IN_FETCH_REPORT_DATA: 'Error fetching report data',
     ERROR_IN_LOAD_REPORTS: 'Unable to load report list',
     UNIQUE_NAME_VALIDATION_MSG:
-        'This Client Name already exists. Please enter a unique name.',
+        'This Expense Name already exists. Please enter a unique name.',
     ERROR_IN_LOAD_LIMS_DATA:
         'Unable to load data. Please try again or contact support.',
 
@@ -259,7 +259,7 @@ export const Messages = {
     LIMS_ID_ADDED_SUCCESSFULLY: 'LIMS Project ID added successfully.',
     LIMS_ID_UPDATED_SUCCESSFULLY: 'LIMS Project ID updated successfully.',
     INVALID_LIMS_ID: 'Invalid LIMS Project ID.',
-    USER_CLIENT_ASSOCIATION_EXISTS: 'Can\'t add the client representative, as the client representative is added to the other client.',
+    USER_EXPENSE_ASSOCIATION_EXISTS: 'Can\'t add the expense representative, as the expense representative is added to the other expense.',
     
     SAVE_AS_DRAFT_CONFIRMATION_MSG: 'Are you sure you want to save this as a draft and close on this step?',
     DEACTIVATE_USER_BY_ADMIN: 'This user cannot be added as they have been deactivated by the Platform Admin.',
@@ -272,7 +272,6 @@ export const ApplicationModules = {
     REPORT: 'Project',
     DOCUMENT: 'Documents',
     CUSTOMER: 'Customers',
-    CLIENT: 'Clients',
     ROLE_MODULE_MAPPING: 'RoleModuleMapping',
     FEEDBACK: 'Feedback',
     SAMPLE_SUBMISSION_FORM: 'SampleSubmissionForm',
@@ -294,7 +293,6 @@ export const ApplicationRoles = {
     Project_Manager: 'Project Manager',
     Finance_User: 'Finance User',
     Sample_Management_User: 'Sample Management User',
-    Client_Representative: 'Client Representative',
     Internal_PD: 'Internal PD',
-    External_Client: 'External Client'
+    External_Expense: 'External Expense'
 };

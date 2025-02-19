@@ -10,9 +10,9 @@
     export const environmentDev = {
         production: false,
         // serverUrl: 'https://localhost:44343',
-       serverUrl:  'https://localhost:7069/api/',
+       serverUrl:  'https://localhost:7069/',
       //  serverUrl:  'http://localhoskt:82/api/',
-    apiPrefix: '',
+    apiPrefix: 'api',
         msalConfig: {
           auth: {
             clientId: 'e752795e-c2ae-44b5-b128-668abedd461d',

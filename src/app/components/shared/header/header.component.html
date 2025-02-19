@@ -1,17 +1,29 @@
 <header class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm">
-  <div class="d-flex align-items-center flex-shrink-0">
+  <div class="banner-text d-flex align-items-center flex-shrink-0">
     <!-- <img src="../../../../CurrencyCollector.png" alt="Project Logo"
       class="logo me-2 img-fluid d-none d-sm-block" /> -->
+      Hello {{ loggedInUserName }}!
   </div>
   <div class="d-flex align-items-center flex-grow-1 justify-content-end">
     <div class="d-flex align-items-center position-relative me-3 flex-shrink-0">
-      <button (click)="redirectToHome()" class="font-weight-bold text-decoration-none p-2" [ngClass]="{
+      <button (click)="navigateToExpenseList()" class="font-weight-bold text-decoration-none p-2" [ngClass]="{
           'active-link':
-            isActiveMenu(NavigationURLs.HOME_CLIENTS) ||
-            isActiveMenu(NavigationURLs.PROJECT_LIST)
+            isActiveMenu(NavigationURLs.EXPENSE_LIST)
         }">
-        Home
-      </button>
+        Expense
+      </button>&nbsp;
+      <button (click)="navigateToDayList()" class="font-weight-bold text-decoration-none p-2" [ngClass]="{
+        'active-link':
+          isActiveMenu(NavigationURLs.DAY_LIST)
+      }">
+      Day
+    </button>&nbsp;
+    <button (click)="navigateToUserList()" class="font-weight-bold text-decoration-none p-2" [ngClass]="{
+      'active-link':
+        isActiveMenu(NavigationURLs.USER_LIST)
+    }">
+    User
+  </button>
 
       <!-- @if(globalService.isAccessible(Modules.CUSTOMER, Module_Actions.VIEW)) {
       <button
@@ -47,13 +59,6 @@
         Programs
       </button>
       } -->
-      @if(globalService.isAccessible(Modules.USER, Module_Actions.VIEW)) {
-      <button (click)="userList()" class="font-weight-bold text-decoration-none p-2"
-        [ngClass]="{ 'active-link': isActiveMenu(NavigationURLs.USER_LIST) }">
-        Users
-      </button>
-      }
-
       <!-- @if(isUserAuthorized()) {
       <button
         (click)="chatSystem()"

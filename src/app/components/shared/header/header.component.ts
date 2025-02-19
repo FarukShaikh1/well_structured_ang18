@@ -149,11 +149,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([NavigationURLs.CUSTOMER_LIST]);
   }
 
-  redirectToHome() {
-    this.router.navigate([NavigationURLs.HOME]);
+  navigateToExpenseList() {
+    this.router.navigate([NavigationURLs.EXPENSE_LIST]);
   }
 
-  userList() {
+  navigateToDayList() {
+    this.router.navigate([NavigationURLs.DAY_LIST]);
+  }
+
+  navigateToUserList() {
     this.router.navigate([NavigationURLs.USER_LIST]);
   }
 

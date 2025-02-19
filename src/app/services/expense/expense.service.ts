@@ -90,7 +90,12 @@ export class ExpenseService {
       .set('toDate', toDt)
       .set('searchText', searchText)
     return this.http.get(API_URL.GET_SOURCES_REASONS_LIST, { params: params });//?expenseId=' + expenseId + '&userId=' + Number(localStorage.getItem("userId")));
+  }
 
+  getExpenseSuggestionList(): Observable<any> {
+    const params = new HttpParams()
+      .set('userid', this.loggedInUserId)
+    return this.http.get(API_URL.GET_EXPENSE_SUGGESTION_LIST, { params: params });//?expenseId=' + expenseId + '&userId=' + Number(localStorage.getItem("userId")));
   }
 
   getAvailAmount(onDate: string = '', accountType: string = ''): Observable<any> {

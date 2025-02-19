@@ -59,11 +59,6 @@ export class UserDetailsComponent implements OnInit {
   ngOnInit() {
     this.isEditMode = false;
     this.initForm();
-
-    // Listen to changes in the role field
-    this.userForm.get('role')?.valueChanges.subscribe((selectedRole) => {
-      this.toggleClientAndPhoneFields(selectedRole);
-    });
   }
 
   initForm() {
@@ -90,21 +85,6 @@ export class UserDetailsComponent implements OnInit {
     });
   }
 
-  toggleClientAndPhoneFields(selectedRoleId: string) {
-    const matchedRole = this.roleList?.find(
-      (rol: { name: string }) =>
-        rol.name?.toUpperCase() ===
-        ApplicationRoles.Client_Representative.toUpperCase()
-    );
-    if (this.isGuid(selectedRoleId)) {
-      if (selectedRoleId === matchedRole?.id) {
-        this.setClientIdAsRequired();
-      } else {
-        this.setClientIdAsNonRequired();
-      }
-    }
-  }
-
   isGuid(value: string) {
     const guidPattern =
       /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -117,11 +97,6 @@ export class UserDetailsComponent implements OnInit {
     this.enteredEmailId = '';
     this.getRoleList();
     this.initForm();
-
-    // Listen to changes in the role field
-    this.userForm.get('role')?.valueChanges.subscribe((selectedRole) => {
-      this.toggleClientAndPhoneFields(selectedRole);
-    });
 
     this.existingUserRole = '';
     this.setClientIdAsNonRequired();
@@ -238,12 +213,6 @@ export class UserDetailsComponent implements OnInit {
           role: result.data?.role,
           clientID: result.data?.clientID,
         });
-        if (
-          this.existingUserRole?.toUpperCase() ===
-          ApplicationRoles.Client_Representative.toUpperCase()
-        ) {
-          this.setClientIdAsRequired();
-        }
         this.loaderService.hideLoader();
       },
       error: (error : any) => {
@@ -276,14 +245,6 @@ export class UserDetailsComponent implements OnInit {
             clientID: result.data?.clientID,
           });
           this.existingUserRole = result.data?.role;
-          if (
-            this.existingUserRole?.toUpperCase() ===
-            ApplicationRoles.Client_Representative.toUpperCase()
-          ) {
-            this.setClientIdAsRequired();
-          } else {
-            this.setClientIdAsNonRequired();
-          }
           this.emailAlreadyExists = true;
           this.existingUserRole = result.data?.role;
           this.userForm.get('username')?.disable();

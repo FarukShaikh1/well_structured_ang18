@@ -9,20 +9,20 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import {
+  ApplicationConstants,
+  ApplicationRoles,
+  Messages,
+  NavigationURLs,
+} from '../../../utils/application-constants';
 import { ChangePassword } from '../../interfaces/change-password';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import { LogoutService } from '../../services/logout/logout.service';
 import { UserService } from '../../services/user/user.service';
-import {
-  Messages,
-  NavigationURLs,
-  ApplicationConstants,
-  ApplicationRoles,
-} from '../../../utils/application-constants';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { LogoutService } from '../../services/logout/logout.service';
 
 @Component({
   selector: 'app-change-password',
@@ -53,21 +53,16 @@ export class ChangePasswordComponent implements OnInit {
     public globalService: GlobalService,
     private localStorageService: LocalStorageService,
     private logoutService: LogoutService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loaderService.showLoader();
     this.hasPasswordExpired = this.localStorageService.getLoggedInUserData()?.hasPasswordExpired;
 
-    if (this.globalService.isPermitted([ApplicationRoles.Client_Representative])) {
-      this.userId = this.localStorageService.getLoggedInUserData().userId;
-      this.userFullName =
-        this.localStorageService.getLoggedInUserData().username;
-    } else {
-      this.userId = '';
-      this.loaderService.hideLoader();
-      this.router.navigate([NavigationURLs.ERROR_PAGE]);
-    }
+    this.userId = this.localStorageService.getLoggedInUserData().userId;
+    this.userFullName =
+      this.localStorageService.getLoggedInUserData().username;
+    this.loaderService.hideLoader();
 
     this.changePasswordForm = this.fb.group(
       {
@@ -182,7 +177,7 @@ export class ChangePasswordComponent implements OnInit {
       this.userService.changePassword(payload).subscribe({
         next: (response) => {
           if (response.success) {
-            this.toaster.showMessage(response?.message +' Please relogin with the new password.', 'success', 5000);
+            this.toaster.showMessage(response?.message + ' Please relogin with the new password.', 'success', 5000);
             setTimeout(() => {
               this.loaderService.hideLoader();
               this.logout();
@@ -197,7 +192,7 @@ export class ChangePasswordComponent implements OnInit {
             this.loaderService.hideLoader();
           }
         },
-        error: (error:any) => {
+        error: (error: any) => {
           this.processing = false;
           if (error?.error?.errors?.ConfirmPassword) {
             this.toaster.showMessage(

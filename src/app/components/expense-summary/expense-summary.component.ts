@@ -98,34 +98,34 @@ export class ExpenseSummaryComponent implements OnInit {
     this.expenseColumnConfig = [
       {
         title: 'Expense Date',
-        field: 'ExpenseDate',
+        field: 'expenseDate',
         sorter: 'alphanum',
         formatter: this.uploadedDateFormatter.bind(this),
       },
       {
         title: 'Source/Reason',
-        field: 'SourceOrReason',
+        field: 'sourceOrReason',
         sorter: 'alphanum',
       },
       {
         title: 'Description',
-        field: 'Description',
+        field: 'description',
         sorter: 'alphanum',
         width:400,
       },
       {
         title: 'ModeOfTransaction',
-        field: 'ModeOfTransaction',
+        field: 'modeOfTransaction',
         sorter: 'alphanum',
       },
       {
         title: 'Debit',
-        field: 'Debit',
+        field: 'debit',
         sorter: 'alphanum',
       },
       {
         title: 'Credit',
-        field: 'Credit',
+        field: 'credit',
         sorter: 'alphanum',
       },
     ];
@@ -135,63 +135,63 @@ export class ExpenseSummaryComponent implements OnInit {
     this.summaryColumnConfig = [
       {
         title: 'Expense Date',
-        field: 'ExpenseDate',
+        field: 'expenseDate',
         sorter: 'alphanum',
         formatter: this.uploadedDateFormatter.bind(this),
       },
       {
         title: 'Source/Reason',
-        field: 'SourceOrReason',
+        field: 'sourceOrReason',
         sorter: 'alphanum',
       },
       {
         title: 'SBI Account',
-        field: 'SbiAccount',
+        field: 'sbiAccount',
         sorter: 'alphanum',
       },
       {
         title: 'CBI Account',
-        field: 'CbiAccount',
+        field: 'cbiAccount',
         sorter: 'alphanum',
       },
       {
         title: 'Cash Account',
-        field: 'Cash',
+        field: 'cash',
         sorter: 'alphanum',
       },
       {
         title: 'Other Account',
-        field: 'Other',
+        field: 'other',
         sorter: 'alphanum',
       },
       {
         title: 'Total',
-        field: 'Total',
+        field: 'total',
         sorter: 'alphanum',
       },
       {
         title: 'SbiBalance',
-        field: 'SbiBalance',
+        field: 'sbiBalance',
         sorter: 'alphanum',
       },
       {
         title: 'CashBalance',
-        field: 'CashBalance',
+        field: 'cashBalance',
         sorter: 'alphanum',
       },
       {
         title: 'CbiBalance',
-        field: 'CbiBalance',
+        field: 'cbiBalance',
         sorter: 'alphanum',
       },
       {
         title: 'OtherBalance',
-        field: 'OtherBalance',
+        field: 'otherBalance',
         sorter: 'alphanum',
       },
       {
         title: 'TotalAvailable',
-        field: 'TotalAvailable',
+        field: 'totalAvailable',
         sorter: 'alphanum',
       },
       {

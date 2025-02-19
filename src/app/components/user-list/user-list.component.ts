@@ -61,7 +61,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.columnConfig = [
       {
         title: 'Name',
-        field: 'userName',
+        field: 'firstName',
         sorter: 'string',
         formatter: this.nameFormatter.bind(this),
         titleFormatter(_cell, _formatterParams, onRendered) {
@@ -73,13 +73,13 @@ export class UserListComponent implements OnInit, AfterViewInit {
         `;
         },
       },
-      { title: 'Email', field: 'email', sorter: 'string' },
-      { title: 'Role', field: 'role', sorter: 'string' },
+      { title: 'Email', field: 'emailAddress', sorter: 'string' },
+      { title: 'Role', field: 'roleName', sorter: 'string' },
       {
         title: 'Status',
-        field: 'isDeactivated',
+        field: 'isLocked',
         sorter: 'string',
-        formatter: this.statusFormatter.bind(this),
+        formatter: this.isLockedFormatter.bind(this),
       },
       {
         title: '',
@@ -195,6 +195,16 @@ export class UserListComponent implements OnInit, AfterViewInit {
     if (statusValue) {
       this.columnConfig[4].visible = false;
       return '<span style="color:gray">Inactive</span>';
+    } else {
+      return '<span style="color:#ff7a00">Active</span>';
+    }
+  }
+
+  isLockedFormatter(cell: CellComponent) {
+    const statusValue = cell.getValue();
+    if (statusValue) {
+      this.columnConfig[4].visible = false;
+      return '<span style="color:gray">Locked</span>';
     } else {
       return '<span style="color:#ff7a00">Active</span>';
     }

@@ -148,7 +148,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         columns: this.columnConfig,
         layout: 'fitColumns',
         responsiveLayout: 'collapse',
-        height: '430',
+        height: '530',
         maxHeight: '100%',
 
         pagination: true, // Enable pagination

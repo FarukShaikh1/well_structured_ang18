@@ -42,7 +42,7 @@ export class ExpenseComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  latestDate: Date = new Date();
+  lastExpenseDate: Date = new Date();
   index: number = 0;
   expenseDataSource!: any;
   filteredExpenseDataSource!: any;
@@ -88,7 +88,7 @@ export class ExpenseComponent implements OnInit {
                   `,
       action: (_e: any, cell: CellComponent) => {
         const expenseData = cell.getRow().getData();
-        const expenseId = expenseData['ExpenseId'];
+        const expenseId = expenseData['expenseId'];
         this.expenseDetails(expenseId);
       },
     },
@@ -104,7 +104,7 @@ export class ExpenseComponent implements OnInit {
                   `,
       action: (_e: any, cell: CellComponent) => {
         const expenseData = cell.getRow().getData();
-        const expenseId = expenseData['ExpenseId'];
+        const expenseId = expenseData['expenseId'];
         this.deleteExpense(expenseId);
       },
     },
@@ -218,6 +218,16 @@ export class ExpenseComponent implements OnInit {
         // if(dateStr){
         //   dateStr = this.datePipe.transform(Date.now(),ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT)??'';
         // }
+        if (!dateStr) {
+          const today = new Date();
+          today.setDate(today.getDate() - 60); // Subtract 60 days
+
+          const dd = ('0' + today.getDate()).slice(-2);
+          const mm = ('0' + (today.getMonth() + 1)).slice(-2); // Months are zero-based
+          const yyyy = today.getFullYear();
+
+          dateStr = `${dd}/${mm}/${yyyy}`; // Format as "DD/MM/YYYY"
+        }
         this.filterGridByFromDate(dateStr);
       }
 
@@ -255,13 +265,13 @@ export class ExpenseComponent implements OnInit {
 
   // getTotalDebit(): number {
   //   if (this.filteredDataSource)
-  //     return this.filteredDataSource.reduce((total: any, item: any) => total + (item.Debit || 0), 0);
+  //     return this.filteredDataSource.reduce((total: any, item: any) => total + (item.debit || 0), 0);
   //   else return 0;
   // }
 
   // getTotalCredit(): number {
   //   if (this.filteredDataSource)
-  //     return this.filteredDataSource.reduce((total: any, item: any) => total + (item.Credit || 0), 0);
+  //     return this.filteredDataSource.reduce((total: any, item: any) => total + (item.credit || 0), 0);
   //   else return 0;
   // }
 
@@ -305,13 +315,12 @@ export class ExpenseComponent implements OnInit {
       this.getExpenseList();
     }
     this.filteredExpenseDataSource = this.expenseDataSource.filter((item: any) => {
-      const searchText = item.SourceOrReason.toLowerCase().includes(this.sourceOrReason) || item.Description.toLowerCase().includes(this.sourceOrReason);
-      const minAmountCondition = this.minAmount == 0 || (item.Debit !== 0 && Math.abs(item.Debit) >= this.minAmount) || (item.Credit !== 0 && Math.abs(item.Credit) >= this.minAmount);
-      const maxAmountCondition = this.maxAmount == 0 || (item.Debit !== 0 && Math.abs(item.Debit) <= this.maxAmount) || (item.Credit !== 0 && Math.abs(item.Credit) <= this.maxAmount);
+      const searchText = item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) || item.description.toLowerCase().includes(this.sourceOrReason);
+      const minAmountCondition = this.minAmount == 0 || (item.debit !== 0 && Math.abs(item.debit) >= this.minAmount) || (item.credit !== 0 && Math.abs(item.credit) >= this.minAmount);
+      const maxAmountCondition = this.maxAmount == 0 || (item.debit !== 0 && Math.abs(item.debit) <= this.maxAmount) || (item.credit !== 0 && Math.abs(item.credit) <= this.maxAmount);
       return searchText && minAmountCondition && maxAmountCondition;
     });
-    this.latestDate = this.getLatestExpenseDate();
-    console.log('this.latestDate : ', this.latestDate);
+    console.log('this.lastExpenseDate : ', this.lastExpenseDate);
 
   }
 
@@ -319,17 +328,17 @@ export class ExpenseComponent implements OnInit {
     if (!this.filteredExpenseDataSource || this.filteredExpenseDataSource.length === 0) {
       return new Date(); // Return null if no data is available
     }
-    return this.filteredExpenseDataSource[0].ExpenseDate
+    return this.filteredExpenseDataSource[0].expenseDate
   }
 
   // hideExpense(expenseId: number) {
   //   this.onTableDataChange(1);
   //   this.filteredDataSource = this.filteredDataSource.filter((item: any) => {
-  //     const includeExpense = item.ExpenseId != expenseId;
+  //     const includeExpense = item.expenseId != expenseId;
   //     return includeExpense;
   //   });
   //   this.filteredSummaryDataSource = this.filteredSummaryDataSource.filter((item: any) => {
-  //     const includeExpense = item.ExpenseId != expenseId;
+  //     const includeExpense = item.expenseId != expenseId;
   //     return includeExpense;
   //   });
   // }
@@ -350,6 +359,8 @@ export class ExpenseComponent implements OnInit {
       this.expenseDataSource = res;
       this.filteredExpenseDataSource = res;
       this.loaderService.hideLoader();
+      this.lastExpenseDate = this.getLatestExpenseDate();
+      console.log('this.lastExpenseDate : ', this.lastExpenseDate);
 
       console.log('this.filteredExpenseDataSource : ', this.filteredExpenseDataSource);
 
@@ -419,6 +430,9 @@ export class ExpenseComponent implements OnInit {
 
   filterGridByMaxAmount(data: any) {
     this.maxAmount = data.target.value;
+    setTimeout(() => {
+      this.maxInput.nativeElement.focus();
+    }, 0);
     this.applyFilters();
   }
 
@@ -439,10 +453,6 @@ export class ExpenseComponent implements OnInit {
     else if (data.value != null && data.value != undefined) {
       this.sourceOrReason = data.source.value.toLowerCase();
     }
-    setTimeout(() => {
-      this.searchInput.nativeElement.focus();
-    }, 0);
-
     this.applyFilters();
   }
 
@@ -452,7 +462,10 @@ export class ExpenseComponent implements OnInit {
   }
 
   filterGridBySearch(data: any) {
-    this.sourceOrReason = data.target.value.toLowerCase();
+    setTimeout(() => {
+      this.searchInput.nativeElement.focus();
+    }, 0);
+    this.sourceOrReason = data?.target?.value?.toLowerCase();
     this.applyFilters();
   }
 
