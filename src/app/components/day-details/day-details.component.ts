@@ -2,13 +2,13 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { DayService } from '../../services/day/day.service';
 import { HttpClient } from '@angular/common/http';
-import * as constants from '../../../utils/constants';
 import { AssetService } from '../../services/asset/asset.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalService } from '../../services/global/global.service'
 import { DatePipe } from '@angular/common';
 import flatpickr from 'flatpickr';
 import { ReactiveFormsModule } from '@angular/forms';
+import { API_URL } from '../../../utils/api-url';
 
 @Component({
   selector: 'app-day-details',
@@ -42,11 +42,11 @@ export class DayDetailsComponent implements OnInit {
     private _globalService: GlobalService, private _assetService: AssetService,
     private datepipe: DatePipe
   ) {
-    // this._httpClient.get(_globalService.getCommonListItems(constants.RELATION)).subscribe(res => {
+    // this._httpClient.get(_globalService.getCommonListItems(API_URL.RELATION)).subscribe(res => {
     //   this.relation = res;
     // });
 
-    // this._httpClient.get(_globalService.getCommonListItems(constants.DAYTYPE)).subscribe(res => {
+    // this._httpClient.get(_globalService.getCommonListItems(API_URL.DAYTYPE)).subscribe(res => {
     //   this.dayType = res;
     // });
 
@@ -124,7 +124,7 @@ export class DayDetailsComponent implements OnInit {
   }
   getAssetDetails(assetId: number) {
     this._assetService.getAssetDetails(assetId).subscribe((res: any) => {
-      this.selectedImage = constants.ATTACHMENT + res.OriginalPath;
+      this.selectedImage = API_URL.ATTACHMENT + res.OriginalPath;
     }
     )
 
@@ -228,7 +228,7 @@ export class DayDetailsComponent implements OnInit {
   }
   addImage() {
     if (this.selectedImageFile) {
-      this._dayService.uploadImage(this.dayDetailsForm.value['assetId'], constants.BIRTHDAYPERSONPIC, this.formData).subscribe((response) => {
+      this._dayService.uploadImage(this.dayDetailsForm.value['assetId'], API_URL.BIRTHDAYPERSONPIC, this.formData).subscribe((response) => {
         this.dayDetailsForm.value['assetId'] = response;
         this.addOrUpdateDayDetails();
 

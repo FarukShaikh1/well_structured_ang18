@@ -1,45 +1,47 @@
 <div class="main-body">
-    <div>
-        <button (click)="openPopup()"         data-bs-toggle="modal"
+    <button (click)="openPopup()" class="btn btn-primary rounded-button" data-bs-toggle="modal"
         data-bs-target="#dayDetailsPopup">
-            Add Day
-        </button>
+        Add Day
+    </button>
 
-        <div class="row form-fields-container">
-            <div class="col-5 col-sm-4 col-md-3 col-lg-2">
-                <div appearance="outline" class="form-field">
-                    <label>Select Month</label>
-                    <select #monthInput multiple (selectionChange)="filterGridByMonth()">
-                        <option *ngFor="let item of monthList" [value]="item.SequenceNumber">
-                            {{item.ListItemDescription}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-5 col-sm-4 col-md-3 col-lg-2">
-                <div appearance="outline" class="form-field">
-                    <label>Select Type</label>
-                    <select #typeInput multiple (selectionChange)="filterGridByType()">
-                        <option *ngFor="let item of dayTypeList" [value]="item.CommonListItemId">{{item.ListItemName}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-5 col-sm-4 col-md-3 col-lg-2">
-                <div appearance="outline" class="form-field">
-                    <label>Search by name</label>
-                    <input #searchInput (input)="filterGridSearchText($event)">
-                </div>
-            </div>
-            <div class="col-6 col-sm-4 col-md-6 col-lg-5">
-                <section class="checbox-section">
-                </section>
+    <div class="row pb-2">
+        <div class="col-6 col-sm-4  col-lg-2 col-xl-2">
+            <div appearance="outline" class="form-field">
+                <label>Select Month</label>
+                <select #monthInput multiple1 (selectionChange)="filterGridByMonth()"
+                    class="form-control form-control-lg text-dark bg-transparent">
+                    <option *ngFor="let item of monthList" [value]="item.sequenceNumber">
+                        {{item.listItemDescription}}</option>
+                </select>
             </div>
         </div>
-        <div class="mb-2">
-            <app-tabulator-grid [tableData]="filteredDataSource" [columnConfig]="columnConfig" [height]="'320px'"
-                [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
-            </app-tabulator-grid>
+        <div class="col-5 col-sm-4 col-md-3 col-lg-2">
+            <div appearance="outline" class="form-field">
+                <label>Select Type</label>
+                <select #typeInput  (selectionChange)="filterGridByType()"
+                    class="form-control form-control-lg text-dark bg-transparent">
+                    <option *ngFor="let item of dayTypeList" [value]="item.commonListItemId">{{item.listItemName}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="col-5 col-sm-4 col-md-3 col-lg-2">
+            <div appearance="outline">
+                <label>Search by name</label>
+                <input #searchInput (input)="filterGridSearchText($event)"
+                    class="form-control form-control-lg text-dark bg-transparent">
+            </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-6 col-lg-5">
+            <section class="checbox-section">
+            </section>
         </div>
     </div>
+</div>
+
+<div class="mb-2">
+    <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="tableColumnConfig" [height]="'320px'"
+        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
+    </app-tabulator-grid>
 </div>
 <app-day-details></app-day-details>

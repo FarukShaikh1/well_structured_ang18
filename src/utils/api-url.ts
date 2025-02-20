@@ -48,6 +48,20 @@ export const API_URL = {
   UPLOAD_IMAGE: `${serverUrl}${apiPrefix}/asset/UploadAndSaveFile?userId=`,
   GET_ASSET_DETAILS: `${serverUrl}${apiPrefix}/asset/getAssetDetail`,
 
+  GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/common/getCommonListItems?commonListId=`,
+
+  DAYURL: 'day/',
+    EXPENSEURL: 'expense/',
+    COMMONURL: 'common/',
+    AUTHENTICATIONURL : 'authentication/',
+    LOGINURL: 'login/',
+    USERURL: 'user/',
+    ASSETURL: 'asset/',
+    CURRENCYCOINURL: 'CollectionCoin/',
+    ATTACHMENT: "../../assets/ProjectAttatchments/", // Should be compared with "PhysicalPathDirectory" in "AppSettings" in DotNet
+    COLLECTIONCOINS: "Collection_Coins",
+    BIRTHDAYPERSONPIC: "Birthday_Person_Pic",
+
   GET_LOGGED_IN_USER_DETAILS: `${serverUrl}${apiPrefix}/auth/getloggedinuserdetails`,
   REGISTER_USER: `${serverUrl}${apiPrefix}/auth/register`,
   RESET_PASSWORD: `${serverUrl}${apiPrefix}/auth/resetpassword`,

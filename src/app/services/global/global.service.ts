@@ -6,6 +6,7 @@ import { NavigationURLs } from '../../../utils/application-constants';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { RoleService } from '../role/role.service';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { API_URL } from '../../../utils/api-url';
 
 @Injectable({
   providedIn: 'root',
@@ -126,4 +127,10 @@ export class GlobalService {
       return isDuplicate ? { nameExists: true } : null;
     };
   }
+  
+  getCommonListItems(commonListId: number) {
+    // alert(commonListId)
+    return API_URL.GET_COMMON_LIST_ITEMS + commonListId;
+  }
+
 }

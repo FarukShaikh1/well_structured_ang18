@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component'
-import * as constants from '../../../utils/constants'
 import { CommonModule } from '@angular/common';
+import { API_URL } from '../../../utils/api-url';
 @Component({
   selector: 'app-currency',
   standalone:true,
@@ -14,7 +14,7 @@ export class CurrencyCoinComponent {
   displayedColumns: string[] = [];
   imageList: any;
   dataSource: any;
-  basePath: string = constants.ATTACHMENT;
+  basePath: string = API_URL.ATTACHMENT;
   selectedTabIndex: number = 0;
   sort: any;
   paginator: any;
@@ -42,7 +42,7 @@ export class CurrencyCoinComponent {
 
   ngOnInit() {
     this.selectedTabIndex = 0;
-    this.basePath = constants.ATTACHMENT;
+    this.basePath = API_URL.ATTACHMENT;
     this.getCurrencyCoinRecords();
 
   }

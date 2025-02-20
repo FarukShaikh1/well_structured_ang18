@@ -2,7 +2,7 @@
     <div class="row form-fields-container">
         <div appearance="outline" class="form-field">
             <label>Search by name</label>
-            <input (input)="filterGridSearchText($event)">
+            <input #searchInput (input)="filterGridSearchText($event)">
         </div>
     </div>
     <div class="table-container">

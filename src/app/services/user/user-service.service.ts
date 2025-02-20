@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import * as constants from '../../../utils/constants';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environmentDev } from '../../../environments/environment.dev';
 import { UserLoginRequest } from '../../interfaces/user-login-request';
 import { API_URL } from '../../../utils/api-url';
 

@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { HttpClient } from '@angular/common/http';
-import * as constants from '../../../utils/constants';
 import { AssetService } from '../../services/asset/asset.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalService } from '../../services/global/global.service'
 import { DatePipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { API_URL } from '../../../utils/api-url';
 
 @Component({
   selector: 'app-currency-details',
@@ -90,7 +90,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   }
   getAssetDetails(assetId: number) {
     this._assetService.getAssetDetails(assetId).subscribe((res: any) => {
-      this.selectedImage = constants.ATTACHMENT + res.OriginalPath;
+      this.selectedImage = API_URL.ATTACHMENT + res.OriginalPath;
     }
     )
 

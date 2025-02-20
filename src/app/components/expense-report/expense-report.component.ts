@@ -83,7 +83,7 @@ export class ExpenseReportComponent implements OnInit {
     private _globalService: GlobalService, private sanitizer: DomSanitizer,
     public datePipe: DatePipe,
   ) {
-    // this._httpClient.get(_globalService.getCommonListItems(constants.MODEOFTRANSACTION)).subscribe(res => {
+    // this._httpClient.get(_globalService.getCommonListItems(API_URL.MODEOFTRANSACTION)).subscribe(res => {
     //   this.modeOfTransactionList = res;
     // });
   }

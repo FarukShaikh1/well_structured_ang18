@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { UserServiceService } from '../../services/user/user-service.service';
 import { GlobalService } from '../../services/global/global.service';
 import { HttpClient } from '@angular/common/http';
@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./manage-users.component.scss']
 })
 export class ManageUsersComponent {
+   @ViewChild('searchInput') searchInput!: ElementRef;
   displayedUserColumns: string[] = ['userId', 'personName', 'emailAddress', 'userName', 'roleName', 'modifiedBy', 'modifiedOn', 'isLocked', 'edit', 'delete'];
   usersDataSource!: any;
   filteredDataSource!: any;
@@ -59,6 +60,10 @@ export class ManageUsersComponent {
   }
 
   filterGridSearchText(event: Event) {
+    setTimeout(() => {
+      this.searchInput.nativeElement.focus();
+    }, 0);
+
     this.searchText = (event.target as HTMLInputElement).value.toLocaleLowerCase();
     this.applyFilters()
   }

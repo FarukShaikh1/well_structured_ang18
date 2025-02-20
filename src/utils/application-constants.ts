@@ -91,7 +91,7 @@ export const NavigationURLs = {
     TESTING_AND_RESULTS: '/home/expenses/projects/testing-and-results',
     PROJECT_USER: '/home/expenses/projects/project-user',
     ALL_NOTIFICATIONS: '/home/notifications',
-    REPORT: '/home/expenses/projects/report'
+    REPORT: '/home/expenses/projects/report',
 };
 
 export const SampleSubmissionFormNotes = {
@@ -158,8 +158,8 @@ export const Messages = {
 
     PASSWORD_RESET_SUCCESSFULLY: 'Password reset successfully.',
     PASSWORD_CREATED_SUCCESSFULLY: 'Password created successfully.',
-    PASSWORD_CREATION_FAILED :'Password creation failed.',
-    PASSWORD_RESET_FAILED :'Password reset failed.',
+    PASSWORD_CREATION_FAILED: 'Password creation failed.',
+    PASSWORD_RESET_FAILED: 'Password reset failed.',
 
     EXPENSE_NAME_VALIDATION_MSG: 'Name should contain only alphabetic characters.',
     ERROR_IN_FETCH_EXPENSE_DATA: 'Error fetching expense data',
@@ -260,7 +260,7 @@ export const Messages = {
     LIMS_ID_UPDATED_SUCCESSFULLY: 'LIMS Project ID updated successfully.',
     INVALID_LIMS_ID: 'Invalid LIMS Project ID.',
     USER_EXPENSE_ASSOCIATION_EXISTS: 'Can\'t add the expense representative, as the expense representative is added to the other expense.',
-    
+
     SAVE_AS_DRAFT_CONFIRMATION_MSG: 'Are you sure you want to save this as a draft and close on this step?',
     DEACTIVATE_USER_BY_ADMIN: 'This user cannot be added as they have been deactivated by the Platform Admin.',
 };
@@ -296,3 +296,10 @@ export const ApplicationRoles = {
     Internal_PD: 'Internal PD',
     External_Expense: 'External Expense'
 };
+export const DBConstants = {
+    DAYTYPE: 11,
+    COINTYPE: 12,
+    RELATION: 15,
+    MONTH: 4,
+    MODEOFTRANSACTION: 14,
+}

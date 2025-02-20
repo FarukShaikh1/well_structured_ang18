@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { ApplicationTableConstants } from '../../../utils/application-constants';
+import { ApplicationConstants, ApplicationTableConstants, DBConstants } from '../../../utils/application-constants';
 import { TableUtils } from '../../../utils/table-utils';
 import { DayService } from '../../services/day/day.service';
 import { GlobalService } from '../../services/global/global.service';
@@ -11,6 +11,7 @@ import { LoaderService } from '../../services/loader/loader.service';
 import { DayDetailsComponent } from '../day-details/day-details.component';
 import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 
 export interface Task {
   name: string;
@@ -23,26 +24,27 @@ export interface Task {
   standalone: true,
   templateUrl: './day.component.html',
   styleUrls: ['./day.component.scss'],
-  imports: [TabulatorGridComponent, CommonModule, DayDetailsComponent]
+  imports: [TabulatorGridComponent, CommonModule, DayDetailsComponent],
+  providers: [DatePipe]
 })
 
 export class DayComponent implements OnInit {
-  @ViewChild('searchInput', { static: true }) searchInput: ElementRef | undefined;
+  @ViewChild('searchInput') searchInput!: ElementRef;
   @ViewChild('typeInput', { static: true }) typeInput: any;
   @ViewChild('monthInput', { static: true }) monthInput: any;
   @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(DayDetailsComponent)
   dayDetailsComponent!: DayDetailsComponent;
+  @ViewChild(ConfirmationDialogComponent, { static: false })
+  confirmationDialog!: ConfirmationDialogComponent;
+
   public tableData: Record<string, unknown>[] = [];
-  public columnConfig: ColumnDefinition[] = [];
+  public filteredTableData: Record<string, unknown>[] = [];
+  public tableColumnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-
-  index: number = 0;
-  dataSource!: any;
-  filteredDataSource!: any;
 
   monthList: any;
   dayTypeList: any = '';
@@ -56,43 +58,30 @@ export class DayComponent implements OnInit {
   daySelected: number[] = [];
   searchText: string = '';
   selectedData!: { value: any; text: any; };
-  selectedCount: number = 0;
-  key: string = 'archiveAdminData.name';
-  reverse: boolean = false;
-  isAllChecked: boolean = false;
-  sortDir = 1;
-  sortClickCount = 0;
-  selectedCheckboxMap: { [key: number]: boolean } = {};
-  page: number = 1;
-  count: number = 0;
-  itemCountList: string = '';
-  pageSizeOptions = [10, 15, 20, 50, 100, 500, 1000];
-  itemsPerPage = 10;
 
   constructor(private _dayService: DayService, private _globalService: GlobalService,
     private _httpClient: HttpClient, public tableUtils: TableUtils,
     public globalService: GlobalService,
     private loaderService: LoaderService,
+    public datePipe: DatePipe,
     private router: Router
   ) {
-    // this._httpClient.get(_globalService.getCommonListItems(constants.MONTH)).subscribe(res => {
-    //   this.monthList = res;
-    // });
+    this._httpClient.get(_globalService.getCommonListItems(DBConstants.MONTH)).subscribe(res => {
+      this.monthList = res;
+    });
 
-    // this._httpClient.get(_globalService.getCommonListItems(constants.DAYTYPE)).subscribe(res => {
-    //   this.dayTypeList = res;
-    // });
+    this._httpClient.get(_globalService.getCommonListItems(DBConstants.DAYTYPE)).subscribe(res => {
+      this.dayTypeList = res;
+    });
 
   }
 
 
   ngOnInit() {
     this.loaderService.showLoader()
-    this.itemCountList = this.itemcount();
-    console.log(' this.itemCountList :', this.itemCountList);
     this.columnConfiguration();
     // Define which columns are available for filtering
-    this.filterColumns = this.columnConfig.filter((col) =>
+    this.filterColumns = this.tableColumnConfig.filter((col) =>
       ['personName', 'emailId'].includes(col.field ?? '')
     );
 
@@ -102,9 +91,9 @@ export class DayComponent implements OnInit {
     this._dayService.getDayList(this.month, this.dayType, this.searchText, this.isToday, this.isTomorrow, this.isYesterday).subscribe(
       {
         next: (res: any) => {
-          this.dataSource = res.data;
-          this.filteredDataSource = res.data;
-          console.log('this.filteredDataSource : ', this.filteredDataSource);
+          this.tableData = res.data;
+          this.filteredTableData = res.data;
+          console.log('this.filteredTableData : ', this.filteredTableData);
           this.loaderService.hideLoader();
         },
         error: (error: any) => {
@@ -115,16 +104,27 @@ export class DayComponent implements OnInit {
   }
 
   columnConfiguration() {
-    this.columnConfig = [
+    this.tableColumnConfig = [
       {
         title: 'Birth date',
         field: 'birthdate',
         sorter: 'alphanum',
+        formatter: this.dateFormatter.bind(this),
       },
       {
         title: 'Person Name',
+        titleFormatter(_cell, _formatterParams, onRendered) {
+          onRendered(() => { });
+          return `
+            <div class="client-name-header">
+              Person Name
+            </div>
+          `;
+        },
+
         field: 'personName',
-        sorter: 'alphanum',
+        sorter: 'string',
+        formatter: this.personNameFormatter.bind(this),
       },
       {
         title: 'Email Id',
@@ -143,23 +143,18 @@ export class DayComponent implements OnInit {
       },
       {
         title: 'Pic',
-        field: 'pic',
-        sorter: 'alphanum',
+        field: 'assetId',
+        formatter: this.picFormatter.bind(this),
       },
       {
-        title: 'Person Name',
-        titleFormatter(_cell, _formatterParams, onRendered) {
-          onRendered(() => { });
-          return `
-            <div class="client-name-header">
-              Person Name
-            </div>
-          `;
-        },
-
-        field: 'personName',
-        sorter: 'string',
-        formatter: this.personNameFormatter.bind(this),
+        title: '',
+        field: 'options',
+        maxWidth: 50,
+        formatter: (_cell) =>
+          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+        clickMenu: this.optionsMenu,
+        hozAlign: 'left',
+        headerSort: false,
       },
 
       // {
@@ -179,9 +174,22 @@ export class DayComponent implements OnInit {
     const clientId = clientData['id'];
     const html = `
        <button class="text-link view-projects-btn" data-client-id="${clientId}">
-         ${clientData['name']}
+         ${clientData['personName']}
       </button>
     `;
+    return html;
+  }
+
+  picFormatter(cell: CellComponent) {
+    const clientData = cell.getRow().getData();
+    const clientId = clientData['assetId'];
+    if (clientId) {
+      const html = `
+      <img src="../../">
+   `;
+      return html;
+    }
+    const html = ''
     return html;
   }
 
@@ -216,6 +224,19 @@ export class DayComponent implements OnInit {
     //      }
     //  },
   ];
+  dateFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const projectData = cell.getRow().getData();
+    const dateColumn = projectData[columnName];
+    if (dateColumn) {
+      return `<span>${this.datePipe.transform(
+        dateColumn,
+        'dd-MMM'
+      )}</span>`;
+    }
+    const nullDate = '';
+    return `<span>${nullDate}</span>`;
+  }
 
   openPopup() {
     console.log('dayDetails clicked');
@@ -224,8 +245,7 @@ export class DayComponent implements OnInit {
   }
 
   hideDay(BirthdayId: number) {
-    this.onTableDataChange(1);
-    this.filteredDataSource = this.filteredDataSource.filter((item: any) => {
+    this.filteredTableData = this.filteredTableData.filter((item: any) => {
       const includeDay = item.BirthdayId != BirthdayId;
       return includeDay;
     });
@@ -251,19 +271,23 @@ export class DayComponent implements OnInit {
 
   filterGridByMonth() {
     this.applyFilters();
-    this.itemcount();
+
     // this.getDayList();
   }
 
   filterGridByType() {
     this.applyFilters();
-    this.itemcount();
+
   }
 
   filterGridSearchText(event: any) {
+    setTimeout(() => {
+      this.searchInput.nativeElement.focus();
+    }, 0);
+
     this.searchText = event.target.value.toLowerCase();
     this.applyFilters();
-    this.itemcount();
+
   }
 
   task: Task = {
@@ -335,139 +359,11 @@ export class DayComponent implements OnInit {
     this.getDayList();
   }
 
-  itemcount(): string {
-    const recordsPerPage = this.itemsPerPage;
-    const totalRecords = this.filteredDataSource?.length;
-    const currentPage = this.page;
-    let startRecord = (currentPage - 1) * recordsPerPage + 1;
-    startRecord = this.filteredDataSource?.length > 0 ? startRecord : 0;
-    let endRecord = currentPage * recordsPerPage;
-    endRecord = Math.min(endRecord, totalRecords);
-
-    return startRecord + '-' + endRecord;
-  }
-
-  sortarr(key: string) {
-    if (this.key === key) {
-      if (this.reverse) {
-        this.reverse = false;
-      } else {
-        this.reverse = true;
-      }
-    } else {
-      this.key = key;
-      this.reverse = false;
-    }
-
-    if (!this.reverse) {
-      this.dataSource.sort((a: any, b: any) => {
-        const valueA = a[key]?.toLowerCase();
-        const valueB = b[key]?.toLowerCase();
-        return valueA.localeCompare(valueB);
-      });
-    } else {
-      this.dataSource.sort((a: any, b: any) => {
-        const valueA = a[key]?.toLowerCase();
-        const valueB = b[key]?.toLowerCase();
-        return valueB.localeCompare(valueA);
-      });
-    }
-
-    this.sortClickCount++;
-
-    if (this.sortClickCount === 3) {
-      this.sortClickCount = 0;
-      this.getDayList();
-    }
-  }
-
-  onSortClick(event: any, column: string) {
-    const target = event.currentTarget;
-    const classList = target.classList;
-
-    if (
-      !classList.contains('bi-arrow-up') &&
-      !classList.contains('bi-arrow-down')
-    ) {
-      classList.add('bi-arrow-up');
-      this.sortDir = 1;
-    } else if (classList.contains('bi-arrow-up')) {
-      classList.remove('bi-arrow-up');
-      classList.add('bi-arrow-down');
-      this.sortDir = -1;
-    } else {
-      classList.remove('bi-arrow-up', 'bi-arrow-down');
-      this.sortDir = 0;
-    }
-
-    this.sortarr(column);
-  }
-
-  checkUncheckAll(e: any, page: number) {
-    this.daySelected = [];
-    this.isAllChecked = !this.isAllChecked;
-    const currentPageRows = this.dataSource.slice(
-      (page - 1) * 10,
-      page * 10
-    );
-
-    this.dataSource.map((item: any) => {
-      item.selected = this.isAllChecked;
-      if (item.selected) {
-        if (!this.daySelected.includes(item)) {
-          this.daySelected.push(item.id);
-        }
-      } else {
-        const index = this.daySelected.indexOf(item.id);
-        if (index !== -1) {
-          this.daySelected.splice(index, 1);
-        }
-      }
-    });
-    console.log('daySelected', this.daySelected);
-  }
-
-  isAllSelected(event: any, item: any, Index: number, pageIndex: number) {
-    const currentPageRows = this.dataSource.slice(
-      (pageIndex - 1) * 10,
-      pageIndex * 10
-    );
-    this.dataSource[Index].selected = event.target.checked;
-    const index = this.daySelected.indexOf(item.id);
-    if (event.target.checked) {
-      this.daySelected.push(item.id);
-      this.selectedCheckboxMap[item.id] = true;
-      this.selectedCount++;
-    } else {
-      this.daySelected.splice(index, 1);
-      this.selectedCheckboxMap[item.id] = false;
-      this.selectedCount--;
-    }
-    const currentPage = this.page;
-    this.selectedCheckboxMap[currentPage] =
-      this.daySelected.length === this.dataSource.length;
-    this.isAllChecked = this.selectedCheckboxMap[currentPage];
-  }
-
-  onTableDataChange(event: any) {
-    this.page = event;
-  }
-  onPageSizeChange(event: any) {
-    this.itemsPerPage = event.target.value;
-    this.page = 1;
-    this.applyFilters();
-  }
-  updateDisplayedData() {
-    const startIndex = (this.page - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.filteredDataSource = this.filteredDataSource.slice(startIndex, endIndex);
-  }
   applyFilters() {
-    this.onTableDataChange(1);
-    this.filteredDataSource = this.dataSource.filter((item: any) => {
-      const matchesName = item.PersonName.toLowerCase().includes(this.searchText);
-      const matchesMonth = (this.selectedMonths.length === 0 || this.selectedMonths.includes(new Date(item.Birthdate).getMonth() + 1));
-      const matchesType = this.selectedDayTypeIds.length === 0 || this.selectedDayTypeIds.includes(item.DayTypeId);
+    this.filteredTableData = this.tableData.filter((item: any) => {
+      const matchesName = item.personName.toLowerCase().includes(this.searchText);
+      const matchesMonth = (this.selectedMonths.length === 0 || this.selectedMonths.includes(new Date(item.birthdate).getMonth() + 1));
+      const matchesType = this.selectedDayTypeIds.length === 0 || this.selectedDayTypeIds.includes(item.dayTypeId);
       return matchesName && matchesMonth && matchesType;
     });
   }
