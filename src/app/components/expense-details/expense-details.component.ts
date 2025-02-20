@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { ApplicationConstants, ApplicationModules } from '../../../utils/application-constants';
 import { ExpenseService } from '../../services/expense/expense.service';
@@ -11,7 +11,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 @Component({
   selector: 'app-expense-details',
   standalone: true,
-  imports: [ReactiveFormsModule, ToasterComponent],
+  imports: [ReactiveFormsModule],
   templateUrl: './expense-details.component.html',
   styleUrls: ['./expense-details.component.scss'],
 })
@@ -20,30 +20,33 @@ export class ExpenseDetailsComponent {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild('btnCloseExpenseDetailsPopup') btnCloseExpensePopup!: ElementRef;
   @Input() lastExpenseDate!: Date; // Receiving lastExpenseDate from parent
-  startDate = new Date();
+
   expenseDetailsForm: FormGroup;
-  sourceOrReasonList: any;
-  filteredSourceOrReasonList: any;
-  descriptionList: any;
-  filteredDescriptionList: any;
-  purposeList: any;
+  sbiValid = false;
+  cbiValid = false;
+  cashValid = false;
+  otherValid = false;
+
   commonSuggestionList: any;
+  sourceOrReasonList: any;
+  purposeList: any;
+  descriptionList: any;
+
+  filteredSourceOrReasonList: any;
   filteredPurposeList: any;
-  source: string = '';
-  filteredOptions!: any;
-  myControl = new FormControl('');
-  focusInSource:   boolean = false;
-  focusInPurpose:   boolean = false;
-  focusInDescription  :   boolean = false;
+  filteredDescriptionList: any;
+
+  focusInSource: boolean = false;
+  focusInPurpose: boolean = false;
+  focusInDescription: boolean = false;
+
   constructor(private _details: FormBuilder,
     private expenseService: ExpenseService,
     private _globalService: GlobalService,
     private loaderService: LoaderService,
     private renderer: Renderer2,
-
     private datepipe: DatePipe
   ) {
-
     this.expenseDetailsForm = this._details.group({
       expenseId: 0,
       expenseDate: ['', Validators.required],
@@ -79,6 +82,7 @@ export class ExpenseDetailsComponent {
     }
     this.getExpenseSuggestionList()
   }
+
   closePopup() {
     const model = document.getElementById('expenseDetailsPopup');
     if (model !== null) {
@@ -92,14 +96,13 @@ export class ExpenseDetailsComponent {
       dateFormat: 'd/m/Y',
       defaultDate: new Date(),
     });
-    this.loaderService.hideLoader();
   }
+
   validateAmount(event: any) {
     if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.\-]$/)) {
       event.preventDefault();
     }
   }
-
 
   getExpenseSuggestionList() {
     this.expenseService.getExpenseSuggestionList().subscribe((res) => {
@@ -227,21 +230,24 @@ export class ExpenseDetailsComponent {
       this.loaderService.hideLoader()
     })
   }
-  focusOutSource(){
+
+  focusOutSource() {
     setTimeout(() => {
       this.focusInSource = false;
     }, 500);
   }
-  focusOutPurpose(){
+
+  focusOutPurpose() {
     setTimeout(() => {
       this.focusInPurpose = false;
     }, 500);
   }
-  focusOutDescription(){
+
+  focusOutDescription() {
     setTimeout(() => {
       this.focusInDescription = false;
     }, 500);
-  }  
+  }
 
   patchValues(res: any) {
     this.expenseDetailsForm.controls['expenseId'].patchValue(res['expenseId']);
@@ -255,10 +261,6 @@ export class ExpenseDetailsComponent {
     this.expenseDetailsForm.controls['cbiAccount'].patchValue(res['cbiAccount']);
     this.expenseDetailsForm.controls['assetId'].patchValue(res['assetId']);
   }
-  sbiValid = false;
-  cbiValid = false;
-  cashValid = false;
-  otherValid = false;
 
   submitExpenseDetails() {
     this.loaderService.showLoader();

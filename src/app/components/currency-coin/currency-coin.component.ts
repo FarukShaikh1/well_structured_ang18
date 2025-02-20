@@ -47,10 +47,6 @@ export class CurrencyCoinComponent {
 
   }
 
-  setTabActive(index: number) {
-    this.selectedTabIndex = index;
-  }
-
   getCurrencyCoinRecords() {
     this._currencyCoinService.getCurrencyCoinRecords().subscribe((res) => {
       this.displayedColumns = ['collectionCoinId', 'collectionCoinName', 'countryName', 'actualValue', 'indianValue', 'description', 'edit'];

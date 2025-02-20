@@ -3,18 +3,11 @@
         data-bs-target="#expenseDetailsPopup">
         Add Expense
     </button>
-    <!-- <button  (click)="exportGridToExcel()">
-        Export to Excel
-    </button> -->
     <button (click)="expenseAdjustment()" class="btn btn-primary rounded-button">
         Expense Adjustment
     </button>
     <div class="row pb-2">
         <div class="col-6 col-sm-4  col-lg col-xl">
-            <!-- From Date: <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate"
-                placeholder="DD/MM/YYYY" [value]="fromDt" /> -->
-
-
             From Date: <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate"
                 placeholder="DD/MM/YYYY" />
         </div>
@@ -37,22 +30,19 @@
                 placeholder="Search Something" aria-label="Search Something" #searchInput
                 (keyup)="filterGridBySearch($event);onSourceOrReasonChange($event)">
             <div>
-                <!-- <option *ngFor="let option of sourceOrReasonList" [value]="option.Name"
-                    (onSelectionChange)="filterGridBySource($event)">
-                    {{option.Name}}
-                </option> -->
             </div>
         </div>
-
     </div>
+
     <div class="row">
         <div class="mb-2">
-            <app-tabulator-grid [tableData]="filteredExpenseDataSource" [columnConfig]="expenseColumnConfig"
+            <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="tableColumnConfig"
                 [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
                 [allowCSVExport]="allowCSVExport">
             </app-tabulator-grid>
         </div>
     </div>
+
 </div>
 <app-expense-details [lastExpenseDate]="lastExpenseDate"></app-expense-details>
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>

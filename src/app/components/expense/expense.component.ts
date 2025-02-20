@@ -38,46 +38,24 @@ export class ExpenseComponent implements OnInit {
   confirmationDialog!: ConfirmationDialogComponent;
 
   public tableData: Record<string, unknown>[] = [];
-  public expenseColumnConfig: ColumnDefinition[] = [];
+  public filteredTableData: Record<string, unknown>[] = [];
+  public tableColumnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
+
   lastExpenseDate: Date = new Date();
-  index: number = 0;
-  expenseDataSource!: any;
-  filteredExpenseDataSource!: any;
-  // @ViewChild(MatPaginator) paginator!: MatPaginator;
-  // @ViewChild(MatSort) sort!: MatSort;
+
   fromDate = new Date();
   toDate = new Date();
   formattedFromDate: any;
   formattedToDate: any;
   sourceOrReason: string = '';
-  SpecificSourceOrReason: string = '';
   minAmount: number = 0;
   maxAmount: number = 0;
-  modeOfTransaction: string = '';
-  modeOfTransactionList: any
   sourceOrReasonList: any;
-  amountStyle = "'color':'red'";
-  event: any;
-  selectedTabIndex = 0;
-  page: number = 1;
-  count: number = 0;
-  tableSize: number = 10;
-  selectedCount: number = 0;
-  key: string = 'dayData.name';
-  reverse: boolean = false;
-  expenseSelected: number[] = [];
-  summarySelected: number[] = [];
+  expenseId: string = '';
 
-  isAllChecked: boolean = false;
-  sortDir = 1;
-  sortClickCount = 0;
-  selectedCheckboxMap: { [key: number]: boolean } = {};
-  itemCountList: string = '';
-  pageSizeOptions = [10, 15, 20, 50, 100, 500, 1000];
-  itemsPerPage = 10;
   optionsMenu = [
     {
       label: `<a class="dropdown-item btn-link"
@@ -109,7 +87,6 @@ export class ExpenseComponent implements OnInit {
       },
     },
   ];
-  expenseId: string = '';
 
   constructor(private expenseService: ExpenseService,
     private _globalService: GlobalService,
@@ -117,16 +94,12 @@ export class ExpenseComponent implements OnInit {
     private loaderService: LoaderService,
     private dateUtil: DateUtils
 
-  ) {
-    // this._httpClient.get(_globalService.getCommonListItems(constants.MODEOFTRANSACTION)).subscribe(res => {
-    //   this.modeOfTransactionList = res;
-    // });
-  }
+  ) {}
 
   ngOnInit() {
+    this.loaderService.showLoader();
+    this.expenseColumnConfiguration();
     this.fromDate.setDate(this.toDate.getDate() - 60);
-    // this.fromDt = this.datepipe.transform(this.fromDate, 'dd/MM/yyyy');
-    // this.toDt = this.datepipe.transform(this.toDate, 'dd/MM/yyyy');
     this.getSourceOrReasonList();
     this.LoadGrid();
     this._globalService.reloadGrid$.subscribe((listName: string) => {
@@ -142,12 +115,12 @@ export class ExpenseComponent implements OnInit {
 
   }
   expenseColumnConfiguration() {
-    this.expenseColumnConfig = [
+    this.tableColumnConfig = [
       {
         title: 'Expense Date',
         field: 'expenseDate',
         sorter: 'alphanum',
-        formatter: this.uploadedDateFormatter.bind(this),
+        formatter: this.dateFormatter.bind(this),
       },
       {
         title: 'Source/Reason',
@@ -188,7 +161,7 @@ export class ExpenseComponent implements OnInit {
     ];
   }
 
-  uploadedDateFormatter(cell: CellComponent) {
+  dateFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
     const projectData = cell.getRow().getData();
     const dateColumn = projectData[columnName];
@@ -202,22 +175,16 @@ export class ExpenseComponent implements OnInit {
     return `<span>${nullDate}</span>`;
   }
 
-
   ngAfterViewInit() {
 
     flatpickr('#fromDate', {
       dateFormat: 'd/m/Y',
-      // defaultDate: new Date(new Date().getTime() - 90 * 24 * 60 * 60 * 1000),
       defaultDate: (() => {
         let date = new Date(); // Get the current date
-        date.setDate(date.getDate() - 90); // Subtract 90 days
+        date.setDate(date.getDate() - 60); // Subtract 60 days
         return date;
       })(),
       onChange: (selectedDates, dateStr) => {
-        // // this.fromDt = dateStr;
-        // if(dateStr){
-        //   dateStr = this.datePipe.transform(Date.now(),ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT)??'';
-        // }
         if (!dateStr) {
           const today = new Date();
           today.setDate(today.getDate() - 60); // Subtract 60 days
@@ -232,52 +199,23 @@ export class ExpenseComponent implements OnInit {
       }
 
     });
-    this.loaderService.hideLoader();
-
-    // flatpickr('#fromDate', {
-    //   dateFormat: 'd/m/Y', // Adjust the date format as per your requirement
-    //   defaultDate: this.fromDate,
-    //   onChange: (selectedDates, dateStr, instance) => {
-    //     // this.fromDt = dateStr;
-    //     if(dateStr){
-    //       dateStr = this.datePipe.transform(Date.now(),ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT)??'';
-    //     }
-    //     this.filterGridByFromDate(dateStr);
-    //   }
-    // });
 
     flatpickr('#toDate', {
       dateFormat: 'd/m/Y', // Adjust the date format as per your requirement
       defaultDate: this.toDate,
       onChange: (selectedDates, dateStr) => {
-        // this.toDt = dateStr;
-        // if(dateStr){
-        //   dateStr = this.datePipe.transform(Date.now(),ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT)??'';
-        // }
+        if (!dateStr) {
+          const today = new Date();
+
+          const dd = ('0' + today.getDate()).slice(-2);
+          const mm = ('0' + (today.getMonth() + 1)).slice(-2); // Months are zero-based
+          const yyyy = today.getFullYear();
+
+          dateStr = `${dd}/${mm}/${yyyy}`; // Format as "DD/MM/YYYY"
+        }
         this.filterGridByToDate(dateStr);
       }
     });
-  }
-
-  // getTotalCost() {
-  //   return this.filteredDataSource.map((t: { debit: any; }) => t.debit).reduce((credit: any, value: any) => credit + value, 0);
-  // }
-
-  // getTotalDebit(): number {
-  //   if (this.filteredDataSource)
-  //     return this.filteredDataSource.reduce((total: any, item: any) => total + (item.debit || 0), 0);
-  //   else return 0;
-  // }
-
-  // getTotalCredit(): number {
-  //   if (this.filteredDataSource)
-  //     return this.filteredDataSource.reduce((total: any, item: any) => total + (item.credit || 0), 0);
-  //   else return 0;
-  // }
-
-  setTabActive(index: number) {
-    this.selectedTabIndex = index;
-    // this.LoadGrid();
   }
 
   LoadGrid() {
@@ -305,7 +243,6 @@ export class ExpenseComponent implements OnInit {
     ).subscribe(
       (res) => {
         this.sourceOrReasonList = res;
-        // this.LoadGrid();
       },
     )
   }
@@ -314,7 +251,7 @@ export class ExpenseComponent implements OnInit {
     if (all) {
       this.getExpenseList();
     }
-    this.filteredExpenseDataSource = this.expenseDataSource.filter((item: any) => {
+    this.filteredTableData = this.tableData.filter((item: any) => {
       const searchText = item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) || item.description.toLowerCase().includes(this.sourceOrReason);
       const minAmountCondition = this.minAmount == 0 || (item.debit !== 0 && Math.abs(item.debit) >= this.minAmount) || (item.credit !== 0 && Math.abs(item.credit) >= this.minAmount);
       const maxAmountCondition = this.maxAmount == 0 || (item.debit !== 0 && Math.abs(item.debit) <= this.maxAmount) || (item.credit !== 0 && Math.abs(item.credit) <= this.maxAmount);
@@ -324,11 +261,13 @@ export class ExpenseComponent implements OnInit {
 
   }
 
-  getLatestExpenseDate(): Date {
-    if (!this.filteredExpenseDataSource || this.filteredExpenseDataSource.length === 0) {
-      return new Date(); // Return null if no data is available
+  getLatestExpenseDate(): any {
+    if (!this.filteredTableData || this.filteredTableData.length === 0) {
+    this.loaderService.hideLoader();
+    return new Date(); // Return null if no data is available
     }
-    return this.filteredExpenseDataSource[0].expenseDate
+    this.loaderService.hideLoader();
+    return this.filteredTableData[0]['expenseDate'];
   }
 
   // hideExpense(expenseId: number) {
@@ -351,26 +290,19 @@ export class ExpenseComponent implements OnInit {
 
   getExpenseList() {
     this.loaderService.showLoader();
-    this.expenseColumnConfiguration();
-    this.filterColumns = this.expenseColumnConfig.filter((col) =>
+    this.filterColumns = this.tableColumnConfig.filter((col) =>
       ['SourceOrReason', 'emailId'].includes(col.field ?? '')
     );
-    this.expenseService.getExpenseList(this.formattedFromDate, this.formattedToDate, this.SpecificSourceOrReason, 0, 0, this.modeOfTransaction).subscribe((res) => {
-      this.expenseDataSource = res;
-      this.filteredExpenseDataSource = res;
-      this.loaderService.hideLoader();
+    this.expenseService.getExpenseList(this.formattedFromDate, this.formattedToDate, '', 0, 0, '').subscribe((res) => {
+      this.tableData = res;
+      this.filteredTableData = res;
       this.lastExpenseDate = this.getLatestExpenseDate();
       console.log('this.lastExpenseDate : ', this.lastExpenseDate);
 
-      console.log('this.filteredExpenseDataSource : ', this.filteredExpenseDataSource);
+      console.log('this.filteredTableData : ', this.filteredTableData);
 
     },
     )
-  }
-
-  getExpenseListBySourceOrReason(sourceOrReason: string) {
-    this.SpecificSourceOrReason = sourceOrReason;
-    this.setTabActive(0);
   }
 
   expenseDetails(data: any) {
@@ -438,7 +370,6 @@ export class ExpenseComponent implements OnInit {
 
   filterGridByMinAmount(data: any) {
     this.minAmount = data.target.value;
-    //           this.messageInput.nativeElement.focus();
     setTimeout(() => {
       this.minInput.nativeElement.focus();
     }, 0);
@@ -453,11 +384,6 @@ export class ExpenseComponent implements OnInit {
     else if (data.value != null && data.value != undefined) {
       this.sourceOrReason = data.source.value.toLowerCase();
     }
-    this.applyFilters();
-  }
-
-  filterGridByMode(data: any) {
-    this.modeOfTransaction = data.value;
     this.applyFilters();
   }
 
@@ -498,154 +424,6 @@ export class ExpenseComponent implements OnInit {
       event.preventDefault();
     }
   }
-  // exportToExcel() {
-  // }
-
-  // exportGridToExcel() {
-  //   this.expenseService.exportGridToExcel(this.filteredDataSource.filteredData).subscribe((res) => {
-  //     if (res) {
-
-  //     }
-  //   })
-  // }
-  // onTableDataChange(event: any) {
-  //   this.page = event;
-  // }
-
-  // itemcount(): string {
-  //   const recordsPerPage = this.itemsPerPage;
-  //   const totalRecords = this.filteredDataSource?.length;
-  //   const currentPage = this.page;
-  //   let startRecord = (currentPage - 1) * recordsPerPage + 1;
-  //   startRecord = this.filteredDataSource?.length > 0 ? startRecord : 0;
-  //   let endRecord = currentPage * recordsPerPage;
-  //   endRecord = Math.min(endRecord, totalRecords);
-
-  //   return startRecord + '-' + endRecord;
-  // }
-
-  // sortarr(key: string) {
-  //   if (this.key === key) {
-  //     if (this.reverse) {
-  //       // Second click, set to ascending order
-  //       this.reverse = false;
-  //     } else {
-  //       // First click, set to descending order
-  //       this.reverse = true;
-  //     }
-  //   } else {
-  //     // Clicking a different column, reset sorting and sorting direction
-  //     this.key = key;
-  //     this.reverse = false;
-  //   }
-
-  //   // Sort the data based on the column and sorting direction
-  //   if (!this.reverse) {
-  //     // Sort in ascending order
-  //     this.filteredDataSource.sort((a: any, b: any) => {
-  //       const valueA = a[key]?.toLowerCase();
-  //       const valueB = b[key]?.toLowerCase();
-  //       return valueA.localeCompare(valueB);
-  //     });
-  //   } else {
-  //     // Sort in descending order
-  //     this.filteredDataSource.sort((a: any, b: any) => {
-  //       const valueA = a[key]?.toLowerCase();
-  //       const valueB = b[key]?.toLowerCase();
-  //       return valueB.localeCompare(valueA);
-  //     });
-  //   }
-
-  //   this.sortClickCount++;
-
-  //   if (this.sortClickCount === 3) {
-  //     // Third click, reset data to its original order
-  //     this.sortClickCount = 0; // Reset the click count
-  //     this.getExpenseList();
-  //   }
-  // }
-
-  // onSortClick(event: any, column: string) {
-  //   const target = event.currentTarget;
-  //   const classList = target.classList;
-
-  //   if (
-  //     !classList.contains('bi-arrow-up') &&
-  //     !classList.contains('bi-arrow-down')
-  //   ) {
-  //     // First click, set to ascending order
-  //     classList.add('bi-arrow-up');
-  //     this.sortDir = 1;
-  //   } else if (classList.contains('bi-arrow-up')) {
-  //     // Second click, set to descending order
-  //     classList.remove('bi-arrow-up');
-  //     classList.add('bi-arrow-down');
-  //     this.sortDir = -1;
-  //   } else {
-  //     classList.remove('bi-arrow-up', 'bi-arrow-down'); // Remove both classes
-  //     this.sortDir = 0; // Reset sorting direction
-  //   }
-
-  //   this.sortarr(column); // Use the provided column parameter here
-  // }
-
-  // checkUncheckAll(e: any, page: number) {
-  //   this.expenseSelected = [];
-  //   this.isAllChecked = !this.isAllChecked;
-  //   const currentPageRows = this.filteredDataSource.slice(
-  //     (page - 1) * 10,
-  //     page * 10
-  //   );
-
-  //   this.filteredDataSource.map((item: any) => {
-  //     item.selected = this.isAllChecked;
-  //     if (item.selected) {
-  //       if (!this.expenseSelected.includes(item)) {
-  //         this.expenseSelected.push(item.id);
-  //       }
-  //     } else {
-  //       const index = this.expenseSelected.indexOf(item.id);
-  //       if (index !== -1) {
-  //         this.expenseSelected.splice(index, 1);
-  //       }
-  //     }
-  //   });
-  //   console.log('expenseSelected', this.expenseSelected);
-  // }
-
-  // isAllSelected(event: any, item: any, Index: number, pageIndex: number) {
-  //   const currentPageRows = this.filteredDataSource.slice(
-  //     (pageIndex - 1) * 10,
-  //     pageIndex * 10
-  //   );
-  //   this.filteredDataSource[Index].selected = event.target.checked;
-  //   const index = this.expenseSelected.indexOf(item.id);
-  //   if (event.target.checked) {
-  //     this.expenseSelected.push(item.id);
-  //     this.selectedCheckboxMap[item.id] = true;
-  //     this.selectedCount++;
-  //   } else {
-  //     this.expenseSelected.splice(index, 1);
-  //     this.selectedCheckboxMap[item.id] = false;
-  //     this.selectedCount--;
-  //   }
-  //   const currentPage = this.page;
-  //   this.selectedCheckboxMap[currentPage] =
-  //     this.expenseSelected.length === this.filteredDataSource.length;
-  //   this.isAllChecked = this.selectedCheckboxMap[currentPage];
-  // }
-
-  onPageSizeChange(event: any) {
-    this.itemsPerPage = event.target.value;
-    this.page = 1; // Reset to the first page
-    this.applyFilters();
-  }
-  // updateDisplayedData() {
-  //   const startIndex = (this.page - 1) * this.itemsPerPage;
-  //   const endIndex = startIndex + this.itemsPerPage;
-  //   this.filteredDataSource = this.filteredexpenseDataSource.slice(startIndex, endIndex);
-  // }
-
 
 }
 

@@ -1,62 +1,43 @@
 <div class="main-body">
-    <button (click)="expenseDetails(0)" class="btn btn-primary" data-bs-toggle="modal"
+    <button (click)="expenseDetails(0)" class="btn btn-primary rounded-button" data-bs-toggle="modal"
         data-bs-target="#expenseDetailsPopup">
         Add Expense
     </button>
-    <!-- <button  (click)="exportGridToExcel()">
-        Export to Excel
-    </button> -->
-    <button (click)="expenseAdjustment(0)" class="btn btn-primary">
-        Expense Adjustment
-    </button>
     <div class="row pb-2">
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
-            From Date: <input id="startDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                id="fromDate" placeholder="DD/MM/YYYY" [value]="fromDt" />
+        <div class="col-6 col-sm-4  col-lg col-xl">
+            From Date: <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate"
+                placeholder="DD/MM/YYYY" />
         </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
-            To Date: <input id="startDate" class="form-control form-control-lg text-dark bg-transparent" type="Date"
-                id="toDate" placeholder="DD/MM/YYYY" [value]="toDt" />
+        <div class="col-6 col-sm-4  col-lg col-xl">
+            To Date: <input class="form-control form-control-lg text-dark bg-transparent" type="Date" id="toDate"
+                placeholder="DD/MM/YYYY" />
         </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
+        <div class="col-6 col-sm-4  col-lg col-xl">
             Min Amount <input class="form-control form-control-lg text-dark bg-transparent" type="text"
                 placeholder="Min Amount" aria-label="Min Amount" #minInput (input)="filterGridByMinAmount($event)"
                 (keydown)="validateAmount($event)">
         </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
+        <div class="col-6 col-sm-4  col-lg col-xl">
             Max Amount <input class="form-control form-control-lg text-dark bg-transparent" type="text"
                 placeholder="Max Amount" aria-label="Max Amount" #maxInput (input)="filterGridByMaxAmount($event)"
                 (keydown)="validateAmount($event)">
         </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
+        <div class="col-6 col-sm-4  col-lg col-xl">
             Source/Reason <input class="form-control form-control-lg text-dark bg-transparent" type="text"
-                placeholder="Search Something" aria-label="Search Something" #Input
-                (input)="onSourceOrReasonChange($event)" (keydown)="filterGridBySearch($event)">
+                placeholder="Search Something" aria-label="Search Something" #searchInput
+                (keyup)="filterGridBySearch($event);onSourceOrReasonChange($event)">
             <div>
-                <!-- <option *ngFor="let option of sourceOrReasonList" [value]="option.Name"
-                    (onSelectionChange)="filterGridBySource($event)">
-                    {{option.Name}}
-                </option> -->
             </div>
         </div>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
-            Mode of transaction
-            <select class="form-control form-control-lg text-dark bg-transparent"
-                (selectionChange)="filterGridByMode($event)">
-                <option *ngFor="let item of modeOfTransactionList" [value]="item.ListItemName">{{item.ListItemName}}
-                </option>
-            </select>
-        </div>
-
     </div>
     <div class="row">
 
         <div class="mb-2">
-            <app-tabulator-grid [tableData]="filteredSummaryDataSource" [columnConfig]="summaryColumnConfig"
-                [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
-                [allowCSVExport]="allowCSVExport">
+            <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="tableColumnConfig" [height]="'320px'"
+                [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
             </app-tabulator-grid>
         </div>
     </div>
 </div>
-<app-expense-details></app-expense-details>
+<app-expense-details [lastExpenseDate]="lastExpenseDate"></app-expense-details>
+<app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
