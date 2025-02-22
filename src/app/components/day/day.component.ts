@@ -29,6 +29,45 @@ export interface Task {
 })
 
 export class DayComponent implements OnInit {
+  // Handle "Select All" checkbox
+  toggleAllMonthCheck(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+
+    this.selectedMonths = checked ? this.monthList.map((m: any) => m.listItemName) : [];
+
+    this.getMonthDropdownLabel()
+    this.applyFilters();
+  }
+  // Handle individual month selection
+  toggleMonthCheck(event: Event, monthName: string) {
+    const checked = (event.target as HTMLInputElement).checked;
+    debugger;
+    if (checked) {
+      this.selectedMonths.push(monthName);
+    } else {
+      this.selectedMonths = this.selectedMonths.filter(m => m !== monthName);
+    }
+    this.getMonthDropdownLabel()
+    this.applyFilters()
+  }
+  getMonthDropdownLabel() {
+    if (this.selectedMonths.length === 0) {
+      this.lableForMonthDropDown = 'Select Months'
+    } else if (this.selectedMonths.length === this.monthList.length) {
+      this.lableForMonthDropDown = "All";
+    } else {
+      this.lableForMonthDropDown = this.selectedMonths.join(", ");
+    }
+  }
+  getDayTypeDropdownLabel() {
+    if (this.selectedDayType.length === 0) {
+      this.lableForDayTypeDropDown = 'Select DayTypes'
+    } else if (this.selectedDayType.length === this.dayTypeList.length) {
+      this.lableForDayTypeDropDown = "All";
+    } else {
+      this.lableForDayTypeDropDown = this.selectedDayType.join(", ");
+    }
+  }
   @ViewChild('searchInput') searchInput!: ElementRef;
   @ViewChild('typeInput', { static: true }) typeInput: any;
   @ViewChild('monthInput', { static: true }) monthInput: any;
@@ -49,7 +88,6 @@ export class DayComponent implements OnInit {
   monthList: any;
   dayTypeList: any = '';
   month: any = '';
-  selectedMonths: any = '';
   selectedDayTypeIds: any = '';
   dayType: any = '';
   isToday: boolean = false;
@@ -58,6 +96,11 @@ export class DayComponent implements OnInit {
   daySelected: number[] = [];
   searchText: string = '';
   selectedData!: { value: any; text: any; };
+  lableForMonthDropDown = 'Select Months'
+  selectedMonths: string[] = [];  // Array to store selected months
+  DayType: string[] = [];  // Array to store selected months
+  lableForDayTypeDropDown = 'Select DayTypes'
+  selectedDayType: string[] = [];  // Array to store selected DayTypes
 
   constructor(private _dayService: DayService, private _globalService: GlobalService,
     private _httpClient: HttpClient, public tableUtils: TableUtils,
@@ -109,6 +152,7 @@ export class DayComponent implements OnInit {
         title: 'Birth date',
         field: 'birthdate',
         sorter: 'alphanum',
+        maxWidth: 100,
         formatter: this.dateFormatter.bind(this),
       },
       {
@@ -129,6 +173,11 @@ export class DayComponent implements OnInit {
       {
         title: 'Email Id',
         field: 'emailId',
+        sorter: 'alphanum',
+      },
+      {
+        title: 'Mobile Number',
+        field: 'mobileNumber',
         sorter: 'alphanum',
       },
       {
@@ -301,27 +350,27 @@ export class DayComponent implements OnInit {
   };
   allComplete: boolean = false;
 
-  updateAllComplete() {
-    this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
+  // updateAllComplete() {
+  //   this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
 
-    this.isToday = (this.task.subtasks != null && this.task.subtasks[0].completed);//(t => t.completed);
-    this.isYesterday = (this.task.subtasks != null && this.task.subtasks[1].completed);//(t => t.completed);
-    this.isTomorrow = (this.task.subtasks != null && this.task.subtasks[2].completed);//(t => t.completed);
-    if (this.searchInput) {
-      this.searchInput.nativeElement.value = '';
-    }
-    if (this.monthInput) {
-      this.selectedMonths = '';
-      this.monthInput.value = [];
-    }
-    if (this.typeInput) {
-      this.selectedDayTypeIds = '';
-      this.typeInput.value = [];
-    }
+  //   this.isToday = (this.task.subtasks != null && this.task.subtasks[0].completed);//(t => t.completed);
+  //   this.isYesterday = (this.task.subtasks != null && this.task.subtasks[1].completed);//(t => t.completed);
+  //   this.isTomorrow = (this.task.subtasks != null && this.task.subtasks[2].completed);//(t => t.completed);
+  //   if (this.searchInput) {
+  //     this.searchInput.nativeElement.value = '';
+  //   }
+  //   if (this.monthInput) {
+  //     // this.selectedMonths = '';
+  //     this.monthInput.value = [];
+  //   }
+  //   if (this.typeInput) {
+  //     this.selectedDayTypeIds = '';
+  //     this.typeInput.value = [];
+  //   }
 
-    this.getDayList();
+  //   this.getDayList();
 
-  }
+  // }
 
   someComplete(): boolean {
     this.isToday = (this.task.subtasks != null && this.task.subtasks[0].completed);//(t => t.completed);
@@ -334,37 +383,47 @@ export class DayComponent implements OnInit {
     return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
   }
 
-  setAll(completed: boolean) {
-    if (this.searchInput) {
-      this.searchInput.nativeElement.value = '';
-    }
-    if (this.monthInput) {
-      this.selectedMonths = '';
-      this.monthInput.value = [];
-    }
-    if (this.typeInput) {
-      this.selectedDayTypeIds = '';
-      this.typeInput.value = [];
-    }
+  // setAll(completed: boolean) {
+  //   if (this.searchInput) {
+  //     this.searchInput.nativeElement.value = '';
+  //   }
+  //   if (this.monthInput) {
+  //     // this.selectedMonths = '';
+  //     this.monthInput.value = [];
+  //   }
+  //   if (this.typeInput) {
+  //     this.selectedDayTypeIds = '';
+  //     this.typeInput.value = [];
+  //   }
 
-    this.allComplete = completed;
-    if (this.task.subtasks == null) {
-      return;
-    }
-    this.task.subtasks.forEach(t => (t.completed = completed));
-    this.isToday = (this.task.subtasks != null && this.task.subtasks[0].completed);//(t => t.completed);
-    this.isTomorrow = (this.task.subtasks != null && this.task.subtasks[1].completed);//(t => t.completed);
-    this.isYesterday = (this.task.subtasks != null && this.task.subtasks[2].completed);//(t => t.completed);
+  //   this.allComplete = completed;
+  //   if (this.task.subtasks == null) {
+  //     return;
+  //   }
+  //   this.task.subtasks.forEach(t => (t.completed = completed));
+  //   this.isToday = (this.task.subtasks != null && this.task.subtasks[0].completed);//(t => t.completed);
+  //   this.isTomorrow = (this.task.subtasks != null && this.task.subtasks[1].completed);//(t => t.completed);
+  //   this.isYesterday = (this.task.subtasks != null && this.task.subtasks[2].completed);//(t => t.completed);
 
-    this.getDayList();
-  }
+  //   this.getDayList();
+  // }
 
   applyFilters() {
+    console.log('this.tableData : ', this.tableData);
+
     this.filteredTableData = this.tableData.filter((item: any) => {
-      const matchesName = item.personName.toLowerCase().includes(this.searchText);
-      const matchesMonth = (this.selectedMonths.length === 0 || this.selectedMonths.includes(new Date(item.birthdate).getMonth() + 1));
-      const matchesType = this.selectedDayTypeIds.length === 0 || this.selectedDayTypeIds.includes(item.dayTypeId);
-      return matchesName && matchesMonth && matchesType;
+      const matchesName = item.personName?.toLowerCase().includes(this.searchText);
+      const email = item.emailId?.toLowerCase().includes(this.searchText);
+      const address = item.address?.toLowerCase().includes(this.searchText);
+      const dayType = item.type?.toLowerCase().includes(this.searchText);
+      const date = item.date?.toLowerCase().includes(this.searchText);
+      const mobileNumber = item.mobileNumber?.toLowerCase().includes(this.searchText);
+      // Check if item's month exists in selectedMonths
+      const matchesMonth = this.selectedMonths.length === 0 || this.selectedMonths.includes(item.month);
+      const matchesDayType = this.selectedDayType.length === 0 || this.selectedDayType.includes(item.DayType);
+      // const matchesType = this.selectedDayTypeIds.length === 0 || this.selectedDayTypeIds.includes(item.dayTypeId);
+      // return matchesName && matchesMonth && matchesType;
+      return (matchesName || email || address || dayType || date || mobileNumber) && matchesMonth;
     });
   }
 

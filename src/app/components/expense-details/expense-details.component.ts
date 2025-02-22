@@ -11,7 +11,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 @Component({
   selector: 'app-expense-details',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,ToasterComponent],
   templateUrl: './expense-details.component.html',
   styleUrls: ['./expense-details.component.scss'],
 })
