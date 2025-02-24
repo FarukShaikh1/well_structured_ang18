@@ -99,7 +99,7 @@ export class ExpenseComponent implements OnInit {
   ngOnInit() {
     this.loaderService.showLoader();
     this.expenseColumnConfiguration();
-    this.fromDate.setDate(this.toDate.getDate() - 60);
+    this.fromDate.setDate(this.toDate.getDate() - 30);
     this.getSourceOrReasonList();
     this.LoadGrid();
     this._globalService.reloadGrid$.subscribe((listName: string) => {
@@ -181,13 +181,13 @@ export class ExpenseComponent implements OnInit {
       dateFormat: 'd/m/Y',
       defaultDate: (() => {
         let date = new Date(); // Get the current date
-        date.setDate(date.getDate() - 60); // Subtract 60 days
+        date.setDate(date.getDate() - 30); // Subtract 30 days
         return date;
       })(),
       onChange: (selectedDates, dateStr) => {
         if (!dateStr) {
           const today = new Date();
-          today.setDate(today.getDate() - 60); // Subtract 60 days
+          today.setDate(today.getDate() - 30); // Subtract 30 days
 
           const dd = ('0' + today.getDate()).slice(-2);
           const mm = ('0' + (today.getMonth() + 1)).slice(-2); // Months are zero-based

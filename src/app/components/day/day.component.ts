@@ -32,16 +32,13 @@ export class DayComponent implements OnInit {
   // Handle "Select All" checkbox
   toggleAllMonthCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-
     this.selectedMonths = checked ? this.monthList.map((m: any) => m.listItemName) : [];
-
     this.getMonthDropdownLabel()
     this.applyFilters();
   }
   // Handle individual month selection
   toggleMonthCheck(event: Event, monthName: string) {
     const checked = (event.target as HTMLInputElement).checked;
-    debugger;
     if (checked) {
       this.selectedMonths.push(monthName);
     } else {
@@ -52,16 +49,38 @@ export class DayComponent implements OnInit {
   }
   getMonthDropdownLabel() {
     if (this.selectedMonths.length === 0) {
-      this.lableForMonthDropDown = 'Select Months'
+      this.lableForMonthDropDown = ''
     } else if (this.selectedMonths.length === this.monthList.length) {
       this.lableForMonthDropDown = "All";
     } else {
       this.lableForMonthDropDown = this.selectedMonths.join(", ");
     }
   }
+    // Handle "Select All" checkbox
+    toggleAllDayTypeCheck(event: Event) {
+      const checked = (event.target as HTMLInputElement).checked;
+  
+      this.selectedDayType = checked ? this.dayTypeList.map((m: any) => m.listItemDescription) : [];
+  
+      this.getDayTypeDropdownLabel()
+      this.applyFilters();
+    }
+    // Handle individual daytype selection
+    toggleDayTypeCheck(event: Event, daytypeName: string) {
+      const checked = (event.target as HTMLInputElement).checked;
+      debugger;
+      if (checked) {
+        this.selectedDayType.push(daytypeName);
+      } else {
+        this.selectedDayType = this.selectedDayType.filter(m => m !== daytypeName);
+      }
+      this.getDayTypeDropdownLabel()
+      this.applyFilters()
+    }
+  
   getDayTypeDropdownLabel() {
     if (this.selectedDayType.length === 0) {
-      this.lableForDayTypeDropDown = 'Select DayTypes'
+      this.lableForDayTypeDropDown = ''
     } else if (this.selectedDayType.length === this.dayTypeList.length) {
       this.lableForDayTypeDropDown = "All";
     } else {
@@ -96,10 +115,10 @@ export class DayComponent implements OnInit {
   daySelected: number[] = [];
   searchText: string = '';
   selectedData!: { value: any; text: any; };
-  lableForMonthDropDown = 'Select Months'
+  lableForMonthDropDown = ''
   selectedMonths: string[] = [];  // Array to store selected months
   DayType: string[] = [];  // Array to store selected months
-  lableForDayTypeDropDown = 'Select DayTypes'
+  lableForDayTypeDropDown = ''
   selectedDayType: string[] = [];  // Array to store selected DayTypes
 
   constructor(private _dayService: DayService, private _globalService: GlobalService,
@@ -415,15 +434,14 @@ export class DayComponent implements OnInit {
       const matchesName = item.personName?.toLowerCase().includes(this.searchText);
       const email = item.emailId?.toLowerCase().includes(this.searchText);
       const address = item.address?.toLowerCase().includes(this.searchText);
-      const dayType = item.type?.toLowerCase().includes(this.searchText);
       const date = item.date?.toLowerCase().includes(this.searchText);
       const mobileNumber = item.mobileNumber?.toLowerCase().includes(this.searchText);
       // Check if item's month exists in selectedMonths
       const matchesMonth = this.selectedMonths.length === 0 || this.selectedMonths.includes(item.month);
-      const matchesDayType = this.selectedDayType.length === 0 || this.selectedDayType.includes(item.DayType);
+      const matchesDayType = this.selectedDayType.length === 0 || this.selectedDayType.includes(item.type);
       // const matchesType = this.selectedDayTypeIds.length === 0 || this.selectedDayTypeIds.includes(item.dayTypeId);
       // return matchesName && matchesMonth && matchesType;
-      return (matchesName || email || address || dayType || date || mobileNumber) && matchesMonth;
+      return (matchesName || email || address || date || mobileNumber) && matchesMonth && matchesDayType;
     });
   }
 
