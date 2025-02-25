@@ -11,7 +11,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 @Component({
   selector: 'app-expense-details',
   standalone: true,
-  imports: [ReactiveFormsModule,ToasterComponent],
+  imports: [ReactiveFormsModule, ToasterComponent],
   templateUrl: './expense-details.component.html',
   styleUrls: ['./expense-details.component.scss'],
 })
@@ -105,11 +105,18 @@ export class ExpenseDetailsComponent {
   }
 
   getExpenseSuggestionList() {
-    this.expenseService.getExpenseSuggestionList().subscribe((res) => {
-      this.commonSuggestionList = res;
-      console.log('data: ', res);
-    },
-    )
+    this.expenseService.getExpenseSuggestionList()
+      .subscribe({
+        next: (res: any) => {
+          this.commonSuggestionList = res;
+          console.log('data: ', res);
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
 
   onSourceReasonChange(event: any) {
@@ -224,12 +231,20 @@ export class ExpenseDetailsComponent {
   }
 
   getExpenseDetails(expenseId: string) {
-    this.expenseService.getExpenseDetails(expenseId).subscribe((res: any) => {
-      console.log('res : ', res);
-      this.patchValues(res);
-      this.loaderService.hideLoader()
-    })
+    this.expenseService.getExpenseDetails(expenseId)
+      .subscribe({
+        next: (res: any) => {
+          console.log('res : ', res);
+          this.patchValues(res);
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
+
 
   focusOutSource() {
     setTimeout(() => {

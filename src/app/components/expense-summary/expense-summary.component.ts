@@ -290,12 +290,20 @@ export class ExpenseSummaryComponent implements OnInit {
     this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate)
     this.expenseService.getSourceOrReasonList(
       this.fromDate.toString(), this.toDate.toString(), this.sourceOrReason
-    ).subscribe(
-      (res) => {
-        this.sourceOrReasonList = res;
-      },
     )
+      .subscribe({
+        next: (res: any) => {
+          this.sourceOrReasonList = res;
+          console.log('data: ', res);
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
+
 
   applyFilters(all: boolean = false) {
     if (all) {
@@ -319,14 +327,22 @@ export class ExpenseSummaryComponent implements OnInit {
 
   getExpenseSummaryList() {
     this.loaderService.showLoader();
-    this.expenseService.getExpenseSummaryList(this.formattedFromDate, this.formattedToDate, '', 0, 0, '').subscribe((res) => {
-      this.tableData = res;
-      this.filteredTableData = res;
-      console.log('this.filteredTableData : ', this.filteredTableData);
-      this.lastExpenseDate = this.getLatestExpenseDate();
-    },
-    )
+    this.expenseService.getExpenseSummaryList(this.formattedFromDate, this.formattedToDate, '', 0, 0, '')
+      .subscribe({
+        next: (res: any) => {
+          this.tableData = res;
+          this.filteredTableData = res;
+          console.log('this.filteredTableData : ', this.filteredTableData);
+          this.lastExpenseDate = this.getLatestExpenseDate();
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
+
 
   getLatestExpenseDate(): any {
     if (!this.filteredTableData || this.filteredTableData.length === 0) {
@@ -356,21 +372,36 @@ export class ExpenseSummaryComponent implements OnInit {
 
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
-    this.expenseService.deleteExpense(this.expenseId).subscribe((res) => {
-      if (res) {
-        this.LoadGrid();
-      }
-    },
-    );
+    this.expenseService.deleteExpense(this.expenseId)
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.LoadGrid();
+          }
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
 
+
   addExpense(expense: any, item: any) {
-    this.expenseService.addExpense(expense).subscribe((res) => {
-      if (res) {
-        this.LoadGrid();
-      }
-    },
-    )
+    this.expenseService.addExpense(expense)
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.LoadGrid();
+          }
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
 
   expenseAdjustment(data: any) {

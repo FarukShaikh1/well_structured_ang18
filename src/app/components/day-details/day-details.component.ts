@@ -1,22 +1,19 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms'
-import { DayService } from '../../services/day/day.service';
-import { HttpClient } from '@angular/common/http';
-import { AssetService } from '../../services/asset/asset.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalService } from '../../services/global/global.service'
 import { DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import flatpickr from 'flatpickr';
-import { ReactiveFormsModule } from '@angular/forms';
 import { API_URL } from '../../../utils/api-url';
+import { AssetService } from '../../services/asset/asset.service';
+import { DayService } from '../../services/day/day.service';
+import { LoaderService } from '../../services/loader/loader.service';
 
 @Component({
   selector: 'app-day-details',
-  standalone:true,
+  standalone: true,
   templateUrl: './day-details.component.html',
   imports: [ReactiveFormsModule],
   styleUrls: ['./day-details.component.scss'],
-  providers:[DatePipe]
+  providers: [DatePipe]
 })
 export class DayDetailsComponent implements OnInit {
   [x: string]: any;
@@ -36,10 +33,9 @@ export class DayDetailsComponent implements OnInit {
   IsApprovable: boolean = false;
   IsVerified: boolean = false;
 
-  constructor(private _details: FormBuilder, private _dayService: DayService, private _httpClient: HttpClient, private route: ActivatedRoute,
-    private router: Router,
-     
-    private _globalService: GlobalService, private _assetService: AssetService,
+  constructor(private _details: FormBuilder, private _dayService: DayService, 
+    private loaderService: LoaderService,
+    private _assetService: AssetService,
     private datepipe: DatePipe
   ) {
     // this._httpClient.get(_globalService.getCommonListItems(API_URL.RELATION)).subscribe(res => {
@@ -103,7 +99,7 @@ export class DayDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      this.dayDetailsForm.controls['birthdate'].patchValue(this.startDate);
+    this.dayDetailsForm.controls['birthdate'].patchValue(this.startDate);
   }
   ngAfterViewInit() {
     flatpickr('#birthdate', {
@@ -113,21 +109,34 @@ export class DayDetailsComponent implements OnInit {
   }
 
   getDayDetails(dayId: number) {
-    this._dayService.getDayDetails(dayId).subscribe((res: any) => {
-      this.patchValues(res[0]);
-      this.dayDetails = res[0];
-      if (this.dayDetails.AssetId) {
-        this.getAssetDetails(this.dayDetails.AssetId);
-      }
-    }
-    )
+    this._dayService.getDayDetails(dayId)
+      .subscribe({
+        next: (res: any) => {
+          this.patchValues(res[0]);
+          this.dayDetails = res[0];
+          if (this.dayDetails.AssetId) {
+            this.getAssetDetails(this.dayDetails.AssetId);
+            this.loaderService.hideLoader();
+          }
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
   getAssetDetails(assetId: number) {
-    this._assetService.getAssetDetails(assetId).subscribe((res: any) => {
-      this.selectedImage = API_URL.ATTACHMENT + res.OriginalPath;
-    }
-    )
-
+    this._assetService.getAssetDetails(assetId)
+      .subscribe({
+        next: (res: any) => {
+          this.selectedImage = API_URL.ATTACHMENT + res.OriginalPath;
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
 
   patchValues(res: any) {
@@ -179,13 +188,13 @@ export class DayDetailsComponent implements OnInit {
     }
   }
 
-  openDetailsPopup(){
+  openDetailsPopup() {
     const model = document.getElementById('dayDetailsPopup');
     if (model !== null) {
       model.style.display = 'block';
     }
   }
-  closePopup(){
+  closePopup() {
     const model = document.getElementById('dayDetailsPopup');
     if (model !== null) {
       model.style.display = 'none';
@@ -193,29 +202,31 @@ export class DayDetailsComponent implements OnInit {
   }
 
   addDayDetails() {
-    this._dayService.addDay(this.dayDetailsForm.value).subscribe((result) => {
-      if (result) {
-        //this._globalService.openSnackBar("Record added successfully");
-        
-      }
-      // else
-        //this._globalService.openSnackBar('some issue is in adding the data');
-    },
-      (error) => {
-        console.error('Error occurred:', error); // Log the exception
-        //this._globalService.openSnackBar('An error occurred while adding the data');
-      }
-    );
+    this._dayService.addDay(this.dayDetailsForm.value)
+      .subscribe({
+        next: () => {
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
   updateDayDetails() {
-    this._dayService.updateDay(this.dayDetailsForm.value).subscribe((result) => {
-      if (result) {
-        //this._globalService.openSnackBar("Record updated successfully");
-        
-      }
-      // else
-        //this._globalService.openSnackBar('some issue is in updating the data');
-    });
+    this._dayService.updateDay(this.dayDetailsForm.value)
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            
+            //this._globalService.openSnackBar("Record updated successfully");
+
+          }
+          else {
+            //this._globalService.openSnackBar('some issue is in updating the data');
+          }
+        }
+      });
   }
 
   addOrUpdateDayDetails() {
@@ -228,11 +239,18 @@ export class DayDetailsComponent implements OnInit {
   }
   addImage() {
     if (this.selectedImageFile) {
-      this._dayService.uploadImage(this.dayDetailsForm.value['assetId'], API_URL.BIRTHDAYPERSONPIC, this.formData).subscribe((response) => {
-        this.dayDetailsForm.value['assetId'] = response;
-        this.addOrUpdateDayDetails();
-
-      });
+      this._dayService.uploadImage(this.dayDetailsForm.value['assetId'], API_URL.BIRTHDAYPERSONPIC, this.formData)
+        .subscribe({
+          next: (res: any) => {
+            this.dayDetailsForm.value['assetId'] = res;
+            this.addOrUpdateDayDetails();
+            this.loaderService.hideLoader();
+          },
+          error: (error: any) => {
+            console.log('error : ', error);
+            this.loaderService.hideLoader();
+          }
+        });
     }
     else {
       this.addOrUpdateDayDetails();

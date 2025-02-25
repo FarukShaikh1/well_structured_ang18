@@ -1,17 +1,16 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { ApplicationConstants, ApplicationTableConstants, DBConstants } from '../../../utils/application-constants';
+import { ApplicationTableConstants, DBConstants } from '../../../utils/application-constants';
 import { TableUtils } from '../../../utils/table-utils';
 import { DayService } from '../../services/day/day.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { DayDetailsComponent } from '../day-details/day-details.component';
+import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 
 export interface Task {
   name: string;
@@ -56,28 +55,28 @@ export class DayComponent implements OnInit {
       this.lableForMonthDropDown = this.selectedMonths.join(", ");
     }
   }
-    // Handle "Select All" checkbox
-    toggleAllDayTypeCheck(event: Event) {
-      const checked = (event.target as HTMLInputElement).checked;
-  
-      this.selectedDayType = checked ? this.dayTypeList.map((m: any) => m.listItemDescription) : [];
-  
-      this.getDayTypeDropdownLabel()
-      this.applyFilters();
+  // Handle "Select All" checkbox
+  toggleAllDayTypeCheck(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+
+    this.selectedDayType = checked ? this.dayTypeList.map((m: any) => m.listItemDescription) : [];
+
+    this.getDayTypeDropdownLabel()
+    this.applyFilters();
+  }
+  // Handle individual daytype selection
+  toggleDayTypeCheck(event: Event, daytypeName: string) {
+    const checked = (event.target as HTMLInputElement).checked;
+    debugger;
+    if (checked) {
+      this.selectedDayType.push(daytypeName);
+    } else {
+      this.selectedDayType = this.selectedDayType.filter(m => m !== daytypeName);
     }
-    // Handle individual daytype selection
-    toggleDayTypeCheck(event: Event, daytypeName: string) {
-      const checked = (event.target as HTMLInputElement).checked;
-      debugger;
-      if (checked) {
-        this.selectedDayType.push(daytypeName);
-      } else {
-        this.selectedDayType = this.selectedDayType.filter(m => m !== daytypeName);
-      }
-      this.getDayTypeDropdownLabel()
-      this.applyFilters()
-    }
-  
+    this.getDayTypeDropdownLabel()
+    this.applyFilters()
+  }
+
   getDayTypeDropdownLabel() {
     if (this.selectedDayType.length === 0) {
       this.lableForDayTypeDropDown = ''
@@ -121,21 +120,34 @@ export class DayComponent implements OnInit {
   lableForDayTypeDropDown = ''
   selectedDayType: string[] = [];  // Array to store selected DayTypes
 
-  constructor(private _dayService: DayService, private _globalService: GlobalService,
+  constructor(private _dayService: DayService, _globalService: GlobalService,
     private _httpClient: HttpClient, public tableUtils: TableUtils,
     public globalService: GlobalService,
     private loaderService: LoaderService,
-    public datePipe: DatePipe,
-    private router: Router
-  ) {
-    this._httpClient.get(_globalService.getCommonListItems(DBConstants.MONTH)).subscribe(res => {
-      this.monthList = res;
-    });
+    public datePipe: DatePipe) {
+    this._httpClient.get(_globalService.getCommonListItems(DBConstants.MONTH))
+      .subscribe({
+        next: (res: any) => {
+          this.monthList = res;
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
 
-    this._httpClient.get(_globalService.getCommonListItems(DBConstants.DAYTYPE)).subscribe(res => {
-      this.dayTypeList = res;
-    });
-
+    this._httpClient.get(_globalService.getCommonListItems(DBConstants.DAYTYPE))
+      .subscribe({
+        next: (res: any) => {
+          this.dayTypeList = res;
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
 
 
@@ -271,7 +283,6 @@ export class DayComponent implements OnInit {
                   `,
       action: (_e: any, cell: CellComponent) => {
         const clientData = cell.getRow().getData();
-        const clientId = clientData['id'];
         this.openPopup();
       },
     },
@@ -319,21 +330,28 @@ export class DayComponent implements OnInit {
     });
   }
 
-  approveDay(dayId: number) {
+  approveDay() {
   }
 
 
 
-  deleteDay(dayId: number) {
+  deleteDay() {
   }
 
-  addDay(day: any, item: any) {
-    this._dayService.addDay(day).subscribe((res) => {
-      if (res) {
-        this.getDayList();
-      }
-    },
-    )
+  addDay(day: any) {
+    this._dayService.addDay(day)
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.getDayList();
+          }
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
 
 

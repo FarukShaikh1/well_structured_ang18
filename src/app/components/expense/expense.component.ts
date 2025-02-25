@@ -94,7 +94,7 @@ export class ExpenseComponent implements OnInit {
     private loaderService: LoaderService,
     private dateUtil: DateUtils
 
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loaderService.showLoader();
@@ -240,11 +240,16 @@ export class ExpenseComponent implements OnInit {
     this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate)
     this.expenseService.getSourceOrReasonList(
       this.fromDate.toString(), this.toDate.toString(), this.sourceOrReason
-    ).subscribe(
-      (res) => {
+    ).subscribe({
+      next: (res: any) => {
         this.sourceOrReasonList = res;
+        this.loaderService.hideLoader();
       },
-    )
+      error: (error: any) => {
+        console.log('error : ', error);
+        this.loaderService.hideLoader();
+      }
+    });
   }
 
   applyFilters(all: boolean = false) {
@@ -263,8 +268,8 @@ export class ExpenseComponent implements OnInit {
 
   getLatestExpenseDate(): any {
     if (!this.filteredTableData || this.filteredTableData.length === 0) {
-    this.loaderService.hideLoader();
-    return new Date(); // Return null if no data is available
+      this.loaderService.hideLoader();
+      return new Date(); // Return null if no data is available
     }
     this.loaderService.hideLoader();
     return this.filteredTableData[0]['expenseDate'];
@@ -293,16 +298,21 @@ export class ExpenseComponent implements OnInit {
     this.filterColumns = this.tableColumnConfig.filter((col) =>
       ['SourceOrReason', 'emailId'].includes(col.field ?? '')
     );
-    this.expenseService.getExpenseList(this.formattedFromDate, this.formattedToDate, '', 0, 0, '').subscribe((res) => {
-      this.tableData = res;
-      this.filteredTableData = res;
-      this.lastExpenseDate = this.getLatestExpenseDate();
-      console.log('this.lastExpenseDate : ', this.lastExpenseDate);
-
-      console.log('this.filteredTableData : ', this.filteredTableData);
-
-    },
-    )
+    this.expenseService.getExpenseList(this.formattedFromDate, this.formattedToDate, '', 0, 0, '')
+      .subscribe({
+        next: (res: any) => {
+          this.tableData = res;
+          this.filteredTableData = res;
+          this.lastExpenseDate = this.getLatestExpenseDate();
+          console.log('this.lastExpenseDate : ', this.lastExpenseDate);
+          console.log('this.filteredTableData : ', this.filteredTableData);
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
 
   expenseDetails(data: any) {
@@ -323,20 +333,28 @@ export class ExpenseComponent implements OnInit {
 
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
-    this.expenseService.deleteExpense(this.expenseId).subscribe((res) => {
-      if (res) {
-        this.LoadGrid();
-      }
-    },
-    );
+    this.expenseService.deleteExpense(this.expenseId)
+      .subscribe({
+        next: (res: any) => {
+          this.LoadGrid();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
   addExpense(expense: any) {
-    this.expenseService.addExpense(expense).subscribe((res) => {
-      if (res) {
-        this.LoadGrid();
-      }
-    },
-    )
+    this.expenseService.addExpense(expense)
+      .subscribe({
+        next: (res: any) => {
+          this.LoadGrid();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
   }
 
   expenseAdjustment() {
