@@ -48,7 +48,8 @@ export const API_URL = {
   UPLOAD_IMAGE: `${serverUrl}${apiPrefix}/asset/UploadAndSaveFile?userId=`,
   GET_ASSET_DETAILS: `${serverUrl}${apiPrefix}/asset/getAssetDetail`,
 
-  GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/common/getCommonListItems?commonListId=`,
+  GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/common/getCommonListItems`,
+  // GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/common/getCommonListItems?commonListId=`,
 
   DAYURL: 'day/',
     EXPENSEURL: 'expense/',

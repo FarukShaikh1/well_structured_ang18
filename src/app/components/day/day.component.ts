@@ -2,7 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { ApplicationTableConstants, DBConstants } from '../../../utils/application-constants';
+import { ApplicationModules, ApplicationTableConstants, DBConstants } from '../../../utils/application-constants';
 import { TableUtils } from '../../../utils/table-utils';
 import { DayService } from '../../services/day/day.service';
 import { GlobalService } from '../../services/global/global.service';
@@ -28,64 +28,6 @@ export interface Task {
 })
 
 export class DayComponent implements OnInit {
-  // Handle "Select All" checkbox
-  toggleAllMonthCheck(event: Event) {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.selectedMonths = checked ? this.monthList.map((m: any) => m.listItemName) : [];
-    this.getMonthDropdownLabel()
-    this.applyFilters();
-  }
-  // Handle individual month selection
-  toggleMonthCheck(event: Event, monthName: string) {
-    const checked = (event.target as HTMLInputElement).checked;
-    if (checked) {
-      this.selectedMonths.push(monthName);
-    } else {
-      this.selectedMonths = this.selectedMonths.filter(m => m !== monthName);
-    }
-    this.getMonthDropdownLabel()
-    this.applyFilters()
-  }
-  getMonthDropdownLabel() {
-    if (this.selectedMonths.length === 0) {
-      this.lableForMonthDropDown = ''
-    } else if (this.selectedMonths.length === this.monthList.length) {
-      this.lableForMonthDropDown = "All";
-    } else {
-      this.lableForMonthDropDown = this.selectedMonths.join(", ");
-    }
-  }
-  // Handle "Select All" checkbox
-  toggleAllDayTypeCheck(event: Event) {
-    const checked = (event.target as HTMLInputElement).checked;
-
-    this.selectedDayType = checked ? this.dayTypeList.map((m: any) => m.listItemDescription) : [];
-
-    this.getDayTypeDropdownLabel()
-    this.applyFilters();
-  }
-  // Handle individual daytype selection
-  toggleDayTypeCheck(event: Event, daytypeName: string) {
-    const checked = (event.target as HTMLInputElement).checked;
-    debugger;
-    if (checked) {
-      this.selectedDayType.push(daytypeName);
-    } else {
-      this.selectedDayType = this.selectedDayType.filter(m => m !== daytypeName);
-    }
-    this.getDayTypeDropdownLabel()
-    this.applyFilters()
-  }
-
-  getDayTypeDropdownLabel() {
-    if (this.selectedDayType.length === 0) {
-      this.lableForDayTypeDropDown = ''
-    } else if (this.selectedDayType.length === this.dayTypeList.length) {
-      this.lableForDayTypeDropDown = "All";
-    } else {
-      this.lableForDayTypeDropDown = this.selectedDayType.join(", ");
-    }
-  }
   @ViewChild('searchInput') searchInput!: ElementRef;
   @ViewChild('typeInput', { static: true }) typeInput: any;
   @ViewChild('monthInput', { static: true }) monthInput: any;
@@ -120,12 +62,13 @@ export class DayComponent implements OnInit {
   lableForDayTypeDropDown = ''
   selectedDayType: string[] = [];  // Array to store selected DayTypes
 
-  constructor(private _dayService: DayService, _globalService: GlobalService,
+  constructor(private _dayService: DayService,
     private _httpClient: HttpClient, public tableUtils: TableUtils,
     public globalService: GlobalService,
     private loaderService: LoaderService,
     public datePipe: DatePipe) {
-    this._httpClient.get(_globalService.getCommonListItems(DBConstants.MONTH))
+    this.loaderService.showLoader();
+    globalService.getCommonListItems(DBConstants.MONTH)
       .subscribe({
         next: (res: any) => {
           this.monthList = res;
@@ -137,7 +80,8 @@ export class DayComponent implements OnInit {
         }
       });
 
-    this._httpClient.get(_globalService.getCommonListItems(DBConstants.DAYTYPE))
+    this.loaderService.showLoader();
+    globalService.getCommonListItems(DBConstants.DAYTYPE)
       .subscribe({
         next: (res: any) => {
           this.dayTypeList = res;
@@ -152,22 +96,27 @@ export class DayComponent implements OnInit {
 
 
   ngOnInit() {
-    this.loaderService.showLoader()
     this.columnConfiguration();
-    // Define which columns are available for filtering
-    this.filterColumns = this.tableColumnConfig.filter((col) =>
-      ['personName', 'emailId'].includes(col.field ?? '')
-    );
-
-    this.getDayList();
+    this.loadGrid();
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.DAY) {
+        this.loadGrid();
+      }
+    });
+    this.globalService.refreshList$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.DAY) {
+        this.applyFilters();
+      }
+    });
   }
-  getDayList() {
+
+  loadGrid() {
+    this.loaderService.showLoader()
     this._dayService.getDayList(this.month, this.dayType, this.searchText, this.isToday, this.isTomorrow, this.isYesterday).subscribe(
       {
         next: (res: any) => {
           this.tableData = res.data;
           this.filteredTableData = res.data;
-          console.log('this.filteredTableData : ', this.filteredTableData);
           this.loaderService.hideLoader();
         },
         error: (error: any) => {
@@ -231,41 +180,32 @@ export class DayComponent implements OnInit {
         field: 'options',
         maxWidth: 50,
         formatter: (_cell) =>
-          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+          '<button title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         clickMenu: this.optionsMenu,
         hozAlign: 'left',
         headerSort: false,
       },
-
-      // {
-      //   title: '',
-      //   field: 'options',
-      //   maxWidth: 50,
-      //   formatter: (_cell) =>
-      //     '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-      //   clickMenu: this.optionsMenu,
-      //   hozAlign: 'left',
-      //   headerSort: false,
-      // },
     ];
   }
+
   personNameFormatter(cell: CellComponent) {
-    const clientData = cell.getRow().getData();
-    const clientId = clientData['id'];
+    const rowData = cell.getRow().getData();
+    const clientId = rowData['id'];
     const html = `
        <button class="text-link view-projects-btn" data-client-id="${clientId}">
-         ${clientData['personName']}
+         ${rowData['personName']}
       </button>
     `;
     return html;
   }
 
   picFormatter(cell: CellComponent) {
-    const clientData = cell.getRow().getData();
-    const clientId = clientData['assetId'];
+    const rowData = cell.getRow().getData();
+    const clientId = rowData['assetId'];
     if (clientId) {
+      debugger;
       const html = `
-      <img src="../../">
+        <i class="fa fa-user-circle-o action-buttons">hiiiiiiiiiiiiiii</i>
    `;
       return html;
     }
@@ -276,14 +216,14 @@ export class DayComponent implements OnInit {
   optionsMenu = [
     {
       label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#clientDetailsPopup">
+              data-bs-toggle="modal" data-bs-target="#dayDetailsPopup">
                   <i class="bi bi-pencil"></i>
                     &nbsp;Edit
                   </a>
                   `,
       action: (_e: any, cell: CellComponent) => {
-        const clientData = cell.getRow().getData();
-        this.openPopup();
+        const rowData = cell.getRow().getData();
+        this.openPopup(rowData['birthdayId']);
       },
     },
     {
@@ -297,8 +237,8 @@ export class DayComponent implements OnInit {
     //        &nbsp;Deactivate
     //</a>`,
     //      action: (_e: any, cell: CellComponent) => {
-    //          const clientData = cell.getRow().getData();
-    //          const clientId = clientData['id'];
+    //          const rowData = cell.getRow().getData();
+    //          const clientId = rowData['id'];
     //          this.deactivateClient(clientId);
     //      }
     //  },
@@ -317,9 +257,68 @@ export class DayComponent implements OnInit {
     return `<span>${nullDate}</span>`;
   }
 
-  openPopup() {
+  // Handle "Select All" checkbox
+  toggleAllMonthCheck(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.selectedMonths = checked ? this.monthList.map((m: any) => m.listItemName) : [];
+    this.getMonthDropdownLabel()
+    this.applyFilters();
+  }
+  // Handle individual month selection
+  toggleMonthCheck(event: Event, monthName: string) {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.selectedMonths.push(monthName);
+    } else {
+      this.selectedMonths = this.selectedMonths.filter(m => m !== monthName);
+    }
+    this.getMonthDropdownLabel()
+    this.applyFilters()
+  }
+  getMonthDropdownLabel() {
+    if (this.selectedMonths.length === 0) {
+      this.lableForMonthDropDown = ''
+    } else if (this.selectedMonths.length === this.monthList.length) {
+      this.lableForMonthDropDown = "All";
+    } else {
+      this.lableForMonthDropDown = this.selectedMonths.join(", ");
+    }
+  }
+  // Handle "Select All" checkbox
+  toggleAllDayTypeCheck(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+
+    this.selectedDayType = checked ? this.dayTypeList.map((m: any) => m.listItemDescription) : [];
+
+    this.getDayTypeDropdownLabel()
+    this.applyFilters();
+  }
+  // Handle individual daytype selection
+  toggleDayTypeCheck(event: Event, daytypeName: string) {
+    const checked = (event.target as HTMLInputElement).checked;
+    debugger;
+    if (checked) {
+      this.selectedDayType.push(daytypeName);
+    } else {
+      this.selectedDayType = this.selectedDayType.filter(m => m !== daytypeName);
+    }
+    this.getDayTypeDropdownLabel()
+    this.applyFilters()
+  }
+
+  getDayTypeDropdownLabel() {
+    if (this.selectedDayType.length === 0) {
+      this.lableForDayTypeDropDown = ''
+    } else if (this.selectedDayType.length === this.dayTypeList.length) {
+      this.lableForDayTypeDropDown = "All";
+    } else {
+      this.lableForDayTypeDropDown = this.selectedDayType.join(", ");
+    }
+  }
+
+  openPopup(dayId: any) {
     console.log('dayDetails clicked');
-    this.dayDetailsComponent.openDetailsPopup();
+    this.dayDetailsComponent.openDetailsPopup(dayId);
 
   }
 
@@ -336,34 +335,6 @@ export class DayComponent implements OnInit {
 
 
   deleteDay() {
-  }
-
-  addDay(day: any) {
-    this._dayService.addDay(day)
-      .subscribe({
-        next: (res: any) => {
-          if (res) {
-            this.getDayList();
-          }
-          this.loaderService.hideLoader();
-        },
-        error: (error: any) => {
-          console.log('error : ', error);
-          this.loaderService.hideLoader();
-        }
-      });
-  }
-
-
-  filterGridByMonth() {
-    this.applyFilters();
-
-    // this.getDayList();
-  }
-
-  filterGridByType() {
-    this.applyFilters();
-
   }
 
   filterGridSearchText(event: any) {
@@ -405,7 +376,7 @@ export class DayComponent implements OnInit {
   //     this.typeInput.value = [];
   //   }
 
-  //   this.getDayList();
+  //   this.loadGrid();
 
   // }
 
@@ -442,7 +413,7 @@ export class DayComponent implements OnInit {
   //   this.isTomorrow = (this.task.subtasks != null && this.task.subtasks[1].completed);//(t => t.completed);
   //   this.isYesterday = (this.task.subtasks != null && this.task.subtasks[2].completed);//(t => t.completed);
 
-  //   this.getDayList();
+  //   this.loadGrid();
   // }
 
   applyFilters() {
@@ -454,11 +425,8 @@ export class DayComponent implements OnInit {
       const address = item.address?.toLowerCase().includes(this.searchText);
       const date = item.date?.toLowerCase().includes(this.searchText);
       const mobileNumber = item.mobileNumber?.toLowerCase().includes(this.searchText);
-      // Check if item's month exists in selectedMonths
       const matchesMonth = this.selectedMonths.length === 0 || this.selectedMonths.includes(item.month);
       const matchesDayType = this.selectedDayType.length === 0 || this.selectedDayType.includes(item.type);
-      // const matchesType = this.selectedDayTypeIds.length === 0 || this.selectedDayTypeIds.includes(item.dayTypeId);
-      // return matchesName && matchesMonth && matchesType;
       return (matchesName || email || address || date || mobileNumber) && matchesMonth && matchesDayType;
     });
   }

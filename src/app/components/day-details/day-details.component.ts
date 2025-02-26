@@ -1,22 +1,26 @@
-import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { API_URL } from '../../../utils/api-url';
 import { AssetService } from '../../services/asset/asset.service';
 import { DayService } from '../../services/day/day.service';
 import { LoaderService } from '../../services/loader/loader.service';
+import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { GlobalService } from '../../services/global/global.service';
+import { ApplicationConstants, ApplicationModules, DBConstants } from '../../../utils/application-constants';
 
 @Component({
   selector: 'app-day-details',
   standalone: true,
   templateUrl: './day-details.component.html',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ToasterComponent, CommonModule],
   styleUrls: ['./day-details.component.scss'],
   providers: [DatePipe]
 })
 export class DayDetailsComponent implements OnInit {
-  [x: string]: any;
+  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
+  @ViewChild('btnCloseDayDetailsPopup') btnCloseDayPopup!: ElementRef;
   startDate = new Date();
   dayDetailsForm: FormGroup;
   user: any;
@@ -30,28 +34,22 @@ export class DayDetailsComponent implements OnInit {
   formData: FormData = new FormData();
   dayDetails: any;
   assetDetails: any;
-  IsApprovable: boolean = false;
-  IsVerified: boolean = false;
+  isApprovable: boolean = false;
+  isVerified: boolean = false;
 
-  constructor(private _details: FormBuilder, private _dayService: DayService, 
+  constructor(private _details: FormBuilder, private _dayService: DayService,
     private loaderService: LoaderService,
     private _assetService: AssetService,
+    private _globalService: GlobalService,
+        private renderer: Renderer2,
     private datepipe: DatePipe
   ) {
-    // this._httpClient.get(_globalService.getCommonListItems(API_URL.RELATION)).subscribe(res => {
-    //   this.relation = res;
-    // });
-
-    // this._httpClient.get(_globalService.getCommonListItems(API_URL.DAYTYPE)).subscribe(res => {
-    //   this.dayType = res;
-    // });
-
     this.dayDetailsForm = this._details.group<any>({
       dayId: 0,
       personName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z. ]{3,40}$/)]],
-      dayTypeId: [0, Validators.required],
+      dayTypeId: ['', Validators.required],
       birthdate: ['', Validators.required],
-      relationId: [0, Validators.required],
+      relationId: ['', Validators.required],
       mobileNumber: ['', Validators.pattern(/^[0-9]{8,12}$/)],
       mobileNumber2: ['', Validators.pattern(/^[0-9]{8,12}$/)],
       emailId: ['', Validators.pattern(/^[a-zA-Z_0-9.]{3,}@[a-zA-Z\-]{2,}[.]{1}[a-zA-Z.]{2,10}$/)],
@@ -141,32 +139,33 @@ export class DayDetailsComponent implements OnInit {
 
   patchValues(res: any) {
     if (res != undefined) {
-      this.IsApprovable = res['IsApprovable'];
-      this.IsVerified = res['IsVerified'];
-      this.dayDetailsForm.controls['dayId'].patchValue(res['BirthdayId']);
-      this.dayDetailsForm.controls['personName'].patchValue(res['PersonName']);
-      this.dayDetailsForm.controls['relationId'].patchValue(res['SuperAdminRelationId']);
-      this.dayDetailsForm.controls['dayTypeId'].patchValue(res['DayTypeId']);
-      this.dayDetailsForm.controls['birthdate'].patchValue(this.datepipe.transform(res['Birthdate'], 'dd/MM/yyyy'));
-      this.dayDetailsForm.controls['mobileNumber'].patchValue(res['MobileNumber']);
-      this.dayDetailsForm.controls['mobileNumber2'].patchValue(res['ContactNumber']);
-      this.dayDetailsForm.controls['emailId'].patchValue(res['EmailId']);
-      this.dayDetailsForm.controls['address'].patchValue(res['Address']);
-      this.dayDetailsForm.controls['gender'].patchValue(res['Gender']);
-      this.dayDetailsForm.controls['image'].patchValue(res['Image']);
-      this.dayDetailsForm.controls['assetId'].patchValue(res['AssetId']);
-      // if(res['IsApprovable'] && !res['IsVerified']){
-      this.dayDetailsForm.controls['createdOn'].patchValue(res['CreatedOn']);
-      this.dayDetailsForm.controls['createdBy'].patchValue(res['CreatedBy']);
-      this.dayDetailsForm.controls['modifiedOn'].patchValue(res['ModifiedOn']);
-      this.dayDetailsForm.controls['modifiedBy'].patchValue(res['ModifiedBy']);
+      this.isApprovable = res['isApprovable'];
+      this.isVerified = res['isVerified'];
+      this.dayDetailsForm.controls['dayId'].patchValue(res['birthdayId']);
+      this.dayDetailsForm.controls['personName'].patchValue(res['personName']);
+      this.dayDetailsForm.controls['relationId'].patchValue(res['superAdminRelationId']);
+      this.dayDetailsForm.controls['dayTypeId'].patchValue(res['dayTypeId']);
+      this.dayDetailsForm.controls['birthdate'].patchValue(this.datepipe.transform(res['birthdate'], 'dd/MM/yyyy'));
+      this.dayDetailsForm.controls['mobileNumber'].patchValue(res['mobileNumber']);
+      this.dayDetailsForm.controls['mobileNumber2'].patchValue(res['mobileNumber2']);
+      this.dayDetailsForm.controls['emailId'].patchValue(res['emailId']);
+      this.dayDetailsForm.controls['address'].patchValue(res['address']);
+      this.dayDetailsForm.controls['gender'].patchValue(res['gender']);
+      this.dayDetailsForm.controls['image'].patchValue(res['image']);
+      this.dayDetailsForm.controls['assetId'].patchValue(res['assetId']);
+      // if(res['isApprovable'] && !res['isVerified']){
+      this.dayDetailsForm.controls['createdOn'].patchValue(res['createdOn']);
+      this.dayDetailsForm.controls['createdBy'].patchValue(res['createdBy']);
+      this.dayDetailsForm.controls['modifiedOn'].patchValue(res['modifiedOn']);
+      this.dayDetailsForm.controls['modifiedBy'].patchValue(res['modifiedBy']);
       // }
     }
   }
 
   submitDayDetails() {
+    debugger
     if (!this.dayDetailsForm.valid) {
-      //this._globalService.openSnackBar('Some issue is there');
+      this.toaster.showMessage('Please fill valid details.', 'error');
       return;
     }
     else {
@@ -188,10 +187,39 @@ export class DayDetailsComponent implements OnInit {
     }
   }
 
-  openDetailsPopup() {
+  openDetailsPopup(dayId: any) {
+    this.loaderService.showLoader()
+    this._globalService.getCommonListItems(DBConstants.RELATION)
+      .subscribe({
+        next: (res: any) => {
+          this.relation = res;
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
+
+    this._globalService.getCommonListItems(DBConstants.DAYTYPE)
+      .subscribe({
+        next: (res: any) => {
+          this.dayType = res;
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
+
     const model = document.getElementById('dayDetailsPopup');
     if (model !== null) {
       model.style.display = 'block';
+      this.loaderService.hideLoader()
+    }
+    if (dayId) {
+      this.getDayDetails(dayId);
     }
   }
   closePopup() {
@@ -205,11 +233,17 @@ export class DayDetailsComponent implements OnInit {
     this._dayService.addDay(this.dayDetailsForm.value)
       .subscribe({
         next: () => {
+          this.toaster.showMessage('Record Added Successfully.', 'success');
           this.loaderService.hideLoader();
+          this.renderer
+            .selectRootElement(this.btnCloseDayPopup?.nativeElement)
+            .click();
+          this._globalService.triggerGridReload(ApplicationModules.DAY);
         },
         error: (error: any) => {
-          console.log('error : ', error);
           this.loaderService.hideLoader();
+          this.toaster.showMessage('Some issue is in Add the data.', 'error');
+          return;
         }
       });
   }
@@ -217,14 +251,18 @@ export class DayDetailsComponent implements OnInit {
     this._dayService.updateDay(this.dayDetailsForm.value)
       .subscribe({
         next: (res: any) => {
-          if (res) {
-            
-            //this._globalService.openSnackBar("Record updated successfully");
-
-          }
-          else {
-            //this._globalService.openSnackBar('some issue is in updating the data');
-          }
+          this.toaster.showMessage('Record Updated Successfully.', 'success');
+          this.loaderService.hideLoader();
+          this.renderer
+            .selectRootElement(this.btnCloseDayPopup?.nativeElement)
+            .click();
+          this._globalService.triggerGridReload(ApplicationModules.DAY);
+        },
+        error: (error: any) => {
+          this.loaderService.hideLoader();
+          this.toaster.showMessage('Some issue is in Update the data.', 'error');
+          //this._globalService.openSnackBar('some issue is in update the data');
+          return;
         }
       });
   }

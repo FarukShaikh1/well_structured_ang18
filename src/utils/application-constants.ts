@@ -267,6 +267,7 @@ export const Messages = {
 
 export const ApplicationModules = {
     EXPENSE: 'Expense',
+    DAY: 'Day',
     USER: 'AUTH',
     PROJECT: 'Project',
     REPORT: 'Project',

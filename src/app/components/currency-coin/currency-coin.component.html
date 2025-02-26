@@ -1,43 +1,43 @@
 <div class="main-body">
 
     <div class="coinPic" *ngFor="let item of imageList">
-        <div *ngIf="item.CollectionCurrencyType.includes('Coin')" style="margin: 1vh; height: 65vh;">
+        <div *ngIf="item.collectionCurrencyType.includes('Coin')" style="margin: 1vh; height: 65vh;">
             <div>
                 <div div-avatar class="example-header-image"></div>
-                <div>{{item.CollectionCoinName.substring(0,10)}}</div>
-                <div>{{item.CurrencyCoinType}}</div>
+                <div>{{item.collectionCoinName.substring(0,10)}}</div>
+                <div>{{item.currencyCoinType}}</div>
             </div>
-            <img div-image src={{basePath+item.ImagePath}} style="height: 50vh; width: 25vh"
+            <img div-image src={{basePath+item.imagePath}} style="height: 50vh; width: 25vh"
                 onerror="this.src='../../assets/ProjectAttatchments/Collection_Coins/26bea03d-b86a-4a8b-aa09-29a4cc2ee267.png'"
-                alt={{item.CollectionCoinName}}>
+                alt={{item.collectionCoinName}}>
             <div>
                 <p>
-                    {{item.Description.substring(0, 15)}}
+                    {{item.description.substring(0, 15)}}
                 </p>
             </div>
             <div>
-                <button (click)="currencyCoinDetails(item.CollectionCoinId)">View</button>
+                <button (click)="currencyCoinDetails(item.collectionCoinId)">View</button>
                 <button>Download</button>
                 <button>Edit</button>
             </div>
         </div>
 
-        <div *ngIf="!item.CollectionCurrencyType.includes('Coin')" style="margin: 1vh; height: 65vh;">
+        <div *ngIf="!item.collectionCurrencyType.includes('Coin')" style="margin: 1vh; height: 65vh;">
             <div>
                 <div div-avatar class="example-header-image"></div>
-                <div>{{item.CollectionCoinName}}</div>
-                <div>{{item.CurrencyCoinType}}</div>
+                <div>{{item.collectionCoinName}}</div>
+                <div>{{item.currencyCoinType}}</div>
             </div>
-            <img div-image src={{basePath+item.ImagePath}} style="height: 50vh; width: auto"
+            <img div-image src={{basePath+item.imagePath}} style="height: 50vh; width: auto"
                 onerror="this.src='../../assets/ProjectAttatchments/Collection_Coins/f4e3fdbb-7e39-453a-a8ef-7c888a12cb7c.png'"
-                alt={{item.CollectionCoinName}}>
+                alt={{item.collectionCoinName}}>
             <div>
                 <p>
-                    {{item.Description}}
+                    {{item.description}}
                 </p>
             </div>
             <div>
-                <button (click)="currencyCoinDetails(item.CollectionCoinId)">View</button>
+                <button (click)="currencyCoinDetails(item.collectionCoinId)">View</button>
                 <button>Download</button>
                 <button>Edit</button>
             </div>
@@ -47,39 +47,38 @@
     <div class="table-responsive table-container">
         <table class="table table-striped table-hover styled-table"
             [ngStyle]="{'margin-top': coinSelected.length > 0 ? '0px' : '20px'}">
-                <tr>
-                    <th style="width:7%">
-                        <span>Id</span>
-                        <i class="bi bi-arrow-down-up inlinebox"
-                            (click)="onSortClick($event, 'CollectionCoinName')"></i>
-                    </th>
-                    <th style="width:10%">CollectionCoinName</th>
-                    <th style="width:12%">CountryName</th>
-                    <th style="width:27%">ActualValue</th>
-                    <th style="width:10%;">Indian Value</th>
-                    <th style="width:5%;">Description</th>
-                    <th style="width:5%;">Pic</th>
-                    <th style="width:12%;"></th>
-                </tr>
-                @for(item of filteredDataSource;track $index)
-                {
-                <tr>
-                    <td data-label="id">{{ item.CollectionCoinId }}</td>
-                    <td data-label="CollectionCoinName">{{ item.CollectionCoinName }}</td>
-                    <td data-label="CountryName">{{ item.CountryName }}</td>
-                    <td data-label="ActualValue">{{ item.ActualValue }}</td>
-                    <td data-label="IndianValue">{{ item.IndianValue }}</td>
-                    <td data-label="Description">{{ item.Description }}</td>
-                    <td data-label="Pic">
-                        <i class="fa fa-user-circle-o action-buttons" *ngIf="item.AssetId > 0"></i>
-                    </td>
-                    <td data-label="ACTION" class="td-action text-end">
-                        <button (click)="currencyCoinDetails(item.CollectionCoinId)"
-                            class="btn btn-primary btn-sm action-buttons">
-                            <i class="fa fa-edit"></i> Edit
-                        </button>
-                    </td>
-                </tr>
+            <tr>
+                <th style="width:7%">
+                    <span>Id</span>
+                    <i class="bi bi-arrow-down-up inlinebox" (click)="onSortClick($event, 'collectionCoinName')"></i>
+                </th>
+                <th style="width:10%">CollectionCoinName</th>
+                <th style="width:12%">CountryName</th>
+                <th style="width:27%">ActualValue</th>
+                <th style="width:10%;">Indian Value</th>
+                <th style="width:5%;">Description</th>
+                <th style="width:5%;">Pic</th>
+                <th style="width:12%;"></th>
+            </tr>
+            @for(item of filteredDataSource;track $index)
+            {
+            <tr>
+                <td data-label="id">{{ item.collectionCoinId }}</td>
+                <td data-label="CollectionCoinName">{{ item.collectionCoinName }}</td>
+                <td data-label="CountryName">{{ item.countryName }}</td>
+                <td data-label="ActualValue">{{ item.actualValue }}</td>
+                <td data-label="IndianValue">{{ item.indianValue }}</td>
+                <td data-label="Description">{{ item.description }}</td>
+                <td data-label="Pic">
+                    <i class="fa fa-user-circle-o" *ngIf="item.assetId > 0"></i>
+                </td>
+                <td data-label="ACTION" class="td-action text-end">
+                    <button (click)="currencyCoinDetails(item.collectionCoinId)"
+                        class="btn btn-primary btn-sm action-buttons">
+                        <i class="fa fa-edit"></i> Edit
+                    </button>
+                </td>
+            </tr>
             }
         </table>
     </div>

@@ -7,12 +7,14 @@ import { LocalStorageService } from '../local-storage/local-storage.service';
 import { RoleService } from '../role/role.service';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { API_URL } from '../../../utils/api-url';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GlobalService {
   constructor(
+  private http: HttpClient,
     private localStorageService: LocalStorageService,
     private roleService: RoleService
   ) { }
@@ -129,8 +131,8 @@ export class GlobalService {
   }
   
   getCommonListItems(commonListId: number) {
-    // alert(commonListId)
-    return API_URL.GET_COMMON_LIST_ITEMS + commonListId;
+    const params = new HttpParams()
+      .set('commonListId', commonListId)
+    return this.http.get(API_URL.GET_COMMON_LIST_ITEMS, { params: params });
   }
-
 }
