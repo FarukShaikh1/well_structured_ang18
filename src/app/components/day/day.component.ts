@@ -205,7 +205,7 @@ export class DayComponent implements OnInit {
     if (clientId) {
       debugger;
       const html = `
-        <i class="fa fa-user-circle-o action-buttons">hiiiiiiiiiiiiiii</i>
+        <i class="fa fa-user-circle-o action-buttons"></i>
    `;
       return html;
     }

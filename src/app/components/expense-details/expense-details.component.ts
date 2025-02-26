@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import flatpickr from 'flatpickr';
@@ -11,7 +11,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 @Component({
   selector: 'app-expense-details',
   standalone: true,
-  imports: [ReactiveFormsModule, ToasterComponent],
+  imports: [ReactiveFormsModule, ToasterComponent, CommonModule],
   templateUrl: './expense-details.component.html',
   styleUrls: ['./expense-details.component.scss'],
 })
@@ -39,6 +39,7 @@ export class ExpenseDetailsComponent {
   focusInSource: boolean = false;
   focusInPurpose: boolean = false;
   focusInDescription: boolean = false;
+  isValidAmount: boolean = false;
 
   constructor(private _details: FormBuilder,
     private expenseService: ExpenseService,
@@ -102,6 +103,16 @@ export class ExpenseDetailsComponent {
     if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.\-]$/)) {
       event.preventDefault();
     }
+  }
+
+  validateAmountFields() {
+    debugger;
+    this.sbiValid = this.expenseDetailsForm.controls['sbiAccount'].value && this.expenseDetailsForm.controls['sbiAccount'].value != 0 ;
+    this.cbiValid = this.expenseDetailsForm.controls['cbiAccount'].value && this.expenseDetailsForm.controls['cbiAccount'].value != 0;
+    this.cashValid = this.expenseDetailsForm.controls['cash'].value && this.expenseDetailsForm.controls['cash'].value != 0;
+    this.otherValid = this.expenseDetailsForm.controls['otherAmount'].value && this.expenseDetailsForm.controls['otherAmount'].value != 0;
+
+    this.isValidAmount = this.sbiValid || this.cbiValid || this.cashValid || this.otherValid;
   }
 
   getExpenseSuggestionList() {
@@ -249,19 +260,19 @@ export class ExpenseDetailsComponent {
   focusOutSource() {
     setTimeout(() => {
       this.focusInSource = false;
-    }, 500);
+    }, 200);
   }
 
   focusOutPurpose() {
     setTimeout(() => {
       this.focusInPurpose = false;
-    }, 500);
+    }, 200);
   }
 
   focusOutDescription() {
     setTimeout(() => {
       this.focusInDescription = false;
-    }, 500);
+    }, 200);
   }
 
   patchValues(res: any) {
@@ -279,12 +290,8 @@ export class ExpenseDetailsComponent {
 
   submitExpenseDetails() {
     this.loaderService.showLoader();
-    this.sbiValid = this.expenseDetailsForm.controls['sbiAccount'].value != 0 && this.expenseDetailsForm.controls['sbiAccount'].value != '';
-    this.cbiValid = this.expenseDetailsForm.controls['cbiAccount'].value != 0 && this.expenseDetailsForm.controls['cbiAccount'].value != '';
-    this.cashValid = this.expenseDetailsForm.controls['cash'].value != 0 && this.expenseDetailsForm.controls['cash'].value != '';
-    this.otherValid = this.expenseDetailsForm.controls['otherAmount'].value != 0 && this.expenseDetailsForm.controls['otherAmount'].value != '';
-
-    if (this.sbiValid || this.cbiValid || this.cashValid || this.otherValid) {
+    this.validateAmountFields();
+    if (this.isValidAmount) {
       if (!this.expenseDetailsForm.valid) {
         this.toaster.showMessage('Please fill valid details.', 'error');
         this.loaderService.hideLoader();
