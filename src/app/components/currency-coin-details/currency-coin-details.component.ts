@@ -11,8 +11,8 @@ import { API_URL } from '../../../utils/api-url';
 
 @Component({
   selector: 'app-currency-details',
-  standalone:true,
-  imports:[ReactiveFormsModule],
+  standalone: true,
+  imports: [ReactiveFormsModule],
   templateUrl: './currency-coin-details.component.html',
   styleUrls: ['./currency-coin-details.component.scss']
 })
@@ -30,7 +30,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   assetDetails: any;
 
   constructor(private _details: FormBuilder, private _currencyCoinService: CurrencyCoinService, private _httpClient: HttpClient, private route: ActivatedRoute,
-    private router: Router,  
+    private router: Router,
     private _globalService: GlobalService, private _assetService: AssetService,
     private datepipe: DatePipe
   ) {
@@ -98,23 +98,23 @@ export class CurrencyCoinDetailsComponent implements OnInit {
 
   patchValues(res: any) {
     if (res != undefined) {
-      this.currencyCoinDetailsForm.controls['collectionCoinId'].patchValue(res['BirthcollectionCoinId']);
-      this.currencyCoinDetailsForm.controls['collectionCoinName'].patchValue(res['CollectionCoinName']);
-      this.currencyCoinDetailsForm.controls['countryId'].patchValue(res['CountryId']);
-      this.currencyCoinDetailsForm.controls['coinWeightInGrams'].patchValue(res['CoinWeightInGrams']);
-      this.currencyCoinDetailsForm.controls['actualValue'].patchValue(res['ActualValue']);
-      this.currencyCoinDetailsForm.controls['indianValue'].patchValue(res['IndianValue']);
-      this.currencyCoinDetailsForm.controls['printedYear'].patchValue(res['PrintedYear']);
-      this.currencyCoinDetailsForm.controls['speciality'].patchValue(res['Speciality']);
-      this.currencyCoinDetailsForm.controls['diameterOfCoin'].patchValue(res['DiameterOfCoin']);
-      this.currencyCoinDetailsForm.controls['lengthOfNote'].patchValue(res['LengthOfNote']);
-      this.currencyCoinDetailsForm.controls['breadthOfNote'].patchValue(res['BreadthOfNote']);
-      this.currencyCoinDetailsForm.controls['description'].patchValue(res['Description']);
-      this.currencyCoinDetailsForm.controls['metalUsed'].patchValue(res['MetalUsed']);
-      this.currencyCoinDetailsForm.controls['image'].patchValue(res['Image']);
-      this.currencyCoinDetailsForm.controls['assetId'].patchValue(res['AssetId']);
-      this.currencyCoinDetailsForm.controls['isVerified'].patchValue(res['IsVerified']);
-      this.currencyCoinDetailsForm.controls['isEditable'].patchValue(res['IsEditable']);
+      this.currencyCoinDetailsForm.controls['collectionCoinId'].patchValue(res['birthcollectionCoinId']);
+      this.currencyCoinDetailsForm.controls['collectionCoinName'].patchValue(res['collectionCoinName']);
+      this.currencyCoinDetailsForm.controls['countryId'].patchValue(res['countryId']);
+      this.currencyCoinDetailsForm.controls['coinWeightInGrams'].patchValue(res['coinWeightInGrams']);
+      this.currencyCoinDetailsForm.controls['actualValue'].patchValue(res['actualValue']);
+      this.currencyCoinDetailsForm.controls['indianValue'].patchValue(res['indianValue']);
+      this.currencyCoinDetailsForm.controls['printedYear'].patchValue(res['printedYear']);
+      this.currencyCoinDetailsForm.controls['speciality'].patchValue(res['speciality']);
+      this.currencyCoinDetailsForm.controls['diameterOfCoin'].patchValue(res['diameterOfCoin']);
+      this.currencyCoinDetailsForm.controls['lengthOfNote'].patchValue(res['lengthOfNote']);
+      this.currencyCoinDetailsForm.controls['breadthOfNote'].patchValue(res['breadthOfNote']);
+      this.currencyCoinDetailsForm.controls['description'].patchValue(res['description']);
+      this.currencyCoinDetailsForm.controls['metalUsed'].patchValue(res['metalUsed']);
+      this.currencyCoinDetailsForm.controls['image'].patchValue(res['image']);
+      this.currencyCoinDetailsForm.controls['assetId'].patchValue(res['assetId']);
+      this.currencyCoinDetailsForm.controls['isVerified'].patchValue(res['isVerified']);
+      this.currencyCoinDetailsForm.controls['isEditable'].patchValue(res['isEditable']);
     }
   }
 
@@ -143,20 +143,20 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     this._currencyCoinService.addCurrencyCoin(this.currencyCoinDetailsForm.value).subscribe((result) => {
       if (result) {
         //this._globalService.openSnackBar("Record added successfully");
-        
+
       }
       // else
-        //this._globalService.openSnackBar('some issue is in adding the data');
+      //this._globalService.openSnackBar('some issue is in adding the data');
     });
   }
   updateCurrencyCoinDetails() {
     this._currencyCoinService.updateCurrencyCoin(this.currencyCoinDetailsForm.value).subscribe((result) => {
       if (result) {
         //this._globalService.openSnackBar("Record updated successfully");
-        
+
       }
       // else
-        //this._globalService.openSnackBar('some issue is in updating the data');
+      //this._globalService.openSnackBar('some issue is in updating the data');
     });
   }
 

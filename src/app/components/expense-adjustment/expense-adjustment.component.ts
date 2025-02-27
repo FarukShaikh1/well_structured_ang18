@@ -153,16 +153,16 @@ export class ExpenseAdjustmentComponent implements OnInit {
   }
 
   patchValues(res: any) {
-    this.expenseAdjustmentForm.controls['expenseId'].patchValue(res['ExpenseId']);
-    this.expenseAdjustmentForm.controls['expenseDate'].patchValue(res['ExpenseDate']);
-    this.expenseAdjustmentForm.controls['sourceOrReason'].patchValue(res['SourceOrReason']);
-    this.expenseAdjustmentForm.controls['purpose'].patchValue(res['Purpose']);
-    this.expenseAdjustmentForm.controls['description'].patchValue(res['Description']);
-    this.expenseAdjustmentForm.controls['sbiAccount'].patchValue(res['SbiAccount']);
-    this.expenseAdjustmentForm.controls['cashAmount'].patchValue(res['Cash']);
-    this.expenseAdjustmentForm.controls['otherAmount'].patchValue(res['OtherAmount']);
-    this.expenseAdjustmentForm.controls['cbiAccount'].patchValue(res['CbiAccount']);
-    this.expenseAdjustmentForm.controls['assetId'].patchValue(res['AssetId']);
+    this.expenseAdjustmentForm.controls['expenseId'].patchValue(res['expenseId']);
+    this.expenseAdjustmentForm.controls['expenseDate'].patchValue(res['expenseDate']);
+    this.expenseAdjustmentForm.controls['sourceOrReason'].patchValue(res['sourceOrReason']);
+    this.expenseAdjustmentForm.controls['purpose'].patchValue(res['purpose']);
+    this.expenseAdjustmentForm.controls['description'].patchValue(res['description']);
+    this.expenseAdjustmentForm.controls['sbiAccount'].patchValue(res['sbiAccount']);
+    this.expenseAdjustmentForm.controls['cashAmount'].patchValue(res['cash']);
+    this.expenseAdjustmentForm.controls['otherAmount'].patchValue(res['otherAmount']);
+    this.expenseAdjustmentForm.controls['cbiAccount'].patchValue(res['cbiAccount']);
+    this.expenseAdjustmentForm.controls['assetId'].patchValue(res['assetId']);
   }
   sbiValid = false;
   cbiValid = false;

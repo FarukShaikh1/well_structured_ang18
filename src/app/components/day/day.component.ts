@@ -1,5 +1,4 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { ApplicationModules, ApplicationTableConstants, DBConstants } from '../../../utils/application-constants';
@@ -63,39 +62,39 @@ export class DayComponent implements OnInit {
   selectedDayType: string[] = [];  // Array to store selected DayTypes
 
   constructor(private _dayService: DayService,
-    private _httpClient: HttpClient, public tableUtils: TableUtils,
+    public tableUtils: TableUtils,
     public globalService: GlobalService,
     private loaderService: LoaderService,
-    public datePipe: DatePipe) {
-    this.loaderService.showLoader();
-    globalService.getCommonListItems(DBConstants.MONTH)
-      .subscribe({
-        next: (res: any) => {
-          this.monthList = res;
-          this.loaderService.hideLoader();
-        },
-        error: (error: any) => {
-          console.log('error : ', error);
-          this.loaderService.hideLoader();
-        }
-      });
-
-    this.loaderService.showLoader();
-    globalService.getCommonListItems(DBConstants.DAYTYPE)
-      .subscribe({
-        next: (res: any) => {
-          this.dayTypeList = res;
-          this.loaderService.hideLoader();
-        },
-        error: (error: any) => {
-          console.log('error : ', error);
-          this.loaderService.hideLoader();
-        }
-      });
-  }
+    public datePipe: DatePipe) {  }
 
 
   ngOnInit() {
+    this.loaderService.showLoader();
+    this.globalService.getCommonListItems(DBConstants.MONTH)
+      .subscribe({
+        next: (res: any) => {
+          this.monthList = res;
+          // this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
+
+    // this.loaderService.showLoader();
+    this.globalService.getCommonListItems(DBConstants.DAYTYPE)
+      .subscribe({
+        next: (res: any) => {
+          this.dayTypeList = res;
+          // this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log('error : ', error);
+          this.loaderService.hideLoader();
+        }
+      });
+
     this.columnConfiguration();
     this.loadGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
@@ -117,6 +116,8 @@ export class DayComponent implements OnInit {
         next: (res: any) => {
           this.tableData = res.data;
           this.filteredTableData = res.data;
+          console.log('res : ',res);
+          
           this.loaderService.hideLoader();
         },
         error: (error: any) => {
@@ -180,7 +181,7 @@ export class DayComponent implements OnInit {
         field: 'options',
         maxWidth: 50,
         formatter: (_cell) =>
-          '<button title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         clickMenu: this.optionsMenu,
         hozAlign: 'left',
         headerSort: false,
@@ -203,7 +204,6 @@ export class DayComponent implements OnInit {
     const rowData = cell.getRow().getData();
     const clientId = rowData['assetId'];
     if (clientId) {
-      debugger;
       const html = `
         <i class="fa fa-user-circle-o action-buttons"></i>
    `;
@@ -296,7 +296,6 @@ export class DayComponent implements OnInit {
   // Handle individual daytype selection
   toggleDayTypeCheck(event: Event, daytypeName: string) {
     const checked = (event.target as HTMLInputElement).checked;
-    debugger;
     if (checked) {
       this.selectedDayType.push(daytypeName);
     } else {

@@ -41,7 +41,7 @@ export class DayDetailsComponent implements OnInit {
     private loaderService: LoaderService,
     private _assetService: AssetService,
     private _globalService: GlobalService,
-        private renderer: Renderer2,
+    private renderer: Renderer2,
     private datepipe: DatePipe
   ) {
     this.dayDetailsForm = this._details.group<any>({
@@ -110,10 +110,14 @@ export class DayDetailsComponent implements OnInit {
     this._dayService.getDayDetails(dayId)
       .subscribe({
         next: (res: any) => {
+          console.log('res : ', res);
+
           this.patchValues(res[0]);
           this.dayDetails = res[0];
-          if (this.dayDetails.AssetId) {
-            this.getAssetDetails(this.dayDetails.AssetId);
+          console.log('this.dayDetails?.assetId : ', this.dayDetails?.assetId);
+
+          if (this.dayDetails?.assetId) {
+            this.getAssetDetails(this.dayDetails.assetId);
             this.loaderService.hideLoader();
           }
         },
@@ -127,7 +131,11 @@ export class DayDetailsComponent implements OnInit {
     this._assetService.getAssetDetails(assetId)
       .subscribe({
         next: (res: any) => {
-          this.selectedImage = API_URL.ATTACHMENT + res.OriginalPath;
+          console.log();
+
+          this.selectedImage = API_URL.ATTACHMENT + res.originalPath;
+          console.log('this.selectedImage : ', this.selectedImage);
+
           this.loaderService.hideLoader();
         },
         error: (error: any) => {
@@ -163,7 +171,6 @@ export class DayDetailsComponent implements OnInit {
   }
 
   submitDayDetails() {
-    debugger
     if (!this.dayDetailsForm.valid) {
       this.toaster.showMessage('Please fill valid details.', 'error');
       return;
@@ -227,6 +234,11 @@ export class DayDetailsComponent implements OnInit {
     if (model !== null) {
       model.style.display = 'none';
     }
+    this.dayDetailsForm.reset();
+    this.selectedImage = '';
+    this.renderer
+      .selectRootElement(this.btnCloseDayPopup?.nativeElement)
+      .click();
   }
 
   addDayDetails() {

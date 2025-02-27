@@ -59,7 +59,7 @@ export const API_URL = {
     USERURL: 'user/',
     ASSETURL: 'asset/',
     CURRENCYCOINURL: 'CollectionCoin/',
-    ATTACHMENT: "../../assets/ProjectAttatchments/", // Should be compared with "PhysicalPathDirectory" in "AppSettings" in DotNet
+    ATTACHMENT: "../../../assets/ProjectAttatchments", // Should be compared with "PhysicalPathDirectory" in "AppSettings" in DotNet
     COLLECTIONCOINS: "Collection_Coins",
     BIRTHDAYPERSONPIC: "Birthday_Person_Pic",
 

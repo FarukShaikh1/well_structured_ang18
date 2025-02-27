@@ -106,7 +106,6 @@ export class ExpenseDetailsComponent {
   }
 
   validateAmountFields() {
-    debugger;
     this.sbiValid = this.expenseDetailsForm.controls['sbiAccount'].value && this.expenseDetailsForm.controls['sbiAccount'].value != 0 ;
     this.cbiValid = this.expenseDetailsForm.controls['cbiAccount'].value && this.expenseDetailsForm.controls['cbiAccount'].value != 0;
     this.cashValid = this.expenseDetailsForm.controls['cash'].value && this.expenseDetailsForm.controls['cash'].value != 0;

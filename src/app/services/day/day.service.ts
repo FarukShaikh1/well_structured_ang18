@@ -20,7 +20,7 @@ export class DayService {
 
   }
 
-  getDayList(month: string, dayType: string, searchText: string, isToday: boolean = false, isTomorrow: boolean = false, isYesterday: boolean = false): Observable<any> {
+  getDayList(month: string, dayType: string, searchText: string, isToday: boolean = false, isTomorrow: boolean = false, isYesterday: boolean = false){
     const params = new HttpParams()
       .set('userid', Number(localStorage.getItem("userId")))
       .set('searchText', searchText)
