@@ -43,7 +43,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     formId: string = '';
     formIdOpenedByOtherUser: string = '';
     NavigationURLs = NavigationURLs;
-    selectedTab: string = NavigationURLs.ACTIVE_PROJECT_LIST;
     userName: string = '';
     roleName: string = '';
     roles = ApplicationRoles;
@@ -86,13 +85,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     userList() {
         this.router.navigate([NavigationURLs.USER_LIST]);
-    }
-
-    activeProjectList() {
-        this.router.navigate([NavigationURLs.ACTIVE_PROJECT_LIST], {
-            queryParams: { clientId: this.clientId },
-        });
-        this.getBannerData();
     }
 
     chatSystem() {

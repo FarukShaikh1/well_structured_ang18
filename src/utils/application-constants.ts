@@ -72,40 +72,18 @@ export const NavigationURLs = {
     PROGRAMS: '/home/program',
     HOME: '/home',
     DAY_LIST: '/home/day',
-    HOME_PROJECTS: '/home/projects',
     FORGOT_PASSWORD: '/forgot-password',
     USER_LIST: '/home/manage-users',
     USER_PROFILE: '/home/user-profile',
     CHANGE_PASSWORD: '/home/change-password',
     NAV_CHAT_PANEL: '/home/nav-chat-panel',
-    EXPENSE_LIST: '/home/expense',
-    ACTIVE_PROJECT_LIST: '/home/expenses/projects/project',
-    PROJECT_LIST: '/home/projects/project',
-    INTERNAL_PROJECT_LIST: '/home/internalproject',
-    ACTIVE_INTERNAL_PROJECT_LIST: '/home/expenses/projects/internalproject',
+    EXPENSE_LIST: '/home/expenses',
+    EXPENSE_SUMMARY_LIST: '/home/expense-summary',
+    BUSINESS_LIST: '/home/business',
     REPORT_LIST: '/home/expenses/reports',
-    SAMPLE_FORM_LIST: '/home/expenses/projects/forms',
-    SAMPLE_SUBMISSION_FORM: '/home/expenses/projects/form-home',
-    SAMPLE_SUBMISSION_FORM_STEPS: '/home/sample-submission',
-    DOCUMENT_LIST: '/home/expenses/projects/document',
-    TESTING_AND_RESULTS: '/home/expenses/projects/testing-and-results',
-    PROJECT_USER: '/home/expenses/projects/project-user',
     ALL_NOTIFICATIONS: '/home/notifications',
-    REPORT: '/home/expenses/projects/report',
 };
 
-export const SampleSubmissionFormNotes = {
-    SECTION_A_RUSH: 'The turnaround time chosen here should align with what was agreed upon in the signed agreement, as the timeline in the agreement will be followed. If a different turnaround time is required, please contact your program manager.',
-    SECTION_A_STAT: 'The turnaround time chosen here should align with what was agreed upon in the signed agreement, as the timeline in the agreement will be followed. If a different turnaround time is required, please contact your program manager.',
-    SECTION_A_RETURN: 'Extra charges may apply-please provide courier name and account no. for returns. charges apply.',
-    SECTION_B_INFECTIOUS_AGENTS_YES: 'Please Provide All Applicable Testing Results. If None are Available. Please Contact CBM Prior To Sending Samples.',
-    SECTION_C_TEMPLATE_TO_BE_RETURNED: 'Extra charges may apply – please provide your courier acc. # for returns.',
-    SECTION_C_RETURN_SHIPPING_CONTAINER: 'Extra charges may apply – please provide your courier acc. # for returns.',
-    SECTION_D_EXPENSE_SAMPLE_ID: 'Will Appear on the Testing Certificate as entered.',
-    SECTION_D_SAMPLE_DESCRIPTION: 'Will Appear on the Testing Certificate as entered.',
-    SECTION_D_SAMPLE_LOT_NO: 'Will Appear on the Testing Certificate as entered.',
-    SECTION_E_I_AGREE_PRE_CONTENTS: 'This Sample Submission Form Must Accompany Each Submitted Sample And Acts As An Official Record For The Testing Services Being Performed By SK pharmteco With Respect To The Sample Or Samples Listed Herein. Failure To Provide Timely And Complete Information Could Result In Testing Delays Or Other Issues, For Which SK pharmteco Shall Not Be Liable. Services Requested In This Form Shall Be Governed In Accordance With SK pharmteco’s Terms And Conditions. To The Extent SK pharmteco’s Terms And Conditions Are In Conflict With An Applicable Agreement (Agreement) Between Customer Listed In This Form And SK pharmteco, Such Agreement Will Govern.'
-};
 
 export const Messages = {
     OPERATION_SUCCESS: 'Operation was successful.',
@@ -129,17 +107,6 @@ export const Messages = {
 
     USER_SAVED: 'User registered successfully.',
     USER_SAVED_FAILED: 'Failed to registered user.',
-
-    FEEDBACK_ADDED: 'Feedback added successfully.',
-    FEEDBACK_UPDATED: 'Feedback updated successfully.',
-    FEEDBACK_DELETED: 'Feedback deleted successfully.',
-    ERROR_IN_FEEDBACK_ADD: 'Error occuered in adding feedback.',
-    ERROR_IN_FEEDBACK_UPDATE: 'Error occuered in updating feedback.',
-    ERROR_IN_FEEDBACK_DELETE: 'Error occuered in deleting feedback.',
-
-    FEEDBACK_REPLY_ADDED: 'Reply added successfully.',
-    FEEDBACK_REPLY_UPDATED: 'Reply updated successfully.',
-    FEEDBACK_REPLY_DELETED: 'Reply deleted successfully.',
 
     CHAT_DELETE_CONFIRMATION: 'Are you sure you want to delete chat between',
     ROLE_MODULE_MAPPING_UPDATED_SUCCESSFULLY:
@@ -171,22 +138,6 @@ export const Messages = {
 
     UNABLE_TO_LOAD_EXPENSES: 'Unable to load expense list',
 
-    PROJECTS_FETCHED_SUCCESS: 'Projects fetched successfully.',
-    PROJECT_ADDED_SUCCESS: 'Project details added successfully.',
-    PROJECT_UPDATED_SUCCESS: 'Project details updated successfully.',
-    ERROR_IN_PROJECT_REMOVE: 'Error in removing project.',
-
-    ERROR_IN_FETCH_PROJECT:
-        'Unable to load project data. Please try again later.',
-    PROJECT_USER_ADDED_SUCCESS: 'User added successfully.',
-    ERROR_IN_PROJECT_USER_ADD: 'Error in adding project user.',
-    PROJECT_USER_REMOVED_SUCCESS: 'User removed from the project successfully.',
-    ERROR_IN_PROJECT_USER_REMOVE: 'Error in removing project user.',
-
-    PROJECT_NAME_VALIDATION_MSG:
-        'Project Name can only contain alphabetic characters, underscores (_), hyphens (-), and spaces.',
-    ERROR_IN_FETCH_PROJECT_DATA: 'Error fetching project data',
-    ERROR_IN_LOAD_PROJECTS: 'Unable to load project list',
     DATE_DISMATCHED:
         'End Date should be greater than or equal to the Start Date.',
     REQUIRED_MSG: 'This Field is required.',
@@ -256,9 +207,6 @@ export const Messages = {
     USER_REACTIVATED_SUCCESS: 'User reactivated successfully.',
     ERROR_IN_DEACTIVATING_USER: 'Error in deactivating user.',
 
-    LIMS_ID_ADDED_SUCCESSFULLY: 'LIMS Project ID added successfully.',
-    LIMS_ID_UPDATED_SUCCESSFULLY: 'LIMS Project ID updated successfully.',
-    INVALID_LIMS_ID: 'Invalid LIMS Project ID.',
     USER_EXPENSE_ASSOCIATION_EXISTS: 'Can\'t add the expense representative, as the expense representative is added to the other expense.',
 
     SAVE_AS_DRAFT_CONFIRMATION_MSG: 'Are you sure you want to save this as a draft and close on this step?',
@@ -267,17 +215,11 @@ export const Messages = {
 
 export const ApplicationModules = {
     EXPENSE: 'Expense',
+    BUSINESS: 'Business',
     DAY: 'Day',
     USER: 'AUTH',
-    PROJECT: 'Project',
-    REPORT: 'Project',
     DOCUMENT: 'Documents',
-    CUSTOMER: 'Customers',
     ROLE_MODULE_MAPPING: 'RoleModuleMapping',
-    FEEDBACK: 'Feedback',
-    SAMPLE_SUBMISSION_FORM: 'SampleSubmissionForm',
-    USER_PROJECT: 'UserProject',
-    LIMS: 'LIMS'
 };
 
 export const ApplicationModuleActions = {
@@ -291,10 +233,8 @@ export const ApplicationModuleActions = {
 
 export const ApplicationRoles = {
     Platform_Admin: 'Platform Admin',
-    Project_Manager: 'Project Manager',
     Finance_User: 'Finance User',
     Sample_Management_User: 'Sample Management User',
-    Internal_PD: 'Internal PD',
     External_Expense: 'External Expense'
 };
 export const DBConstants = {

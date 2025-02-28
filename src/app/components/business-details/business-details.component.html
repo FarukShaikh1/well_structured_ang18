@@ -1,37 +1,37 @@
-<div class="modal fade modal-md" id="expenseDetailsPopup" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade modal-md" id="businessDetailsPopup" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add Expense</h4>
-                <button #btnCloseExpenseDetailsPopup class="btn-close" (click)="closePopup()"
+                <h4 class="modal-title">Add Business</h4>
+                <button #btnCloseBusinessDetailsPopup class="btn-close" (click)="closePopup()"
                     data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
-                <form [formGroup]="expenseDetailsForm" (ngSubmit)="submitExpenseDetails()">
+                <form [formGroup]="businessDetailsForm" (ngSubmit)="submitBusinessDetails()">
                     <div>
 
                         <div style="display: none;">
-                            <p>expenseId</p>
-                            <input formControlName="expenseId">
+                            <p>businessId</p>
+                            <input formControlName="businessId">
                         </div>
                         <div class="row">
                             <div class="col-6">
                                 <label> Choose a date</label>
-                                <input id="expenseDate" class="form-control form-control-lg text-dark bg-transparent"
+                                <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent"
                                     type="date" placeholder="DD/MM/YYYY" appearance="outline"
-                                    formControlName="expenseDate" [ngClass]="{
+                                    formControlName="businessDate" [ngClass]="{
                                         'error-border':
-                                        expenseDetailsForm.get('expenseDate')?.touched &&
-                                        expenseDetailsForm.get('expenseDate')?.invalid
+                                        businessDetailsForm.get('businessDate')?.touched &&
+                                        businessDetailsForm.get('businessDate')?.invalid
                                       }" />
-                                @if(expenseDetailsForm.get('expenseDate')?.touched &&
-                                expenseDetailsForm.get('expenseDate')?.invalid){
+                                @if(businessDetailsForm.get('businessDate')?.touched &&
+                                businessDetailsForm.get('businessDate')?.invalid){
                                 <div class="text-danger">
-                                    @if(expenseDetailsForm.get('expenseDate')?.errors?.['required']){
+                                    @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
                                     Date is required.
                                     }
-                                    @else if(expenseDetailsForm.get('expenseDate')?.errors?.['pattern']){
+                                    @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
                                     Invalid Date.
                                     }
                                 </div>
@@ -46,16 +46,16 @@
                                     formControlName="sourceOrReason" (input)="onSourceReasonChange($event)"
                                     (focus)="focusInSource=true" (focusout)="focusOutSource()" [ngClass]="{
                                         'error-border':
-                                        expenseDetailsForm.get('sourceOrReason')?.touched &&
-                                        expenseDetailsForm.get('sourceOrReason')?.invalid
+                                        businessDetailsForm.get('sourceOrReason')?.touched &&
+                                        businessDetailsForm.get('sourceOrReason')?.invalid
                                       }">
-                                @if(expenseDetailsForm.get('sourceOrReason')?.touched &&
-                                expenseDetailsForm.get('sourceOrReason')?.invalid){
+                                @if(businessDetailsForm.get('sourceOrReason')?.touched &&
+                                businessDetailsForm.get('sourceOrReason')?.invalid){
                                 <div class="text-danger">
-                                    @if(expenseDetailsForm.get('sourceOrReason')?.errors?.['required']){
+                                    @if(businessDetailsForm.get('sourceOrReason')?.errors?.['required']){
                                     Source/Reason is required.
                                     }
-                                    @else if(expenseDetailsForm.get('sourceOrReason')?.errors?.['pattern']){
+                                    @else if(businessDetailsForm.get('sourceOrReason')?.errors?.['pattern']){
                                     Invalid source/Reason.
                                     }
                                 </div>
@@ -126,7 +126,7 @@
                                 <label>Description </label>
                                 <textarea formControlName="description" (input)="onDescriptionChange($event)"
                                     (focus)="focusInDescription=true" (focusout)="focusOutDescription()"
-                                    placeholder="Details about expense"
+                                    placeholder="Details about business"
                                     class="form-control form-control-lg text-dark bg-transparent"></textarea>
 
                                 @if(filteredDescriptionList?.length > 0 && focusInDescription){
@@ -150,7 +150,7 @@
                                         (click)="closePopup()" data-bs-dismiss="modal"> Cancel</button>
                                     <button class="btn btn-danger rounded-button" type="reset"> Reset</button>
                                     <button class="btn btn-primary rounded-button" type="submit"
-                                        [disabled]="expenseDetailsForm.invalid || !isValidAmount">Save</button>
+                                        [disabled]="businessDetailsForm.invalid || !isValidAmount">Save</button>
                                 </div>
                             </div>
                         </div>

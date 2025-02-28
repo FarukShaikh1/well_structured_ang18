@@ -1,22 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms'
-import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
-import { HttpClient } from '@angular/common/http';
-import { AssetService } from '../../services/asset/asset.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalService } from '../../services/global/global.service'
-import { DatePipe } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { API_URL } from '../../../utils/api-url';
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { CurrencyCoinService } from "../../services/currency-coin/currency-coin.service";
+import { HttpClient } from "@angular/common/http";
+import { AssetService } from "../../services/asset/asset.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { GlobalService } from "../../services/global/global.service";
+import { DatePipe } from "@angular/common";
+import { ReactiveFormsModule } from "@angular/forms";
+import { API_URL } from "../../../utils/api-url";
 
 @Component({
-  selector: 'app-currency-details',
+  selector: "app-currency-details",
   standalone: true,
   imports: [ReactiveFormsModule],
-  templateUrl: './currency-coin-details.component.html',
-  styleUrls: ['./currency-coin-details.component.scss']
+  templateUrl: "./currency-coin-details.component.html",
+  styleUrls: ["./currency-coin-details.component.scss"],
 })
-
 export class CurrencyCoinDetailsComponent implements OnInit {
   currencyCoinDetailsForm: FormGroup;
   user: any;
@@ -29,22 +28,29 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   currencyCoinDetails: any;
   assetDetails: any;
 
-  constructor(private _details: FormBuilder, private _currencyCoinService: CurrencyCoinService, private _httpClient: HttpClient, private route: ActivatedRoute,
+  constructor(
+    private _details: FormBuilder,
+    private _currencyCoinService: CurrencyCoinService,
+    private _httpClient: HttpClient,
+    private route: ActivatedRoute,
     private router: Router,
-    private _globalService: GlobalService, private _assetService: AssetService,
+    private _globalService: GlobalService,
+    private _assetService: AssetService,
     private datepipe: DatePipe
   ) {
     this.currencyCoinDetailsForm = this._details.group<any>({
       collectionCoinId: 0,
-      collectionCoinName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z. ]{3,40}$/)]],
+      collectionCoinName: [
+        "",
+        [Validators.required, Validators.pattern(/^[a-zA-Z. ]{3,40}$/)],
+      ],
       countryId: [0, Validators.required],
-      mobileNumber: ['', Validators.pattern(/^[0-9]{8,12}$/)],
-      mobileNumber2: ['', Validators.pattern(/^[0-9]{8,12}$/)],
-      address: '',
+      mobileNumber: ["", Validators.pattern(/^[0-9]{8,12}$/)],
+      mobileNumber2: ["", Validators.pattern(/^[0-9]{8,12}$/)],
+      address: "",
       assetId: 0,
-      image: null
-
-    })
+      image: null,
+    });
   }
 
   onDragOver(event: any) {
@@ -61,11 +67,10 @@ export class CurrencyCoinDetailsComponent implements OnInit {
 
   private handleImageDrop(files: FileList | null): void {
     if (files && files.length > 0) {
-
       const file = files[0];
       this.selectedImageFile = files[0];
-      if (file.type.startsWith('image/')) {
-        this.formData.append('file', file);
+      if (file.type.startsWith("image/")) {
+        this.formData.append("file", file);
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -73,48 +78,78 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         };
         reader.readAsDataURL(file);
       } else {
-        alert('Please select a valid image file.');
+        alert("Please select a valid image file.");
       }
     }
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   getCurrencyCoinDetails(collectionCoinId: number) {
-    this._currencyCoinService.getCurrencyCoinDetails(collectionCoinId).subscribe((res: any) => {
-      this.currencyCoinDetails = res[0];
-      this.patchValues(res);
-    }
-    )
+    this._currencyCoinService
+      .getCurrencyCoinDetails(collectionCoinId)
+      .subscribe((res: any) => {
+        this.currencyCoinDetails = res[0];
+        this.patchValues(res);
+      });
   }
   getAssetDetails(assetId: number) {
     this._assetService.getAssetDetails(assetId).subscribe((res: any) => {
       this.selectedImage = API_URL.ATTACHMENT + res.OriginalPath;
-    }
-    )
-
+    });
   }
 
   patchValues(res: any) {
     if (res != undefined) {
-      this.currencyCoinDetailsForm.controls['collectionCoinId'].patchValue(res['birthcollectionCoinId']);
-      this.currencyCoinDetailsForm.controls['collectionCoinName'].patchValue(res['collectionCoinName']);
-      this.currencyCoinDetailsForm.controls['countryId'].patchValue(res['countryId']);
-      this.currencyCoinDetailsForm.controls['coinWeightInGrams'].patchValue(res['coinWeightInGrams']);
-      this.currencyCoinDetailsForm.controls['actualValue'].patchValue(res['actualValue']);
-      this.currencyCoinDetailsForm.controls['indianValue'].patchValue(res['indianValue']);
-      this.currencyCoinDetailsForm.controls['printedYear'].patchValue(res['printedYear']);
-      this.currencyCoinDetailsForm.controls['speciality'].patchValue(res['speciality']);
-      this.currencyCoinDetailsForm.controls['diameterOfCoin'].patchValue(res['diameterOfCoin']);
-      this.currencyCoinDetailsForm.controls['lengthOfNote'].patchValue(res['lengthOfNote']);
-      this.currencyCoinDetailsForm.controls['breadthOfNote'].patchValue(res['breadthOfNote']);
-      this.currencyCoinDetailsForm.controls['description'].patchValue(res['description']);
-      this.currencyCoinDetailsForm.controls['metalUsed'].patchValue(res['metalUsed']);
-      this.currencyCoinDetailsForm.controls['image'].patchValue(res['image']);
-      this.currencyCoinDetailsForm.controls['assetId'].patchValue(res['assetId']);
-      this.currencyCoinDetailsForm.controls['isVerified'].patchValue(res['isVerified']);
-      this.currencyCoinDetailsForm.controls['isEditable'].patchValue(res['isEditable']);
+      this.currencyCoinDetailsForm.controls["collectionCoinId"].patchValue(
+        res["birthcollectionCoinId"]
+      );
+      this.currencyCoinDetailsForm.controls["collectionCoinName"].patchValue(
+        res["collectionCoinName"]
+      );
+      this.currencyCoinDetailsForm.controls["countryId"].patchValue(
+        res["countryId"]
+      );
+      this.currencyCoinDetailsForm.controls["coinWeightInGrams"].patchValue(
+        res["coinWeightInGrams"]
+      );
+      this.currencyCoinDetailsForm.controls["actualValue"].patchValue(
+        res["actualValue"]
+      );
+      this.currencyCoinDetailsForm.controls["indianValue"].patchValue(
+        res["indianValue"]
+      );
+      this.currencyCoinDetailsForm.controls["printedYear"].patchValue(
+        res["printedYear"]
+      );
+      this.currencyCoinDetailsForm.controls["speciality"].patchValue(
+        res["speciality"]
+      );
+      this.currencyCoinDetailsForm.controls["diameterOfCoin"].patchValue(
+        res["diameterOfCoin"]
+      );
+      this.currencyCoinDetailsForm.controls["lengthOfNote"].patchValue(
+        res["lengthOfNote"]
+      );
+      this.currencyCoinDetailsForm.controls["breadthOfNote"].patchValue(
+        res["breadthOfNote"]
+      );
+      this.currencyCoinDetailsForm.controls["description"].patchValue(
+        res["description"]
+      );
+      this.currencyCoinDetailsForm.controls["metalUsed"].patchValue(
+        res["metalUsed"]
+      );
+      this.currencyCoinDetailsForm.controls["image"].patchValue(res["image"]);
+      this.currencyCoinDetailsForm.controls["assetId"].patchValue(
+        res["assetId"]
+      );
+      this.currencyCoinDetailsForm.controls["isVerified"].patchValue(
+        res["isVerified"]
+      );
+      this.currencyCoinDetailsForm.controls["isEditable"].patchValue(
+        res["isEditable"]
+      );
     }
   }
 
@@ -122,15 +157,16 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     if (!this.currencyCoinDetailsForm.valid) {
       //this._globalService.openSnackBar('Some issue is there');
       return;
-    }
-    else {
+    } else {
       try {
-        const selectedDate = new Date(this.currencyCoinDetailsForm.value['birthdate']);
-        this.currencyCoinDetailsForm.value['birthdate'] = this.datepipe.transform(selectedDate, 'yyyy-MM-ddTHH:mm:ss');
+        const selectedDate = new Date(
+          this.currencyCoinDetailsForm.value["birthdate"]
+        );
+        this.currencyCoinDetailsForm.value["birthdate"] =
+          this.datepipe.transform(selectedDate, "yyyy-MM-ddTHH:mm:ss");
         if (this.formData) {
           this.addImage();
         }
-
       } catch (error) {
         //this._globalService.openSnackBar("Error in adding data : " + error);
         console.error("Error in adding data : ", error);
@@ -138,47 +174,50 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     }
   }
 
-
   addCurrencyCoinDetails() {
-    this._currencyCoinService.addCurrencyCoin(this.currencyCoinDetailsForm.value).subscribe((result) => {
-      if (result) {
-        //this._globalService.openSnackBar("Record added successfully");
-
-      }
-      // else
-      //this._globalService.openSnackBar('some issue is in adding the data');
-    });
+    this._currencyCoinService
+      .addCurrencyCoin(this.currencyCoinDetailsForm.value)
+      .subscribe((result) => {
+        if (result) {
+          //this._globalService.openSnackBar("Record added successfully");
+        }
+        // else
+        //this._globalService.openSnackBar('some issue is in adding the data');
+      });
   }
   updateCurrencyCoinDetails() {
-    this._currencyCoinService.updateCurrencyCoin(this.currencyCoinDetailsForm.value).subscribe((result) => {
-      if (result) {
-        //this._globalService.openSnackBar("Record updated successfully");
-
-      }
-      // else
-      //this._globalService.openSnackBar('some issue is in updating the data');
-    });
+    this._currencyCoinService
+      .updateCurrencyCoin(this.currencyCoinDetailsForm.value)
+      .subscribe((result) => {
+        if (result) {
+          //this._globalService.openSnackBar("Record updated successfully");
+        }
+        // else
+        //this._globalService.openSnackBar('some issue is in updating the data');
+      });
   }
 
   addOrUpdateCurrencyCoinDetails() {
-    if (this.currencyCoinDetailsForm.value['collectionCoinId'] > 0) {
-      this.updateCurrencyCoinDetails()
-    }
-    else {
+    if (this.currencyCoinDetailsForm.value["collectionCoinId"] > 0) {
+      this.updateCurrencyCoinDetails();
+    } else {
       this.addCurrencyCoinDetails();
     }
   }
   addImage() {
     if (this.selectedImageFile) {
-
-      this._currencyCoinService.uploadImage(this.currencyCoinDetailsForm.value['assetId'], 'Collection_Coins', this.formData).subscribe((response) => {
-        this.currencyCoinDetailsForm.value['assetId'] = response;
-        this.addOrUpdateCurrencyCoinDetails();
-      });
-    }
-    else {
+      this._currencyCoinService
+        .uploadImage(
+          this.currencyCoinDetailsForm.value["assetId"],
+          "Collection_Coins",
+          this.formData
+        )
+        .subscribe((response) => {
+          this.currencyCoinDetailsForm.value["assetId"] = response;
+          this.addOrUpdateCurrencyCoinDetails();
+        });
+    } else {
       this.addOrUpdateCurrencyCoinDetails();
     }
   }
-
 }

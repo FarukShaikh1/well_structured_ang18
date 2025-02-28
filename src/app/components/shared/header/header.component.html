@@ -6,7 +6,19 @@
   </div>
   <div class="d-flex align-items-center flex-grow-1 justify-content-end">
     <div class="d-flex align-items-center position-relative me-3 flex-shrink-0">
-      <button (click)="navigateToExpenseList()" class="font-weight-bold txt-btn p-2" [ngClass]="{
+      <button (click)="navigateToBusinessList()" class="font-weight-bold txt-btn p-2" [ngClass]="{
+        'active-link':
+          isActiveMenu(NavigationURLs.BUSINESS_LIST)
+      }">
+      Business
+    </button>&nbsp;
+    <button (click)="navigateToExpenseSummaryList()" class="font-weight-bold txt-btn p-2" [ngClass]="{
+        'active-link':
+          isActiveMenu(NavigationURLs.EXPENSE_SUMMARY_LIST)
+      }">
+      Expense-Summary
+    </button>&nbsp;
+    <button (click)="navigateToExpenseList()" class="font-weight-bold txt-btn p-2" [ngClass]="{
           'active-link':
             isActiveMenu(NavigationURLs.EXPENSE_LIST)
         }">

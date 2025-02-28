@@ -8,6 +8,7 @@ import { ExpenseDetailsComponent } from './components/expense-details/expense-de
 import { ExpenseReportComponent } from './components/expense-report/expense-report.component';
 import { ExpenseSummaryComponent } from './components/expense-summary/expense-summary.component';
 import { ExpenseComponent } from './components/expense/expense.component';
+import { BusinessComponent } from './components/business/business.component';
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
@@ -33,7 +34,7 @@ export const routes: Routes = [
       import('./components/home/home.component').then((m) => m.HomeComponent),
     // canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'expense', pathMatch: 'full' },
+      { path: '', redirectTo: 'expenses', pathMatch: 'full' },
       {
         path: 'day',
         children: [
@@ -41,7 +42,8 @@ export const routes: Routes = [
           { path: 'day-details', component: DayDetailsComponent },
         ]
       },
-      { path: 'expense', component: ExpenseComponent },
+      { path: 'expenses', component: ExpenseComponent },
+      { path: 'business', component: BusinessComponent },
       { path: 'expense-summary', component: ExpenseSummaryComponent },
       { path: 'expense-report', component: ExpenseReportComponent },
       { path: 'expense-details', component: ExpenseDetailsComponent },

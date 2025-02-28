@@ -23,10 +23,6 @@ export class UserService {
     return this.httpService.get(API_URL.GET_LOGGED_IN_USER_DETAILS);
   }
 
-  getProjectManager(): Observable<any> {
-    return this.httpService.get(API_URL.GET_ALL_PROJECT_MANAGER);
-  }
-
   getUserByIdOrEmail(value: string, isId: boolean): Observable<any> {
     if (isId) {
       return this.getUserDetailsById(value);
@@ -53,22 +49,6 @@ export class UserService {
     } else {
       return this.httpService.delete<any>(API_URL.REACTIVATE_USER + id);
     }
-  }
-
-  getProjectUsersByProjectId(projectId: string): Observable<any> {
-    return this.httpService.get(
-      API_URL.GET_ALL_PROJECT_USER_BY_PROJECTID + projectId
-    );
-  }
-
-  removeProjectUsersByid(id: any): Observable<any> {
-    return this.httpService.delete(
-      API_URL.REMOVE_PROJECT_USER_BY_PROJECTID + id
-    );
-  }
-
-  addProjectUser(userData: any): Observable<any> {
-    return this.httpService.post<any>(API_URL.ADD_PROJECT_USER, userData);
   }
 
   updateUser(userData: any): Observable<any> {

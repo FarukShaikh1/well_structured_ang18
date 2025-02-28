@@ -8,10 +8,10 @@ import {
   ApplicationTableConstants,
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
-import { ExpenseService } from "../../services/expense/expense.service";
+import { BusinessService } from "../../services/business/business.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
-import { ExpenseDetailsComponent } from "../expense-details/expense-details.component";
+import { BusinessDetailsComponent } from "../business-details/business-details.component";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
@@ -22,26 +22,26 @@ export interface Task {
 }
 
 @Component({
-  selector: "app-expense",
+  selector: "app-business",
   standalone: true,
   imports: [
     CommonModule,
     TabulatorGridComponent,
-    ExpenseDetailsComponent,
+    BusinessDetailsComponent,
     ConfirmationDialogComponent,
   ],
-  templateUrl: "./expense.component.html",
+  templateUrl: "./business.component.html",
   providers: [DatePipe, DateUtils],
-  styleUrls: ["./expense.component.scss"],
+  styleUrls: ["./business.component.scss"],
 })
-export class ExpenseComponent implements OnInit {
+export class BusinessComponent implements OnInit {
   @ViewChild("searchInput") searchInput!: ElementRef;
   @ViewChild("minInput") minInput!: any;
   @ViewChild("maxInput") maxInput!: any;
   @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
-  @ViewChild(ExpenseDetailsComponent)
-  expenseDetailsComponent!: ExpenseDetailsComponent;
+  @ViewChild(BusinessDetailsComponent)
+  businessDetailsComponent!: BusinessDetailsComponent;
   @ViewChild(ConfirmationDialogComponent, { static: false })
   confirmationDialog!: ConfirmationDialogComponent;
 
@@ -52,7 +52,7 @@ export class ExpenseComponent implements OnInit {
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
 
-  lastExpenseDate: Date = new Date();
+  lastBusinessDate: Date = new Date();
 
   fromDate = new Date();
   toDate = new Date();
@@ -62,20 +62,20 @@ export class ExpenseComponent implements OnInit {
   minAmount: number = 0;
   maxAmount: number = 0;
   sourceOrReasonList: any;
-  expenseId: string = "";
+  businessId: string = "";
 
   optionsMenu = [
     {
       label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#expenseDetailsPopup">
+              data-bs-toggle="modal" data-bs-target="#businessDetailsPopup">
                   <i class="bi bi-pencil"></i>
                     &nbsp;Edit
                   </a>
                   `,
       action: (_e: any, cell: CellComponent) => {
-        const expenseData = cell.getRow().getData();
-        const expenseId = expenseData["expenseId"];
-        this.expenseDetails(expenseId);
+        const businessData = cell.getRow().getData();
+        const businessId = businessData["businessId"];
+        this.businessDetails(businessId);
       },
     },
     {
@@ -89,15 +89,15 @@ export class ExpenseComponent implements OnInit {
                   </a>
                   `,
       action: (_e: any, cell: CellComponent) => {
-        const expenseData = cell.getRow().getData();
-        const expenseId = expenseData["expenseId"];
-        this.deleteExpense(expenseId);
+        const businessData = cell.getRow().getData();
+        const businessId = businessData["businessId"];
+        this.deleteBusiness(businessId);
       },
     },
   ];
 
   constructor(
-    private expenseService: ExpenseService,
+    private businessService: BusinessService,
     private _globalService: GlobalService,
     public datePipe: DatePipe,
     private loaderService: LoaderService,
@@ -106,26 +106,26 @@ export class ExpenseComponent implements OnInit {
 
   ngOnInit() {
     this.loaderService.showLoader();
-    this.expenseColumnConfiguration();
+    this.businessColumnConfiguration();
     this.fromDate.setDate(this.toDate.getDate() - 30);
     this.getSourceOrReasonList();
     this.LoadGrid();
     this._globalService.reloadGrid$.subscribe((listName: string) => {
-      if (listName === ApplicationModules.EXPENSE) {
+      if (listName === ApplicationModules.BUSINESS) {
         this.LoadGrid();
       }
     });
     this._globalService.refreshList$.subscribe((listName: string) => {
-      if (listName === ApplicationModules.EXPENSE) {
+      if (listName === ApplicationModules.BUSINESS) {
         this.applyFilters();
       }
     });
   }
-  expenseColumnConfiguration() {
+  businessColumnConfiguration() {
     this.tableColumnConfig = [
       {
-        title: "Expense Date",
-        field: "expenseDate",
+        title: "Business Date",
+        field: "businessDate",
         sorter: "alphanum",
         formatter: this.dateFormatter.bind(this),
       },
@@ -228,7 +228,7 @@ export class ExpenseComponent implements OnInit {
     this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
     this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
 
-    this.getExpenseList();
+    this.getBusinessList();
     if (this.searchInput) {
       this.searchInput.nativeElement.value = "";
     }
@@ -243,7 +243,7 @@ export class ExpenseComponent implements OnInit {
   getSourceOrReasonList() {
     this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
     this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-    this.expenseService
+    this.businessService
       .getSourceOrReasonList(
         this.fromDate.toString(),
         this.toDate.toString(),
@@ -263,7 +263,7 @@ export class ExpenseComponent implements OnInit {
 
   applyFilters(all: boolean = false) {
     if (all) {
-      this.getExpenseList();
+      this.getBusinessList();
     }
     this.filteredTableData = this.tableData.filter((item: any) => {
       const searchText =
@@ -279,27 +279,27 @@ export class ExpenseComponent implements OnInit {
         (item.credit !== 0 && Math.abs(item.credit) <= this.maxAmount);
       return searchText && minAmountCondition && maxAmountCondition;
     });
-    console.log("this.lastExpenseDate : ", this.lastExpenseDate);
+    console.log("this.lastBusinessDate : ", this.lastBusinessDate);
   }
 
-  getLatestExpenseDate(): any {
+  getLatestBusinessDate(): any {
     if (!this.filteredTableData || this.filteredTableData.length === 0) {
       this.loaderService.hideLoader();
       return new Date(); // Return null if no data is available
     }
     this.loaderService.hideLoader();
-    return this.filteredTableData[0]["expenseDate"];
+    return this.filteredTableData[0]["businessDate"];
   }
 
-  // hideExpense(expenseId: number) {
+  // hideBusiness(businessId: number) {
   //   this.onTableDataChange(1);
   //   this.filteredDataSource = this.filteredDataSource.filter((item: any) => {
-  //     const includeExpense = item.expenseId != expenseId;
-  //     return includeExpense;
+  //     const includeBusiness = item.businessId != businessId;
+  //     return includeBusiness;
   //   });
   //   this.filteredSummaryDataSource = this.filteredSummaryDataSource.filter((item: any) => {
-  //     const includeExpense = item.expenseId != expenseId;
-  //     return includeExpense;
+  //     const includeBusiness = item.businessId != businessId;
+  //     return includeBusiness;
   //   });
   // }
 
@@ -309,13 +309,13 @@ export class ExpenseComponent implements OnInit {
     this.applyFilters();
   }
 
-  getExpenseList() {
+  getBusinessList() {
     this.loaderService.showLoader();
     this.filterColumns = this.tableColumnConfig.filter((col) =>
       ["SourceOrReason", "emailId"].includes(col.field ?? "")
     );
-    this.expenseService
-      .getExpenseList(
+    this.businessService
+      .getBusinessList(
         this.formattedFromDate,
         this.formattedToDate,
         "",
@@ -327,8 +327,8 @@ export class ExpenseComponent implements OnInit {
         next: (res: any) => {
           this.tableData = res;
           this.filteredTableData = res;
-          this.lastExpenseDate = this.getLatestExpenseDate();
-          console.log("this.lastExpenseDate : ", this.lastExpenseDate);
+          this.lastBusinessDate = this.getLatestBusinessDate();
+          console.log("this.lastBusinessDate : ", this.lastBusinessDate);
           console.log("this.filteredTableData : ", this.filteredTableData);
           this.loaderService.hideLoader();
         },
@@ -339,24 +339,24 @@ export class ExpenseComponent implements OnInit {
       });
   }
 
-  expenseDetails(data: any) {
+  businessDetails(data: any) {
     this.loaderService.showLoader();
-    this.expenseDetailsComponent.openDetailsPopup(data);
+    this.businessDetailsComponent.openDetailsPopup(data);
   }
 
-  deleteExpense(expenseId: string) {
-    if (expenseId) {
-      this.expenseId = expenseId;
+  deleteBusiness(businessId: string) {
+    if (businessId) {
+      this.businessId = businessId;
       this.confirmationDialog.openConfirmationPopup(
         "Confirmation",
-        "Are you sure you want to delete this expense? This action cannot be undone."
+        "Are you sure you want to delete this business? This action cannot be undone."
       );
     }
   }
 
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
-    this.expenseService.deleteExpense(this.expenseId).subscribe({
+    this.businessService.deleteBusiness(this.businessId).subscribe({
       next: (res: any) => {
         this.LoadGrid();
       },
@@ -366,8 +366,8 @@ export class ExpenseComponent implements OnInit {
       },
     });
   }
-  addExpense(expense: any) {
-    this.expenseService.addExpense(expense).subscribe({
+  addBusiness(business: any) {
+    this.businessService.addBusiness(business).subscribe({
       next: (res: any) => {
         this.LoadGrid();
       },
@@ -378,7 +378,7 @@ export class ExpenseComponent implements OnInit {
     });
   }
 
-  expenseAdjustment() {}
+  businessAdjustment() {}
 
   filterGridByFromDate(date: any) {
     console.log("fromDate : ", this.fromDate);

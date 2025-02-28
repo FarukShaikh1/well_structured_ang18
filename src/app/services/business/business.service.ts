@@ -7,20 +7,20 @@ import { API_URL } from "../../../utils/api-url";
 @Injectable({
   providedIn: "root",
 })
-export class ExpenseService {
+export class BusinessService {
   loggedInUserId: number;
   constructor(private http: HttpClient) {
     this.loggedInUserId = Number(localStorage.getItem("userId"));
   }
 
-  getExpenseDetails(expenseId: string) {
+  getBusinessDetails(businessId: string) {
     const params = new HttpParams()
       .set("userid", this.loggedInUserId)
-      .set("expenseId", expenseId);
-    return this.http.get(API_URL.GET_EXPENSE_DETAILS, { params: params });
+      .set("businessId", businessId);
+    return this.http.get(API_URL.GET_BUSINESS_DETAILS, { params: params });
   }
 
-  getExpenseSummaryList(
+  getBusinessSummaryList(
     fromDate: string,
     toDate: string,
     sourceOrReason: string,
@@ -37,10 +37,10 @@ export class ExpenseService {
       .set("maxAmount", maxAmount)
       .set("modeOfTransaction", modeOfTransaction);
 
-    return this.http.get(API_URL.GET_EXPENSE_SUMMARY_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+    return this.http.get(API_URL.GET_BUSINESS_SUMMARY_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
   }
 
-  getExpenseReportList(
+  getBusinessReportList(
     fromDate: string,
     toDate: string,
     sourceOrReason: string,
@@ -57,10 +57,10 @@ export class ExpenseService {
       .set("maxAmount", maxAmount)
       .set("modeOfTransaction", modeOfTransaction);
 
-    return this.http.get(API_URL.GET_EXPENSE_SUMMARY_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+    return this.http.get(API_URL.GET_BUSINESS_SUMMARY_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
   }
 
-  getExpenseList(
+  getBusinessList(
     fromDate: string,
     toDate: string,
     sourceOrReason: string,
@@ -77,34 +77,34 @@ export class ExpenseService {
       .set("maxAmount", maxAmount)
       .set("modeOfTransaction", modeOfTransaction);
 
-    return this.http.get(API_URL.GET_EXPENSE_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+    return this.http.get(API_URL.GET_BUSINESS_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
   }
 
-  addExpense(expenseDetailsForm: any): Observable<any> {
+  addBusiness(businessDetailsForm: any): Observable<any> {
     return this.http.post(
-      API_URL.ADD_EXPENSE + this.loggedInUserId,
-      expenseDetailsForm
+      API_URL.ADD_BUSINESS + this.loggedInUserId,
+      businessDetailsForm
     );
   }
 
-  adjustExpense(expenseAdjustmentForm: any): Observable<any> {
+  adjustBusiness(businessAdjustmentForm: any): Observable<any> {
     return this.http.post(
-      API_URL.EXPENSE_ADJUSTMENT + this.loggedInUserId,
-      expenseAdjustmentForm
+      API_URL.BUSINESS_ADJUSTMENT + this.loggedInUserId,
+      businessAdjustmentForm
     );
   }
 
-  updateExpense(expenseDetailsForm: any): Observable<any> {
+  updateBusiness(businessDetailsForm: any): Observable<any> {
     return this.http.post(
-      API_URL.UPDATE_EXPENSE + this.loggedInUserId,
-      expenseDetailsForm
+      API_URL.UPDATE_BUSINESS + this.loggedInUserId,
+      businessDetailsForm
     );
   }
 
-  deleteExpense(expenseId: string): Observable<any> {
+  deleteBusiness(businessId: string): Observable<any> {
     return this.http.get(
-      API_URL.DELETE_EXPENSE +
-        expenseId +
+      API_URL.DELETE_BUSINESS +
+        businessId +
         "&userId=" +
         Number(localStorage.getItem("userId"))
     );
@@ -120,14 +120,14 @@ export class ExpenseService {
       .set("fromDate", fromDt)
       .set("toDate", toDt)
       .set("searchText", searchText);
-    return this.http.get(API_URL.GET_SOURCES_REASONS_LIST, { params: params }); //?expenseId=' + expenseId + '&userId=' + Number(localStorage.getItem("userId")));
+    return this.http.get(API_URL.GET_SOURCES_REASONS_LIST, { params: params }); //?businessId=' + businessId + '&userId=' + Number(localStorage.getItem("userId")));
   }
 
-  getExpenseSuggestionList(): Observable<any> {
+  getBusinessSuggestionList(): Observable<any> {
     const params = new HttpParams().set("userid", this.loggedInUserId);
-    return this.http.get(API_URL.GET_EXPENSE_SUGGESTION_LIST, {
+    return this.http.get(API_URL.GET_BUSINESS_SUGGESTION_LIST, {
       params: params,
-    }); //?expenseId=' + expenseId + '&userId=' + Number(localStorage.getItem("userId")));
+    }); //?businessId=' + businessId + '&userId=' + Number(localStorage.getItem("userId")));
   }
 
   getAvailAmount(
@@ -138,7 +138,7 @@ export class ExpenseService {
       .set("userid", this.loggedInUserId)
       .set("onDate", onDate)
       .set("accountType", accountType);
-    return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params }); //?expenseId=' + expenseId + '&userId=' + Number(localStorage.getItem("userId")));
+    return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params }); //?businessId=' + businessId + '&userId=' + Number(localStorage.getItem("userId")));
   }
 
   getDescriptionList(
@@ -149,7 +149,7 @@ export class ExpenseService {
       .set("userid", this.loggedInUserId)
       .set("sourceText", sourceText)
       .set("descriptionText", descriptionText);
-    return this.http.get(API_URL.GET_DESCRIPTION_LIST, { params: params }); //?expenseId=' + expenseId + '&userId=' + Number(localStorage.getItem("userId")));
+    return this.http.get(API_URL.GET_DESCRIPTION_LIST, { params: params }); //?businessId=' + businessId + '&userId=' + Number(localStorage.getItem("userId")));
   }
   getPurposeList(
     sourceText: string = "",
@@ -159,10 +159,6 @@ export class ExpenseService {
       .set("userid", this.loggedInUserId)
       .set("sourceText", sourceText)
       .set("purposeText", purposeText);
-    return this.http.get(API_URL.GET_PURPOSE_LIST, { params: params }); //?expenseId=' + expenseId + '&userId=' + Number(localStorage.getItem("userId")));
-  }
-
-  exportGridToExcel(dataSource: any) {
-    return this.http.get(API_URL.DOWNLOAD_EXPENSE_LIST, { params: dataSource }); //?expenseId=' + expenseId + '&userId=' + Number(localStorage.getItem("userId")));
+    return this.http.get(API_URL.GET_PURPOSE_LIST, { params: params }); //?businessId=' + businessId + '&userId=' + Number(localStorage.getItem("userId")));
   }
 }
