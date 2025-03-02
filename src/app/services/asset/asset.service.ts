@@ -6,15 +6,15 @@ import { API_URL } from '../../../utils/api-url';
   providedIn: 'root'
 })
 export class AssetService {
-  loggedInUserId: number;
+  loggedInUserId: string;
 
   constructor(private http: HttpClient) {
-    this.loggedInUserId = Number(localStorage.getItem("userId"));
+    this.loggedInUserId = String(localStorage.getItem("userId"));
   }
 
-  getAssetDetails(assetId: number) {
+  getAssetDetails(assetId: string) {
     const params = new HttpParams()
-      .set('userid', Number(localStorage.getItem("userId")))
+      .set('userid', String(localStorage.getItem("userId")))
       .set('assetId', assetId)
     return this.http.get(API_URL.GET_ASSET_DETAILS, { params: params })
 

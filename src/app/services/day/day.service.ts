@@ -6,14 +6,14 @@ import { API_URL } from "../../../utils/api-url";
   providedIn: "root",
 })
 export class DayService {
-  loggedInUserId: number;
+  loggedInUserId: string;
   constructor(private http: HttpClient) {
-    this.loggedInUserId = Number(localStorage.getItem("userId"));
+    this.loggedInUserId = String(localStorage.getItem("userId"));
   }
 
-  getDayDetails(dayId: number) {
+  getDayDetails(dayId: string) {
     const params = new HttpParams()
-      .set("userid", Number(localStorage.getItem("userId")))
+      .set("userid", String(localStorage.getItem("userId")))
       .set("dayId", dayId);
     return this.http.get(API_URL.GET_DAY_DETAILS, { params: params });
   }
@@ -27,7 +27,7 @@ export class DayService {
     isYesterday: boolean = false
   ) {
     const params = new HttpParams()
-      .set("userid", Number(localStorage.getItem("userId")))
+      .set("userid", String(localStorage.getItem("userId")))
       .set("searchText", searchText)
       .set("month", month)
       .set("dayType", dayType)
@@ -39,26 +39,26 @@ export class DayService {
 
   addDay(dayDetailsForm: any): Observable<any> {
     return this.http.post(
-      API_URL.ADD_DAY + Number(localStorage.getItem("userId")),
+      API_URL.ADD_DAY + String(localStorage.getItem("userId")),
       dayDetailsForm
     );
   }
 
   updateDay(dayDetailsForm: any): Observable<any> {
     return this.http.post(
-      API_URL.UPDATE_EXPENSE + Number(localStorage.getItem("userId")),
+      API_URL.UPDATE_EXPENSE + String(localStorage.getItem("userId")),
       dayDetailsForm
     );
   }
 
   uploadImage(
-    assetId: number,
+    assetId: string,
     documentType: string,
     dayDetailsForm: any
   ): Observable<any> {
     return this.http.post(
       API_URL.UPLOAD_IMAGE +
-        Number(localStorage.getItem("userId")) +
+        String(localStorage.getItem("userId")) +
         "&assetId=" +
         assetId +
         "&documentType=" +
@@ -67,21 +67,21 @@ export class DayService {
     );
   }
 
-  deleteDay(dayId: number): Observable<any> {
+  deleteDay(dayId: string): Observable<any> {
     return this.http.get(
       API_URL.DELETE_DAY +
         dayId +
         "&userId=" +
-        Number(localStorage.getItem("userId"))
+        String(localStorage.getItem("userId"))
     );
   }
 
-  approveDay(dayId: number): Observable<any> {
+  approveDay(dayId: string): Observable<any> {
     return this.http.get(
       API_URL.APPROVE_DAY +
         dayId +
         "&userId=" +
-        Number(localStorage.getItem("userId"))
+        String(localStorage.getItem("userId"))
     );
   }
 }

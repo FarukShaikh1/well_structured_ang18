@@ -34,11 +34,11 @@ export class LocalStorageService {
       return false;
     }
     const loginToken = user?.token;
-    const userName = user?.username;
-    const isUserLoggedIn = localStorage.getItem('isUserLoggedIn');
+    const userName = user?.userName;
+    const isUserLoggedIn = localStorage.getItem('currentUser');
 
     return !!(
-      loginToken &&
+      // loginToken &&
       isUserLoggedIn === 'true' && // Ensure the value is exactly 'true'
       userName
     );

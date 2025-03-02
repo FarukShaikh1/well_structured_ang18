@@ -12,37 +12,37 @@ export class CurrencyCoinService {
 
   getCurrencyCoinList(): Observable<any> {
     const params = new HttpParams()
-      .set('userid', Number(localStorage.getItem("userId")))
+      .set('userid', String(localStorage.getItem("userId")))
     return this.http.get(API_URL.GET_COLLECTION_COIN_GALLERY, { params: params });//?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
   }
   getCurrencyCoinRecords(): Observable<any> {
     const params = new HttpParams()
-      .set('userid', Number(localStorage.getItem("userId")))
+      .set('userid', String(localStorage.getItem("userId")))
     return this.http.get(API_URL.GET_COLLECTION_COIN_LIST, { params: params });//?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
   }
 
-  getCurrencyCoinDetails(collectionCoinId: number) {
+  getCurrencyCoinDetails(collectionCoinId: string) {
     const params = new HttpParams()
-      .set('userid', Number(localStorage.getItem("userId")))
+      .set('userid', String(localStorage.getItem("userId")))
       .set('collectionCoinId', collectionCoinId)
     return this.http.get(API_URL.GET_COLLECTION_COIN_DETAILS, { params: params })
 
   }
 
   addCurrencyCoin(currencyCoinDetailsForm: any): Observable<any> {
-    return this.http.post(API_URL.ADD_COLLECTION_COIN + Number(localStorage.getItem("userId")), currencyCoinDetailsForm);
+    return this.http.post(API_URL.ADD_COLLECTION_COIN + String(localStorage.getItem("userId")), currencyCoinDetailsForm);
   }
 
   updateCurrencyCoin(currencyCoinDetailsForm: any): Observable<any> {
-    return this.http.post(API_URL.UPDATE_COLLECTION_COIN + Number(localStorage.getItem("userId")), currencyCoinDetailsForm);
+    return this.http.post(API_URL.UPDATE_COLLECTION_COIN + String(localStorage.getItem("userId")), currencyCoinDetailsForm);
   }
 
-  uploadImage(assetId: number, documentType: string, currencyCoinDetailsForm: any): Observable<any> {
-    return this.http.post(API_URL.UPLOAD_IMAGE + Number(localStorage.getItem("userId")) + '&assetId=' + assetId + '&documentType=' + documentType, currencyCoinDetailsForm);
+  uploadImage(assetId: string, documentType: string, currencyCoinDetailsForm: any): Observable<any> {
+    return this.http.post(API_URL.UPLOAD_IMAGE + String(localStorage.getItem("userId")) + '&assetId=' + assetId + '&documentType=' + documentType, currencyCoinDetailsForm);
   }
 
-  daleteCurrencyCoin(dayId: number): Observable<any> {
-    return this.http.get(API_URL.DELETE_COLLECTION_COIN + dayId + '&userId=' + Number(localStorage.getItem("userId")));
+  daleteCurrencyCoin(dayId: string): Observable<any> {
+    return this.http.get(API_URL.DELETE_COLLECTION_COIN + dayId + '&userId=' + String(localStorage.getItem("userId")));
   }
 
 }

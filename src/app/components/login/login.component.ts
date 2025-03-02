@@ -5,6 +5,8 @@ import { UserServiceService } from '../../services/user/user-service.service';
 import { HttpClient } from '@angular/common/http';
 import { GlobalService } from '../../services/global/global.service'
 import { ReactiveFormsModule } from '@angular/forms';
+import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import { ApplicationConstants, NavigationURLs } from '../../../utils/application-constants';
 
 @Component({
   selector: 'app-login',
@@ -18,16 +20,21 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class LoginComponent {
 
   ngOninit() {
+    if(this.localStorageService.isAuthenticated()){
+    this.router.navigate([NavigationURLs.HOME]);
+    }
+    else{
+      localStorage.clear();
+      this.router.navigate([NavigationURLs.UNAUTHORIZED_PAGE]);  
+    }
     //this._globalService.openSnackBar("Login ngOnInit : currentUser=false")
-    localStorage.setItem("currentUser", "false")
-    this.router.navigate(['/logout']);
 
   }
   loginForm: FormGroup;
 
   userList: any;// {id:number,email:string,password:string};
   constructor(private fb: FormBuilder, private router: Router, private userService: UserServiceService,
-    private http: HttpClient, private _globalService: GlobalService) {
+    private http: HttpClient, private _globalService: GlobalService, private localStorageService: LocalStorageService ) {
     localStorage.setItem("currentUser", "false")
     this.loginForm = this.fb.group(
       {

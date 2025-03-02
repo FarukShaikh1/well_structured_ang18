@@ -20,7 +20,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   currencyCoinDetailsForm: FormGroup;
   user: any;
   countryList: any;
-  collectionCoinId: number = 0;
+  collectionCoinId: string = '';
   selectedImage!: string | ArrayBuffer | null;
   selectedImageFile: File | null = null;
   fil: File | null = null;
@@ -85,7 +85,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  getCurrencyCoinDetails(collectionCoinId: number) {
+  getCurrencyCoinDetails(collectionCoinId: string) {
     this._currencyCoinService
       .getCurrencyCoinDetails(collectionCoinId)
       .subscribe((res: any) => {
@@ -93,7 +93,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         this.patchValues(res);
       });
   }
-  getAssetDetails(assetId: number) {
+  getAssetDetails(assetId: string) {
     this._assetService.getAssetDetails(assetId).subscribe((res: any) => {
       this.selectedImage = API_URL.ATTACHMENT + res.OriginalPath;
     });

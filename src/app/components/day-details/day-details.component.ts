@@ -38,10 +38,9 @@ export class DayDetailsComponent implements OnInit {
   startDate = new Date();
   dayDetailsForm: FormGroup;
   user: any;
-  relation: any;
   dayType: any;
-  userId: number = 0;
-  dayId: number = 0;
+  userId: string ='';
+  dayId: string = '';
   selectedImage!: string | ArrayBuffer | null;
   selectedImageFile: File | null = null;
   fil: File | null = null;
@@ -68,7 +67,6 @@ export class DayDetailsComponent implements OnInit {
       ],
       dayTypeId: ["", Validators.required],
       birthdate: ["", Validators.required],
-      relationId: ["", Validators.required],
       mobileNumber: ["", Validators.pattern(/^[0-9]{8,12}$/)],
       mobileNumber2: ["", Validators.pattern(/^[0-9]{8,12}$/)],
       emailId: [
@@ -128,7 +126,7 @@ export class DayDetailsComponent implements OnInit {
     });
   }
 
-  getDayDetails(dayId: number) {
+  getDayDetails(dayId: string) {
     this._dayService.getDayDetails(dayId).subscribe({
       next: (res: any) => {
         console.log("res : ", res);
@@ -148,7 +146,7 @@ export class DayDetailsComponent implements OnInit {
       },
     });
   }
-  getAssetDetails(assetId: number) {
+  getAssetDetails(assetId: string) {
     this._assetService.getAssetDetails(assetId).subscribe({
       next: (res: any) => {
         console.log();
@@ -171,9 +169,6 @@ export class DayDetailsComponent implements OnInit {
       this.isVerified = res["isVerified"];
       this.dayDetailsForm.controls["dayId"].patchValue(res["birthdayId"]);
       this.dayDetailsForm.controls["personName"].patchValue(res["personName"]);
-      this.dayDetailsForm.controls["relationId"].patchValue(
-        res["superAdminRelationId"]
-      );
       this.dayDetailsForm.controls["dayTypeId"].patchValue(res["dayTypeId"]);
       this.dayDetailsForm.controls["birthdate"].patchValue(
         this.datepipe.transform(res["birthdate"], "dd/MM/yyyy")
@@ -229,16 +224,6 @@ export class DayDetailsComponent implements OnInit {
 
   openDetailsPopup(dayId: any) {
     this.loaderService.showLoader();
-    this._globalService.getCommonListItems(DBConstants.RELATION).subscribe({
-      next: (res: any) => {
-        this.relation = res;
-        this.loaderService.hideLoader();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
 
     this._globalService.getCommonListItems(DBConstants.DAYTYPE).subscribe({
       next: (res: any) => {

@@ -13,6 +13,7 @@ export const publicGuard: CanActivateFn = (_route: ActivatedRouteSnapshot, state
   }
 
   try {
+    debugger;
     const localStorageservice = inject(LocalStorageService);
     const golbalService = inject(GlobalService);
     const router = inject(Router);

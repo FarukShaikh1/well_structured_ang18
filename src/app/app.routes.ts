@@ -9,6 +9,7 @@ import { ExpenseReportComponent } from './components/expense-report/expense-repo
 import { ExpenseSummaryComponent } from './components/expense-summary/expense-summary.component';
 import { ExpenseComponent } from './components/expense/expense.component';
 import { BusinessComponent } from './components/business/business.component';
+import { publicGuard } from './guards/public.guard';
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
@@ -18,7 +19,7 @@ export const routes: Routes = [
       import('./components/login/login.component').then(
         (m) => m.LoginComponent
       ),
-    // canActivate: [publicGuard],
+    canActivate: [publicGuard],
   },
   {
     path: 'logout',
