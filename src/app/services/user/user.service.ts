@@ -9,7 +9,7 @@ import { HttpService } from '../rest/http.service';
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService) { }
 
   authenticateUser(userLoginRequest: UserLoginRequest): Observable<any> {
     return this.httpService.post(API_URL.AUTHENTICATE_USER, userLoginRequest);

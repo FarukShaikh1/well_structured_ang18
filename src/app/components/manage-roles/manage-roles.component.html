@@ -20,10 +20,10 @@
                 </thead>
                 <tbody>
                     <tr style="height:20px" *ngFor=" let item of rolesDataSource index as i"
-                        (onclick)="rowClicked(item.RoleName)">
+                        (onclick)="rowClicked(item.roleName)">
                         <td></td>
                         <td data-label="Sr.No."> {{i+1}}</td>
-                        <td data-label="">{{ item.RoleName }}</td>
+                        <td data-label="">{{ item.roleName }}</td>
                         <td data-label="">{{ item.RoleDescription }}</td>
                         <td class="action-buttons">
                             <button span-button color="warn" (click)="deleteRole(item.RoleId)" class="td-action"

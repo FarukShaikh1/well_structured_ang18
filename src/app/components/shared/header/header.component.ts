@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule } from "@angular/common";
 import {
   Component,
   ElementRef,
@@ -6,33 +6,33 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
-} from '@angular/core';
-import { Router } from '@angular/router';
-import { GlobalService } from '../../../services/global/global.service';
-import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
-import { LogoutService } from '../../../services/logout/logout.service';
+} from "@angular/core";
+import { Router } from "@angular/router";
+import { GlobalService } from "../../../services/global/global.service";
+import { LocalStorageService } from "../../../services/local-storage/local-storage.service";
+import { LogoutService } from "../../../services/logout/logout.service";
 // import { SignalRService } from '../../../services/signal-r/signal-r.service';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from "date-fns";
 import {
   ApplicationConstants,
   ApplicationModuleActions,
   ApplicationModules,
   ApplicationRoles,
   NavigationURLs,
-} from '../../../../utils/application-constants';
-import { SystemNotifications } from '../../../interfaces/system-notifications';
-import { NotificationService } from '../../../services/notification/notification.service';
-import { ConfirmBoxComponent } from '../confirm-box/confirm-box.component';
+} from "../../../../utils/application-constants";
+import { SystemNotifications } from "../../../interfaces/system-notifications";
+import { NotificationService } from "../../../services/notification/notification.service";
+import { ConfirmBoxComponent } from "../confirm-box/confirm-box.component";
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
+  selector: "app-header",
+  templateUrl: "./header.component.html",
   imports: [CommonModule, ConfirmBoxComponent],
-  styleUrls: ['./header.component.css'],
+  styleUrls: ["./header.component.css"],
   standalone: true,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  @ViewChild('notificationDropdown') notificationDropdown!: ElementRef;
+  @ViewChild("notificationDropdown") notificationDropdown!: ElementRef;
   showNotifications = false;
   NOTIFICATION_INITIAL_PAGE_NO = 1;
   NOTIFICATION_INITIAL_PAGE_SIZE = 5;
@@ -47,14 +47,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   NavigationURLs = NavigationURLs;
   roles = ApplicationRoles;
   loginDisplay = false;
-  loggedInUsername: string = '';
+  loggedInUsername: string = "";
 
   notificationsCount: number = 0;
   alreadyLoggedIn: boolean = true;
-  profilePicUrl: string = '../../../assets/icons/user1icon.png';
+  profilePicUrl: string = "../../../assets/icons/user1icon.png";
   ApplicationRoles = ApplicationRoles;
-  loggedInUserName: string = '';
-  userNameInitials: string = '';
+  loggedInUserName: string = "";
+  userNameInitials: string = "";
   // profilePicUrl: string = '';
 
   constructor(
@@ -63,7 +63,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public globalService: GlobalService,
     // private signalRService: SignalRService,
     private logoutService: LogoutService,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService
   ) {
     this.globalService.getReloadObservable().subscribe(() => {
       this.alreadyLoggedIn = localStorageService.isAuthenticated();
@@ -75,7 +75,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return routePath.includes(urlEndPoint);
   }
   ngOnDestroy(): void {
-    this.loggedInUsername = '';
+    this.loggedInUsername = "";
     // Unsubscribe SignalR
   }
 
@@ -102,8 +102,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.confirmationPopupComponent.openConfirmModal(
-      'Confirmation',
-      'Are you sure you want to log out?'
+      "Confirmation",
+      "Are you sure you want to log out?"
     );
   }
 
@@ -182,12 +182,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getUserNameInitials(): string {
-    const fullName = this.localStorageService.getLoggedInUserData()?.firstName + ' ' + this.localStorageService.getLoggedInUserData()?.lastName;
+    const fullName =
+      this.localStorageService.getLoggedInUserData()?.firstName +
+      " " +
+      this.localStorageService.getLoggedInUserData()?.lastName;
     if (!fullName) {
-      return '';
+      return "";
     }
 
-    const nameParts = fullName.split(' ').filter((part) => part.trim());
+    const nameParts = fullName.split(" ").filter((part) => part.trim());
 
     if (nameParts.length === 1) {
       return nameParts[0][0].toUpperCase();
@@ -197,7 +200,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       return (firstInitial + secondInitial).toUpperCase();
     }
 
-    return '';
+    return "";
   }
 
   goToChangePasswordPage() {
@@ -223,7 +226,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 new Date(b.createdOn).getTime() -
                 new Date(a.createdOn).getTime()
             )
-            .slice(0, ApplicationConstants.NUMBER_OF_TOP_SYSTEM_NOTIFICATIONS_TO_SHOW);
+            .slice(
+              0,
+              ApplicationConstants.NUMBER_OF_TOP_SYSTEM_NOTIFICATIONS_TO_SHOW
+            );
 
           this.notificationTotalUnreadCount =
             notifications.data.unreadNotificationCount;
@@ -244,7 +250,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.showNotificationList = false;
   }
 
-  @HostListener('document:click', ['$event.target'])
+  @HostListener("document:click", ["$event.target"])
   onClickOutside(targetElement: HTMLElement) {
     if (
       this.notificationDropdown &&

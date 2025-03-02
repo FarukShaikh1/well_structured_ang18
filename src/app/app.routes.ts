@@ -1,88 +1,92 @@
-import { Routes } from '@angular/router';
-import { ApplicationModules } from '../utils/application-constants';
-import { CurrencyCoinDetailsComponent } from './components/currency-coin-details/currency-coin-details.component';
-import { CurrencyCoinComponent } from './components/currency-coin/currency-coin.component';
-import { DayDetailsComponent } from './components/day-details/day-details.component';
-import { DayComponent } from './components/day/day.component';
-import { ExpenseDetailsComponent } from './components/expense-details/expense-details.component';
-import { ExpenseReportComponent } from './components/expense-report/expense-report.component';
-import { ExpenseSummaryComponent } from './components/expense-summary/expense-summary.component';
-import { ExpenseComponent } from './components/expense/expense.component';
-import { BusinessComponent } from './components/business/business.component';
-import { publicGuard } from './guards/public.guard';
+import { Routes } from "@angular/router";
+import { ApplicationModules } from "../utils/application-constants";
+import { CurrencyCoinDetailsComponent } from "./components/currency-coin-details/currency-coin-details.component";
+import { CurrencyCoinComponent } from "./components/currency-coin/currency-coin.component";
+import { DayDetailsComponent } from "./components/day-details/day-details.component";
+import { DayComponent } from "./components/day/day.component";
+import { ExpenseDetailsComponent } from "./components/expense-details/expense-details.component";
+import { ExpenseReportComponent } from "./components/expense-report/expense-report.component";
+import { ExpenseSummaryComponent } from "./components/expense-summary/expense-summary.component";
+import { ExpenseComponent } from "./components/expense/expense.component";
+import { BusinessComponent } from "./components/business/business.component";
+import { publicGuard } from "./guards/public.guard";
+import { authGuard } from "./guards/auth.guard";
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: "", redirectTo: "home", pathMatch: "full" },
   {
-    path: 'login',
-    title: 'Login',
+    path: "login",
+    title: "Login",
     loadComponent: () =>
-      import('./components/login/login.component').then(
+      import("./components/login/login.component").then(
         (m) => m.LoginComponent
       ),
     canActivate: [publicGuard],
   },
   {
-    path: 'logout',
+    path: "logout",
     loadComponent: () =>
-      import('./components/logout/logout.component').then(
+      import("./components/logout/logout.component").then(
         (m) => m.LogoutComponent
       ),
   },
   {
-    path: 'home',
-    title: 'Home',
+    path: "home",
+    title: "Home",
     loadComponent: () =>
-      import('./components/home/home.component').then((m) => m.HomeComponent),
-    // canActivate: [authGuard],
+      import("./components/home/home.component").then((m) => m.HomeComponent),
+    canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'expenses', pathMatch: 'full' },
+      { path: "", redirectTo: "expenses", pathMatch: "full" },
       {
-        path: 'day',
+        path: "day",
         children: [
-          { path: '', component: DayComponent },
-          { path: 'day-details', component: DayDetailsComponent },
-        ]
+          { path: "", component: DayComponent },
+          { path: "day-details", component: DayDetailsComponent },
+        ],
       },
-      { path: 'expenses', component: ExpenseComponent },
-      { path: 'business', component: BusinessComponent },
-      { path: 'expense-summary', component: ExpenseSummaryComponent },
-      { path: 'expense-report', component: ExpenseReportComponent },
-      { path: 'expense-details', component: ExpenseDetailsComponent },
-      { path: 'currency-coin', component: CurrencyCoinComponent },
-      { path: 'currency-coin-details', component: CurrencyCoinDetailsComponent },
+      { path: "expenses", component: ExpenseComponent },
+      { path: "business", component: BusinessComponent },
+      { path: "expense-summary", component: ExpenseSummaryComponent },
+      { path: "expense-report", component: ExpenseReportComponent },
+      { path: "expense-details", component: ExpenseDetailsComponent },
+      { path: "currency-coin", component: CurrencyCoinComponent },
       {
-        path: 'manage-users',
-        title: 'Users',
+        path: "currency-coin-details",
+        component: CurrencyCoinDetailsComponent,
+      },
+      {
+        path: "manage-users",
+        title: "Users",
         loadComponent: () =>
-          import('./components/user-list/user-list.component').then(
+          import("./components/user-list/user-list.component").then(
             (m) => m.UserListComponent
           ),
         // canActivate: [moduleAccessGuard],
         data: { moduleName: ApplicationModules.USER },
       },
-    ]
+    ],
   },
   {
-    path: 'role-module-mapping',
+    path: "role-module-mapping",
     loadComponent: () =>
       import(
-        './components/role-module-mapping/role-module-mapping.component'
+        "./components/role-module-mapping/role-module-mapping.component"
       ).then((m) => m.RoleModuleMappingComponent),
     // canActivate: [moduleAccessGuard],
     data: { moduleName: ApplicationModules.ROLE_MODULE_MAPPING },
   },
   {
-    path: 'user-details',
+    path: "user-details",
     loadComponent: () =>
-      import('./components/user-details/user-details.component').then(
+      import("./components/user-details/user-details.component").then(
         (m) => m.UserDetailsComponent
       ),
   },
   {
-    path: 'change-password',
-    title: 'Change Password',
+    path: "change-password",
+    title: "Change Password",
     loadComponent: () =>
-      import('./components/change-password/change-password.component').then(
+      import("./components/change-password/change-password.component").then(
         (m) => m.ChangePasswordComponent
       ),
   },
@@ -95,45 +99,47 @@ export const routes: Routes = [
   //     ),
   // },
   {
-    path: 'unauthorised',
-    title: 'Unauthorised User',
+    path: "unauthorised",
+    title: "Unauthorised User",
     loadComponent: () =>
       import(
-        './components/shared/unauthorised-error-page/unauthorised-error.component'
+        "./components/shared/unauthorised-error-page/unauthorised-error.component"
       ).then((m) => m.UnauthorisedErrorComponent),
   },
   {
-    path: 'notifications',
-    title: 'Notifications',
+    path: "notifications",
+    title: "Notifications",
     loadComponent: () =>
-      import('./components/notification-list/notification-list.component').then((m) => m.NotificationListComponent),
+      import("./components/notification-list/notification-list.component").then(
+        (m) => m.NotificationListComponent
+      ),
   },
-  { path: '**', redirectTo: 'pagenotfound' },
+  { path: "**", redirectTo: "pagenotfound" },
   {
-    path: 'reset-password',
-    title: 'Reset Password',
+    path: "reset-password",
+    title: "Reset Password",
     loadComponent: () =>
-      import('./components/reset-password/reset-password.component').then(
+      import("./components/reset-password/reset-password.component").then(
         (m) => m.ResetPasswordComponent
       ),
   },
   {
-    path: 'forgot-password',
-    title: 'Forgot Password',
+    path: "forgot-password",
+    title: "Forgot Password",
     loadComponent: () =>
-      import('./components/forgot-password/forgot-password.component').then(
+      import("./components/forgot-password/forgot-password.component").then(
         (m) => m.ForgotPasswordComponent
       ),
   },
   {
-    path: 'unauthorised',
-    title: 'Unauthorised User',
+    path: "unauthorised",
+    title: "Unauthorised User",
     loadComponent: () =>
       import(
-        './components/shared/unauthorised-error-page/unauthorised-error.component'
+        "./components/shared/unauthorised-error-page/unauthorised-error.component"
       ).then((m) => m.UnauthorisedErrorComponent),
   },
-  { path: '**', redirectTo: 'expenses' },
+  { path: "**", redirectTo: "expenses" },
 ];
 // {
 //     path: 'home',

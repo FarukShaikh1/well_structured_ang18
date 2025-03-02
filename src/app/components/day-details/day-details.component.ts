@@ -16,7 +16,7 @@ import flatpickr from "flatpickr";
 import { API_URL } from "../../../utils/api-url";
 import {
   ApplicationModules,
-  DBConstants
+  DBConstants,
 } from "../../../utils/application-constants";
 import { AssetService } from "../../services/asset/asset.service";
 import { DayService } from "../../services/day/day.service";
@@ -39,8 +39,8 @@ export class DayDetailsComponent implements OnInit {
   dayDetailsForm: FormGroup;
   user: any;
   dayType: any;
-  userId: string ='';
-  dayId: string = '';
+  userId: string = "";
+  dayId: string = "";
   selectedImage!: string | ArrayBuffer | null;
   selectedImageFile: File | null = null;
   fil: File | null = null;
@@ -60,7 +60,7 @@ export class DayDetailsComponent implements OnInit {
     private datepipe: DatePipe
   ) {
     this.dayDetailsForm = this._details.group<any>({
-      dayId: 0,
+      dayId: '',
       personName: [
         "",
         [Validators.required, Validators.pattern(/^[a-zA-Z. ]{3,40}$/)],
@@ -76,8 +76,8 @@ export class DayDetailsComponent implements OnInit {
         ),
       ],
       address: "",
-      assetId: 0,
-      gender: 0,
+      assetId: '',
+      gender: 'M',
       image: null,
       createdBy: "",
       createdOn: "",
@@ -294,7 +294,7 @@ export class DayDetailsComponent implements OnInit {
   }
 
   addOrUpdateDayDetails() {
-    if (this.dayDetailsForm.value["dayId"] > 0) {
+    if (this.dayDetailsForm.value["dayId"]) {
       this.updateDayDetails();
     } else {
       this.addDayDetails();

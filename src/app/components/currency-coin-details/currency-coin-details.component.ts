@@ -1,13 +1,9 @@
-import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { CurrencyCoinService } from "../../services/currency-coin/currency-coin.service";
-import { HttpClient } from "@angular/common/http";
-import { AssetService } from "../../services/asset/asset.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { GlobalService } from "../../services/global/global.service";
 import { DatePipe } from "@angular/common";
-import { ReactiveFormsModule } from "@angular/forms";
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { API_URL } from "../../../utils/api-url";
+import { AssetService } from "../../services/asset/asset.service";
+import { CurrencyCoinService } from "../../services/currency-coin/currency-coin.service";
 
 @Component({
   selector: "app-currency-details",
@@ -20,7 +16,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   currencyCoinDetailsForm: FormGroup;
   user: any;
   countryList: any;
-  collectionCoinId: string = '';
+  collectionCoinId: string = "";
   selectedImage!: string | ArrayBuffer | null;
   selectedImageFile: File | null = null;
   fil: File | null = null;
@@ -31,10 +27,6 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   constructor(
     private _details: FormBuilder,
     private _currencyCoinService: CurrencyCoinService,
-    private _httpClient: HttpClient,
-    private route: ActivatedRoute,
-    private router: Router,
-    private _globalService: GlobalService,
     private _assetService: AssetService,
     private datepipe: DatePipe
   ) {

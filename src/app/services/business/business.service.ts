@@ -104,9 +104,9 @@ export class BusinessService {
   deleteBusiness(businessId: string): Observable<any> {
     return this.http.get(
       API_URL.DELETE_BUSINESS +
-        businessId +
-        "&userId=" +
-        Number(localStorage.getItem("userId"))
+      businessId +
+      "&userId=" +
+      Number(localStorage.getItem("userId"))
     );
   }
 

@@ -58,11 +58,11 @@ export class DayService {
   ): Observable<any> {
     return this.http.post(
       API_URL.UPLOAD_IMAGE +
-        String(localStorage.getItem("userId")) +
-        "&assetId=" +
-        assetId +
-        "&documentType=" +
-        documentType,
+      String(localStorage.getItem("userId")) +
+      "&assetId=" +
+      assetId +
+      "&documentType=" +
+      documentType,
       dayDetailsForm
     );
   }
@@ -70,18 +70,18 @@ export class DayService {
   deleteDay(dayId: string): Observable<any> {
     return this.http.get(
       API_URL.DELETE_DAY +
-        dayId +
-        "&userId=" +
-        String(localStorage.getItem("userId"))
+      dayId +
+      "&userId=" +
+      String(localStorage.getItem("userId"))
     );
   }
 
   approveDay(dayId: string): Observable<any> {
     return this.http.get(
       API_URL.APPROVE_DAY +
-        dayId +
-        "&userId=" +
-        String(localStorage.getItem("userId"))
+      dayId +
+      "&userId=" +
+      String(localStorage.getItem("userId"))
     );
   }
 }

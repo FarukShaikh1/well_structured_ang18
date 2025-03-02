@@ -96,14 +96,13 @@ export class ExpenseComponent implements OnInit {
     },
   ];
 
-
   constructor(
     private expenseService: ExpenseService,
     private _globalService: GlobalService,
     public datePipe: DatePipe,
     private loaderService: LoaderService,
     private dateUtil: DateUtils
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loaderService.showLoader();
@@ -150,17 +149,17 @@ export class ExpenseComponent implements OnInit {
         title: "Debit",
         field: "debit",
         sorter: "alphanum",
-        bottomCalc: 'sum', // This will calculate the sum
-        bottomCalcFormatter: 'money', // Optional: Format the sum (if it's a currency value)
-        bottomCalcFormatterParams: { symbol: '', precision: 2 }, // Customize formatting
+        bottomCalc: "sum", // This will calculate the sum
+        bottomCalcFormatter: "money", // Optional: Format the sum (if it's a currency value)
+        bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
       },
       {
         title: "Credit",
         field: "credit",
         sorter: "alphanum",
-        bottomCalc: 'sum', // This will calculate the sum
-        bottomCalcFormatter: 'money', // Optional: Format the sum (if it's a currency value)
-        bottomCalcFormatterParams: { symbol: '', precision: 2 }, // Customize formatting
+        bottomCalc: "sum", // This will calculate the sum
+        bottomCalcFormatter: "money", // Optional: Format the sum (if it's a currency value)
+        bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
       },
       {
         title: "-",
@@ -168,7 +167,7 @@ export class ExpenseComponent implements OnInit {
         maxWidth: 50,
         formatter: this.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const expenseId = cell.getRow().getData()['expenseId'];
+          const expenseId = cell.getRow().getData()["expenseId"];
           this.hideExpense(expenseId); // Call the hideExpense method
         },
       },
@@ -186,299 +185,299 @@ export class ExpenseComponent implements OnInit {
   }
 
   hidebuttonFormatter(cell: CellComponent) {
-      return `<button class="action-buttons" title="Hide Expense" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
+    return `<button class="action-buttons" title="Hide Expense" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
   }
 
   hideExpense(expenseId: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.expenseId != expenseId
+      return item.expenseId != expenseId;
     });
   }
-    dateFormatter(cell: CellComponent) {
-      const columnName = cell.getColumn().getField();
-      const projectData = cell.getRow().getData();
-      const dateColumn = projectData[columnName];
-      if (dateColumn) {
-        return `<span>${this.datePipe.transform(
-          dateColumn,
-          ApplicationConstants.GLOBAL_DATE_FORMAT
-        )}</span>`;
-      }
-      const nullDate = "";
-      return `<span>${nullDate}</span>`;
+  dateFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const projectData = cell.getRow().getData();
+    const dateColumn = projectData[columnName];
+    if (dateColumn) {
+      return `<span>${this.datePipe.transform(
+        dateColumn,
+        ApplicationConstants.GLOBAL_DATE_FORMAT
+      )}</span>`;
     }
+    const nullDate = "";
+    return `<span>${nullDate}</span>`;
+  }
 
-    ngAfterViewInit() {
-      flatpickr("#fromDate", {
-        dateFormat: "d/m/Y",
-        defaultDate: (() => {
-          let date = new Date(); // Get the current date
-          date.setDate(date.getDate() - 30); // Subtract 30 days
-          return date;
-        })(),
-        onChange: (selectedDates, dateStr) => {
-          if (!dateStr) {
-            const today = new Date();
-            today.setDate(today.getDate() - 30); // Subtract 30 days
+  ngAfterViewInit() {
+    flatpickr("#fromDate", {
+      dateFormat: "d/m/Y",
+      defaultDate: (() => {
+        let date = new Date(); // Get the current date
+        date.setDate(date.getDate() - 30); // Subtract 30 days
+        return date;
+      })(),
+      onChange: (selectedDates, dateStr) => {
+        if (!dateStr) {
+          const today = new Date();
+          today.setDate(today.getDate() - 30); // Subtract 30 days
 
-            const dd = ("0" + today.getDate()).slice(-2);
-            const mm = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based
-            const yyyy = today.getFullYear();
+          const dd = ("0" + today.getDate()).slice(-2);
+          const mm = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based
+          const yyyy = today.getFullYear();
 
-            dateStr = `${dd}/${mm}/${yyyy}`; // Format as "DD/MM/YYYY"
-          }
-          this.filterGridByFromDate(dateStr);
-        },
-      });
+          dateStr = `${dd}/${mm}/${yyyy}`; // Format as "DD/MM/YYYY"
+        }
+        this.filterGridByFromDate(dateStr);
+      },
+    });
 
-      flatpickr("#toDate", {
-        dateFormat: "d/m/Y", // Adjust the date format as per your requirement
-        defaultDate: this.toDate,
-        onChange: (selectedDates, dateStr) => {
-          if (!dateStr) {
-            const today = new Date();
+    flatpickr("#toDate", {
+      dateFormat: "d/m/Y", // Adjust the date format as per your requirement
+      defaultDate: this.toDate,
+      onChange: (selectedDates, dateStr) => {
+        if (!dateStr) {
+          const today = new Date();
 
-            const dd = ("0" + today.getDate()).slice(-2);
-            const mm = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based
-            const yyyy = today.getFullYear();
+          const dd = ("0" + today.getDate()).slice(-2);
+          const mm = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based
+          const yyyy = today.getFullYear();
 
-            dateStr = `${dd}/${mm}/${yyyy}`; // Format as "DD/MM/YYYY"
-          }
-          this.filterGridByToDate(dateStr);
-        },
-      });
+          dateStr = `${dd}/${mm}/${yyyy}`; // Format as "DD/MM/YYYY"
+        }
+        this.filterGridByToDate(dateStr);
+      },
+    });
+  }
+
+  LoadGrid() {
+    this.loaderService.showLoader();
+    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
+    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
+
+    this.getExpenseList();
+    if (this.searchInput) {
+      this.searchInput.nativeElement.value = "";
     }
-
-    LoadGrid() {
-      this.loaderService.showLoader();
-      this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
-      this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-
-      this.getExpenseList();
-      if (this.searchInput) {
-        this.searchInput.nativeElement.value = "";
-      }
-      if (this.minInput) {
-        this.minInput.nativeElement.value = "";
-      }
-      if (this.maxInput) {
-        this.maxInput.nativeElement.value = "";
-      }
+    if (this.minInput) {
+      this.minInput.nativeElement.value = "";
     }
-
-    getSourceOrReasonList() {
-      this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
-      this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-      this.expenseService
-        .getSourceOrReasonList(
-          this.fromDate.toString(),
-          this.toDate.toString(),
-          this.sourceOrReason
-        )
-        .subscribe({
-          next: (res: any) => {
-            this.sourceOrReasonList = res;
-            this.loaderService.hideLoader();
-          },
-          error: (error: any) => {
-            console.log("error : ", error);
-            this.loaderService.hideLoader();
-          },
-        });
-    }
-
-    applyFilters(all: boolean = false) {
-      if (all) {
-        this.getExpenseList();
-      }
-      this.filteredTableData = this.tableData.filter((item: any) => {
-        const searchText =
-          item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) ||
-          item.description.toLowerCase().includes(this.sourceOrReason);
-        const minAmountCondition =
-          this.minAmount == 0 ||
-          (item.debit !== 0 && Math.abs(item.debit) >= this.minAmount) ||
-          (item.credit !== 0 && Math.abs(item.credit) >= this.minAmount);
-        const maxAmountCondition =
-          this.maxAmount == 0 ||
-          (item.debit !== 0 && Math.abs(item.debit) <= this.maxAmount) ||
-          (item.credit !== 0 && Math.abs(item.credit) <= this.maxAmount);
-        return searchText && minAmountCondition && maxAmountCondition;
-      });
-      console.log("this.lastExpenseDate : ", this.lastExpenseDate);
-    }
-
-    getLatestExpenseDate(): any {
-      if (!this.filteredTableData || this.filteredTableData.length === 0) {
-        this.loaderService.hideLoader();
-        return new Date(); // Return null if no data is available
-      }
-      this.loaderService.hideLoader();
-      return this.filteredTableData[0]["expenseDate"];
-    }
-
-    // hideExpense(expenseId: number) {
-    //   this.onTableDataChange(1);
-    //   this.filteredDataSource = this.filteredDataSource.filter((item: any) => {
-    //     const includeExpense = item.expenseId != expenseId;
-    //     return includeExpense;
-    //   });
-    //   this.filteredSummaryDataSource = this.filteredSummaryDataSource.filter((item: any) => {
-    //     const includeExpense = item.expenseId != expenseId;
-    //     return includeExpense;
-    //   });
-    // }
-
-    onSourceOrReasonChange(valueToFilter: any) {
-      this.sourceOrReason = valueToFilter.target.value.toLowerCase();
-      this.getSourceOrReasonList();
-      this.applyFilters();
-    }
-
-    getExpenseList() {
-      this.loaderService.showLoader();
-      this.filterColumns = this.tableColumnConfig.filter((col) =>
-        ["SourceOrReason", "emailId"].includes(col.field ?? "")
-      );
-      this.expenseService
-        .getExpenseList(
-          this.formattedFromDate,
-          this.formattedToDate,
-          "",
-          0,
-          0,
-          ""
-        )
-        .subscribe({
-          next: (res: any) => {
-            this.tableData = res;
-            this.filteredTableData = res;
-            this.lastExpenseDate = this.getLatestExpenseDate();
-            console.log("this.lastExpenseDate : ", this.lastExpenseDate);
-            console.log("this.filteredTableData : ", this.filteredTableData);
-            this.loaderService.hideLoader();
-          },
-          error: (error: any) => {
-            console.log("error : ", error);
-            this.loaderService.hideLoader();
-          },
-        });
-    }
-
-    expenseDetails(data: any) {
-      this.loaderService.showLoader();
-      this.expenseDetailsComponent.openDetailsPopup(data);
-    }
-
-    deleteExpense(expenseId: string) {
-      if (expenseId) {
-        this.expenseId = expenseId;
-        this.confirmationDialog.openConfirmationPopup(
-          "Confirmation",
-          "Are you sure you want to delete this expense? This action cannot be undone."
-        );
-      }
-    }
-
-    handleConfirmResult(isConfirmed: boolean) {
-      console.log(isConfirmed);
-      this.expenseService.deleteExpense(this.expenseId).subscribe({
-        next: (res: any) => {
-          this.LoadGrid();
-        },
-        error: (error: any) => {
-          console.log("error : ", error);
-          this.loaderService.hideLoader();
-        },
-      });
-    }
-    addExpense(expense: any) {
-      this.expenseService.addExpense(expense).subscribe({
-        next: (res: any) => {
-          this.LoadGrid();
-        },
-        error: (error: any) => {
-          console.log("error : ", error);
-          this.loaderService.hideLoader();
-        },
-      });
-    }
-
-    expenseAdjustment() { }
-
-    filterGridByFromDate(date: any) {
-      console.log("fromDate : ", this.fromDate);
-
-      this.fromDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
-      console.log("fromDate : ", this.fromDate);
-      this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
-      this.getSourceOrReasonList();
-      this.LoadGrid();
-    }
-
-    filterGridByToDate(date: any) {
-      this.toDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
-      this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-      this.getSourceOrReasonList();
-      this.LoadGrid();
-    }
-
-    filterGridByMaxAmount(data: any) {
-      this.maxAmount = data.target.value;
-      setTimeout(() => {
-        this.maxInput.nativeElement.focus();
-      }, 0);
-      this.applyFilters();
-    }
-
-    filterGridByMinAmount(data: any) {
-      this.minAmount = data.target.value;
-      setTimeout(() => {
-        this.minInput.nativeElement.focus();
-      }, 0);
-
-      this.applyFilters();
-    }
-
-    filterGridBySource(data: any) {
-      if (data.source != null && data.source != undefined) {
-        this.sourceOrReason = data.source.value.toLowerCase();
-      } else if (data.value != null && data.value != undefined) {
-        this.sourceOrReason = data.source.value.toLowerCase();
-      }
-      this.applyFilters();
-    }
-
-    filterGridBySearch(data: any) {
-      setTimeout(() => {
-        this.searchInput.nativeElement.focus();
-      }, 0);
-      this.sourceOrReason = data?.target?.value?.toLowerCase();
-      this.applyFilters();
-    }
-
-    getColorForAmount(amount: any): any {
-      if (amount <= 0) {
-        return { color: "#FF0000", "font-weight": "bold" };
-      } else {
-        return { color: "#129D0A", "font-weight": "bold" };
-      }
-    }
-
-    getColorForText(col: any): any {
-      if (col.toLowerCase().includes("emergency")) {
-        return { color: "#FF0000", "font-weight": "bold" };
-      } else if (col.toLowerCase().includes("return")) {
-        return { color: "#129D0A", "font-weight": "bold" };
-      } else if (col.toLowerCase().includes("recharge")) {
-        return { color: "#F29D0A", "font-weight": "bold" };
-      } else return {}; // Default style (no style)
-    }
-
-    validateAmount(event: any) {
-      // if (event.target.value.match(/^[0-9]{0,20}$/)) {
-      if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.\-]$/)) {
-        event.preventDefault();
-      }
+    if (this.maxInput) {
+      this.maxInput.nativeElement.value = "";
     }
   }
+
+  getSourceOrReasonList() {
+    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
+    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
+    this.expenseService
+      .getSourceOrReasonList(
+        this.fromDate.toString(),
+        this.toDate.toString(),
+        this.sourceOrReason
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.sourceOrReasonList = res;
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log("error : ", error);
+          this.loaderService.hideLoader();
+        },
+      });
+  }
+
+  applyFilters(all: boolean = false) {
+    if (all) {
+      this.getExpenseList();
+    }
+    this.filteredTableData = this.tableData.filter((item: any) => {
+      const searchText =
+        item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) ||
+        item.description.toLowerCase().includes(this.sourceOrReason);
+      const minAmountCondition =
+        this.minAmount == 0 ||
+        (item.debit !== 0 && Math.abs(item.debit) >= this.minAmount) ||
+        (item.credit !== 0 && Math.abs(item.credit) >= this.minAmount);
+      const maxAmountCondition =
+        this.maxAmount == 0 ||
+        (item.debit !== 0 && Math.abs(item.debit) <= this.maxAmount) ||
+        (item.credit !== 0 && Math.abs(item.credit) <= this.maxAmount);
+      return searchText && minAmountCondition && maxAmountCondition;
+    });
+    console.log("this.lastExpenseDate : ", this.lastExpenseDate);
+  }
+
+  getLatestExpenseDate(): any {
+    if (!this.filteredTableData || this.filteredTableData.length === 0) {
+      this.loaderService.hideLoader();
+      return new Date(); // Return null if no data is available
+    }
+    this.loaderService.hideLoader();
+    return this.filteredTableData[0]["expenseDate"];
+  }
+
+  // hideExpense(expenseId: number) {
+  //   this.onTableDataChange(1);
+  //   this.filteredDataSource = this.filteredDataSource.filter((item: any) => {
+  //     const includeExpense = item.expenseId != expenseId;
+  //     return includeExpense;
+  //   });
+  //   this.filteredSummaryDataSource = this.filteredSummaryDataSource.filter((item: any) => {
+  //     const includeExpense = item.expenseId != expenseId;
+  //     return includeExpense;
+  //   });
+  // }
+
+  onSourceOrReasonChange(valueToFilter: any) {
+    this.sourceOrReason = valueToFilter.target.value.toLowerCase();
+    this.getSourceOrReasonList();
+    this.applyFilters();
+  }
+
+  getExpenseList() {
+    this.loaderService.showLoader();
+    this.filterColumns = this.tableColumnConfig.filter((col) =>
+      ["SourceOrReason", "emailId"].includes(col.field ?? "")
+    );
+    this.expenseService
+      .getExpenseList(
+        this.formattedFromDate,
+        this.formattedToDate,
+        "",
+        0,
+        0,
+        ""
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.tableData = res;
+          this.filteredTableData = res;
+          this.lastExpenseDate = this.getLatestExpenseDate();
+          console.log("this.lastExpenseDate : ", this.lastExpenseDate);
+          console.log("this.filteredTableData : ", this.filteredTableData);
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log("error : ", error);
+          this.loaderService.hideLoader();
+        },
+      });
+  }
+
+  expenseDetails(data: any) {
+    this.loaderService.showLoader();
+    this.expenseDetailsComponent.openDetailsPopup(data);
+  }
+
+  deleteExpense(expenseId: string) {
+    if (expenseId) {
+      this.expenseId = expenseId;
+      this.confirmationDialog.openConfirmationPopup(
+        "Confirmation",
+        "Are you sure you want to delete this expense? This action cannot be undone."
+      );
+    }
+  }
+
+  handleConfirmResult(isConfirmed: boolean) {
+    console.log(isConfirmed);
+    this.expenseService.deleteExpense(this.expenseId).subscribe({
+      next: (res: any) => {
+        this.LoadGrid();
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+        this.loaderService.hideLoader();
+      },
+    });
+  }
+  addExpense(expense: any) {
+    this.expenseService.addExpense(expense).subscribe({
+      next: (res: any) => {
+        this.LoadGrid();
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+        this.loaderService.hideLoader();
+      },
+    });
+  }
+
+  expenseAdjustment() {}
+
+  filterGridByFromDate(date: any) {
+    console.log("fromDate : ", this.fromDate);
+
+    this.fromDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
+    console.log("fromDate : ", this.fromDate);
+    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
+    this.getSourceOrReasonList();
+    this.LoadGrid();
+  }
+
+  filterGridByToDate(date: any) {
+    this.toDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
+    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
+    this.getSourceOrReasonList();
+    this.LoadGrid();
+  }
+
+  filterGridByMaxAmount(data: any) {
+    this.maxAmount = data.target.value;
+    setTimeout(() => {
+      this.maxInput.nativeElement.focus();
+    }, 0);
+    this.applyFilters();
+  }
+
+  filterGridByMinAmount(data: any) {
+    this.minAmount = data.target.value;
+    setTimeout(() => {
+      this.minInput.nativeElement.focus();
+    }, 0);
+
+    this.applyFilters();
+  }
+
+  filterGridBySource(data: any) {
+    if (data.source != null && data.source != undefined) {
+      this.sourceOrReason = data.source.value.toLowerCase();
+    } else if (data.value != null && data.value != undefined) {
+      this.sourceOrReason = data.source.value.toLowerCase();
+    }
+    this.applyFilters();
+  }
+
+  filterGridBySearch(data: any) {
+    setTimeout(() => {
+      this.searchInput.nativeElement.focus();
+    }, 0);
+    this.sourceOrReason = data?.target?.value?.toLowerCase();
+    this.applyFilters();
+  }
+
+  getColorForAmount(amount: any): any {
+    if (amount <= 0) {
+      return { color: "#FF0000", "font-weight": "bold" };
+    } else {
+      return { color: "#129D0A", "font-weight": "bold" };
+    }
+  }
+
+  getColorForText(col: any): any {
+    if (col.toLowerCase().includes("emergency")) {
+      return { color: "#FF0000", "font-weight": "bold" };
+    } else if (col.toLowerCase().includes("return")) {
+      return { color: "#129D0A", "font-weight": "bold" };
+    } else if (col.toLowerCase().includes("recharge")) {
+      return { color: "#F29D0A", "font-weight": "bold" };
+    } else return {}; // Default style (no style)
+  }
+
+  validateAmount(event: any) {
+    // if (event.target.value.match(/^[0-9]{0,20}$/)) {
+    if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.\-]$/)) {
+      event.preventDefault();
+    }
+  }
+}

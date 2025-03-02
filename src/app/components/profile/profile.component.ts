@@ -114,14 +114,14 @@ export class ProfileComponent {
       console.log("LastName : ", res.LastName);
       console.log("MobileNumber : ", res.MobileNumber);
       console.log("MobileNumber1 : ", res.MobileNumber1);
-      console.log("RoleName : ",res.RoleName);
+      console.log("roleName : ",res.roleName);
       this.profileForm.controls['username'].patchValue(res.UserName);
       this.profileForm.controls['emailAddress'].patchValue(res.EmailAddress);
       this.profileForm.controls['firstName'].patchValue(res.FirstName);
       this.profileForm.controls['lastName'].patchValue(res.LastName);
       this.profileForm.controls['mobileNumber'].patchValue(res.MobileNumber);
       this.profileForm.controls['mobileNumber2'].patchValue(res.MobileNumber2);
-      this.profileForm.controls['roleName'].patchValue(res.RoleName);
+      this.profileForm.controls['roleName'].patchValue(res.roleName);
       }
         // reload() {
   //   this._globalService.reloadComponent();

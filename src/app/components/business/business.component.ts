@@ -102,7 +102,7 @@ export class BusinessComponent implements OnInit {
     public datePipe: DatePipe,
     private loaderService: LoaderService,
     private dateUtil: DateUtils
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loaderService.showLoader();
@@ -378,7 +378,7 @@ export class BusinessComponent implements OnInit {
     });
   }
 
-  businessAdjustment() {}
+  businessAdjustment() { }
 
   filterGridByFromDate(date: any) {
     console.log("fromDate : ", this.fromDate);

@@ -4,19 +4,19 @@ import {
   Output,
   AfterViewInit,
   ElementRef,
-} from '@angular/core';
+} from "@angular/core";
 
 @Component({
-  selector: 'app-confirm-box',
+  selector: "app-confirm-box",
   standalone: true,
-  templateUrl: './confirm-box.component.html',
-  styleUrls: ['./confirm-box.component.css'],
+  templateUrl: "./confirm-box.component.html",
+  styleUrls: ["./confirm-box.component.css"],
 })
 export class ConfirmBoxComponent implements AfterViewInit {
   @Output() confirmResult = new EventEmitter<boolean>();
 
-  title: string = 'Confirmation';
-  message: string = 'Are you sure you want to perform this action?';
+  title: string = "Confirmation";
+  message: string = "Are you sure you want to perform this action?";
 
   private modalInstance: any;
 
@@ -24,10 +24,10 @@ export class ConfirmBoxComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const modalElement =
-      this.elementRef.nativeElement.querySelector('#confirmBox');
+      this.elementRef.nativeElement.querySelector("#confirmBox");
     if (modalElement) {
       this.modalInstance = new (window as any).bootstrap.Modal(modalElement, {
-        backdrop: 'static',
+        backdrop: "static",
         keyboard: false,
       });
     }

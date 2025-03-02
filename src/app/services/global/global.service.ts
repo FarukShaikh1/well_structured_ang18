@@ -14,7 +14,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class GlobalService {
   constructor(
-  private http: HttpClient,
+    private http: HttpClient,
     private localStorageService: LocalStorageService,
     private roleService: RoleService
   ) { }
@@ -129,10 +129,10 @@ export class GlobalService {
       return isDuplicate ? { nameExists: true } : null;
     };
   }
-  
-  getCommonListItems(commonListId: number) {
+
+  getCommonListItems(commonListId: String) {
     const params = new HttpParams()
-      .set('commonListId', commonListId)
+      .set('commonListId', commonListId.toString())
     return this.http.get(API_URL.GET_COMMON_LIST_ITEMS, { params: params });
   }
 }
