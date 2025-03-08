@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  serverUrl: 'https://localhost:7069',
-  // serverUrl:  'http://localhost:82',
+  // serverUrl: 'https://localhost:7069',
+  serverUrl:  'http://localhost:82',
   apiPrefix: '/api',
   msalConfig: {
     auth: {

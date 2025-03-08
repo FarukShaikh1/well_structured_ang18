@@ -1,41 +1,58 @@
-<header class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm">
+<header
+  class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm"
+>
   <div class="banner-text d-flex align-items-center flex-shrink-0">
     <!-- <img src="../../../../CurrencyCollector.png" alt="Project Logo"
       class="logo me-2 img-fluid d-none d-sm-block" /> -->
-      Hello {{ loggedInUserName }}!
+    Hello {{ loggedInUserName }}!
   </div>
   <div class="d-flex align-items-center flex-grow-1 justify-content-end">
     <div class="d-flex align-items-center position-relative me-3 flex-shrink-0">
-      <button (click)="navigateToBusinessList()" class="font-weight-bold txt-btn p-2" [ngClass]="{
-        'active-link':
-          isActiveMenu(NavigationURLs.BUSINESS_LIST)
-      }">
-      Business
-    </button>&nbsp;
-    <button (click)="navigateToExpenseSummaryList()" class="font-weight-bold txt-btn p-2" [ngClass]="{
-        'active-link':
-          isActiveMenu(NavigationURLs.EXPENSE_SUMMARY_LIST)
-      }">
-      Expense-Summary
-    </button>&nbsp;
-    <button (click)="navigateToExpenseList()" class="font-weight-bold txt-btn p-2" [ngClass]="{
-          'active-link':
-            isActiveMenu(NavigationURLs.EXPENSE_LIST)
-        }">
-        Expense
-      </button>&nbsp;
-      <button (click)="navigateToDayList()" class="font-weight-bold txt-btn  p-2" [ngClass]="{
-        'active-link':
-          isActiveMenu(NavigationURLs.DAY_LIST)
-      }">
-      Day
-    </button>&nbsp;
-    <button (click)="navigateToUserList()" class="font-weight-bold p-2 txt-btn" [ngClass]="{
-      'active-link':
-        isActiveMenu(NavigationURLs.USER_LIST)
-    }">
-    User
-  </button>
+      <button
+        (click)="navigateToBusinessList()"
+        class="font-weight-bold txt-btn p-2"
+        [ngClass]="{
+          'active-link': isActiveMenu(NavigationURLs.BUSINESS_LIST)
+        }"
+      >
+        Business</button
+      >&nbsp; @if(isActiveMenu(NavigationURLs.EXPENSE_SUMMARY_LIST)){
+      <button
+        (click)="navigateToExpenseSummaryList()"
+        class="font-weight-bold txt-btn p-2"
+        [ngClass]="{
+          'active-link': isActiveMenu(NavigationURLs.EXPENSE_SUMMARY_LIST)
+        }"
+      >
+        Expense-Summary</button
+      >&nbsp; } @if(!isActiveMenu(NavigationURLs.EXPENSE_SUMMARY_LIST)){
+      <button
+        (click)="navigateToExpenseList()"
+        class="font-weight-bold txt-btn p-2"
+        [ngClass]="{
+          'active-link': isActiveMenu(NavigationURLs.EXPENSE_LIST)
+        }"
+      >
+        Expense</button
+      >&nbsp; }
+      <button
+        (click)="navigateToDayList()"
+        class="font-weight-bold txt-btn p-2"
+        [ngClass]="{
+          'active-link': isActiveMenu(NavigationURLs.DAY_LIST)
+        }"
+      >
+        Day</button
+      >&nbsp;
+      <button
+        (click)="navigateToUserList()"
+        class="font-weight-bold p-2 txt-btn"
+        [ngClass]="{
+          'active-link': isActiveMenu(NavigationURLs.USER_LIST)
+        }"
+      >
+        User
+      </button>
 
       <!-- @if(globalService.isAccessible(Modules.CUSTOMER, Module_Actions.VIEW)) {
       <button
@@ -88,20 +105,34 @@
       @if(showNotificationIcon()) {
       <!-- For Notifications -->
       <div class="position-relative" #notificationDropdown>
-        <button class="btn p-0 position-relative notification-btn" (click)="toggleSystemNotificationList()">
+        <button
+          class="btn p-0 position-relative notification-btn"
+          (click)="toggleSystemNotificationList()"
+        >
           <i class="bi bi-bell"></i>
           @if(notificationTotalUnreadCount > 0) {
-          <span class="notification position-absolute translate-middle btn-danger">
+          <span
+            class="notification position-absolute translate-middle btn-danger"
+          >
             {{ notificationTotalUnreadCount }}
           </span>
           }
         </button>
 
         @if(showNotificationList) {
-        <ul class="dropdown-menu dropdown-menu-notification dropdown-menu-end show">
-          <div class="d-flex justify-content-between align-items-center px-3 py-2 pb-2 border-bottom">
+        <ul
+          class="dropdown-menu dropdown-menu-notification dropdown-menu-end show"
+        >
+          <div
+            class="d-flex justify-content-between align-items-center px-3 py-2 pb-2 border-bottom"
+          >
             <span><strong>Notifications</strong></span>
-            <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemNotificationList()"></button>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              (click)="closeSystemNotificationList()"
+            ></button>
           </div>
           @if(notifications.length === 0) {
           <li class="text-center p-2">
@@ -110,33 +141,42 @@
           <li>
             <hr class="dropdown-divider" />
           </li>
-          }
-
-          @for(notification of notifications; track $index;) {
-          <li class="dropdown-item notification-item" [ngClass]="notification.hasRead ? 'read-notification' : 'unread-notification'">
-            <button class="btn notification-item text-start" (click)="markSystemNotificationAsRead(notification)">
+          } @for(notification of notifications; track $index;) {
+          <li
+            class="dropdown-item notification-item"
+            [ngClass]="
+              notification.hasRead ? 'read-notification' : 'unread-notification'
+            "
+          >
+            <button
+              class="btn notification-item text-start"
+              (click)="markSystemNotificationAsRead(notification)"
+            >
               <div>{{ notification.notificationMessage }}</div>
-              <small>{{
-                getRelativeTime(notification.createdOn)
-                }}</small>
+              <small>{{ getRelativeTime(notification.createdOn) }}</small>
               <!-- Spinner (optional) -->
-              <div *ngIf="notification.isLoading" class="spinner-border spinner-border-sm notification-spinner mt-2"
-                role="status"></div>
+              <div
+                *ngIf="notification.isLoading"
+                class="spinner-border spinner-border-sm notification-spinner mt-2"
+                role="status"
+              ></div>
             </button>
           </li>
-          @if($index < notifications.length ) { <li>
+          @if($index < notifications.length ) {
+          <li>
             <hr class="dropdown-divider" />
-            </li>
-            }
-            }
-            @if(notifications.length) {
-            <li class="text-center">
-              <button class="dropdown-item view-all-btn py-2" (click)="viewAllSystemNotifications()"
-                [disabled]="notifications.length === 0">
-                View All
-              </button>
-            </li>
-            }
+          </li>
+          } } @if(notifications.length) {
+          <li class="text-center">
+            <button
+              class="dropdown-item view-all-btn py-2"
+              (click)="viewAllSystemNotifications()"
+              [disabled]="notifications.length === 0"
+            >
+              View All
+            </button>
+          </li>
+          }
         </ul>
         }
       </div>
@@ -145,7 +185,12 @@
     </div>
     <!-- @if(showSettingsIcon()) { -->
     <div class="dropdown flex-shrink-0 me-4">
-      <button class="btn dropdown-toggle p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+      <button
+        class="btn dropdown-toggle p-0"
+        type="button"
+        id="dropdownMenuButton"
+        data-bs-toggle="dropdown"
+      >
         <div class="profile-circle">
           <!-- @if(profilePicUrl!=''){
           <img [src]="profilePicUrl" alt="Profile Picture" class="icon img-fluid" />
@@ -155,10 +200,9 @@
         </div>
         <!-- <img src="../../../assets/icons/settings-svgrepo-com.svg" class="icon img-fluid" /> -->
       </button>
-      
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-          <!-- <li class="top-dropdown-item">
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <!-- <li class="top-dropdown-item">
       <a class="dropdown-item logout-btn" (click)="goToProfilePage()">
         <img
           alt="Profile Picture"
@@ -167,23 +211,32 @@
         />&nbsp;My Profile</a
       >
     </li> -->
-          <li class="top-dropdown-item">
-              <a class="dropdown-item logout-btn" (click)="goToChangePasswordPage()">
-                  <i class="bi bi-pencil-square"></i>
-                  &nbsp;Change Password
-              </a>
-          </li>
+        <li class="top-dropdown-item">
+          <a
+            class="dropdown-item logout-btn"
+            (click)="goToChangePasswordPage()"
+          >
+            <i class="bi bi-pencil-square"></i>
+            &nbsp;Change Password
+          </a>
+        </li>
 
-          <li class="top-dropdown-item">
-              <a class="dropdown-item logout-btn" (click)="logout()" data-bs-toggle="modal" data-bs-target="#confirmBox">
-                  <i class="bi bi-box-arrow-right"></i>
-                  &nbsp;Log Out
-              </a>
-          </li>
-
+        <li class="top-dropdown-item">
+          <a
+            class="dropdown-item logout-btn"
+            (click)="logout()"
+            data-bs-toggle="modal"
+            data-bs-target="#confirmBox"
+          >
+            <i class="bi bi-box-arrow-right"></i>
+            &nbsp;Log Out
+          </a>
+        </li>
       </ul>
     </div>
     <!-- } -->
   </div>
 </header>
-<app-confirm-box (confirmResult)="handleConfirmResult($event)"></app-confirm-box>
+<app-confirm-box
+  (confirmResult)="handleConfirmResult($event)"
+></app-confirm-box>

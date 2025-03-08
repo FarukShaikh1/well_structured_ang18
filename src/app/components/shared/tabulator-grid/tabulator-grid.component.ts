@@ -8,18 +8,18 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
-} from '@angular/core';
+} from "@angular/core";
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
-} from '@angular/forms';
+} from "@angular/forms";
 import {
   CellComponent,
   ColumnDefinition,
   TabulatorFull,
-} from 'tabulator-tables';
+} from "tabulator-tables";
 
 /*
  * So - the whole point of TypeScript is to make things strictly typed.
@@ -33,25 +33,25 @@ import {
  *  (immediately after the overview at the top of the page)
  */
 @Component({
-  selector: 'app-tabulator-grid',
-  templateUrl: './tabulator-grid.component.html',
-  styleUrls: ['./tabulator-grid.component.scss'],
+  selector: "app-tabulator-grid",
+  templateUrl: "./tabulator-grid.component.html",
+  styleUrls: ["./tabulator-grid.component.scss"],
   imports: [ReactiveFormsModule],
   standalone: true,
 })
 export class TabulatorGridComponent implements OnChanges, OnDestroy {
-  @ViewChild('tabulatorGridWrapper', { static: true })
+  @ViewChild("tabulatorGridWrapper", { static: true })
   wrapperDiv!: ElementRef<HTMLDivElement>;
 
   @Input() tableData: Record<string, unknown>[] | undefined;
   @Input() columnConfig: ColumnDefinition[] | undefined;
-  @Input() dateFormat = '';
-  @Input() height = ''; // default is to auto-adjust height with the grid contents.
+  @Input() dateFormat = "";
+  @Input() height = ""; // default is to auto-adjust height with the grid contents.
   @Input() paginationSize = 10; // Add default pagination size
   @Input() filterColumns!: ColumnDefinition[] | [];
   @Input() allowCSVExport!: boolean;
-  @Input() noDataMessage = 'No Data';
-  @Input() noMatchingDataMessage = 'No Matching Data';
+  @Input() noDataMessage = "No Data";
+  @Input() noMatchingDataMessage = "No Matching Data";
 
   public filterForm!: FormGroup;
 
@@ -63,20 +63,20 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   @Output() cellChanged = new EventEmitter<CellComponent>();
 
   // private variables for keeping track of the table.
-  private tableDiv = document.createElement('div'); // this is the div that will contain that tabulator-grid HTML.
+  private tableDiv = document.createElement("div"); // this is the div that will contain that tabulator-grid HTML.
   private myTable?: TabulatorFull; // this will become a reference to the tabulator-grid object
   private gridClosing = false;
   isTableBuilt = false;
 
   constructor() {
     // Default the date format if it was not specified.
-    this.dateFormat = this.dateFormat || 'DD MMM YYYY';
+    this.dateFormat = this.dateFormat || "DD MMM YYYY";
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     // Configure the grid with whatever changes are made by the calling component.
     //  (this code also initialises the grid)
-    if (changes['filterColumns']) {
+    if (changes["filterColumns"]) {
       this.createFilterForm(); // Initialize the filter form when filter columns change
     }
     this.drawTable(changes);
@@ -93,17 +93,17 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   private createFilterForm(): void {
     this.filterForm = new FormGroup({
       column: new FormControl(
-        this.filterColumns[-1]?.field || '',
+        this.filterColumns[-1]?.field || "",
         Validators.required
       ),
-      type: new FormControl('like', Validators.required),
-      value: new FormControl(''),
+      type: new FormControl("like", Validators.required),
+      value: new FormControl(""),
     });
 
-    this.filterForm.get('column')?.valueChanges.subscribe((_value) => {
+    this.filterForm.get("column")?.valueChanges.subscribe((_value) => {
       this.applyFilter();
     });
-    this.filterForm.get('value')?.valueChanges.subscribe((_value) => {
+    this.filterForm.get("value")?.valueChanges.subscribe((_value) => {
       this.applyFilter();
     });
   }
@@ -114,23 +114,23 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
   applyFilter(): void {
     if (this.isTableInitialized()) {
-      const column = this.filterForm.get('column')?.value;
-      const type = this.filterForm.get('type')?.value;
-      const value = this.filterForm.get('value')?.value;
-  
+      const column = this.filterForm.get("column")?.value;
+      const type = this.filterForm.get("type")?.value;
+      const value = this.filterForm.get("value")?.value;
+
       if (column && value) {
         this.myTable?.setFilter(column, type, value);
       } else {
         this.myTable?.clearFilter(true);
       }
     } else {
-      console.warn('Table is not initialized. Filter cannot be applied.');
+      console.warn("Table is not initialized. Filter cannot be applied.");
     }
   }
 
   // Clear the filter
   clearFilter(): void {
-    this.filterForm.reset({ column: '', type: 'like', value: '' });
+    this.filterForm.reset({ column: "", type: "like", value: "" });
     this.myTable?.clearFilter(true);
   }
 
@@ -146,16 +146,16 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         data: this.tableData || [],
         reactiveData: true,
         columns: this.columnConfig,
-        layout: 'fitColumns',
-        responsiveLayout: 'collapse',
-        height: '530',
-        maxHeight: '100%',
+        layout: "fitColumns",
+        responsiveLayout: "collapse",
+        height: "530",
+        maxHeight: "100%",
 
         pagination: true, // Enable pagination
-        paginationMode: 'local',
+        paginationMode: "local",
         paginationSize: this.paginationSize, // Items per page
         // paginationSizeSelector: [2, 5, 10, 20, 50, true],  // true is for 'All' option
-        paginationSizeSelector: [2, 5, 10, 20, 50],
+        paginationSizeSelector: [2, 5, 10, 20, 50, 100, 500, true],
         paginationButtonCount: 4,
 
         // paginationCounter: 'rows',
@@ -168,14 +168,14 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
           _totalPages
         ) {
           if (totalRows === 0) {
-            return 'No records available';
+            return "No records available";
           }
           const startRow = currentRow; // Current row already reflects the starting position
           const endRow = Math.min(currentRow + pageSize - 1, totalRows); // Adjust end row correctly
           return `Showing ${startRow}-${endRow} out of ${totalRows} record(s)`;
         },
 
-        // movableColumns:true, // Move columns by mouse drag
+        movableColumns: true, // Move columns by mouse drag
 
         // Enable range selection and clipboard copy
         selectableRange: 1, // True
@@ -192,9 +192,9 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
           columnHeaders: false,
         },
 
-        selectableRangeMode: 'click', // Enable cell range selection mode
+        selectableRangeMode: "click", // Enable cell range selection mode
         clipboard: true, // Enable clipboard
-        clipboardCopyRowRange: 'range',
+        clipboardCopyRowRange: "range",
         // clipboardPasteParser: 'range',
         // clipboardPasteAction: 'range',
 
@@ -203,9 +203,9 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
         //setup cells to work as a spreadsheet
         columnDefaults: {
-          headerHozAlign: 'left',
-          vertAlign: 'middle',
-          resizable: 'header',
+          headerHozAlign: "left",
+          vertAlign: "middle",
+          resizable: "header",
         },
         rowHeight: 48,
         resizableRows: false,
@@ -219,7 +219,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         },
       });
 
-      this.myTable.on('tableBuilt', () => {
+      this.myTable.on("tableBuilt", () => {
         this.isTableBuilt = true;
         this.tableBuilt(); // Emit the tableBuilt event to notify parent components
         this.updatePaginationVisibility(); // Update pagination visibility once the table is built
@@ -228,10 +228,10 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
       this.wrapperDiv.nativeElement.appendChild(this.tableDiv);
       this.updatePaginationVisibility();
     } else {
-      if (changes['columnConfig']) {
+      if (changes["columnConfig"]) {
         this.myTable.setColumns(this.columnConfig);
       }
-      if (changes['tableData']) {
+      if (changes["tableData"]) {
         this.myTable.setData(this.tableData).then(() => {
           this.updatePaginationVisibility(); // Adjust pagination after data is updated
         });
@@ -240,18 +240,20 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   }
 
   private updatePaginationVisibility(): void {
-    const paginationElement = this.wrapperDiv.nativeElement.querySelector('.tabulator-paginator') as HTMLElement;
+    const paginationElement = this.wrapperDiv.nativeElement.querySelector(
+      ".tabulator-paginator"
+    ) as HTMLElement;
     if (paginationElement) {
       if (this.tableData && this.tableData.length > 0) {
-        paginationElement.style.display = 'block';
+        paginationElement.style.display = "block";
       } else {
-        paginationElement.style.display = 'none';
+        paginationElement.style.display = "none";
       }
     }
   }
 
   exportTableData() {
-    this.myTable?.download('csv', 'table-data.csv');
+    this.myTable?.download("csv", "table-data.csv");
   }
 
   /**
@@ -265,7 +267,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
       // Extract only the actual data values (not getters/setters)
       const actualValues = Object.entries(rowData)
-        .filter(([_key, value]) => typeof value !== 'function') // Ignore functions (getters/setters)
+        .filter(([_key, value]) => typeof value !== "function") // Ignore functions (getters/setters)
         .map(([_key, value]) => value);
 
       // Check if any of the values contain the search text
@@ -276,8 +278,12 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   }
 
   clearEmptyCellSelection() {
-    const activeCells = document.querySelectorAll('.tabulator-range-cell-active');
-    activeCells.forEach((cell) => cell.classList.remove('tabulator-range-cell-active'));
+    const activeCells = document.querySelectorAll(
+      ".tabulator-range-cell-active"
+    );
+    activeCells.forEach((cell) =>
+      cell.classList.remove("tabulator-range-cell-active")
+    );
   }
 
   //////////////////////////////////////////////////////////////////
@@ -333,14 +339,14 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   // }
 
   get columnControl(): FormControl {
-    return this.filterForm.get('column') as FormControl;
+    return this.filterForm.get("column") as FormControl;
   }
 
   get typeControl(): FormControl {
-    return this.filterForm.get('type') as FormControl;
+    return this.filterForm.get("type") as FormControl;
   }
 
   get valueControl(): FormControl {
-    return this.filterForm.get('value') as FormControl;
+    return this.filterForm.get("value") as FormControl;
   }
 }

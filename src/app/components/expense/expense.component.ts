@@ -6,6 +6,7 @@ import {
   ApplicationConstants,
   ApplicationModules,
   ApplicationTableConstants,
+  NavigationURLs,
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
 import { ExpenseService } from "../../services/expense/expense.service";
@@ -15,6 +16,7 @@ import { ExpenseDetailsComponent } from "../expense-details/expense-details.comp
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { Router } from "@angular/router";
 export interface Task {
   name: string;
   completed: boolean;
@@ -97,8 +99,9 @@ export class ExpenseComponent implements OnInit {
   ];
 
   constructor(
+    private router: Router,
     private expenseService: ExpenseService,
-    private _globalService: GlobalService,
+    private globalService: GlobalService,
     public datePipe: DatePipe,
     private loaderService: LoaderService,
     private dateUtil: DateUtils
@@ -108,14 +111,13 @@ export class ExpenseComponent implements OnInit {
     this.loaderService.showLoader();
     this.expenseColumnConfiguration();
     this.fromDate.setDate(this.toDate.getDate() - 30);
-    this.getSourceOrReasonList();
     this.LoadGrid();
-    this._globalService.reloadGrid$.subscribe((listName: string) => {
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
         this.LoadGrid();
       }
     });
-    this._globalService.refreshList$.subscribe((listName: string) => {
+    this.globalService.refreshList$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
         this.applyFilters();
       }
@@ -123,6 +125,11 @@ export class ExpenseComponent implements OnInit {
   }
   expenseColumnConfiguration() {
     this.tableColumnConfig = [
+      {
+        title: "Expense Id",
+        field: "expenseId",
+        sorter: "alphanum",
+      },
       {
         title: "Expense Date",
         field: "expenseDate",
@@ -133,6 +140,7 @@ export class ExpenseComponent implements OnInit {
         title: "Source/Reason",
         field: "sourceOrReason",
         sorter: "alphanum",
+        formatter: this.getColorForText.bind(this),
       },
       {
         title: "Description",
@@ -149,16 +157,18 @@ export class ExpenseComponent implements OnInit {
         title: "Debit",
         field: "debit",
         sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
         bottomCalc: "sum", // This will calculate the sum
-        bottomCalcFormatter: "money", // Optional: Format the sum (if it's a currency value)
+        bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
         bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
       },
       {
         title: "Credit",
         field: "credit",
         sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
         bottomCalc: "sum", // This will calculate the sum
-        bottomCalcFormatter: "money", // Optional: Format the sum (if it's a currency value)
+        bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
         bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
       },
       {
@@ -205,6 +215,38 @@ export class ExpenseComponent implements OnInit {
     }
     const nullDate = "";
     return `<span>${nullDate}</span>`;
+  }
+
+  amountColorFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const projectData = cell.getRow().getData();
+    const columnValue = projectData[columnName];
+    const formattedValue = new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(columnValue);
+    if (columnValue > 0) {
+      return `<span style="color:#129D0A; font-weight:bold">${formattedValue}</span>`;
+    }
+    if (columnValue < 0) {
+      return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
+    }
+    return `<span></span>`;
+  }
+
+  getColorForText(cell: CellComponent): any {
+    const projectData = cell.getRow().getData();
+    const columnValue = projectData["purpose"];
+
+    if (columnValue?.toLowerCase().includes("emergency")) {
+      return `<span style="color:#FF0000; font-weight:bold">${columnValue}</span>`;
+    } else if (columnValue.toLowerCase().includes("return")) {
+      return `<span style="color:#129D0A; font-weight:bold">${columnValue}</span>`;
+    } else if (columnValue.toLowerCase().includes("recharge")) {
+      return `<span style="color:#F29D0A; font-weight:bold">${columnValue}</span>`;
+    } else {
+      return `<span style="color:#000000; font-weight:bold">${columnValue}</span>`;
+    } // Default style (no style)
   }
 
   ngAfterViewInit() {
@@ -265,27 +307,6 @@ export class ExpenseComponent implements OnInit {
     }
   }
 
-  getSourceOrReasonList() {
-    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
-    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-    this.expenseService
-      .getSourceOrReasonList(
-        this.fromDate.toString(),
-        this.toDate.toString(),
-        this.sourceOrReason
-      )
-      .subscribe({
-        next: (res: any) => {
-          this.sourceOrReasonList = res;
-          this.loaderService.hideLoader();
-        },
-        error: (error: any) => {
-          console.log("error : ", error);
-          this.loaderService.hideLoader();
-        },
-      });
-  }
-
   applyFilters(all: boolean = false) {
     if (all) {
       this.getExpenseList();
@@ -316,22 +337,8 @@ export class ExpenseComponent implements OnInit {
     return this.filteredTableData[0]["expenseDate"];
   }
 
-  // hideExpense(expenseId: number) {
-  //   this.onTableDataChange(1);
-  //   this.filteredDataSource = this.filteredDataSource.filter((item: any) => {
-  //     const includeExpense = item.expenseId != expenseId;
-  //     return includeExpense;
-  //   });
-  //   this.filteredSummaryDataSource = this.filteredSummaryDataSource.filter((item: any) => {
-  //     const includeExpense = item.expenseId != expenseId;
-  //     return includeExpense;
-  //   });
-  // }
-
-  onSourceOrReasonChange(valueToFilter: any) {
-    this.sourceOrReason = valueToFilter.target.value.toLowerCase();
-    this.getSourceOrReasonList();
-    this.applyFilters();
+  goToExpenseSummary() {
+    this.router.navigate([NavigationURLs.EXPENSE_SUMMARY_LIST]);
   }
 
   getExpenseList() {
@@ -381,44 +388,28 @@ export class ExpenseComponent implements OnInit {
 
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
-    this.expenseService.deleteExpense(this.expenseId).subscribe({
-      next: (res: any) => {
-        this.LoadGrid();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
+    if (isConfirmed) {
+      this.expenseService.deleteExpense(this.expenseId).subscribe({
+        next: (res: any) => {
+          this.LoadGrid();
+        },
+        error: (error: any) => {
+          console.log("error : ", error);
+          this.loaderService.hideLoader();
+        },
+      });
+    }
   }
-  addExpense(expense: any) {
-    this.expenseService.addExpense(expense).subscribe({
-      next: (res: any) => {
-        this.LoadGrid();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
-  }
-
-  expenseAdjustment() {}
 
   filterGridByFromDate(date: any) {
-    console.log("fromDate : ", this.fromDate);
-
     this.fromDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
-    console.log("fromDate : ", this.fromDate);
     this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
-    this.getSourceOrReasonList();
     this.LoadGrid();
   }
 
   filterGridByToDate(date: any) {
     this.toDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
     this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-    this.getSourceOrReasonList();
     this.LoadGrid();
   }
 
@@ -439,39 +430,12 @@ export class ExpenseComponent implements OnInit {
     this.applyFilters();
   }
 
-  filterGridBySource(data: any) {
-    if (data.source != null && data.source != undefined) {
-      this.sourceOrReason = data.source.value.toLowerCase();
-    } else if (data.value != null && data.value != undefined) {
-      this.sourceOrReason = data.source.value.toLowerCase();
-    }
-    this.applyFilters();
-  }
-
   filterGridBySearch(data: any) {
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
     }, 0);
     this.sourceOrReason = data?.target?.value?.toLowerCase();
     this.applyFilters();
-  }
-
-  getColorForAmount(amount: any): any {
-    if (amount <= 0) {
-      return { color: "#FF0000", "font-weight": "bold" };
-    } else {
-      return { color: "#129D0A", "font-weight": "bold" };
-    }
-  }
-
-  getColorForText(col: any): any {
-    if (col.toLowerCase().includes("emergency")) {
-      return { color: "#FF0000", "font-weight": "bold" };
-    } else if (col.toLowerCase().includes("return")) {
-      return { color: "#129D0A", "font-weight": "bold" };
-    } else if (col.toLowerCase().includes("recharge")) {
-      return { color: "#F29D0A", "font-weight": "bold" };
-    } else return {}; // Default style (no style)
   }
 
   validateAmount(event: any) {

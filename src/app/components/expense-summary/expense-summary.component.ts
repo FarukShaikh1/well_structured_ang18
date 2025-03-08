@@ -1,16 +1,22 @@
-import { CommonModule, DatePipe } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import flatpickr from 'flatpickr';
-import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { ApplicationConstants, ApplicationModules, ApplicationTableConstants } from '../../../utils/application-constants';
-import { DateUtils } from '../../../utils/date-utils';
-import { ExpenseService } from '../../services/expense/expense.service';
-import { GlobalService } from '../../services/global/global.service';
-import { LoaderService } from '../../services/loader/loader.service';
-import { ExpenseDetailsComponent } from '../expense-details/expense-details.component';
-import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
-import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { CommonModule, DatePipe } from "@angular/common";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import flatpickr from "flatpickr";
+import { CellComponent, ColumnDefinition } from "tabulator-tables";
+import {
+  ApplicationConstants,
+  ApplicationModules,
+  ApplicationTableConstants,
+  NavigationURLs,
+} from "../../../utils/application-constants";
+import { DateUtils } from "../../../utils/date-utils";
+import { ExpenseService } from "../../services/expense/expense.service";
+import { GlobalService } from "../../services/global/global.service";
+import { LoaderService } from "../../services/loader/loader.service";
+import { ExpenseDetailsComponent } from "../expense-details/expense-details.component";
+import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
+import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
+import { ToasterComponent } from "../shared/toaster/toaster.component";
 export interface Task {
   name: string;
   completed: boolean;
@@ -18,18 +24,22 @@ export interface Task {
 }
 
 @Component({
-  selector: 'app-expense-summary',
+  selector: "app-expense-summary",
   standalone: true,
-  imports: [CommonModule, TabulatorGridComponent, ExpenseDetailsComponent, ConfirmationDialogComponent],
-  templateUrl: './expense-summary.component.html',
+  imports: [
+    CommonModule,
+    TabulatorGridComponent,
+    ExpenseDetailsComponent,
+    ConfirmationDialogComponent,
+  ],
+  templateUrl: "./expense-summary.component.html",
   providers: [DatePipe, DateUtils],
-  styleUrls: ['./expense-summary.component.scss']
+  styleUrls: ["./expense-summary.component.scss"],
 })
-
 export class ExpenseSummaryComponent implements OnInit {
-  @ViewChild('searchInput') searchInput!: ElementRef;
-  @ViewChild('minInput') minInput!: any;
-  @ViewChild('maxInput') maxInput!: any;
+  @ViewChild("searchInput") searchInput!: ElementRef;
+  @ViewChild("minInput") minInput!: any;
+  @ViewChild("maxInput") maxInput!: any;
   @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(ExpenseDetailsComponent)
@@ -50,11 +60,11 @@ export class ExpenseSummaryComponent implements OnInit {
   toDate = new Date();
   formattedFromDate: any;
   formattedToDate: any;
-  sourceOrReason: string = '';
+  sourceOrReason: string = "";
   minAmount: number = 0;
   maxAmount: number = 0;
   sourceOrReasonList: any;
-  expenseId: string = '';
+  expenseId: string = "";
   optionsMenu = [
     {
       label: `<a class="dropdown-item btn-link"
@@ -65,7 +75,7 @@ export class ExpenseSummaryComponent implements OnInit {
                   `,
       action: (_e: any, cell: CellComponent) => {
         const expenseData = cell.getRow().getData();
-        const expenseId = expenseData['expenseId'];
+        const expenseId = expenseData["expenseId"];
         this.expenseDetails(expenseId);
       },
     },
@@ -81,32 +91,32 @@ export class ExpenseSummaryComponent implements OnInit {
                   `,
       action: (_e: any, cell: CellComponent) => {
         const expenseData = cell.getRow().getData();
-        const expenseId = expenseData['expenseId'];
+        const expenseId = expenseData["expenseId"];
         this.deleteExpense(expenseId);
       },
     },
   ];
 
-
-  constructor(private expenseService: ExpenseService,
-    private _globalService: GlobalService,
+  constructor(
+    private router: Router,
+    private expenseService: ExpenseService,
+    private globalService: GlobalService,
     public datePipe: DatePipe,
     private loaderService: LoaderService,
     private dateUtil: DateUtils
-
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loaderService.showLoader();
-    this.fromDate.setDate(this.toDate.getDate() - 60);
-    this.getSourceOrReasonList();
+    this.tableColumnConfiguration();
+    this.fromDate.setDate(this.toDate.getDate() - 30);
     this.LoadGrid();
-    this._globalService.reloadGrid$.subscribe((listName: string) => {
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
         this.LoadGrid();
       }
     });
-    this._globalService.refreshList$.subscribe((listName: string) => {
+    this.globalService.refreshList$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
         this.applyFilters();
       }
@@ -116,79 +126,148 @@ export class ExpenseSummaryComponent implements OnInit {
   tableColumnConfiguration() {
     this.tableColumnConfig = [
       {
-        title: 'Expense Date',
-        field: 'expenseDate',
-        sorter: 'alphanum',
+        title: "Expense Id",
+        field: "expenseId",
+        sorter: "alphanum",
+      },
+      {
+        title: "Expense Date",
+        field: "expenseDate",
+        sorter: "alphanum",
         formatter: this.dateFormatter.bind(this),
       },
       {
-        title: 'Source/Reason',
-        field: 'sourceOrReason',
-        sorter: 'alphanum',
+        title: "Source/Reason",
+        field: "sourceOrReason",
+        sorter: "alphanum",
       },
       {
-        title: 'SBI Account',
-        field: 'sbiAccount',
-        sorter: 'alphanum',
+        title: "SBI Account",
+        field: "sbiAccount",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
       },
       {
-        title: 'CBI Account',
-        field: 'cbiAccount',
-        sorter: 'alphanum',
+        title: "Cash Account",
+        field: "cash",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
       },
       {
-        title: 'Cash Account',
-        field: 'cash',
-        sorter: 'alphanum',
+        title: "CBI Account",
+        field: "cbiAccount",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
       },
       {
-        title: 'Other Account',
-        field: 'other',
-        sorter: 'alphanum',
+        title: "Other Account",
+        field: "otherAmount",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
       },
       {
-        title: 'Total',
-        field: 'total',
-        sorter: 'alphanum',
+        title: "Total",
+        field: "total",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
       },
       {
-        title: 'SbiBalance',
-        field: 'sbiBalance',
-        sorter: 'alphanum',
+        title: "SbiBalance",
+        field: "sbiBalance",
+        sorter: "alphanum",
+        formatter: "money",
+        headerHozAlign: "right",
+        hozAlign: "right",
+        cssClass: "amount-column",
       },
       {
-        title: 'CashBalance',
-        field: 'cashBalance',
-        sorter: 'alphanum',
+        title: "CashBalance",
+        field: "cashBalance",
+        sorter: "alphanum",
+        formatter: "money",
+        headerHozAlign: "right",
+        hozAlign: "right",
+        cssClass: "amount-column",
       },
       {
-        title: 'CbiBalance',
-        field: 'cbiBalance',
-        sorter: 'alphanum',
+        title: "CbiBalance",
+        field: "cbiBalance",
+        sorter: "alphanum",
+        formatter: "money",
+        headerHozAlign: "right",
+        hozAlign: "right",
+        cssClass: "amount-column",
       },
       {
-        title: 'OtherBalance',
-        field: 'otherBalance',
-        sorter: 'alphanum',
+        title: "OtherBalance",
+        field: "otherBalance",
+        sorter: "alphanum",
+        formatter: "money",
+        headerHozAlign: "right",
+        hozAlign: "right",
+        cssClass: "amount-column",
       },
       {
-        title: 'TotalAvailable',
-        field: 'totalAvailable',
-        sorter: 'alphanum',
+        title: "TotalAvailable",
+        field: "totalAvailable",
+        sorter: "alphanum",
+        formatter: "money",
+        headerHozAlign: "right",
+        hozAlign: "right",
+        cssClass: "amount-column",
       },
       {
-        title: '',
-        field: 'options',
+        title: "",
+        field: "options",
         maxWidth: 50,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         clickMenu: this.optionsMenu,
-        hozAlign: 'left',
+        hozAlign: "left",
         headerSort: false,
       },
     ];
   }
 
+  hidebuttonFormatter(cell: CellComponent) {
+    return `<button class="action-buttons" title="Hide Expense" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
+  }
+
+  hideExpense(expenseId: any) {
+    this.filteredTableData = this.filteredTableData.filter((item: any) => {
+      return item.expenseId != expenseId;
+    });
+  }
   dateFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
     const projectData = cell.getRow().getData();
@@ -199,150 +278,84 @@ export class ExpenseSummaryComponent implements OnInit {
         ApplicationConstants.GLOBAL_DATE_FORMAT
       )}</span>`;
     }
-    const nullDate = '';
+    const nullDate = "";
     return `<span>${nullDate}</span>`;
   }
 
-  ngAfterViewInit() {
+  amountColorFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const projectData = cell.getRow().getData();
+    const columnValue = projectData[columnName];
+    const formattedValue = new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(columnValue);
+    if (columnValue > 0) {
+      return `<span style="color:#129D0A; font-weight:bold">${formattedValue}</span>`;
+    }
+    if (columnValue < 0) {
+      return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
+    }
+    return `<span></span>`;
+  }
 
-    flatpickr('#fromDate', {
-      dateFormat: 'd/m/Y',
+  ngAfterViewInit() {
+    flatpickr("#fromDate", {
+      dateFormat: "d/m/Y",
       defaultDate: (() => {
         let date = new Date(); // Get the current date
-        date.setDate(date.getDate() - 60); // Subtract 60 days
+        date.setDate(date.getDate() - 30); // Subtract 30 days
         return date;
       })(),
       onChange: (selectedDates, dateStr) => {
         if (!dateStr) {
           const today = new Date();
-          today.setDate(today.getDate() - 60); // Subtract 60 days
+          today.setDate(today.getDate() - 30); // Subtract 30 days
 
-          const dd = ('0' + today.getDate()).slice(-2);
-          const mm = ('0' + (today.getMonth() + 1)).slice(-2); // Months are zero-based
+          const dd = ("0" + today.getDate()).slice(-2);
+          const mm = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based
           const yyyy = today.getFullYear();
 
           dateStr = `${dd}/${mm}/${yyyy}`; // Format as "DD/MM/YYYY"
         }
         this.filterGridByFromDate(dateStr);
-      }
-
+      },
     });
 
-    flatpickr('#toDate', {
-      dateFormat: 'd/m/Y', // Adjust the date format as per your requirement
+    flatpickr("#toDate", {
+      dateFormat: "d/m/Y", // Adjust the date format as per your requirement
       defaultDate: this.toDate,
       onChange: (selectedDates, dateStr) => {
         if (!dateStr) {
           const today = new Date();
 
-          const dd = ('0' + today.getDate()).slice(-2);
-          const mm = ('0' + (today.getMonth() + 1)).slice(-2); // Months are zero-based
+          const dd = ("0" + today.getDate()).slice(-2);
+          const mm = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based
           const yyyy = today.getFullYear();
 
           dateStr = `${dd}/${mm}/${yyyy}`; // Format as "DD/MM/YYYY"
         }
         this.filterGridByToDate(dateStr);
-      }
+      },
     });
-  }
-
-  getTotalSbiAccount(): number {
-    if (this.filteredTableData)
-      return this.filteredTableData.reduce((total: any, item: any) => total + (item.SbiAccount || 0), 0);
-    else return 0;
-  }
-  getTotalCbiAccount(): number {
-    if (this.filteredTableData)
-      return this.filteredTableData.reduce((total: any, item: any) => total + (item.CbiAccount || 0), 0);
-    else return 0;
-  }
-  getTotalCash(): number {
-    if (this.filteredTableData)
-      return this.filteredTableData.reduce((total: any, item: any) => total + (item.Cash || 0), 0);
-    else return 0;
-  }
-  getTotalOther(): number {
-    if (this.filteredTableData)
-      return this.filteredTableData.reduce((total: any, item: any) => total + (item.Other || 0), 0);
-    else return 0;
   }
 
   LoadGrid() {
     this.loaderService.showLoader();
     this.tableColumnConfiguration();
-    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate)
-    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate)
+    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
+    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
     this.getExpenseSummaryList();
     if (this.searchInput) {
-      this.searchInput.nativeElement.value = '';
+      this.searchInput.nativeElement.value = "";
     }
     if (this.minInput) {
-      this.minInput.nativeElement.value = '';
+      this.minInput.nativeElement.value = "";
     }
     if (this.maxInput) {
-      this.maxInput.nativeElement.value = '';
+      this.maxInput.nativeElement.value = "";
     }
   }
-
-  getSourceOrReasonList() {
-    this.loaderService.showLoader();
-    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate)
-    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate)
-    this.expenseService.getSourceOrReasonList(
-      this.fromDate.toString(), this.toDate.toString(), this.sourceOrReason
-    )
-      .subscribe({
-        next: (res: any) => {
-          this.sourceOrReasonList = res;
-          console.log('data: ', res);
-          this.loaderService.hideLoader();
-        },
-        error: (error: any) => {
-          console.log('error : ', error);
-          this.loaderService.hideLoader();
-        }
-      });
-  }
-
-
-  applyFilters(all: boolean = false) {
-    if (all) {
-      this.getExpenseSummaryList();
-    }
-    this.filteredTableData = this.tableData.filter((item: any) => {
-      const searchText = item.SourceOrReason.toLowerCase().includes(this.sourceOrReason) || item.Description.toLowerCase().includes(this.sourceOrReason);
-      const minAmountCondition = this.minAmount == 0 || (item.Debit !== 0 && Math.abs(item.Debit) >= this.minAmount) || (item.Credit !== 0 && Math.abs(item.Credit) >= this.minAmount);
-      const maxAmountCondition = this.maxAmount == 0 || (item.Debit !== 0 && Math.abs(item.Debit) <= this.maxAmount) || (item.Credit !== 0 && Math.abs(item.Credit) <= this.maxAmount);
-      return searchText && minAmountCondition && maxAmountCondition;
-    });
-  }
-
-
-  onSourceOrReasonChange(valueToFilter: any) {
-    this.sourceOrReason = valueToFilter.target.value.toLowerCase();
-    this.getSourceOrReasonList();
-    this.applyFilters();
-  }
-
-
-  getExpenseSummaryList() {
-    this.loaderService.showLoader();
-    this.expenseService.getExpenseSummaryList(this.formattedFromDate, this.formattedToDate, '', 0, 0, '')
-      .subscribe({
-        next: (res: any) => {
-          this.tableData = res;
-          this.filteredTableData = res;
-          console.log('this.filteredTableData : ', this.filteredTableData);
-          this.lastExpenseDate = this.getLatestExpenseDate();
-          this.loaderService.hideLoader();
-        },
-        error: (error: any) => {
-          console.log('error : ', error);
-          this.loaderService.hideLoader();
-        }
-      });
-  }
-
 
   getLatestExpenseDate(): any {
     if (!this.filteredTableData || this.filteredTableData.length === 0) {
@@ -350,132 +363,164 @@ export class ExpenseSummaryComponent implements OnInit {
       return new Date(); // Return null if no data is available
     }
     this.loaderService.hideLoader();
-    return this.filteredTableData[0]['expenseDate'];
+    return this.filteredTableData[0]["expenseDate"];
+  }
+
+  goToExpenseList() {
+    this.router.navigate([NavigationURLs.EXPENSE_LIST]);
+  }
+
+  getSourceOrReasonList() {
+    this.loaderService.showLoader();
+    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
+    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
+    // this.expenseService.getSourceOrReasonList(
+    //   this.fromDate.toString(), this.toDate.toString(), this.sourceOrReason
+    // )
+    //   .subscribe({
+    //     next: (res: any) => {
+    //       this.sourceOrReasonList = res;
+    //       console.log('data: ', res);
+    //       this.loaderService.hideLoader();
+    //     },
+    //     error: (error: any) => {
+    //       console.log('error : ', error);
+    //       this.loaderService.hideLoader();
+    //     }
+    //   });
+  }
+
+  applyFilters(all: boolean = false) {
+    if (all) {
+      this.getExpenseSummaryList();
+    }
+    this.filteredTableData = this.tableData.filter((item: any) => {
+      const searchText =
+        item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) ||
+        item.description.toLowerCase().includes(this.sourceOrReason);
+      const minAmountCondition =
+        this.minAmount == 0 ||
+        (item.sbiAccount !== 0 &&
+          Math.abs(item.sbiAccount) >= this.minAmount) ||
+        (item.cbiAccount !== 0 &&
+          Math.abs(item.cbiAccount) >= this.minAmount) ||
+        (item.cash !== 0 && Math.abs(item.cash) >= this.minAmount) ||
+        (item.otherAmount !== 0 &&
+          Math.abs(item.otherAmount) >= this.minAmount);
+      const maxAmountCondition =
+        this.maxAmount == 0 ||
+        (item.sbiAccount !== 0 &&
+          Math.abs(item.sbiAccount) <= this.maxAmount) ||
+        (item.cbiAccount !== 0 &&
+          Math.abs(item.cbiAccount) <= this.maxAmount) ||
+        (item.cash !== 0 && Math.abs(item.cash) <= this.maxAmount) ||
+        (item.otherAmount !== 0 &&
+          Math.abs(item.otherAmount) <= this.maxAmount);
+      return searchText && minAmountCondition && maxAmountCondition;
+    });
+  }
+
+  getExpenseSummaryList() {
+    this.loaderService.showLoader();
+    this.expenseService
+      .getExpenseSummaryList(
+        this.formattedFromDate,
+        this.formattedToDate,
+        "",
+        0,
+        0,
+        ""
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.tableData = res;
+          this.filteredTableData = res;
+          console.log("this.filteredTableData : ", this.filteredTableData);
+          this.lastExpenseDate = this.getLatestExpenseDate();
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log("error : ", error);
+          this.loaderService.hideLoader();
+        },
+      });
   }
 
   expenseDetails(data: any) {
-    console.log('expenseDetails clicked');
-
+    this.loaderService.showLoader();
     this.expenseDetailsComponent.openDetailsPopup(data);
   }
-
 
   deleteExpense(expenseId: string) {
     if (expenseId) {
       this.expenseId = expenseId;
       this.confirmationDialog.openConfirmationPopup(
-        'Confirmation',
-        'Are you sure you want to delete this expense? This action cannot be undone.'
+        "Confirmation",
+        "Are you sure you want to delete this expense? This action cannot be undone."
       );
     }
   }
 
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
-    this.expenseService.deleteExpense(this.expenseId)
-      .subscribe({
+    if (isConfirmed) {
+      this.expenseService.deleteExpense(this.expenseId).subscribe({
         next: (res: any) => {
-          if (res) {
-            this.LoadGrid();
-          }
-          this.loaderService.hideLoader();
+          this.LoadGrid();
         },
         error: (error: any) => {
-          console.log('error : ', error);
-          this.loaderService.hideLoader();
-        }
-      });
-  }
-
-
-  addExpense(expense: any, item: any) {
-    this.expenseService.addExpense(expense)
-      .subscribe({
-        next: (res: any) => {
-          if (res) {
-            this.LoadGrid();
-          }
+          console.log("error : ", error);
           this.loaderService.hideLoader();
         },
-        error: (error: any) => {
-          console.log('error : ', error);
-          this.loaderService.hideLoader();
-        }
       });
-  }
-
-  expenseAdjustment(data: any) {
-  }
-
-  convertDDMMYYYYToDate(dateString: string): Date {
-    const [day, mon, year] = dateString.split('/').map(Number);
-    // Months are 0-based in JavaScript Date objects, so subtract 1 from month
-    return new Date(year, mon - 1, day);
+    }
   }
 
   filterGridByFromDate(date: any) {
-    console.log('fromDate : ', this.fromDate);
-
-    this.fromDate = this.convertDDMMYYYYToDate(date);;// this.datepipe.transform(data.value, 'MM-dd-yyyy');
-    console.log('fromDate : ', this.fromDate);
+    this.fromDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
     this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
-    this.getSourceOrReasonList();
     this.LoadGrid();
   }
 
   filterGridByToDate(date: any) {
-    this.toDate = this.convertDDMMYYYYToDate(date);;// this.datepipe.transform(data.value, 'MM-dd-yyyy');
+    this.toDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
     this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-    this.getSourceOrReasonList();
     this.LoadGrid();
   }
 
   filterGridByMaxAmount(data: any) {
     this.maxAmount = data.target.value;
+    setTimeout(() => {
+      this.maxInput.nativeElement.focus();
+    }, 0);
     this.applyFilters();
   }
 
   filterGridByMinAmount(data: any) {
     this.minAmount = data.target.value;
-    this.applyFilters();
-  }
+    setTimeout(() => {
+      this.minInput.nativeElement.focus();
+    }, 0);
 
-  filterGridBySource(data: any) {
-    if (data.source != null && data.source != undefined) {
-      this.sourceOrReason = data.source.value.toLowerCase();
-    }
-    else if (data.value != null && data.value != undefined) {
-      this.sourceOrReason = data.source.value.toLowerCase();
-    }
     this.applyFilters();
   }
 
   filterGridBySearch(data: any) {
-    this.sourceOrReason = data.target.value.toLowerCase();
+    setTimeout(() => {
+      this.searchInput.nativeElement.focus();
+    }, 0);
+    this.sourceOrReason = data?.target?.value?.toLowerCase();
     this.applyFilters();
   }
 
-  getColorForAmount(amount: any): any {
-    if (amount <= 0) {
-      return { 'color': '#FF0000', 'font-weight': 'bold' };
-    }
-    else {
-      return { 'color': '#129D0A', 'font-weight': 'bold' };
-    }
-  }
-
   getColorForText(col: any): any {
-    if (col.toLowerCase().includes('emergency')) {
-      return { 'color': '#FF0000', 'font-weight': 'bold' };
-    }
-    else if (col.toLowerCase().includes('return')) {
-      return { 'color': '#129D0A', 'font-weight': 'bold' };
-    }
-    else if (col.toLowerCase().includes('recharge')) {
-      return { 'color': '#F29D0A', 'font-weight': 'bold' };
-    }
-    else
-      return {}; // Default style (no style)
+    if (col.toLowerCase().includes("emergency")) {
+      return { color: "#FF0000", "font-weight": "bold" };
+    } else if (col.toLowerCase().includes("return")) {
+      return { color: "#129D0A", "font-weight": "bold" };
+    } else if (col.toLowerCase().includes("recharge")) {
+      return { color: "#F29D0A", "font-weight": "bold" };
+    } else return {}; // Default style (no style)
   }
 
   validateAmount(event: any) {
@@ -484,6 +529,6 @@ export class ExpenseSummaryComponent implements OnInit {
       event.preventDefault();
     }
   }
+
+  expenseAdjustment(data: any) {}
 }
-
-
