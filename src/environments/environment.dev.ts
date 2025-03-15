@@ -1,6 +1,5 @@
 export const environmentDev = {
   production: false,
-  // serverUrl: 'https://localhost:44343',
   // serverUrl: 'https://localhost:7069/',
    serverUrl:  'http://localhost:8181/',
   apiPrefix: 'api',

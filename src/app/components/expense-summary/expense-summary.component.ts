@@ -126,11 +126,6 @@ export class ExpenseSummaryComponent implements OnInit {
   tableColumnConfiguration() {
     this.tableColumnConfig = [
       {
-        title: "Expense Id",
-        field: "expenseId",
-        sorter: "alphanum",
-      },
-      {
         title: "Expense Date",
         field: "expenseDate",
         sorter: "alphanum",
@@ -139,6 +134,11 @@ export class ExpenseSummaryComponent implements OnInit {
       {
         title: "Source/Reason",
         field: "sourceOrReason",
+        sorter: "alphanum",
+      },
+      {
+        title: "Description",
+        field: "description",
         sorter: "alphanum",
       },
       {
@@ -204,7 +204,6 @@ export class ExpenseSummaryComponent implements OnInit {
       {
         title: "SbiBalance",
         field: "sbiBalance",
-        sorter: "alphanum",
         formatter: "money",
         headerHozAlign: "right",
         hozAlign: "right",
@@ -213,7 +212,6 @@ export class ExpenseSummaryComponent implements OnInit {
       {
         title: "CashBalance",
         field: "cashBalance",
-        sorter: "alphanum",
         formatter: "money",
         headerHozAlign: "right",
         hozAlign: "right",
@@ -222,7 +220,6 @@ export class ExpenseSummaryComponent implements OnInit {
       {
         title: "CbiBalance",
         field: "cbiBalance",
-        sorter: "alphanum",
         formatter: "money",
         headerHozAlign: "right",
         hozAlign: "right",
@@ -231,7 +228,6 @@ export class ExpenseSummaryComponent implements OnInit {
       {
         title: "OtherBalance",
         field: "otherBalance",
-        sorter: "alphanum",
         formatter: "money",
         headerHozAlign: "right",
         hozAlign: "right",
@@ -240,7 +236,6 @@ export class ExpenseSummaryComponent implements OnInit {
       {
         title: "TotalAvailable",
         field: "totalAvailable",
-        sorter: "alphanum",
         formatter: "money",
         headerHozAlign: "right",
         hozAlign: "right",

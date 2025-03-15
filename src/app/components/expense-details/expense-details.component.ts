@@ -241,7 +241,8 @@ export class ExpenseDetailsComponent {
   }
 
   getExpenseDetails(expenseId: string) {
-    this.expenseService.getExpenseDetails(expenseId)
+          this.loaderService.showLoader();
+          this.expenseService.getExpenseDetails(expenseId)
       .subscribe({
         next: (res: any) => {
           console.log('res : ', res);
@@ -320,7 +321,7 @@ export class ExpenseDetailsComponent {
           // this.expenseDetailsForm.value['expenseDate'] = DateUtils.formatDateStringToYYYYMMDD(this.expenseDetailsForm.value['expenseDate'])
         }
 
-        if (this.expenseDetailsForm.value['expenseId'] > 0) {
+        if (this.expenseDetailsForm.value['expenseId']) {
           this.expenseService.updateExpense(this.expenseDetailsForm.value).subscribe(
             {
               next: (result: any) => {
@@ -348,6 +349,7 @@ export class ExpenseDetailsComponent {
             })
         }
         else {
+          this.loaderService.showLoader();
           this.expenseService.addExpense(this.expenseDetailsForm.value).subscribe({
             next: (result: any) => {
               if (result) {

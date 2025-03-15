@@ -126,11 +126,6 @@ export class ExpenseComponent implements OnInit {
   expenseColumnConfiguration() {
     this.tableColumnConfig = [
       {
-        title: "Expense Id",
-        field: "expenseId",
-        sorter: "alphanum",
-      },
-      {
         title: "Expense Date",
         field: "expenseDate",
         sorter: "alphanum",
@@ -237,15 +232,16 @@ export class ExpenseComponent implements OnInit {
   getColorForText(cell: CellComponent): any {
     const projectData = cell.getRow().getData();
     const columnValue = projectData["purpose"];
+    const sourceValue = projectData["sourceOrReason"];
 
     if (columnValue?.toLowerCase().includes("emergency")) {
-      return `<span style="color:#FF0000; font-weight:bold">${columnValue}</span>`;
+      return `<span style="color:#FF0000; font-weight:bold">${sourceValue}</span>`;
     } else if (columnValue.toLowerCase().includes("return")) {
-      return `<span style="color:#129D0A; font-weight:bold">${columnValue}</span>`;
+      return `<span style="color:#129D0A; font-weight:bold">${sourceValue}</span>`;
     } else if (columnValue.toLowerCase().includes("recharge")) {
-      return `<span style="color:#F29D0A; font-weight:bold">${columnValue}</span>`;
+      return `<span style="color:#F29D0A; font-weight:bold">${sourceValue}</span>`;
     } else {
-      return `<span style="color:#000000; font-weight:bold">${columnValue}</span>`;
+      return `<span style="color:#000000; font-weight:bold">${sourceValue}</span>`;
     } // Default style (no style)
   }
 
