@@ -16,7 +16,7 @@ import { ExpenseDetailsComponent } from "../expense-details/expense-details.comp
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 export interface Task {
   name: string;
   completed: boolean;
@@ -104,8 +104,9 @@ export class ExpenseComponent implements OnInit {
     private globalService: GlobalService,
     public datePipe: DatePipe,
     private loaderService: LoaderService,
+    private activatedRoute: ActivatedRoute,
     private dateUtil: DateUtils
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loaderService.showLoader();
@@ -122,6 +123,7 @@ export class ExpenseComponent implements OnInit {
         this.applyFilters();
       }
     });
+
   }
   expenseColumnConfiguration() {
     this.tableColumnConfig = [
@@ -178,7 +180,7 @@ export class ExpenseComponent implements OnInit {
       },
       {
         title: "",
-        field: "options",
+        field: "",
         maxWidth: 50,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
@@ -288,8 +290,6 @@ export class ExpenseComponent implements OnInit {
 
   LoadGrid() {
     this.loaderService.showLoader();
-    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
-    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
 
     this.getExpenseList();
     if (this.searchInput) {
@@ -333,11 +333,41 @@ export class ExpenseComponent implements OnInit {
     return this.filteredTableData[0]["expenseDate"];
   }
 
+  goToExpense() {
+    this.router.navigate([NavigationURLs.EXPENSE_LIST]);
+    setTimeout(() => {
+      window.location.reload();
+    },
+      0
+    )
+  }
   goToExpenseSummary() {
     this.router.navigate([NavigationURLs.EXPENSE_SUMMARY_LIST]);
   }
+  goToExpenseReport() {
+    this.router.navigate([NavigationURLs.EXPENSE_REPORT]);
+  }
 
   getExpenseList() {
+    console.log('this.formattedFromDate : ', this.formattedFromDate);
+    console.log('this.formattedToDate : ', this.formattedToDate);
+    this.activatedRoute.queryParams.subscribe((params) => {
+      debugger
+      this.sourceOrReason = params['sourceOrReason'] ?? '';
+      if (params['firstDate']) {
+        this.formattedFromDate = this.dateUtil.formatStringDate(params['firstDate']);
+      }
+      else {
+        this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
+      }
+      if (params['lastDate']) {
+        this.formattedToDate = this.dateUtil.formatStringDate(params['lastDate']);
+      }
+      else {
+        this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
+      }
+    });
+
     this.loaderService.showLoader();
     this.filterColumns = this.tableColumnConfig.filter((col) =>
       ["SourceOrReason", "emailId"].includes(col.field ?? "")
@@ -346,7 +376,7 @@ export class ExpenseComponent implements OnInit {
       .getExpenseList(
         this.formattedFromDate,
         this.formattedToDate,
-        "",
+        this.sourceOrReason,
         0,
         0,
         ""

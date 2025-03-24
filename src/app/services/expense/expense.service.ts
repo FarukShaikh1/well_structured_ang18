@@ -56,7 +56,7 @@ export class ExpenseService {
       .set("maxAmount", maxAmount)
       .set("modeOfTransaction", modeOfTransaction);
 
-    return this.http.get(API_URL.GET_EXPENSE_SUMMARY_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+    return this.http.get(API_URL.GET_EXPENSE_REPORT_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
   }
 
   getExpenseList(

@@ -242,8 +242,18 @@ export class ExpenseSummaryComponent implements OnInit {
         cssClass: "amount-column",
       },
       {
+        title: "-",
+        field: "-",
+        maxWidth: 50,
+        formatter: this.hidebuttonFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const expenseId = cell.getRow().getData()["expenseId"];
+          this.hideExpense(expenseId); // Call the hideExpense method
+        },
+      },
+      {
         title: "",
-        field: "options",
+        field: "",
         maxWidth: 50,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
@@ -363,6 +373,10 @@ export class ExpenseSummaryComponent implements OnInit {
 
   goToExpenseList() {
     this.router.navigate([NavigationURLs.EXPENSE_LIST]);
+  }
+
+  goToExpenseReport() {
+    this.router.navigate([NavigationURLs.EXPENSE_REPORT]);
   }
 
   getSourceOrReasonList() {

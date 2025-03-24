@@ -72,8 +72,6 @@
 
 .action-buttons i {
   font-size: 20px;
-  /* color: #007bff; */
-  /* Default color for primary actions */
 }
 
 .action-buttons i.fa-check {
@@ -103,7 +101,6 @@
   background-color: #FF7A00;
 }
 
-/* For screens smaller than 450px xxs like mobile phones */
 @media (max-width: 450px) {
   .table-container {
     padding: 0px;
@@ -124,69 +121,32 @@
   }
 }
 
-/* For screens size between 450px and 576px sm */
 @media (min-width: 450.01px) and (max-width: 576px) {
   .table-container {
     padding: 5px;
   }
 }
 
-/* For screens greater than 576px md*/
 @media (min-width: 576.01px) and (max-width: 768px) {
   .table-container {
     padding: 10px;
   }
 }
 
-/* For screens between 767px and 992px lg*/
 @media (min-width: 768.01px) and (max-width: 992px) {
   .table-container {
     padding: 15px;
   }
 }
 
-/* =========== For Tabulator ================== */
-
 .blank-lims-id {
   margin-left: 10px
 }
 
-/* tabulator table column header */
-/* .tabulator .tabulator-header {
-  background-color: #DEE0E5;
-} */
-
-/* Tabulator column color/font */
-/* .tabulator-col {
-  text-align: left;
-  font: normal normal medium 12px/15px;
-  letter-spacing: 0px;
-  color: #363636;
-  text-transform: capitalize;
-  opacity: 1;
-} */
-
-/* Table background */
-/* .tabulator .tabulator-tableholder {
-  background-color: #FFFFFF !important;
-} */
-
-/* Tabulator footer */
-/* .tabulator .tabulator-footer  {
-  background-color: #fffdfd !important;
-} */
-
-/* Even rows of the table */
-/* .tabulator .tabulator-row.tabulator-row-even {
-  background-color: #fdfefe !important;
-} */
-
-/* Cell hover */
 .tabulator-row .tabulator-cell:hover {
   border: 1px solid rgb(208, 208, 237);
 }
 
-/* For three dots option menu */
 .tabulator-cell[tabulator-field="options"] {
   overflow: visible !important;
   text-align: center;
@@ -212,47 +172,6 @@
   margin-top: 2px;
 }
 
-/* .tabulator .tabulator-paginator select
-{
-  margin: 0 10px !important;
-} */
-
-/* .tabulator .tabulator-footer .tabulator-footer-contents .tabulator-paginator button
-{
-  margin: 0 3px !important;
-} */
-
-/* For pagination buttons */
-/* .tabulator .tabulator-footer .tabulator-page.active {
-  background-color: #FF7A00;
-  border-color: #FF7A00;
-  color: #ffffff;
-} */
-
-/* For disabled pagination buttons */
-/* .tabulator .tabulator-footer .tabulator-page:disabled {
-  background-color: #DEE0E5;
-  border-color: #43403d;
-  color: #3c3a3a;
-} */
-
-/* .tabulator .tabulator-footer .tabulator-page:not(.disabled):hover {
-  background-color: #DEE0E5;
-  border-color: #282624;
-  color: #363636;
-} */
-
-/* .tabulator .tabulator-footer .tabulator-page:not(.active):hover {
-  background-color: #2727D5;
-  border-color: #0e3096;
-  color: #ffffff;
-} */
-
-
-/* .tabulator-col-title[tabulator-field="Project ID"] {
-  text-align: center;
-  background-color: red;
-} */
 
 .tabulator-row .tabulator-cell {
   border-right: none;
@@ -260,7 +179,6 @@
   vertical-align: middle;
 }
 
-/* Project table headers */
 .project-id-header {
   text-align: left;
   white-space: normal;
@@ -273,7 +191,6 @@
   padding-left: 3px
 }
 
-/* Sample form list table headers */
 .form-id-header {
   text-align: left;
   white-space: normal;
@@ -290,7 +207,6 @@
   padding-left: 8px;
 }
 
-/* User Table headers */
 .user-name-header {
   text-align: left;
   white-space: normal;

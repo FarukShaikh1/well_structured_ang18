@@ -79,6 +79,7 @@ export const NavigationURLs = {
     NAV_CHAT_PANEL: '/home/nav-chat-panel',
     EXPENSE_LIST: '/home/expenses',
     EXPENSE_SUMMARY_LIST: '/home/expense-summary',
+    EXPENSE_REPORT: '/home/expense-report',
     BUSINESS_LIST: '/home/business',
     REPORT_LIST: '/home/expenses/reports',
     ALL_NOTIFICATIONS: '/home/notifications',

@@ -13,3 +13,25 @@
     align-items: center;
     justify-content: flex-start;
 }
+
+.tabulator-row .tabulator-cell:hover {
+    border: 1px solid rgb(208, 208, 237);
+  }
+  
+  .tabulator-cell[tabulator-field="options"] {
+    overflow: visible !important;
+    text-align: center;
+  }
+  
+  .options-menu {
+    padding: 0x;
+    background-color: #FFFFFF;
+    border: 1px solid #c9cccf;
+    box-shadow: 0 0 3px #ccc;
+  }
+  
+  .options-menu-item {
+    padding: 5px;
+    cursor: pointer;
+  }
+  

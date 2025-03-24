@@ -5,11 +5,20 @@
     data-bs-toggle="modal"
     data-bs-target="#expenseDetailsPopup"
   >
-    Add Expense
+  <i class="bi bi-plus-lg"></i>
+  Add Expense
   </button>
   <button (click)="goToExpenseSummary()" class="btn btn-primary rounded-button">
     Expense Summary
   </button>
+  <button (click)="goToExpenseReport()" class="btn btn-primary rounded-button">
+    Expense Report
+  </button>
+  @if(sourceOrReason){
+  <button (click)="goToExpense()" class="btn btn-primary rounded-button">
+    Remove Filter{{sourceOrReason}}
+  </button>
+}
   <div class="row pb-2">
     <div class="col-6 col-sm-4 col-lg col-xl">
       From Date:

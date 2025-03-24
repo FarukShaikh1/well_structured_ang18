@@ -35,7 +35,7 @@ import {
 @Component({
   selector: "app-tabulator-grid",
   templateUrl: "./tabulator-grid.component.html",
-  styleUrls: ["./tabulator-grid.component.scss"],
+  styleUrls: ["./tabulator-grid.component.css"],
   imports: [ReactiveFormsModule],
   standalone: true,
 })
@@ -207,7 +207,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
           vertAlign: "middle",
           resizable: "header",
         },
-        rowHeight: 48,
+        // rowHeight: 48,
         resizableRows: false,
 
         placeholder: () => {

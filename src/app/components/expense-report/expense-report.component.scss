@@ -1,3 +1,17 @@
-.part-6{
-    width:16.66%
-}
+.text-wrap {
+    white-space: normal !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 200px; /* Adjust width as needed */
+  }
+  
+  .tabulator .tabulator-cell {
+    white-space: normal !important;
+    height: auto !important; /* Allow height to expand */
+    line-height: 1.2 !important;
+    padding: 5px; /* Adjust padding for better spacing */
+  }
+  
+  .tabulator .tabulator-row {
+    height: auto !important; /* Make row height flexible */
+  }
