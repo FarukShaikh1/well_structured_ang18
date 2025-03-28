@@ -2,15 +2,15 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import * as forms from '@angular/forms';
 import { Router } from '@angular/router';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { GlobalService } from '../../services/global/global.service';
-import { LoaderService } from '../../services/loader/loader.service';
-import { UserService } from '../../services/user/user.service';
 import {
-  Messages,
   ApplicationModuleActions,
   ApplicationModules,
   ApplicationTableConstants,
+  Messages,
 } from '../../../utils/application-constants';
+import { GlobalService } from '../../services/global/global.service';
+import { LoaderService } from '../../services/loader/loader.service';
+import { UserService } from '../../services/user/user.service';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';

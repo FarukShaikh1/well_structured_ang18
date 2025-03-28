@@ -1,41 +1,34 @@
-import { Component } from '@angular/core';
-import { ToasterConfigs } from '../../../../utils/application-constants';
 import { CommonModule } from '@angular/common';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastService } from '../../../services/toast/toast-service';
+import { ToasterConfigs } from '../../../../utils/application-constants';
+import { ToastsContainerComponent } from './../toasts-container/toasts-container.component';
 
 @Component({
   selector: 'app-toaster',
   templateUrl: './toaster.component.html',
-  imports: [CommonModule],
+  imports: [NgbTooltipModule, ToastsContainerComponent, CommonModule],
   styleUrls: ['./toaster.component.css'],
   standalone: true,
 })
-export class ToasterComponent {
-  message: string = '';
-  isSuccess: boolean = true;
-  isVisible: boolean = false;
-  timeout: number = ToasterConfigs.TIMEOUT;
-  isHovered: boolean = false;
+export class ToasterComponent  {
+  @ViewChild('toasterTemplate') toasterTemplate!: TemplateRef<any>;
 
-  showMessage(
-    message: string,
-    type: 'success' | 'error',
-    timeout: number = this.timeout
-  ) {
-    this.message = message;
-    this.isSuccess = type === 'success';
-    this.isVisible = true;
-    this.timeout = timeout;
+  toastService = inject(ToastService);
+  toastText: string = '';
+  timeout = ToasterConfigs.TIMEOUT;
+  showStandard(toastText: string) {
+    if (this.toasterTemplate) {
+      this.toastText = toastText;
+      this.toastService.show({ template: this.toasterTemplate, autohide: true, });
+    }
   }
 
-  closeToaster() {
-    this.isVisible = false;
+  showMessage(toastText: string, result: string, timeout: number = this.timeout) {
+    this.toastText = toastText;
+    this.toastService.show({ template: this.toasterTemplate, autohide: true, classname: result === 'success' ? 'bg-success text-light' : 'bg-danger text-light', delay: timeout });
   }
 
-  onProgressAnimationEnd() {
-    this.isVisible = false;
-  }
-
-  toggleHoverState(state: boolean) {
-    this.isHovered = state;
-  }
+  
 }

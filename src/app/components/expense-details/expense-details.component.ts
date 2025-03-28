@@ -248,6 +248,7 @@ export class ExpenseDetailsComponent {
           console.log('res : ', res);
           this.patchValues(res);
           this.loaderService.hideLoader();
+          this.validateAmountFields()
         },
         error: (error: any) => {
           console.log('error : ', error);
@@ -289,6 +290,7 @@ export class ExpenseDetailsComponent {
   }
 
   submitExpenseDetails() {
+    this._globalService.trimAllFields(this.expenseDetailsForm);
     this.loaderService.showLoader();
     this.validateAmountFields();
     if (this.isValidAmount) {

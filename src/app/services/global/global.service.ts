@@ -135,4 +135,14 @@ export class GlobalService {
       .set('commonListId', commonListId.toString())
     return this.http.get(API_URL.GET_COMMON_LIST_ITEMS, { params: params });
   }
+
+  trimAllFields(form:any) {
+    // Trim whitespace from all form control values
+    Object.keys(form?.controls).forEach(key => {
+        const control = form?.get(key);
+        if (control && typeof control.value === 'string') {
+            control.setValue(control.value.trim());
+        }
+    });
+}
 }

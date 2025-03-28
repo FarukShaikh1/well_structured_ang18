@@ -194,6 +194,7 @@ export class DayDetailsComponent implements OnInit {
   }
 
   submitDayDetails() {
+    this._globalService.trimAllFields(this.dayDetailsForm);
     if (!this.dayDetailsForm.valid) {
       this.toaster.showMessage("Please fill valid details.", "error");
       return;
