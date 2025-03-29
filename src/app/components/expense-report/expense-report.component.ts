@@ -327,9 +327,9 @@ export class ExpenseReportComponent implements OnInit {
       this.getExpenseReportList();
     }
     this.filteredTableData = this.tableData.filter((item: any) => {
-      const searchText = item.SourceOrReason.toLowerCase().includes(this.sourceOrReason) || item.Description.toLowerCase().includes(this.sourceOrReason);
-      const minAmountCondition = this.minAmount == 0 || (item.Debit !== 0 && Math.abs(item.Debit) >= this.minAmount) || (item.Credit !== 0 && Math.abs(item.Credit) >= this.minAmount);
-      const maxAmountCondition = this.maxAmount == 0 || (item.Debit !== 0 && Math.abs(item.Debit) <= this.maxAmount) || (item.Credit !== 0 && Math.abs(item.Credit) <= this.maxAmount);
+      const searchText = item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) || item.description.toLowerCase().includes(this.sourceOrReason);
+      const minAmountCondition = this.minAmount == 0 || (item.debit !== 0 && Math.abs(item.debit) >= this.minAmount) || (item.credit !== 0 && Math.abs(item.credit) >= this.minAmount);
+      const maxAmountCondition = this.maxAmount == 0 || (item.debit !== 0 && Math.abs(item.debit) <= this.maxAmount) || (item.credit !== 0 && Math.abs(item.credit) <= this.maxAmount);
       return searchText && minAmountCondition && maxAmountCondition;
     });
   }

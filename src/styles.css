@@ -1454,3 +1454,29 @@ input.ng-invalid.ng-touched {
   /* Changes cursor to a hand symbol */
 }
 
+.action-buttons {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.action-buttons i {
+  font-size: 20px;
+}
+
+.action-buttons i.fa-check {
+  color: green;
+}
+
+.action-buttons i.fa-edit {
+  color: #007bff;
+}
+
+.action-buttons i.fa-trash {
+  color: red;
+}
+
+.action-buttons:focus {
+  outline: none;
+}

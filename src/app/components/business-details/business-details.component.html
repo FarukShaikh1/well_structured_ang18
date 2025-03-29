@@ -46,7 +46,8 @@
                 businessDetailsForm.get('businessDate')?.invalid){
                 <div class="text-danger">
                   @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
-                  Date is required. } @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
+                  Date is required. } 
+                  @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
                   Invalid Date. }
                 </div>
                 }

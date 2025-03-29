@@ -352,7 +352,6 @@ export class ExpenseComponent implements OnInit {
     console.log('this.formattedFromDate : ', this.formattedFromDate);
     console.log('this.formattedToDate : ', this.formattedToDate);
     this.activatedRoute.queryParams.subscribe((params) => {
-      debugger
       this.sourceOrReason = params['sourceOrReason'] ?? '';
       if (params['firstDate']) {
         this.formattedFromDate = this.dateUtil.formatStringDate(params['firstDate']);

@@ -6,7 +6,6 @@ import {
   ApplicationTableConstants,
   DBConstants,
 } from "../../../utils/application-constants";
-import { TableUtils } from "../../../utils/table-utils";
 import { DayService } from "../../services/day/day.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
@@ -66,7 +65,7 @@ export class DayComponent implements OnInit {
 
   constructor(
     private _dayService: DayService,
-    public tableUtils: TableUtils,
+    // public tableUtils: TableUtils,
     public globalService: GlobalService,
     private loaderService: LoaderService,
     public datePipe: DatePipe
