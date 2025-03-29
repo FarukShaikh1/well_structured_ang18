@@ -1,3 +1,19 @@
+@keyframes slideInRightToLeft {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progress {
+  from {width: 0;}
+  to {width: 100%;}
+}
+
 .toast {
   min-width: 300px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -36,4 +52,14 @@
 
 .bg-danger {
   background-color: #dc3545 !important; 
+}
+.toast-progress {
+  height: 5px;
+  background-color: #fff; /* Progress bar color */
+  animation: progress linear forwards; 
+  animation-play-state: running; 
+}
+
+.toast:hover .toast-progress {
+  animation-play-state: paused; /* Pause animation on hover */
 }

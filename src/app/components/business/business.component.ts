@@ -124,34 +124,49 @@ export class BusinessComponent implements OnInit {
   businessColumnConfiguration() {
     this.tableColumnConfig = [
       {
-        title: "Business Date",
+        title: "Transaction Date",
         field: "businessDate",
         sorter: "alphanum",
         formatter: this.dateFormatter.bind(this),
       },
       {
-        title: "Source/Reason",
+        title: "Customer Name",
         field: "sourceOrReason",
         sorter: "alphanum",
       },
       {
-        title: "Description",
+        title: "Product",
         field: "description",
         sorter: "alphanum",
-        width: 400,
+        formatter: this.dateFormatter.bind(this),
       },
       {
-        title: "ModeOfTransaction",
+        title: "Delevered On",
         field: "modeOfTransaction",
         sorter: "alphanum",
       },
       {
-        title: "Debit",
+        title: "Deal Amount",
         field: "debit",
         sorter: "alphanum",
       },
       {
-        title: "Credit",
+        title: "Paid Amount",
+        field: "credit",
+        sorter: "alphanum",
+      },
+      {
+        title: "Paid through",
+        field: "credit",
+        sorter: "alphanum",
+      },
+      {
+        title: "Pending Amount",
+        field: "credit",
+        sorter: "alphanum",
+      },
+      {
+        title: "Other Details",
         field: "credit",
         sorter: "alphanum",
       },
@@ -170,8 +185,8 @@ export class BusinessComponent implements OnInit {
 
   dateFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
-    const projectData = cell.getRow().getData();
-    const dateColumn = projectData[columnName];
+    const businessData = cell.getRow().getData();
+    const dateColumn = businessData[columnName];
     if (dateColumn) {
       return `<span>${this.datePipe.transform(
         dateColumn,
@@ -180,6 +195,18 @@ export class BusinessComponent implements OnInit {
     }
     const nullDate = "";
     return `<span>${nullDate}</span>`;
+  }
+
+  productFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const businessData = cell.getRow().getData();
+    const quantityColumn = businessData['quantity'];
+    const unitColumn = businessData['unit'];
+    const productColumn = businessData['product'];
+    if (productColumn) {
+      return `<span>${quantityColumn + ' ' + unitColumn + ' ' + productColumn }</span>`;
+    }
+    return `<span>Uniknown</span>`;
   }
 
   ngAfterViewInit() {

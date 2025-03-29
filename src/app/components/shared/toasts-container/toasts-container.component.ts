@@ -23,4 +23,7 @@ export class ToastsContainerComponent {
     resumeToast(toast: any) {
         toast.autohide = true; // Resume auto-hide when mouse leaves
     }
+    onProgressAnimationEnd(toast:any) {
+        toast.autohide = true; // Resume auto-hide when mouse leaves
+      }    
 }
