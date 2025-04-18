@@ -100,7 +100,7 @@ export class ExpenseSummaryComponent implements OnInit {
   constructor(
     private router: Router,
     private expenseService: ExpenseService,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     public datePipe: DatePipe,
     private loaderService: LoaderService,
     private dateUtil: DateUtils
@@ -108,7 +108,7 @@ export class ExpenseSummaryComponent implements OnInit {
 
   ngOnInit() {
     this.loaderService.showLoader();
-    this.tableColumnConfiguration();
+    this.columnConfiguration();
     this.fromDate.setDate(this.toDate.getDate() - 30);
     this.LoadGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
@@ -123,7 +123,7 @@ export class ExpenseSummaryComponent implements OnInit {
     });
   }
 
-  tableColumnConfiguration() {
+  columnConfiguration() {
     this.tableColumnConfig = [
       {
         title: "Expense Date",
@@ -347,19 +347,31 @@ export class ExpenseSummaryComponent implements OnInit {
 
   LoadGrid() {
     this.loaderService.showLoader();
-    this.tableColumnConfiguration();
     this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
     this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-    this.getExpenseSummaryList();
-    if (this.searchInput) {
-      this.searchInput.nativeElement.value = "";
-    }
-    if (this.minInput) {
-      this.minInput.nativeElement.value = "";
-    }
-    if (this.maxInput) {
-      this.maxInput.nativeElement.value = "";
-    }
+    this.loaderService.showLoader();
+    this.expenseService
+      .getExpenseSummaryList(
+        this.formattedFromDate,
+        this.formattedToDate,
+        "",
+        0,
+        0,
+        ""
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.tableData = res;
+          this.filteredTableData = res;
+          console.log("this.filteredTableData : ", this.filteredTableData);
+          this.lastExpenseDate = this.getLatestExpenseDate();
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log("error : ", error);
+          this.loaderService.hideLoader();
+        },
+      });
   }
 
   getLatestExpenseDate(): any {
@@ -383,26 +395,9 @@ export class ExpenseSummaryComponent implements OnInit {
     this.loaderService.showLoader();
     this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
     this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-    // this.expenseService.getSourceOrReasonList(
-    //   this.fromDate.toString(), this.toDate.toString(), this.sourceOrReason
-    // )
-    //   .subscribe({
-    //     next: (res: any) => {
-    //       this.sourceOrReasonList = res;
-    //       console.log('data: ', res);
-    //       this.loaderService.hideLoader();
-    //     },
-    //     error: (error: any) => {
-    //       console.log('error : ', error);
-    //       this.loaderService.hideLoader();
-    //     }
-    //   });
   }
 
-  applyFilters(all: boolean = false) {
-    if (all) {
-      this.getExpenseSummaryList();
-    }
+  applyFilters() {
     this.filteredTableData = this.tableData.filter((item: any) => {
       const searchText =
         item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) ||
@@ -429,34 +424,26 @@ export class ExpenseSummaryComponent implements OnInit {
     });
   }
 
-  getExpenseSummaryList() {
-    this.loaderService.showLoader();
-    this.expenseService
-      .getExpenseSummaryList(
-        this.formattedFromDate,
-        this.formattedToDate,
-        "",
-        0,
-        0,
-        ""
-      )
-      .subscribe({
-        next: (res: any) => {
-          this.tableData = res;
-          this.filteredTableData = res;
-          console.log("this.filteredTableData : ", this.filteredTableData);
-          this.lastExpenseDate = this.getLatestExpenseDate();
-          this.loaderService.hideLoader();
-        },
-        error: (error: any) => {
-          console.log("error : ", error);
-          this.loaderService.hideLoader();
-        },
-      });
+  ClearFilter() {
+    this.sourceOrReason = "";
+    this.minAmount = 0;
+    this.maxAmount = 0;
+
+    if (this.searchInput) {
+      this.searchInput.nativeElement.value = "";
+    }
+
+    if (this.minInput) {
+      this.minInput.nativeElement.value = "";
+    }
+
+    if (this.maxInput) {
+      this.maxInput.nativeElement.value = "";
+    }
+    this.LoadGrid();
   }
 
   expenseDetails(data: any) {
-    this.loaderService.showLoader();
     this.expenseDetailsComponent.openDetailsPopup(data);
   }
 
@@ -498,20 +485,27 @@ export class ExpenseSummaryComponent implements OnInit {
   }
 
   filterGridByMaxAmount(data: any) {
-    this.maxAmount = data.target.value;
     setTimeout(() => {
       this.maxInput.nativeElement.focus();
     }, 0);
-    this.applyFilters();
+    this.maxAmount = data.target.value;
+    if (this.sourceOrReason || this.minAmount || this.maxAmount) {
+      this.applyFilters();
+    } else {
+      this.LoadGrid();
+    }
   }
 
   filterGridByMinAmount(data: any) {
-    this.minAmount = data.target.value;
     setTimeout(() => {
       this.minInput.nativeElement.focus();
     }, 0);
-
-    this.applyFilters();
+    this.minAmount = data.target.value;
+    if (this.sourceOrReason || this.minAmount || this.maxAmount) {
+      this.applyFilters();
+    } else {
+      this.LoadGrid();
+    }
   }
 
   filterGridBySearch(data: any) {
@@ -519,7 +513,11 @@ export class ExpenseSummaryComponent implements OnInit {
       this.searchInput.nativeElement.focus();
     }, 0);
     this.sourceOrReason = data?.target?.value?.toLowerCase();
-    this.applyFilters();
+    if (this.sourceOrReason || this.minAmount || this.maxAmount) {
+      this.applyFilters();
+    } else {
+      this.LoadGrid();
+    }
   }
 
   getColorForText(col: any): any {
@@ -530,13 +528,6 @@ export class ExpenseSummaryComponent implements OnInit {
     } else if (col.toLowerCase().includes("recharge")) {
       return { color: "#F29D0A", "font-weight": "bold" };
     } else return {}; // Default style (no style)
-  }
-
-  validateAmount(event: any) {
-    // if (event.target.value.match(/^[0-9]{0,20}$/)) {
-    if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.\-]$/)) {
-      event.preventDefault();
-    }
   }
 
   expenseAdjustment(data: any) {}

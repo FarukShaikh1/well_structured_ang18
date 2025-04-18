@@ -127,7 +127,7 @@
                 <input
                   formControlName="sbiAccount"
                   class="form-control form-control-lg text-dark bg-transparent"
-                  (keydown)="validateAmount($event)"
+                  (keydown)="globalService.validateAmount($event)"
                   (keyup)="validateAmountFields()"
                 />
               </div>
@@ -170,7 +170,7 @@
                 <label>Deal Amount</label>
                 <input
                   formControlName="cash"
-                  (keydown)="validateAmount($event)"
+                  (keydown)="globalService.validateAmount($event)"
                   (keyup)="validateAmountFields()"
                   class="form-control form-control-lg text-dark bg-transparent"
                 />
@@ -179,7 +179,7 @@
                 <label>Paid Amount</label>
                 <input
                   formControlName="cash"
-                  (keydown)="validateAmount($event)"
+                  (keydown)="globalService.validateAmount($event)"
                   (keyup)="validateAmountFields()"
                   class="form-control form-control-lg text-dark bg-transparent"
                 />
@@ -195,7 +195,7 @@
                 <label>Pending Amount</label>
                 <input
                   formControlName="cash"
-                  (keydown)="validateAmount($event)"
+                  (keydown)="globalService.validateAmount($event)"
                   (keyup)="validateAmountFields()"
                   class="form-control form-control-lg text-dark bg-transparent"
                 />

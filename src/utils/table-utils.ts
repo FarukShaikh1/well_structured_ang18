@@ -20,7 +20,7 @@
 //     totalPages: 0,
 //   };
 
-//   constructor(private globalService: GlobalService) { }
+//   constructor(public globalService: GlobalService) { }
 
 //   onSortClick(event: any, column: string, moduleName: string) {
 //     const target = event.currentTarget;

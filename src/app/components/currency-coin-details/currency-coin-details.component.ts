@@ -1,9 +1,9 @@
-import { DatePipe } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { API_URL } from "../../../utils/api-url";
 import { AssetService } from "../../services/asset/asset.service";
 import { CurrencyCoinService } from "../../services/currency-coin/currency-coin.service";
+
 
 @Component({
   selector: "app-currency-details",
@@ -28,7 +28,6 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     private _details: FormBuilder,
     private _currencyCoinService: CurrencyCoinService,
     private _assetService: AssetService,
-    private datepipe: DatePipe
   ) {
     this.currencyCoinDetailsForm = this._details.group<any>({
       collectionCoinId: 0,
@@ -147,20 +146,15 @@ export class CurrencyCoinDetailsComponent implements OnInit {
 
   submitCurrencyCoinDetails() {
     if (!this.currencyCoinDetailsForm.valid) {
-      //this._globalService.openSnackBar('Some issue is there');
+      //this.globalService.openSnackBar('Some issue is there');
       return;
     } else {
       try {
-        const selectedDate = new Date(
-          this.currencyCoinDetailsForm.value["birthdate"]
-        );
-        this.currencyCoinDetailsForm.value["birthdate"] =
-          this.datepipe.transform(selectedDate, "yyyy-MM-ddTHH:mm:ss");
         if (this.formData) {
           this.addImage();
         }
       } catch (error) {
-        //this._globalService.openSnackBar("Error in adding data : " + error);
+        //this.globalService.openSnackBar("Error in adding data : " + error);
         console.error("Error in adding data : ", error);
       }
     }
@@ -171,10 +165,10 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       .addCurrencyCoin(this.currencyCoinDetailsForm.value)
       .subscribe((result) => {
         if (result) {
-          //this._globalService.openSnackBar("Record added successfully");
+          //this.globalService.openSnackBar("Record added successfully");
         }
         // else
-        //this._globalService.openSnackBar('some issue is in adding the data');
+        //this.globalService.openSnackBar('some issue is in adding the data');
       });
   }
   updateCurrencyCoinDetails() {
@@ -182,10 +176,10 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       .updateCurrencyCoin(this.currencyCoinDetailsForm.value)
       .subscribe((result) => {
         if (result) {
-          //this._globalService.openSnackBar("Record updated successfully");
+          //this.globalService.openSnackBar("Record updated successfully");
         }
         // else
-        //this._globalService.openSnackBar('some issue is in updating the data');
+        //this.globalService.openSnackBar('some issue is in updating the data');
       });
   }
 

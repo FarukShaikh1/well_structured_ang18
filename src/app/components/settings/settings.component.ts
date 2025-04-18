@@ -15,7 +15,7 @@ export class SettingsComponent {
   index: number = 0;
   selectedTabIndex = 0;
 
-  constructor(private _userService: UserServiceService, private _globalService: GlobalService,
+  constructor(private _userService: UserServiceService, public globalService: GlobalService,
       private _httpClient: HttpClient
   ) {
   }

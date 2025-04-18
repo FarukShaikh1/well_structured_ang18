@@ -55,7 +55,7 @@ export class DayDetailsComponent implements OnInit {
     private _dayService: DayService,
     private loaderService: LoaderService,
     private _assetService: AssetService,
-    private _globalService: GlobalService,
+    public globalService: GlobalService,
     private renderer: Renderer2,
     private datepipe: DatePipe
   ) {
@@ -194,7 +194,7 @@ export class DayDetailsComponent implements OnInit {
   }
 
   submitDayDetails() {
-    this._globalService.trimAllFields(this.dayDetailsForm);
+    this.globalService.trimAllFields(this.dayDetailsForm);
     if (!this.dayDetailsForm.valid) {
       this.toaster.showMessage("Please fill valid details.", "error");
       return;
@@ -217,7 +217,7 @@ export class DayDetailsComponent implements OnInit {
           this.addImage();
         }
       } catch (error) {
-        //this._globalService.openSnackBar("Error in adding data : " + error);
+        //this.globalService.openSnackBar("Error in adding data : " + error);
         console.error("Error in adding data : ", error);
       }
     }
@@ -226,7 +226,7 @@ export class DayDetailsComponent implements OnInit {
   openDetailsPopup(dayId: any) {
     this.loaderService.showLoader();
 
-    this._globalService.getCommonListItems(DBConstants.DAYTYPE).subscribe({
+    this.globalService.getCommonListItems(DBConstants.DAYTYPE).subscribe({
       next: (res: any) => {
         this.dayType = res;
         this.loaderService.hideLoader();
@@ -266,7 +266,7 @@ export class DayDetailsComponent implements OnInit {
         this.renderer
           .selectRootElement(this.btnCloseDayPopup?.nativeElement)
           .click();
-        this._globalService.triggerGridReload(ApplicationModules.DAY);
+        this.globalService.triggerGridReload(ApplicationModules.DAY);
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
@@ -283,12 +283,12 @@ export class DayDetailsComponent implements OnInit {
         this.renderer
           .selectRootElement(this.btnCloseDayPopup?.nativeElement)
           .click();
-        this._globalService.triggerGridReload(ApplicationModules.DAY);
+        this.globalService.triggerGridReload(ApplicationModules.DAY);
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
         this.toaster.showMessage("Some issue is in Update the data.", "error");
-        //this._globalService.openSnackBar('some issue is in update the data');
+        //this.globalService.openSnackBar('some issue is in update the data');
         return;
       },
     });

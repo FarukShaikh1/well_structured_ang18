@@ -27,7 +27,7 @@
             </div>
             <div appearance="outline" style="width:20%">
                 <label>Available in your hand</label>
-                <input formControlName="availableInHandSbi" (keydown)="validateAmount($event)" (focusout)="calculateAmount($event,'sbi')">
+                <input formControlName="availableInHandSbi" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event,'sbi')">
             </div>
             <div appearance="outline" style="width:20%">
                 <label>You spent/gain</label>
@@ -60,7 +60,7 @@
             </div>
             <div appearance="outline" style="width:20%">
                 <label>Available in your hand</label>
-                <input formControlName="availableInHandCbi" (keydown)="validateAmount($event)" (focusout)="calculateAmount($event,'cbi')">
+                <input formControlName="availableInHandCbi" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event,'cbi')">
             </div>
             <div appearance="outline" style="width:20%">
                 <label>You spent/gain</label>
@@ -93,7 +93,7 @@
             </div>
             <div appearance="outline" style="width:20%">
                 <label>Available in your hand</label>
-                <input formControlName="availableInHandCash" (keydown)="validateAmount($event)" (focusout)="calculateAmount($event,'cash')">
+                <input formControlName="availableInHandCash" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event,'cash')">
             </div>
             <div appearance="outline" style="width:20%">
                 <label>You spent/gain</label>
@@ -126,7 +126,7 @@
             </div>
             <div appearance="outline" style="width:20%">
                 <label>Available in your hand</label>
-                <input formControlName="availableInHandOther" (keydown)="validateAmount($event)" (focusout)="calculateAmount($event,'other')">
+                <input formControlName="availableInHandOther" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event,'other')">
             </div>
             <div appearance="outline" style="width:20%">
                 <label>You spent/gain</label>

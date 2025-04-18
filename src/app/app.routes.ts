@@ -4,7 +4,6 @@ import { CurrencyCoinDetailsComponent } from "./components/currency-coin-details
 import { CurrencyCoinComponent } from "./components/currency-coin/currency-coin.component";
 import { DayDetailsComponent } from "./components/day-details/day-details.component";
 import { DayComponent } from "./components/day/day.component";
-import { ExpenseDetailsComponent } from "./components/expense-details/expense-details.component";
 import { ExpenseReportComponent } from "./components/expense-report/expense-report.component";
 import { ExpenseSummaryComponent } from "./components/expense-summary/expense-summary.component";
 import { ExpenseComponent } from "./components/expense/expense.component";
@@ -48,7 +47,6 @@ export const routes: Routes = [
       { path: "business", component: BusinessComponent },
       { path: "expense-summary", component: ExpenseSummaryComponent },
       { path: "expense-report", component: ExpenseReportComponent },
-      { path: "expense-details", component: ExpenseDetailsComponent },
       { path: "currency-coin", component: CurrencyCoinComponent },
       {
         path: "currency-coin-details",
@@ -114,7 +112,6 @@ export const routes: Routes = [
         (m) => m.NotificationListComponent
       ),
   },
-  { path: "**", redirectTo: "pagenotfound" },
   {
     path: "reset-password",
     title: "Reset Password",

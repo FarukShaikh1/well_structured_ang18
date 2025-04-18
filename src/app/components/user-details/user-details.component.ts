@@ -50,7 +50,7 @@ export class UserDetailsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private globalService: GlobalService,
+    public globalService: GlobalService,
     private roleService: RoleService,
     private loaderService: LoaderService,
     private renderer: Renderer2

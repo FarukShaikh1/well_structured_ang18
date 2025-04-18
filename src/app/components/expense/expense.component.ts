@@ -101,18 +101,18 @@ export class ExpenseComponent implements OnInit {
   constructor(
     private router: Router,
     private expenseService: ExpenseService,
-    private globalService: GlobalService,
     public datePipe: DatePipe,
+    public globalService: GlobalService,
     private loaderService: LoaderService,
     private activatedRoute: ActivatedRoute,
     private dateUtil: DateUtils
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loaderService.showLoader();
-    this.expenseColumnConfiguration();
+    this.columnConfiguration();
     this.fromDate.setDate(this.toDate.getDate() - 30);
-    this.LoadGrid();
+    this.ClearFilter();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
         this.LoadGrid();
@@ -123,9 +123,8 @@ export class ExpenseComponent implements OnInit {
         this.applyFilters();
       }
     });
-
   }
-  expenseColumnConfiguration() {
+  columnConfiguration() {
     this.tableColumnConfig = [
       {
         title: "Expense Date",
@@ -200,6 +199,7 @@ export class ExpenseComponent implements OnInit {
       return item.expenseId != expenseId;
     });
   }
+
   dateFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
     const projectData = cell.getRow().getData();
@@ -288,25 +288,7 @@ export class ExpenseComponent implements OnInit {
     });
   }
 
-  LoadGrid() {
-    this.loaderService.showLoader();
-
-    this.getExpenseList();
-    if (this.searchInput) {
-      this.searchInput.nativeElement.value = "";
-    }
-    if (this.minInput) {
-      this.minInput.nativeElement.value = "";
-    }
-    if (this.maxInput) {
-      this.maxInput.nativeElement.value = "";
-    }
-  }
-
-  applyFilters(all: boolean = false) {
-    if (all) {
-      this.getExpenseList();
-    }
+  applyFilters() {
     this.filteredTableData = this.tableData.filter((item: any) => {
       const searchText =
         item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) ||
@@ -324,6 +306,22 @@ export class ExpenseComponent implements OnInit {
     console.log("this.lastExpenseDate : ", this.lastExpenseDate);
   }
 
+  ClearFilter() {
+    this.sourceOrReason = "";
+    this.minAmount = 0;
+    this.maxAmount = 0;
+    if (this.searchInput) {
+      this.searchInput.nativeElement.value = "";
+    }
+    if (this.minInput) {
+      this.minInput.nativeElement.value = "";
+    }
+    if (this.maxInput) {
+      this.maxInput.nativeElement.value = "";
+    }
+    this.LoadGrid();
+  }
+
   getLatestExpenseDate(): any {
     if (!this.filteredTableData || this.filteredTableData.length === 0) {
       this.loaderService.hideLoader();
@@ -333,51 +331,43 @@ export class ExpenseComponent implements OnInit {
     return this.filteredTableData[0]["expenseDate"];
   }
 
-  goToExpense() {
-    this.router.navigate([NavigationURLs.EXPENSE_LIST]);
-    setTimeout(() => {
-      window.location.reload();
-    },
-      0
-    )
-  }
   goToExpenseSummary() {
     this.router.navigate([NavigationURLs.EXPENSE_SUMMARY_LIST]);
   }
+
   goToExpenseReport() {
     this.router.navigate([NavigationURLs.EXPENSE_REPORT]);
   }
 
-  getExpenseList() {
-    console.log('this.formattedFromDate : ', this.formattedFromDate);
-    console.log('this.formattedToDate : ', this.formattedToDate);
+  LoadGrid() {
+    this.loaderService.showLoader();
     this.activatedRoute.queryParams.subscribe((params) => {
-      this.sourceOrReason = params['sourceOrReason'] ?? '';
-      if (params['firstDate']) {
-        this.formattedFromDate = this.dateUtil.formatStringDate(params['firstDate']);
+      // this.sourceOrReason = params['sourceOrReason'] ?? '';
+      if (params["firstDate"]) {
+        this.formattedFromDate = this.dateUtil.formatStringDate(
+          params["firstDate"]
+        );
+      } else {
+        this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(
+          this.fromDate
+        );
       }
-      else {
-        this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
-      }
-      if (params['lastDate']) {
-        this.formattedToDate = this.dateUtil.formatStringDate(params['lastDate']);
-      }
-      else {
+      if (params["lastDate"]) {
+        this.formattedToDate = this.dateUtil.formatStringDate(
+          params["lastDate"]
+        );
+      } else {
         this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
       }
     });
 
-    this.loaderService.showLoader();
-    this.filterColumns = this.tableColumnConfig.filter((col) =>
-      ["SourceOrReason", "emailId"].includes(col.field ?? "")
-    );
     this.expenseService
       .getExpenseList(
         this.formattedFromDate,
         this.formattedToDate,
         this.sourceOrReason,
-        0,
-        0,
+        this.minAmount,
+        this.maxAmount,
         ""
       )
       .subscribe({
@@ -385,8 +375,6 @@ export class ExpenseComponent implements OnInit {
           this.tableData = res;
           this.filteredTableData = res;
           this.lastExpenseDate = this.getLatestExpenseDate();
-          console.log("this.lastExpenseDate : ", this.lastExpenseDate);
-          console.log("this.filteredTableData : ", this.filteredTableData);
           this.loaderService.hideLoader();
         },
         error: (error: any) => {
@@ -397,7 +385,6 @@ export class ExpenseComponent implements OnInit {
   }
 
   expenseDetails(data: any) {
-    this.loaderService.showLoader();
     this.expenseDetailsComponent.openDetailsPopup(data);
   }
 
@@ -414,6 +401,7 @@ export class ExpenseComponent implements OnInit {
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
     if (isConfirmed) {
+      this.loaderService.showLoader();
       this.expenseService.deleteExpense(this.expenseId).subscribe({
         next: (res: any) => {
           this.LoadGrid();
@@ -443,7 +431,11 @@ export class ExpenseComponent implements OnInit {
     setTimeout(() => {
       this.maxInput.nativeElement.focus();
     }, 0);
-    this.applyFilters();
+    if (this.sourceOrReason || this.minAmount || this.maxAmount) {
+      this.applyFilters();
+    } else {
+      this.LoadGrid();
+    }
   }
 
   filterGridByMinAmount(data: any) {
@@ -451,8 +443,11 @@ export class ExpenseComponent implements OnInit {
     setTimeout(() => {
       this.minInput.nativeElement.focus();
     }, 0);
-
-    this.applyFilters();
+    if (this.sourceOrReason || this.minAmount || this.maxAmount) {
+      this.applyFilters();
+    } else {
+      this.LoadGrid();
+    }
   }
 
   filterGridBySearch(data: any) {
@@ -460,13 +455,10 @@ export class ExpenseComponent implements OnInit {
       this.searchInput.nativeElement.focus();
     }, 0);
     this.sourceOrReason = data?.target?.value?.toLowerCase();
-    this.applyFilters();
-  }
-
-  validateAmount(event: any) {
-    // if (event.target.value.match(/^[0-9]{0,20}$/)) {
-    if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.\-]$/)) {
-      event.preventDefault();
+    if (this.sourceOrReason || this.minAmount || this.maxAmount) {
+      this.applyFilters();
+    } else {
+      this.LoadGrid();
     }
   }
 }

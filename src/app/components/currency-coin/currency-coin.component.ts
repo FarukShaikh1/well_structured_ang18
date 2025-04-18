@@ -1,198 +1,217 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component'
 import { CommonModule } from '@angular/common';
 import { API_URL } from '../../../utils/api-url';
+import { ColumnDefinition, CellComponent } from 'tabulator-tables';
+import { ApplicationTableConstants } from '../../../utils/application-constants';
+import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
+import { GlobalService } from '../../services/global/global.service';
+import { LoaderService } from '../../services/loader/loader.service';
+
 @Component({
-  selector: 'app-currency',
-  standalone:true,
+  selector: 'app-currency-coin',
+  standalone: true,
   templateUrl: './currency-coin.component.html',
-  imports:[CommonModule],
+  imports: [CommonModule, TabulatorGridComponent, CurrencyCoinDetailsComponent],
   styleUrls: ['./currency-coin.component.scss']
 })
-export class CurrencyCoinComponent {
-  displayedColumns: string[] = [];
-  imageList: any;
-  dataSource: any;
+
+export class CurrencyCoinComponent implements OnInit {
+  @ViewChild("searchInput") searchInput!: ElementRef;
   basePath: string = API_URL.ATTACHMENT;
-  selectedTabIndex: number = 0;
-  sort: any;
-  paginator: any;
-  coinSelected: number[] = [];
-  filteredDataSource: any;
   searchText: string = '';
-  selectedData!: { value: any; text: any; };
-  selectedCount: number = 0;
-  key: string = 'archiveAdminData.name';
-  reverse: boolean = false;
-  isAllChecked: boolean = false;
-  sortDir = 1;
-  sortClickCount = 0;
-  selectedCheckboxMap: { [key: number]: boolean } = {};
-  page: number = 1;
-  count: number = 0;
-  itemCountList: string = '';
-  pageSizeOptions = [10, 15, 20, 50, 100, 500, 1000];
-  itemsPerPage = 10;
+  public tableData: Record<string, unknown>[] = [];
+  public filteredTableData: Record<string, unknown>[] = [];
+  public tableColumnConfig: ColumnDefinition[] = [];
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
+  public allowCSVExport = false;
+  public filterColumns: ColumnDefinition[] = [];
 
-  constructor( private _currencyCoinService: CurrencyCoinService) {
+  optionsMenu = [
+    {
+      label: `<a class="dropdown-item btn-link"
+              data-bs-toggle="modal" data-bs-target="#collectioncoinDetailsPopup">
+                  <i class="bi bi-pencil"></i>
+                    &nbsp;Edit
+                  </a>
+                  `,
+      action: (_e: any, cell: CellComponent) => {
+        const collectioncoinData = cell.getRow().getData();
+        const collectioncoinId = collectioncoinData["collectioncoinId"];
+        this.currencyCoinDetails(collectioncoinId);
+      },
+    },
+    {
+      separator: true,
+    },
+    {
+      label: `<a class="dropdown-item btn-link"
+              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
+                  <i class="bi bi-trash"></i>
+                    &nbsp;Delete
+                  </a>
+                  `,
+      action: (_e: any, cell: CellComponent) => {
+        const collectioncoinData = cell.getRow().getData();
+        const collectioncoinId = collectioncoinData["collectioncoinId"];
+        this.currencyCoinDetails(collectioncoinId);
+      },
+    },
+  ];
 
-  }
-
+  constructor(
+    private currencyCoinService: CurrencyCoinService,
+    public globalService: GlobalService,
+    private loaderService: LoaderService) { 
+  debugger;
+    }
 
   ngOnInit() {
-    this.selectedTabIndex = 0;
-    this.basePath = API_URL.ATTACHMENT;
-    this.getCurrencyCoinRecords();
+    debugger
+    this.loaderService.showLoader();
+    this.collectioncoinColumnConfiguration();
+    this.LoadGrid();
+    this.globalService.reloadGrid$.subscribe(() => {
+      // if (listName === ApplicationModules.COLLECTIONCOIN) {
+      //   this.LoadGrid();
+      // }
+    });
+    this.globalService.refreshList$.subscribe(() => {
+      // if (listName === ApplicationModules.COLLECTIONCOIN) {
+      //   this.applyFilters();
+      // }
+    });
 
   }
 
-  getCurrencyCoinRecords() {
-    this._currencyCoinService.getCurrencyCoinRecords().subscribe((res) => {
-      this.displayedColumns = ['collectionCoinId', 'collectionCoinName', 'countryName', 'actualValue', 'indianValue', 'description', 'edit'];
-      this.imageList = res;
+  // constructor( private _currencyCoinService: CurrencyCoinService) {
+
+  // }
 
 
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+  // ngOnInit() {
+  //   debugger;
+  //   this.basePath = API_URL.ATTACHMENT;
+  //   this.getCurrencyCoinRecords();
+
+  // }
+  collectioncoinColumnConfiguration() {
+    this.tableColumnConfig = [
+      {
+        title: "collectionCoinId",
+        field: "collectionCoinId",
+        sorter: "alphanum",
+      },
+      {
+        title: "collectionCoinName",
+        field: "collectionCoinName",
+        sorter: "alphanum",
+      },
+      {
+        title: "countryName",
+        field: "countryName",
+        sorter: "alphanum",
+        width: 400,
+      },
+      {
+        title: "actualValue",
+        field: "actualValue",
+        sorter: "alphanum",
+      },
+      {
+        title: "indianValue",
+        field: "indianValue",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        bottomCalc: "sum", // This will calculate the sum
+        bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
+        bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
+      },
+      {
+        title: "description",
+        field: "description",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        bottomCalc: "sum", // This will calculate the sum
+        bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
+        bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
+      },
+      {
+        title: "-",
+        field: "-",
+        maxWidth: 50,
+        formatter: this.hidebuttonFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const collectioncoinId = cell.getRow().getData()["collectioncoinId"];
+          this.hideCollectionCoin(collectioncoinId); // Call the hideCollectionCoin method
+        },
+      },
+      {
+        title: "",
+        field: "",
+        maxWidth: 50,
+        formatter: (_cell) =>
+          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+        clickMenu: this.optionsMenu,
+        hozAlign: "left",
+        headerSort: false,
+      },
+    ];
+  }
+
+  hidebuttonFormatter(cell: CellComponent) {
+    return `<button class="action-buttons" title="Hide CollectionCoin" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
+  }
+
+  hideCollectionCoin(collectioncoinId: any) {
+    this.filteredTableData = this.filteredTableData.filter((item: any) => {
+      return item.collectioncoinId != collectioncoinId;
+    });
+  }
+
+  LoadGrid() {
+    debugger
+    this.currencyCoinService.getCurrencyCoinRecords().subscribe((res: any) => {
+      this.tableData = res;
+      this.filteredTableData = res;
+      this.collectioncoinColumnConfiguration();
+
+
     },
     )
   }
 
+  amountColorFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const projectData = cell.getRow().getData();
+    const columnValue = projectData[columnName];
+    const formattedValue = new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(columnValue);
+    if (columnValue > 0) {
+      return `<span style="color:#129D0A; font-weight:bold">${formattedValue}</span>`;
+    }
+    if (columnValue < 0) {
+      return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
+    }
+    return `<span></span>`;
+  }
+
+  filterGridBySearch(data: any) {
+    setTimeout(() => {
+      this.searchInput.nativeElement.focus();
+    }, 0);
+    this.searchText = data?.target?.value?.toLowerCase();
+    this.applyFilters();
+  }
 
   currencyCoinDetails(data: any) {
   }
 
-  itemcount(): string {
-    const recordsPerPage = this.itemsPerPage;
-    const totalRecords = this.filteredDataSource?.length;
-    const currentPage = this.page;
-    let startRecord = (currentPage - 1) * recordsPerPage + 1;
-    startRecord = this.filteredDataSource?.length > 0 ? startRecord : 0;
-    let endRecord = currentPage * recordsPerPage;
-    endRecord = Math.min(endRecord, totalRecords);
-
-    return startRecord + '-' + endRecord;
-  }
-
-  sortarr(key: string) {
-    if (this.key === key) {
-      if (this.reverse) {
-        this.reverse = false;
-      } else {
-        this.reverse = true;
-      }
-    } else {
-      this.key = key;
-      this.reverse = false;
-    }
-
-    if (!this.reverse) {
-      this.dataSource.sort((a: any, b: any) => {
-        const valueA = a[key]?.toLowerCase();
-        const valueB = b[key]?.toLowerCase();
-        return valueA.localeCompare(valueB);
-      });
-    } else {
-      this.dataSource.sort((a: any, b: any) => {
-        const valueA = a[key]?.toLowerCase();
-        const valueB = b[key]?.toLowerCase();
-        return valueB.localeCompare(valueA);
-      });
-    }
-
-    this.sortClickCount++;
-
-    if (this.sortClickCount === 3) {
-      this.sortClickCount = 0;
-      this.getCurrencyCoinRecords();
-    }
-  }
-
-  onSortClick(event: any, column: string) {
-    const target = event.currentTarget;
-    const classList = target.classList;
-
-    if (
-      !classList.contains('bi-arrow-up') &&
-      !classList.contains('bi-arrow-down')
-    ) {
-      classList.add('bi-arrow-up');
-      this.sortDir = 1;
-    } else if (classList.contains('bi-arrow-up')) {
-      classList.remove('bi-arrow-up');
-      classList.add('bi-arrow-down');
-      this.sortDir = -1;
-    } else {
-      classList.remove('bi-arrow-up', 'bi-arrow-down');
-      this.sortDir = 0;
-    }
-
-    this.sortarr(column);
-  }
-
-  checkUncheckAll(e: any, page: number) {
-    this.coinSelected = [];
-    this.isAllChecked = !this.isAllChecked;
-    const currentPageRows = this.dataSource.slice(
-      (page - 1) * 10,
-      page * 10
-    );
-
-    this.dataSource.map((item: any) => {
-      item.selected = this.isAllChecked;
-      if (item.selected) {
-        if (!this.coinSelected.includes(item)) {
-          this.coinSelected.push(item.id);
-        }
-      } else {
-        const index = this.coinSelected.indexOf(item.id);
-        if (index !== -1) {
-          this.coinSelected.splice(index, 1);
-        }
-      }
-    });
-    console.log('coinSelected', this.coinSelected);
-  }
-
-  isAllSelected(event: any, item: any, Index: number, pageIndex: number) {
-    const currentPageRows = this.dataSource.slice(
-      (pageIndex - 1) * 10,
-      pageIndex * 10
-    );
-    this.dataSource[Index].selected = event.target.checked;
-    const index = this.coinSelected.indexOf(item.id);
-    if (event.target.checked) {
-      this.coinSelected.push(item.id);
-      this.selectedCheckboxMap[item.id] = true;
-      this.selectedCount++;
-    } else {
-      this.coinSelected.splice(index, 1);
-      this.selectedCheckboxMap[item.id] = false;
-      this.selectedCount--;
-    }
-    const currentPage = this.page;
-    this.selectedCheckboxMap[currentPage] =
-      this.coinSelected.length === this.dataSource.length;
-    this.isAllChecked = this.selectedCheckboxMap[currentPage];
-  }
-
-  onTableDataChange(event: any) {
-    this.page = event;
-  }
-  onPageSizeChange(event: any) {
-    this.itemsPerPage = event.target.value;
-    this.page = 1;
-    this.applyFilters();
-  }
-  updateDisplayedData() {
-    const startIndex = (this.page - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.filteredDataSource = this.filteredDataSource.slice(startIndex, endIndex);
-  }
   applyFilters() {
-    this.onTableDataChange(1);
-    this.filteredDataSource = this.dataSource.filter((item: any) => {
+    this.filteredTableData = this.tableData.filter((item: any) => {
       const matchesName = item.PersonName.toLowerCase().includes(this.searchText);
       return matchesName;
     });

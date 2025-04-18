@@ -1,13 +1,20 @@
-import { CommonModule, DatePipe } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import flatpickr from 'flatpickr';
-import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { ApplicationConstants, ApplicationTableConstants, NavigationURLs } from '../../../utils/application-constants';
-import { ExpenseService } from '../../services/expense/expense.service';
-import { ExpenseDetailsComponent } from '../expense-details/expense-details.component';
-import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
-import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { CommonModule, DatePipe } from "@angular/common";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import flatpickr from "flatpickr";
+import { CellComponent, ColumnDefinition } from "tabulator-tables";
+import {
+  ApplicationConstants,
+  ApplicationModules,
+  ApplicationTableConstants,
+  NavigationURLs,
+} from "../../../utils/application-constants";
+import { ExpenseService } from "../../services/expense/expense.service";
+import { ExpenseDetailsComponent } from "../expense-details/expense-details.component";
+import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
+import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { GlobalService } from "../../services/global/global.service";
+import { LoaderService } from "../../services/loader/loader.service";
 export interface Task {
   name: string;
   completed: boolean;
@@ -15,23 +22,24 @@ export interface Task {
 }
 
 @Component({
-  selector: 'app-expense-report',
-  standalone:true,
-  imports:[CommonModule,TabulatorGridComponent,ExpenseDetailsComponent],
-  templateUrl: './expense-report.component.html',
+  selector: "app-expense-report",
+  standalone: true,
+  imports: [CommonModule, TabulatorGridComponent, ExpenseDetailsComponent],
+  templateUrl: "./expense-report.component.html",
   providers: [DatePipe],
-  styleUrls: ['./expense-report.component.scss']
+  styleUrls: ["./expense-report.component.scss"],
 })
-
 export class ExpenseReportComponent implements OnInit {
-  @ViewChild('searchInput', { static: true }) searchInput: ElementRef | undefined;
-  @ViewChild('minInput', { static: true }) minInput: any;
-  @ViewChild('maxInput', { static: true }) maxInput: any;
-    @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
-    @ViewChild(ToasterComponent) toaster!: ToasterComponent;
+  @ViewChild("searchInput", { static: true }) searchInput:
+    | ElementRef
+    | undefined;
+  @ViewChild("minInput", { static: true }) minInput: any;
+  @ViewChild("maxInput", { static: true }) maxInput: any;
+  @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
+  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(ExpenseDetailsComponent)
   expenseDetailsComponent!: ExpenseDetailsComponent;
-  
+
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
   public tableColumnConfig: ColumnDefinition[] = [];
@@ -39,7 +47,7 @@ export class ExpenseReportComponent implements OnInit {
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
   public dateFormat = ApplicationConstants.GLOBAL_DATE_FORMAT;
-  
+
   index: number = 0;
   // @ViewChild(MatPaginator) paginator!: MatPaginator;
   // @ViewChild(MatSort) sort!: MatSort;
@@ -47,12 +55,12 @@ export class ExpenseReportComponent implements OnInit {
   toDate = new Date();
   fromDt: any;
   toDt: any;
-  sourceOrReason: string = '';
-  SpecificSourceOrReason: string = '';
+  sourceOrReason: string = "";
+  SpecificSourceOrReason: string = "";
   minAmount: number = 0;
   maxAmount: number = 0;
-  modeOfTransaction: string = '';
-  modeOfTransactionList: any
+  modeOfTransaction: string = "";
+  modeOfTransactionList: any;
   sourceOrReasonList: any;
   amountStyle = "'color':'red'";
   event: any;
@@ -61,7 +69,7 @@ export class ExpenseReportComponent implements OnInit {
   count: number = 0;
   tableSize: number = 10;
   selectedCount: number = 0;
-  key: string = 'dayData.name';
+  key: string = "dayData.name";
   reverse: boolean = false;
   expenseSelected: number[] = [];
   summarySelected: number[] = [];
@@ -69,7 +77,7 @@ export class ExpenseReportComponent implements OnInit {
   sortDir = 1;
   sortClickCount = 0;
   selectedCheckboxMap: { [key: number]: boolean } = {};
-  itemCountList: string = '';
+  itemCountList: string = "";
   pageSizeOptions = [10, 15, 20, 50, 100, 500, 1000];
   itemsPerPage = 10;
   optionsMenu = [
@@ -84,7 +92,7 @@ export class ExpenseReportComponent implements OnInit {
         const sourceOrReason = expenseData["sourceOrReason"];
         const firstDate = expenseData["firstDate"];
         const lastDate = expenseData["lastDate"];
-        this.expenseList(sourceOrReason,firstDate,lastDate);
+        this.expenseList(sourceOrReason, firstDate, lastDate);
       },
     },
     {
@@ -105,61 +113,65 @@ export class ExpenseReportComponent implements OnInit {
     },
   ];
 
-
-  constructor(private expenseService: ExpenseService, 
+  constructor(
+    private expenseService: ExpenseService,
     private router: Router,
-    
-    public datePipe: DatePipe,
-  ) {
-    // this._httpClient.get(_globalService.getCommonListItems(API_URL.MODEOFTRANSACTION)).subscribe(res => {
-    //   this.modeOfTransactionList = res;
-    // });
-  }
+    public globalService: GlobalService,
+    private loaderService: LoaderService,
+    public datePipe: DatePipe
+  ) {}
 
   ngOnInit() {
-
-    this.reportColumnConfiguration();
-    this.fromDate.setDate(this.toDate.getDate() - 62);
-    // this.fromDt = this.datepipe.transform(this.fromDate, 'dd/MM/yyyy');
-    // this.toDt = this.datepipe.transform(this.toDate, 'dd/MM/yyyy');
-    this.getSourceOrReasonList();
-    this.LoadGrid();
+    this.loaderService.showLoader();
+    this.columnConfiguration();
+    this.fromDate.setDate(this.toDate.getDate() - 90);
+    this.ClearFilter();
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.EXPENSE) {
+        this.LoadGrid();
+      }
+    });
+    this.globalService.refreshList$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.EXPENSE) {
+        this.applyFilters();
+      }
+    });
   }
 
-    goToExpenseList() {
-      this.router.navigate([NavigationURLs.EXPENSE_LIST]);
-    }
-    goToExpenseSummary() {
-      this.router.navigate([NavigationURLs.EXPENSE_SUMMARY_LIST]);
-    }
-  
-  reportColumnConfiguration(){
+  goToExpenseList() {
+    this.router.navigate([NavigationURLs.EXPENSE_LIST]);
+  }
+  goToExpenseSummary() {
+    this.router.navigate([NavigationURLs.EXPENSE_SUMMARY_LIST]);
+  }
+
+  columnConfiguration() {
     this.tableColumnConfig = [
       {
-        title: 'FirstDate',
-        field: 'firstDate',
-        sorter: 'alphanum',
-        width:100,
+        title: "FirstDate",
+        field: "firstDate",
+        sorter: "alphanum",
+        width: 100,
         formatter: this.uploadedDateFormatter.bind(this),
       },
       {
-        title: 'LastDate',
-        field: 'lastDate',
-        sorter: 'alphanum',
-        width:100,
+        title: "LastDate",
+        field: "lastDate",
+        sorter: "alphanum",
+        width: 100,
         formatter: this.uploadedDateFormatter.bind(this),
       },
       {
-        title: 'Source/Reason',
-        field: 'sourceOrReason',
-        sorter: 'alphanum',
-        width:150,
+        title: "Source/Reason",
+        field: "sourceOrReason",
+        sorter: "alphanum",
+        width: 150,
       },
       {
-        title: 'Description',
-        field: 'description',
-        sorter: 'alphanum',
-        width:600,
+        title: "Description",
+        field: "description",
+        sorter: "alphanum",
+        width: 600,
         formatter: (cell) => {
           const value = cell.getValue() || "";
           return `<div class="text-wrap">${value}</div>`;
@@ -167,22 +179,22 @@ export class ExpenseReportComponent implements OnInit {
         cssClass: "description-column",
       },
       {
-        title: 'TakenAmount',
-        field: 'takenAmount',
-        sorter: 'alphanum',
-        width:100,
+        title: "TakenAmount",
+        field: "takenAmount",
+        sorter: "alphanum",
+        width: 100,
       },
       {
-        title: 'GivenAmount',
-        field: 'givenAmount',
-        sorter: 'alphanum',
-        width:100,
+        title: "GivenAmount",
+        field: "givenAmount",
+        sorter: "alphanum",
+        width: 100,
       },
       {
-        title: 'TotalAmount',
-        field: 'totalAmount',
-        sorter: 'alphanum',
-        width:100,
+        title: "TotalAmount",
+        field: "totalAmount",
+        sorter: "alphanum",
+        width: 100,
       },
       {
         title: "-",
@@ -226,34 +238,33 @@ export class ExpenseReportComponent implements OnInit {
         this.dateFormat
       )}</span>`;
     }
-    const nullDate = '';
+    const nullDate = "";
     return `<span>${nullDate}</span>`;
   }
 
-
   formatDateToMMDDYYYY(date: Date): string {
-    const mm = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
-    const dd = ('0' + date.getDate()).slice(-2);
+    const mm = ("0" + (date.getMonth() + 1)).slice(-2); // Months are zero-based
+    const dd = ("0" + date.getDate()).slice(-2);
     const yyyy = date.getFullYear();
     return `${mm}/${dd}/${yyyy}`;
   }
   ngAfterViewInit() {
-    flatpickr('#fromDate', {
-      dateFormat: 'd/m/Y', // Adjust the date format as per your requirement
+    flatpickr("#fromDate", {
+      dateFormat: "d/m/Y", // Adjust the date format as per your requirement
       defaultDate: this.fromDate,
       onChange: (selectedDates, dateStr) => {
         // this.fromDt = dateStr;
         this.filterGridByFromDate(dateStr);
-      }
+      },
     });
 
-    flatpickr('#toDate', {
-      dateFormat: 'd/m/Y', // Adjust the date format as per your requirement
+    flatpickr("#toDate", {
+      dateFormat: "d/m/Y", // Adjust the date format as per your requirement
       defaultDate: this.toDate,
       onChange: (selectedDates, dateStr) => {
         // this.toDt = dateStr;
         this.filterGridByToDate(dateStr);
-      }
+      },
     });
   }
   // getTotalCost() {
@@ -274,64 +285,81 @@ export class ExpenseReportComponent implements OnInit {
 
   getTotalTakenAmount(): number {
     if (this.filteredTableData)
-      return this.filteredTableData.reduce((total: any, item: any) => total + (item.TakenAmount || 0), 0);
+      return this.filteredTableData.reduce(
+        (total: any, item: any) => total + (item.TakenAmount || 0),
+        0
+      );
     else return 0;
   }
 
   getTotalGivenAmount(): number {
     if (this.filteredTableData)
-      return this.filteredTableData.reduce((total: any, item: any) => total + (item.GivenAmount || 0), 0);
+      return this.filteredTableData.reduce(
+        (total: any, item: any) => total + (item.GivenAmount || 0),
+        0
+      );
     else return 0;
   }
   getTotalTotalAmount(): number {
     if (this.filteredTableData)
-      return this.filteredTableData.reduce((total: any, item: any) => total + (item.TotalAmount || 0), 0);
+      return this.filteredTableData.reduce(
+        (total: any, item: any) => total + (item.TotalAmount || 0),
+        0
+      );
     else return 0;
   }
 
-  setTabActive(index: number) {
-    this.selectedTabIndex = index;
-    // this.LoadGrid();
-  }
-
   LoadGrid() {
-    this.fromDt = this.formatDateToMMDDYYYY(this.fromDate)
-    this.toDt = this.formatDateToMMDDYYYY(this.toDate)
-    this.getExpenseReportList();
-    if (this.searchInput) {
-      this.searchInput.nativeElement.value = '';
-    }
-    if (this.minInput) {
-      this.minInput.nativeElement.value = '';
-    }
-    if (this.maxInput) {
-      this.maxInput.nativeElement.value = '';
-    }
+    this.fromDt = this.formatDateToMMDDYYYY(this.fromDate);
+    this.toDt = this.formatDateToMMDDYYYY(this.toDate);
+    this.expenseService
+      .getExpenseReportList(
+        this.fromDt,
+        this.toDt,
+        "",
+        0,
+        0,
+        this.modeOfTransaction
+      )
+      .subscribe((res) => {
+        this.tableData = res;
+        this.filteredTableData = res;
+      });
   }
 
-  getSourceOrReasonList() {
-    this.fromDt = this.formatDateToMMDDYYYY(this.fromDate)
-    this.toDt = this.formatDateToMMDDYYYY(this.toDate)
-    this.expenseService.getSourceOrReasonList(
-      this.fromDt, this.toDt, this.sourceOrReason
-    ).subscribe(
-      (res) => {
-        this.sourceOrReasonList = res;
-        // this.LoadGrid();
-      },
-    )
-  }
-
-  applyFilters(all: boolean = false) {
-    if (all) {
-      this.getExpenseReportList();
-    }
+  applyFilters() {
     this.filteredTableData = this.tableData.filter((item: any) => {
-      const searchText = item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) || item.description.toLowerCase().includes(this.sourceOrReason);
-      const minAmountCondition = this.minAmount == 0 || (item.debit !== 0 && Math.abs(item.debit) >= this.minAmount) || (item.credit !== 0 && Math.abs(item.credit) >= this.minAmount);
-      const maxAmountCondition = this.maxAmount == 0 || (item.debit !== 0 && Math.abs(item.debit) <= this.maxAmount) || (item.credit !== 0 && Math.abs(item.credit) <= this.maxAmount);
+      const searchText =
+        item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) ||
+        item.description.toLowerCase().includes(this.sourceOrReason);
+      const minAmountCondition =
+        this.minAmount == 0 ||
+        (item.debit !== 0 && Math.abs(item.debit) >= this.minAmount) ||
+        (item.credit !== 0 && Math.abs(item.credit) >= this.minAmount);
+      const maxAmountCondition =
+        this.maxAmount == 0 ||
+        (item.debit !== 0 && Math.abs(item.debit) <= this.maxAmount) ||
+        (item.credit !== 0 && Math.abs(item.credit) <= this.maxAmount);
       return searchText && minAmountCondition && maxAmountCondition;
     });
+  }
+  ClearFilter() {
+    this.sourceOrReason = "";
+    this.minAmount = 0;
+    this.maxAmount = 0;
+
+    if (this.searchInput) {
+      this.searchInput.nativeElement.value = "";
+    }
+
+    if (this.minInput) {
+      this.minInput.nativeElement.value = "";
+    }
+
+    if (this.maxInput) {
+      this.maxInput.nativeElement.value = "";
+    }
+    this.LoadGrid();
   }
 
   // hideExpense(expenseId: number) {
@@ -348,74 +376,59 @@ export class ExpenseReportComponent implements OnInit {
 
   onSourceOrReasonChange(valueToFilter: any) {
     this.sourceOrReason = valueToFilter.target.value.toLowerCase();
-    this.getSourceOrReasonList();
     this.applyFilters();
   }
 
-  getExpenseReportList() {
-    this.expenseService.getExpenseReportList(this.fromDt, this.toDt, '', 0, 0, this.modeOfTransaction).subscribe((res) => {
-      this.tableData = res;
-      this.filteredTableData = res;
-      console.log('this.filteredReportDataSource : ',this.filteredTableData);
-    },
-    )
-  }
-
-
   getExpenseListBySourceOrReason(sourceOrReason: string) {
     this.SpecificSourceOrReason = sourceOrReason;
-    this.setTabActive(0);
   }
 
-  expenseList(sourceOrReason: string,firstDate:string, lastDate:string) {
-    console.log('expenseDetails clicked');
-    
-    this.router.navigate([NavigationURLs.EXPENSE_LIST],
-      {
-        queryParams: { sourceOrReason: sourceOrReason, firstDate:firstDate, lastDate:lastDate }
-      }
-    );
+  expenseList(sourceOrReason: string, firstDate: string, lastDate: string) {
+    console.log("expenseDetails clicked");
+
+    this.router.navigate([NavigationURLs.EXPENSE_LIST], {
+      queryParams: {
+        sourceOrReason: sourceOrReason,
+        firstDate: firstDate,
+        lastDate: lastDate,
+      },
+    });
   }
 
   expenseDetails(data: any) {
     this.expenseDetailsComponent.openDetailsPopup(data);
   }
 
-  deleteExpense(data: number) {
-  }
+  deleteExpense(data: number) {}
 
   addExpense(expense: any) {
     this.expenseService.addExpense(expense).subscribe((res) => {
       if (res) {
         this.LoadGrid();
       }
-    },
-    )
+    });
   }
 
-  expenseAdjustment() {
-  }
+  expenseAdjustment() {}
 
   convertDDMMYYYYToDate(dateString: string): Date {
-    const [day, mon, year] = dateString.split('/').map(Number);
+    const [day, mon, year] = dateString.split("/").map(Number);
     // Months are 0-based in JavaScript Date objects, so subtract 1 from month
     return new Date(year, mon - 1, day);
   }
 
   filterGridByFromDate(date: any) {
-    console.log('fromDate : ', this.fromDate);
+    console.log("fromDate : ", this.fromDate);
 
-    this.fromDate = this.convertDDMMYYYYToDate(date);;// this.datepipe.transform(data.value, 'MM-dd-yyyy');
-    console.log('fromDate : ', this.fromDate);
+    this.fromDate = this.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
+    console.log("fromDate : ", this.fromDate);
     this.fromDt = this.formatDateToMMDDYYYY(this.fromDate);
-    this.getSourceOrReasonList();
     this.LoadGrid();
   }
 
   filterGridByToDate(date: any) {
-    this.toDate = this.convertDDMMYYYYToDate(date);;// this.datepipe.transform(data.value, 'MM-dd-yyyy');
+    this.toDate = this.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
     this.toDt = this.formatDateToMMDDYYYY(this.toDate);
-    this.getSourceOrReasonList();
     this.LoadGrid();
   }
 
@@ -432,8 +445,7 @@ export class ExpenseReportComponent implements OnInit {
   filterGridBySource(data: any) {
     if (data.source != null && data.source != undefined) {
       this.sourceOrReason = data.source.value.toLowerCase();
-    }
-    else if (data.value != null && data.value != undefined) {
+    } else if (data.value != null && data.value != undefined) {
       this.sourceOrReason = data.source.value.toLowerCase();
     }
     this.applyFilters();
@@ -451,33 +463,22 @@ export class ExpenseReportComponent implements OnInit {
 
   getColorForAmount(amount: any): any {
     if (amount <= 0) {
-      return { 'color': '#FF0000', 'font-weight': 'bold' };
-    }
-    else {
-      return { 'color': '#129D0A', 'font-weight': 'bold' };
+      return { color: "#FF0000", "font-weight": "bold" };
+    } else {
+      return { color: "#129D0A", "font-weight": "bold" };
     }
   }
 
   getColorForText(col: any): any {
-    if (col.toLowerCase().includes('emergency')) {
-      return { 'color': '#FF0000', 'font-weight': 'bold' };
-    }
-    else if (col.toLowerCase().includes('return')) {
-      return { 'color': '#129D0A', 'font-weight': 'bold' };
-    }
-    else if (col.toLowerCase().includes('recharge')) {
-      return { 'color': '#F29D0A', 'font-weight': 'bold' };
-    }
-    else
-      return {}; // Default style (no style)
+    if (col.toLowerCase().includes("emergency")) {
+      return { color: "#FF0000", "font-weight": "bold" };
+    } else if (col.toLowerCase().includes("return")) {
+      return { color: "#129D0A", "font-weight": "bold" };
+    } else if (col.toLowerCase().includes("recharge")) {
+      return { color: "#F29D0A", "font-weight": "bold" };
+    } else return {}; // Default style (no style)
   }
 
-  validateAmount(event: any) {
-    // if (event.target.value.match(/^[0-9]{0,20}$/)) {
-    if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.\-]$/)) {
-      event.preventDefault();
-    }
-  }
   // exportToExcel() {
   // }
 
@@ -625,8 +626,4 @@ export class ExpenseReportComponent implements OnInit {
   //   const endIndex = startIndex + this.itemsPerPage;
   //   this.filteredDataSource = this.filteredexpenseDataSource.slice(startIndex, endIndex);
   // }
-
-
 }
-
-

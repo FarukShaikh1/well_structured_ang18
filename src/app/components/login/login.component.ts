@@ -24,7 +24,7 @@ export class LoginComponent {
       localStorage.clear();
       this.router.navigate([NavigationURLs.UNAUTHORIZED_PAGE]);
     }
-    //this._globalService.openSnackBar("Login ngOnInit : currentUser=false")
+    //this.globalService.openSnackBar("Login ngOnInit : currentUser=false")
   }
   loginForm: FormGroup;
 
@@ -33,7 +33,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private userService: UserServiceService,
-    private _globalService: GlobalService,
+    public globalService: GlobalService,
     private localStorageService: LocalStorageService
   ) {
     localStorage.setItem("currentUser", "false");
@@ -50,18 +50,18 @@ export class LoginComponent {
       this.loginForm.value["email"] != null &&
       this.loginForm.value["email"].length <= 0
     ) {
-      //this._globalService.openSnackBar("email should not be blank")
+      //this.globalService.openSnackBar("email should not be blank")
       return;
     }
     if (this.loginForm.value["password"].length <= 0) {
-      //this._globalService.openSnackBar("Password should not be blank")
+      //this.globalService.openSnackBar("Password should not be blank")
       return;
     }
     this.userService.getUser(this.loginForm.value).subscribe((res) => {
       if (res) {
         this.data = res;
         if (this.data.length <= 0) {
-          //this._globalService.openSnackBar("Invalid credentials, Please check the details correctly.");
+          //this.globalService.openSnackBar("Invalid credentials, Please check the details correctly.");
           // localStorage.setItem("currentUser", "false");
           // localStorage.setItem("email","")
           // localStorage.setItem("userId","")
@@ -78,7 +78,7 @@ export class LoginComponent {
           localStorage.setItem("currentUser", "true");
           localStorage.setItem("email", this.data[0].emailAddr);
           localStorage.setItem("userId", this.data[0].userId);
-          //this._globalService.openSnackBar("Log in successfully")
+          //this.globalService.openSnackBar("Log in successfully")
           this.reload();
           if (this.data[0].roleName == "super admin")
             this.router.navigate([
@@ -92,6 +92,6 @@ export class LoginComponent {
     });
   }
   reload() {
-    this._globalService.reloadComponent();
+    this.globalService.reloadComponent();
   }
 }

@@ -25,7 +25,7 @@ export class ProfileComponent {
 
   userList: any;// {id:number,userName:string,password:string};
   constructor(private fb: FormBuilder, private router: Router, private userService: UserServiceService, 
-    private http: HttpClient,private _globalService:GlobalService) {
+    private http: HttpClient,public globalService:GlobalService) {
           this.profileForm = this.fb.group(
       {
         username: '',
@@ -63,41 +63,41 @@ export class ProfileComponent {
   updateProfile() {
     if(this.profileForm.value["username"]!=null && this.profileForm.value["username"].length<=0)
     {
-      // ////this._globalService.openSnackBar("Username should not be blank")
+      // ////this.globalService.openSnackBar("Username should not be blank")
       return;
     }
     if(this.profileForm.value["emailAddress"]!=null && this.profileForm.value["emailAddress"].length<=0)
     {
-      // ////this._globalService.openSnackBar("emailAddress should not be blank")
+      // ////this.globalService.openSnackBar("emailAddress should not be blank")
       return;
     }
     if(this.profileForm.value["firstName"]!=null && this.profileForm.value["firstName"].length<=0)
     {
-      ////this._globalService.openSnackBar("firstName should not be blank")
+      ////this.globalService.openSnackBar("firstName should not be blank")
       return;
     }
     if(this.profileForm.value["mobileNumber"]!=null && this.profileForm.value["mobileNumber"].length<=0)
     {
-      ////this._globalService.openSnackBar("mobileNumber should not be blank")
+      ////this.globalService.openSnackBar("mobileNumber should not be blank")
       return;
     }
     if(this.profileForm.value["roleName"]!=null && this.profileForm.value["roleName"].length<=0)
     {
-      ////this._globalService.openSnackBar("roleName should not be blank")
+      ////this.globalService.openSnackBar("roleName should not be blank")
       return;
     }
     if(this.profileForm.value["password"]!=null && this.profileForm.value["password"].length<=0)
     {
-      ////this._globalService.openSnackBar("Please enter password to confirm your identity")
+      ////this.globalService.openSnackBar("Please enter password to confirm your identity")
       return;
     }
     this.userService.updateUserDetails(this.profileForm.value).subscribe((result) => {
       if (result) {
-        ////this._globalService.openSnackBar('Record Updated Successfully');
+        ////this.globalService.openSnackBar('Record Updated Successfully');
         // 
       }
       else {
-        ////this._globalService.openSnackBar('some issue is in update the data');
+        ////this.globalService.openSnackBar('some issue is in update the data');
         return;
       }
     });
@@ -124,7 +124,7 @@ export class ProfileComponent {
       this.profileForm.controls['roleName'].patchValue(res.roleName);
       }
         // reload() {
-  //   this._globalService.reloadComponent();
+  //   this.globalService.reloadComponent();
   // }
     }
 } 

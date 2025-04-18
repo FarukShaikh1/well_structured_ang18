@@ -19,11 +19,11 @@ export class ToastsContainerComponent {
     pauseToast(toast: any) {
         toast.autohide = false; // Prevent the toast from auto-hiding when hovered
     }
-
     resumeToast(toast: any) {
         toast.autohide = true; // Resume auto-hide when mouse leaves
     }
     onProgressAnimationEnd(toast:any) {
+        toast.delay = 0;
         toast.autohide = true; // Resume auto-hide when mouse leaves
-      }    
+    }    
 }

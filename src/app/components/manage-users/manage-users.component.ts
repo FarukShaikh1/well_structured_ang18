@@ -35,7 +35,7 @@ export class ManageUsersComponent {
   itemsPerPage = 10;
 
 
-  constructor(private _userService: UserServiceService, private _globalService: GlobalService,
+  constructor(private _userService: UserServiceService, public globalService: GlobalService,
       private _httpClient: HttpClient
   ) {
   }

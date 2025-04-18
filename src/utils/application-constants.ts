@@ -55,11 +55,11 @@ export const ApplicationTableConstants = {
 };
 
 export const ToasterConfigs = {
-    TIMEOUT: 3000, // MS
+    TIMEOUT: 5000, // MS
 };
 
 export const LoaderConfigs = {
-    TIMEOUT: 3000, // MS
+    TIMEOUT: 5000, // MS
 };
 
 export const NavigationURLs = {

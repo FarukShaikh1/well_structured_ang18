@@ -12,7 +12,7 @@ import { ToastsContainerComponent } from './../toasts-container/toasts-container
   styleUrls: ['./toaster.component.css'],
   standalone: true,
 })
-export class ToasterComponent  {
+export class ToasterComponent {
   @ViewChild('toasterTemplate') toasterTemplate!: TemplateRef<any>;
 
   toastService = inject(ToastService);
@@ -29,6 +29,4 @@ export class ToasterComponent  {
     this.toastText = toastText;
     this.toastService.show({ template: this.toasterTemplate, autohide: true, classname: result === 'success' ? 'bg-success text-light' : 'bg-danger text-light', delay: timeout });
   }
-
-  
 }

@@ -1,23 +1,23 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, of, Subject } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { NavigationURLs } from '../../../utils/application-constants';
-import { LocalStorageService } from '../local-storage/local-storage.service';
-import { RoleService } from '../role/role.service';
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { API_URL } from '../../../utils/api-url';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
+import { Observable, of, Subject } from "rxjs";
+import { catchError, map } from "rxjs/operators";
+import { NavigationURLs } from "../../../utils/application-constants";
+import { LocalStorageService } from "../local-storage/local-storage.service";
+import { RoleService } from "../role/role.service";
+import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { API_URL } from "../../../utils/api-url";
+import { HttpClient, HttpParams } from "@angular/common/http";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class GlobalService {
   constructor(
     private http: HttpClient,
     private localStorageService: LocalStorageService,
     private roleService: RoleService
-  ) { }
+  ) {}
 
   private reloadComponentSubject = new Subject<void>();
   private reloadBannerOnSubject = new Subject<void>();
@@ -68,14 +68,14 @@ export class GlobalService {
           if (result.data.length > 0) {
             const user = this.localStorageService.getLoggedInUserData();
             user.role = result.data[0].role;
-            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem("user", JSON.stringify(user));
             return true;
           }
         }
         return false;
       }),
       catchError((error: any) => {
-        console.error('Error fetching role data', error?.message);
+        console.error("Error fetching role data", error?.message);
         return of(false);
       })
     );
@@ -116,7 +116,7 @@ export class GlobalService {
    * @returns {string} the formatted message
    */
   formatMessage(message: string, ...values: any[]): string {
-    return message.replace(/{(\d+)}/g, (match, index) => values[index] || '');
+    return message.replace(/{(\d+)}/g, (match, index) => values[index] || "");
   }
 
   // Unique name validator for type ahead
@@ -131,18 +131,27 @@ export class GlobalService {
   }
 
   getCommonListItems(commonListId: String) {
-    const params = new HttpParams()
-      .set('commonListId', commonListId.toString())
+    const params = new HttpParams().set(
+      "commonListId",
+      commonListId.toString()
+    );
     return this.http.get(API_URL.GET_COMMON_LIST_ITEMS, { params: params });
   }
 
-  trimAllFields(form:any) {
+  trimAllFields(form: any) {
     // Trim whitespace from all form control values
-    Object.keys(form?.controls).forEach(key => {
-        const control = form?.get(key);
-        if (control && typeof control.value === 'string') {
-            control.setValue(control.value.trim());
-        }
+    Object.keys(form?.controls).forEach((key) => {
+      const control = form?.get(key);
+      if (control && typeof control.value === "string") {
+        control.setValue(control.value.trim());
+      }
     });
-}
+  }
+
+  validateAmount(event: any) {
+    // if (event.target.value.match(/^[0-9]{0,20}$/)) {
+    if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.\-]$/)) {
+      event.preventDefault();
+    }
+  }
 }

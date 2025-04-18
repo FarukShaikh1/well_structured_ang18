@@ -78,11 +78,11 @@
                                 <label>SBI Account</label>
                                 <input formControlName="sbiAccount"
                                     class="form-control form-control-lg text-dark bg-transparent"
-                                    (keydown)="validateAmount($event)" (keyup)="validateAmountFields()">
+                                    (keydown)="globalService.validateAmount($event)" (keyup)="validateAmountFields()">
                             </div>
                             <div class="col-6">
                                 <label>Cash</label>
-                                <input formControlName="cash" (keydown)="validateAmount($event)"
+                                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
                                     (keyup)="validateAmountFields()"
                                     class="form-control form-control-lg text-dark bg-transparent">
                             </div>
@@ -90,13 +90,13 @@
                         <div class="row mt-4">
                             <div class="col-6">
                                 <label>CBI Account</label>
-                                <input formControlName="cbiAccount" (keydown)="validateAmount($event)"
+                                <input formControlName="cbiAccount" (keydown)="globalService.validateAmount($event)"
                                     (keyup)="validateAmountFields()"
                                     class="form-control form-control-lg text-dark bg-transparent">
                             </div>
                             <div class="col-6">
                                 <label>Other Amount</label>
-                                <input formControlName="otherAmount" (keydown)="validateAmount($event)"
+                                <input formControlName="otherAmount" (keydown)="globalService.validateAmount($event)"
                                     (keyup)="validateAmountFields()"
                                     class="form-control form-control-lg text-dark bg-transparent">
                             </div>

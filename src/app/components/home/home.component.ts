@@ -58,12 +58,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         public globalService: GlobalService,
         private localStorageService: LocalStorageService,
         private notificationService: NotificationService,
-    ) {
-        // May need for debugging in future
-        // this.globalService.reloadBanner$.subscribe(() => {
-        //   this.getBannerData();
-        // });
-    }
+    ) {}
 
     ngOnInit() {
         this.loaderService.hideLoader();
@@ -71,7 +66,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
             this.unreadSystemNotificationCount = count;
         });
         // this.signalRService.getUnreadChatCountForNotification();
-        this.getBannerData();
         this.getLoggedInUserData();
     }
 
@@ -101,9 +95,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.displayFeedback = false;
     }
 
-    showUserBanner(): boolean {
-        return this.localStorageService.isAuthenticated();
-    }
 
     getLoggedInUserData() {
         const userData = this.localStorageService.getLoggedInUserData();
@@ -133,20 +124,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         });
     }
 
-    /**
-     * currently not in use. Will be used if the new method causes any issue (below implemented)
-     */
-    getBannerDataOld() { }
-
-    getBannerData() {
-    }
-
     isUrlContains(urlEndPoint: string): boolean {
         const routePath = this.router.url;
         return routePath.includes(urlEndPoint);
-    }
-
-    navigateFromNotification() {
-        this.router.navigate([NavigationURLs.HOME]);
     }
 }

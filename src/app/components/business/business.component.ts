@@ -98,11 +98,11 @@ export class BusinessComponent implements OnInit {
 
   constructor(
     private businessService: BusinessService,
-    private _globalService: GlobalService,
+    public globalService: GlobalService,
     public datePipe: DatePipe,
     private loaderService: LoaderService,
     private dateUtil: DateUtils
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loaderService.showLoader();
@@ -110,12 +110,12 @@ export class BusinessComponent implements OnInit {
     this.fromDate.setDate(this.toDate.getDate() - 30);
     this.getSourceOrReasonList();
     this.LoadGrid();
-    this._globalService.reloadGrid$.subscribe((listName: string) => {
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.BUSINESS) {
         this.LoadGrid();
       }
     });
-    this._globalService.refreshList$.subscribe((listName: string) => {
+    this.globalService.refreshList$.subscribe((listName: string) => {
       if (listName === ApplicationModules.BUSINESS) {
         this.applyFilters();
       }
@@ -200,11 +200,13 @@ export class BusinessComponent implements OnInit {
   productFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
     const businessData = cell.getRow().getData();
-    const quantityColumn = businessData['quantity'];
-    const unitColumn = businessData['unit'];
-    const productColumn = businessData['product'];
+    const quantityColumn = businessData["quantity"];
+    const unitColumn = businessData["unit"];
+    const productColumn = businessData["product"];
     if (productColumn) {
-      return `<span>${quantityColumn + ' ' + unitColumn + ' ' + productColumn }</span>`;
+      return `<span>${
+        quantityColumn + " " + unitColumn + " " + productColumn
+      }</span>`;
     }
     return `<span>Uniknown</span>`;
   }
@@ -288,10 +290,7 @@ export class BusinessComponent implements OnInit {
       });
   }
 
-  applyFilters(all: boolean = false) {
-    if (all) {
-      this.getBusinessList();
-    }
+  applyFilters() {
     this.filteredTableData = this.tableData.filter((item: any) => {
       const searchText =
         item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) ||
@@ -405,7 +404,7 @@ export class BusinessComponent implements OnInit {
     });
   }
 
-  businessAdjustment() { }
+  businessAdjustment() {}
 
   filterGridByFromDate(date: any) {
     console.log("fromDate : ", this.fromDate);
@@ -474,12 +473,5 @@ export class BusinessComponent implements OnInit {
     } else if (col.toLowerCase().includes("recharge")) {
       return { color: "#F29D0A", "font-weight": "bold" };
     } else return {}; // Default style (no style)
-  }
-
-  validateAmount(event: any) {
-    // if (event.target.value.match(/^[0-9]{0,20}$/)) {
-    if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.\-]$/)) {
-      event.preventDefault();
-    }
   }
 }

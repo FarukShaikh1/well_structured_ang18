@@ -31,7 +31,7 @@ export class ManageRolesComponent {
   itemsPerPage = 5;
   key: string = '';
 
-  constructor(private _userService: UserServiceService, private _globalService: GlobalService,
+  constructor(private _userService: UserServiceService, public globalService: GlobalService,
       private _httpClient: HttpClient
   ) {
   }
