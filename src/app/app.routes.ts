@@ -4,8 +4,8 @@ import { CurrencyCoinDetailsComponent } from "./components/currency-coin-details
 import { CurrencyCoinComponent } from "./components/currency-coin/currency-coin.component";
 import { DayDetailsComponent } from "./components/day-details/day-details.component";
 import { DayComponent } from "./components/day/day.component";
-import { ExpenseReportComponent } from "./components/expense-report/expense-report.component";
-import { ExpenseSummaryComponent } from "./components/expense-summary/expense-summary.component";
+// import { ExpenseReportComponent } from "./components/expense-report/expense-report.component";
+// import { ExpenseSummaryComponent } from "./components/expense-summary/expense-summary.component";
 import { ExpenseComponent } from "./components/expense/expense.component";
 import { BusinessComponent } from "./components/business/business.component";
 import { publicGuard } from "./guards/public.guard";
@@ -38,16 +38,29 @@ export const routes: Routes = [
       { path: "", redirectTo: "expenses", pathMatch: "full" },
       {
         path: "day",
+        title: "Day",
         children: [
           { path: "", component: DayComponent },
           { path: "day-details", component: DayDetailsComponent },
         ],
       },
-      { path: "expenses", component: ExpenseComponent },
-      { path: "business", component: BusinessComponent },
-      { path: "expense-summary", component: ExpenseSummaryComponent },
-      { path: "expense-report", component: ExpenseReportComponent },
-      { path: "currency-coin", component: CurrencyCoinComponent },
+      {
+        path: "expenses",
+        title: "Expenses",
+        component: ExpenseComponent,
+      },
+      {
+        path: "business",
+        title: "Business",
+        component: BusinessComponent,
+      },
+      // { path: "expense-summary", component: ExpenseSummaryComponent },
+      // { path: "expense-report", component: ExpenseReportComponent },
+      {
+        path: "currency-coin",
+        title: "Currency Collection",
+        component: CurrencyCoinComponent,
+      },
       {
         path: "currency-coin-details",
         component: CurrencyCoinDetailsComponent,
@@ -66,6 +79,7 @@ export const routes: Routes = [
   },
   {
     path: "role-module-mapping",
+    title: "Role Access",
     loadComponent: () =>
       import(
         "./components/role-module-mapping/role-module-mapping.component"
@@ -138,101 +152,3 @@ export const routes: Routes = [
   },
   { path: "**", redirectTo: "expenses" },
 ];
-// {
-//     path: 'home',
-//     title: 'Home',
-//     loadComponent: () =>
-//       import('./components/home/home.component').then((m) => m.HomeComponent),
-//     canActivate: [authGuard],
-//     children: [
-//       { path: '', redirectTo: 'home', pathMatch: 'full' },
-//       {
-//       path: 'user',
-//       title: 'Users',
-//       loadComponent: () =>
-//         import('./components/user-list/user-list.component').then(
-//           (m) => m.UserListComponent
-//         ),
-//       canActivate: [moduleAccessGuard],
-//       data: { moduleName: ApplicationModules.USER},
-//     },
-//   {
-//     path: 'role-module-mapping',
-//     loadComponent: () =>
-//       import(
-//         './components/role-module-mapping/role-module-mapping.component'
-//       ).then((m) => m.RoleModuleMappingComponent),
-//     canActivate: [moduleAccessGuard],
-//     data: { moduleName: ApplicationModules.ROLE_MODULE_MAPPING },
-//   },
-//   {
-//     path: 'change-password',
-//     title: 'Change Password',
-//     loadComponent: () =>
-//       import('./components/change-password/change-password.component').then(
-//         (m) => m.ChangePasswordComponent
-//       ),
-//   },
-//   {
-//     path: 'unauthorised',
-//     title: 'Unauthorised User',
-//     loadComponent: () =>
-//       import(
-//         './components/shared/unauthorised-error-page/unauthorised-error.component'
-//       ).then((m) => m.UnauthorisedErrorComponent),
-//   },
-//   {
-//     path: 'notifications',
-//     title: 'Notifications',
-//     loadComponent: () =>
-//       import('./components/notification-list/notification-list.component').then((m) => m.NotificationListComponent),
-//   },
-//   { path: '**', redirectTo: 'pagenotfound' },
-//   {
-//     path: 'reset-password',
-//     title: 'Reset Password',
-//     loadComponent: () =>
-//       import('./components/reset-password/reset-password.component').then(
-//         (m) => m.ResetPasswordComponent
-//       ),
-//   },
-//   {
-//     path: 'forgot-password',
-//     title: 'Forgot Password',
-//     loadComponent: () =>
-//       import('./components/forgot-password/forgot-password.component').then(
-//         (m) => m.ForgotPasswordComponent
-//       ),
-//   },
-//   {
-//     path: 'unauthorised',
-//     title: 'Unauthorised User',
-//     loadComponent: () =>
-//       import(
-//         './components/shared/unauthorised-error-page/unauthorised-error.component'
-//       ).then((m) => m.UnauthorisedErrorComponent),
-//   },
-//   { path: '**', redirectTo: 'login' },
-// ];
-
-// { path: 'header', component: HeaderComponent },
-// { path: 'login', component: LoginComponent },
-// { path: 'logout', component: LogoutComponent },
-// {
-//   path: 'day',
-//     children: [
-//       { path: '', component: DayComponent },
-//       { path: 'day-details', component: DayDetailsComponent },
-//     ]
-// },
-// { path: 'expense', component: ExpenseComponent },
-// { path: 'expense-summary', component: ExpenseSummaryComponent },
-// { path: 'expense-report', component: ExpenseReportComponent },
-// { path: 'expense-details', component: ExpenseDetailsComponent },
-// { path: 'currency-coin', component: CurrencyCoinComponent },
-// { path: 'currency-coin-details', component: CurrencyCoinDetailsComponent },
-// { path: 'profile', component: ProfileComponent },
-// { path: 'manage-users', component: ManageUsersComponent },
-// { path: 'manage-roles', component: ManageRolesComponent },
-// { path: 'settings', component: SettingsComponent }
-// ];
