@@ -129,24 +129,6 @@ export class BusinessDetailsComponent {
     });
   }
 
-  validateAmountFields() {
-    this.sbiValid =
-      this.businessDetailsForm.controls["sbiAccount"].value &&
-      this.businessDetailsForm.controls["sbiAccount"].value != 0;
-    this.cbiValid =
-      this.businessDetailsForm.controls["cbiAccount"].value &&
-      this.businessDetailsForm.controls["cbiAccount"].value != 0;
-    this.cashValid =
-      this.businessDetailsForm.controls["cash"].value &&
-      this.businessDetailsForm.controls["cash"].value != 0;
-    this.otherValid =
-      this.businessDetailsForm.controls["otherAmount"].value &&
-      this.businessDetailsForm.controls["otherAmount"].value != 0;
-
-    this.isValidAmount =
-      this.sbiValid || this.cbiValid || this.cashValid || this.otherValid;
-  }
-
   getBusinessSuggestionList() {
     this.businessService.getBusinessSuggestionList().subscribe({
       next: (res: any) => {
@@ -330,21 +312,6 @@ export class BusinessDetailsComponent {
     this.businessDetailsForm.controls["sourceOrReason"].patchValue(
       res["sourceOrReason"]
     );
-    this.businessDetailsForm.controls["purpose"].patchValue(res["purpose"]);
-    this.businessDetailsForm.controls["description"].patchValue(
-      res["description"]
-    );
-    this.businessDetailsForm.controls["sbiAccount"].patchValue(
-      res["sbiAccount"]
-    );
-    this.businessDetailsForm.controls["cash"].patchValue(res["cash"]);
-    this.businessDetailsForm.controls["otherAmount"].patchValue(
-      res["otherAmount"]
-    );
-    this.businessDetailsForm.controls["cbiAccount"].patchValue(
-      res["cbiAccount"]
-    );
-    this.businessDetailsForm.controls["assetId"].patchValue(res["assetId"]);
 
     // Patch payment arrays
     if (res.businessPayments) {
@@ -375,7 +342,6 @@ export class BusinessDetailsComponent {
 
   submitBusinessDetails() {
     this.loaderService.showLoader();
-    this.validateAmountFields();
     if (this.isValidAmount) {
       if (!this.businessDetailsForm.valid) {
         this.toaster.showMessage("Please fill valid details.", "error");
