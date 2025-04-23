@@ -31,15 +31,9 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
   styleUrls: ["./business-details.component.scss"],
 })
 export class BusinessDetailsComponent {
-togleDriverData() {
-throw new Error('Method not implemented.');
-}
-togleBrokerData() {
-throw new Error('Method not implemented.');
-}
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild("btnCloseBusinessDetailsPopup") btnCloseBusinessPopup!: ElementRef;
-  @Input() lastBusinessDate!: Date; // Receiving lastBusinessDate from parent
+  @Input() lastBusinessDate!: Date;
 
   businessDetailsForm: FormGroup;
   sbiValid = false;
@@ -351,6 +345,32 @@ throw new Error('Method not implemented.');
       res["cbiAccount"]
     );
     this.businessDetailsForm.controls["assetId"].patchValue(res["assetId"]);
+
+    // Patch payment arrays
+    if (res.businessPayments) {
+      this.patchPaymentArray(this.businessPayments, res.businessPayments);
+    }
+    if (res.brokerPayments) {
+      this.patchPaymentArray(this.brokerPayments, res.brokerPayments);
+    }
+    if (res.driverPayments) {
+      this.patchPaymentArray(this.driverPayments, res.driverPayments);
+    }
+  }
+
+  patchPaymentArray(formArray: FormArray, payments: any[]): void {
+    formArray.clear();
+    payments.forEach(payment => {
+      const paymentGroup = this.createPaymentEntry();
+      paymentGroup.patchValue({
+        paymentId: payment.paymentId,
+        paymentDate: this.datepipe.transform(payment.paymentDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
+        paidAmount: payment.paidAmount,
+        paidBy: payment.paidBy,
+        pendingAmount: payment.pendingAmount
+      });
+      formArray.push(paymentGroup);
+    });
   }
 
   submitBusinessDetails() {
@@ -363,124 +383,79 @@ throw new Error('Method not implemented.');
         return;
       }
       try {
-        if (!this.businessDetailsForm.value["description"]) {
-          this.businessDetailsForm.value["description"] =
-            this.businessDetailsForm.value["purpose"];
-        }
+        const formValue = this.businessDetailsForm.getRawValue();
+        
+        // Format dates
+        formValue.businessDate = this.formatDate(formValue.businessDate);
+        
+        // Format payment dates
+        this.formatPaymentDates(formValue.businessPayments);
+        this.formatPaymentDates(formValue.brokerPayments);
+        this.formatPaymentDates(formValue.driverPayments);
 
-        const selectedDate1 = new Date(
-          this.businessDetailsForm.value["businessDate"]
-        );
-        // // Ensure the date is valid
-        if (!isNaN(selectedDate1.getTime())) {
-          const day = selectedDate1.getDate().toString().padStart(2, "0");
-          const month = (selectedDate1.getMonth() + 1)
-            .toString()
-            .padStart(2, "0"); // Months are 0-based
-          const year = selectedDate1.getFullYear();
-
-          // Format the date as DD/MM/YYYY
-          this.businessDetailsForm.value[
-            "businessDate"
-          ] = `${day}/${month}/${year}`;
+        if (formValue.businessId > 0) {
+          this.businessService.updateBusiness(formValue).subscribe({
+            next: (result: any) => {
+              this.handleSuccessResponse(result, "Record Updated Successfully.");
+            },
+            error: (error: any) => {
+              this.handleErrorResponse(error);
+            }
+          });
         } else {
-          // Split the string and create a Date object in 'yyyy-MM-dd' format.
-          const [day, month, year] = this.businessDetailsForm.value[
-            "businessDate"
-          ]
-            .split("/")
-            .map(Number);
-          const selectedDate = new Date(Date.UTC(year, month - 1, day)); // month is 0-indexed
-          this.businessDetailsForm.value["businessDate"] = selectedDate;
-          // this.businessDetailsForm.value['bsusinessDate'] = DateUtils.formatDateStringToYYYYMMDD(this.businessDetailsForm.value['businessDate'])
-        }
-
-        if (this.businessDetailsForm.value["businessId"] > 0) {
-          this.businessService
-            .updateBusiness(this.businessDetailsForm.value)
-            .subscribe({
-              next: (result: any) => {
-                if (result) {
-                  //this.globalService.openSnackBar('Record Updated Successfully');
-                  this.toaster.showMessage(
-                    "Record Updated Successfully.",
-                    "success"
-                  );
-                  this.loaderService.hideLoader();
-                  this.renderer
-                    .selectRootElement(
-                      this.btnCloseBusinessPopup?.nativeElement
-                    )
-                    .click();
-                  this.globalService.triggerGridReload(
-                    ApplicationModules.BUSINESS
-                  );
-                } else {
-                  this.loaderService.hideLoader();
-                  this.toaster.showMessage(
-                    "Some issue is in update the data.",
-                    "error"
-                  );
-                  //this.globalService.openSnackBar('some issue is in update the data');
-                  return;
-                }
-              },
-              error: (error: any) => {
-                this.loaderService.hideLoader();
-                this.toaster.showMessage(error?.message, "error");
-              },
-            });
-        } else {
-          this.businessService
-            .addBusiness(this.businessDetailsForm.value)
-            .subscribe({
-              next: (result: any) => {
-                if (result) {
-                  this.loaderService.hideLoader();
-                  this.toaster.showMessage(
-                    "Record Added Successfully.",
-                    "success"
-                  );
-                  this.renderer
-                    .selectRootElement(
-                      this.btnCloseBusinessPopup?.nativeElement
-                    )
-                    .click();
-                  this.globalService.triggerGridReload(
-                    ApplicationModules.BUSINESS
-                  );
-                } else {
-                  this.loaderService.hideLoader();
-                  this.toaster.showMessage(
-                    "Some issue is in adding the data.",
-                    "error"
-                  );
-                }
-              },
-              error: (error: any) => {
-                this.toaster.showMessage(error?.message, "error");
-                this.loaderService.hideLoader();
-              },
-            });
+          this.businessService.addBusiness(formValue).subscribe({
+            next: (result: any) => {
+              this.handleSuccessResponse(result, "Record Added Successfully.");
+            },
+            error: (error: any) => {
+              this.handleErrorResponse(error);
+            }
+          });
         }
       } catch (error) {
-        alert("Inside catch block business details line 263");
-        //this.globalService.openSnackBar("Error in adding data : " + error);
-        this.loaderService.hideLoader();
-        this.toaster.showMessage(
-          "Erroooorrrr issue is in adding the data.",
-          "error"
-        );
+        this.handleErrorResponse(error);
       }
     } else {
-      //this.globalService.openSnackBar('Amount can not be blank or 0');
+      this.toaster.showMessage("Amount cannot be blank or 0", "error");
       this.loaderService.hideLoader();
-      return;
     }
+  }
+
+  private formatDate(date: string): string {
+    const [day, month, year] = date.split('/');
+    return `${day}/${month}/${year}`;
+  }
+
+  private formatPaymentDates(payments: any[]): void {
+    if (payments) {
+      payments.forEach(payment => {
+        if (payment.paymentDate) {
+          payment.paymentDate = this.formatDate(payment.paymentDate);
+        }
+      });
+    }
+  }
+
+  private handleSuccessResponse(result: any, message: string): void {
+    if (result) {
+      this.toaster.showMessage(message, "success");
+      this.loaderService.hideLoader();
+      this.renderer.selectRootElement(this.btnCloseBusinessPopup?.nativeElement).click();
+      this.globalService.triggerGridReload(ApplicationModules.BUSINESS);
+    } else {
+      this.toaster.showMessage("Some issue occurred while processing the data.", "error");
+      this.loaderService.hideLoader();
+    }
+  }
+
+  private handleErrorResponse(error: any): void {
+    this.toaster.showMessage(error?.message || "An error occurred", "error");
+    this.loaderService.hideLoader();
   }
 
   createPaymentEntry(): FormGroup {
     return this._details.group({
+      paymentId: 0,
       paymentDate: ['', Validators.required],
       paidAmount: [0, [Validators.required, Validators.min(0)]],
       paidBy: [''],
@@ -535,5 +510,19 @@ throw new Error('Method not implemented.');
 
   get driverPaymentControls() {
     return this.driverPayments.controls;
+  }
+
+  togleDriverData(): void {
+    const driverForm = document.getElementById('driver-form');
+    if (driverForm) {
+      driverForm.style.display = driverForm.style.display === 'none' ? 'block' : 'none';
+    }
+  }
+
+  togleBrokerData(): void {
+    const brokerForm = document.getElementById('broker-form');
+    if (brokerForm) {
+      brokerForm.style.display = brokerForm.style.display === 'none' ? 'block' : 'none';
+    }
   }
 }
