@@ -70,22 +70,29 @@ export class BusinessDetailsComponent {
     this.businessDetailsForm = this._details.group({
       businessId: 0,
       businessDate: ["", Validators.required],
-      sourceOrReason: ["", Validators.required],
-      cash: "",
-      sbiAccount: "",
-      cbiAccount: "",
-      otherAmount: "",
-      totalAmount: "",
-      isInvoiceAvailable: false,
-      referenceNumber: "",
+      customerName: ["", Validators.required],
+      paymentStatus: ["Pending", Validators.required],
+      dealAmount: ["", [Validators.required, Validators.min(0)]],
+      productName: ["", Validators.required],
+      quantity: ["", [Validators.required, Validators.min(0)]],
+      unit: ["", Validators.required],
+      deliveryDate: ["", Validators.required],
       description: "",
-      purpose: "",
-      assetType: "",
-      businessReceiptAssetId: 0,
-      assetId: 0,
+      
+      // Business Payments
       businessPayments: this._details.array([]),
+      
+      // Broker Section
+      brokerName: "",
+      brokerAmount: ["", [Validators.min(0)]],
       brokerPayments: this._details.array([]),
-      driverPayments: this._details.array([])
+      brokerDescription: "",
+      
+      // Driver Section
+      driverName: "",
+      driverAmount: ["", [Validators.min(0)]],
+      driverPayments: this._details.array([]),
+      driverDescription: ""
     });
 
     this.businessPayments = this.businessDetailsForm.get('businessPayments') as FormArray;
