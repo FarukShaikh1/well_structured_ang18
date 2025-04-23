@@ -30,6 +30,12 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
   styleUrls: ["./business-details.component.scss"],
 })
 export class BusinessDetailsComponent {
+togleDriverData() {
+throw new Error('Method not implemented.');
+}
+togleBrokerData() {
+throw new Error('Method not implemented.');
+}
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild("btnCloseBusinessDetailsPopup") btnCloseBusinessPopup!: ElementRef;
   @Input() lastBusinessDate!: Date; // Receiving lastBusinessDate from parent
