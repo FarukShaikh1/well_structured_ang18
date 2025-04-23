@@ -9,6 +9,7 @@ import {
 import {
   FormBuilder,
   FormGroup,
+  FormArray,
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
@@ -60,6 +61,10 @@ throw new Error('Method not implemented.');
   focusInDescription: boolean = false;
   isValidAmount: boolean = false;
 
+  businessPayments: FormArray;
+  brokerPayments: FormArray;
+  driverPayments: FormArray;
+
   constructor(
     private _details: FormBuilder,
     private businessService: BusinessService,
@@ -84,7 +89,14 @@ throw new Error('Method not implemented.');
       assetType: "",
       businessReceiptAssetId: 0,
       assetId: 0,
+      businessPayments: this._details.array([]),
+      brokerPayments: this._details.array([]),
+      driverPayments: this._details.array([])
     });
+
+    this.businessPayments = this.businessDetailsForm.get('businessPayments') as FormArray;
+    this.brokerPayments = this.businessDetailsForm.get('brokerPayments') as FormArray;
+    this.driverPayments = this.businessDetailsForm.get('driverPayments') as FormArray;
   }
 
   openDetailsPopup(businessId: string) {
@@ -465,5 +477,63 @@ throw new Error('Method not implemented.');
       this.loaderService.hideLoader();
       return;
     }
+  }
+
+  createPaymentEntry(): FormGroup {
+    return this._details.group({
+      paymentDate: ['', Validators.required],
+      paidAmount: [0, [Validators.required, Validators.min(0)]],
+      paidBy: [''],
+      pendingAmount: [{ value: 0, disabled: true }]
+    });
+  }
+
+  addBusinessPayment(): void {
+    const paymentEntry = this.createPaymentEntry();
+    this.businessPayments.push(paymentEntry);
+    this.updatePendingAmount(paymentEntry);
+  }
+
+  addBrokerPayment(): void {
+    const paymentEntry = this.createPaymentEntry();
+    this.brokerPayments.push(paymentEntry);
+    this.updatePendingAmount(paymentEntry);
+  }
+
+  addDriverPayment(): void {
+    const paymentEntry = this.createPaymentEntry();
+    this.driverPayments.push(paymentEntry);
+    this.updatePendingAmount(paymentEntry);
+  }
+
+  removeBusinessPayment(index: number): void {
+    this.businessPayments.removeAt(index);
+  }
+
+  removeBrokerPayment(index: number): void {
+    this.brokerPayments.removeAt(index);
+  }
+
+  removeDriverPayment(index: number): void {
+    this.driverPayments.removeAt(index);
+  }
+
+  updatePendingAmount(paymentEntry: FormGroup): void {
+    const dealAmount = this.businessDetailsForm.get('cash')?.value || 0;
+    const paidAmount = paymentEntry.get('paidAmount')?.value || 0;
+    const pendingAmount = dealAmount - paidAmount;
+    paymentEntry.get('pendingAmount')?.setValue(pendingAmount, { emitEvent: false });
+  }
+
+  get businessPaymentControls() {
+    return this.businessPayments.controls;
+  }
+
+  get brokerPaymentControls() {
+    return this.brokerPayments.controls;
+  }
+
+  get driverPaymentControls() {
+    return this.driverPayments.controls;
   }
 }

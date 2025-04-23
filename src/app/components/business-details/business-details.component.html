@@ -1,7 +1,7 @@
 <div class="modal fade modal-lg" id="businessDetailsPopup" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form [formGroup]="businessDetailsForm" (ngSubmit)="submitBusinessDetails()">
+      <form [formGroup]="businessDetailsForm">
         <div class="modal-header">
           <h2 class="modal-title">Add Business</h2>
           <button #btnCloseBusinessDetailsPopup class="btn-close" (click)="closePopup()"
@@ -9,444 +9,517 @@
         </div>
 
         <div class="modal-body">
-          <div>
-            <div style="display: none">
-              <p>businessId</p>
-              <input formControlName="businessId" />
-            </div>
-            <div class="row">
-              <div class="col-3">
-                <label> Choose a date</label>
-                <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                  placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
+          <div style="display: none">
+            <p>businessId</p>
+            <input formControlName="businessId" />
+          </div>
+          <div class="row mb-4">
+            <div class="col-3">
+              <label> Choose a date</label>
+              <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
                     'error-border':
                       businessDetailsForm.get('businessDate')?.touched &&
                       businessDetailsForm.get('businessDate')?.invalid
                   }" />
-                @if(businessDetailsForm.get('businessDate')?.touched &&
-                businessDetailsForm.get('businessDate')?.invalid){
-                <div class="text-danger">
-                  @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
-                  Date is required. }
-                  @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
-                  Invalid Date. }
-                </div>
-                }
+              @if(businessDetailsForm.get('businessDate')?.touched &&
+              businessDetailsForm.get('businessDate')?.invalid){
+              <div class="text-danger">
+                @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
+                Date is required. }
+                @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
+                Invalid Date. }
               </div>
+              }
+            </div>
 
-              <div class="col-3">
-                <label>Customer Name</label>
-                <input type="text" placeholder="Enter Customer Name" aria-label="Customer Name"
-                  class="form-control form-control-lg text-dark bg-transparent" formControlName="sourceOrReason"
-                  (input)="onSourceReasonChange($event)" (focus)="focusInSource = true" (focusout)="focusOutSource()"
-                  [ngClass]="{
+            <div class="col-3">
+              <label>Customer Name</label>
+              <input type="text" placeholder="Enter Customer Name" aria-label="Customer Name"
+                class="form-control form-control-lg text-dark bg-transparent" formControlName="sourceOrReason"
+                (input)="onSourceReasonChange($event)" (focus)="focusInSource = true" (focusout)="focusOutSource()"
+                [ngClass]="{
                     'error-border':
                       businessDetailsForm.get('sourceOrReason')?.touched &&
                       businessDetailsForm.get('sourceOrReason')?.invalid
                   }" />
-                @if(businessDetailsForm.get('sourceOrReason')?.touched &&
-                businessDetailsForm.get('sourceOrReason')?.invalid){
-                <div class="text-danger">
-                  @if(businessDetailsForm.get('sourceOrReason')?.errors?.['required']){
-                  Source/Reason is required. }
-                  @else if(businessDetailsForm.get('sourceOrReason')?.errors?.['pattern']){
-                  Invalid source/Reason. }
-                </div>
-                } @if(filteredSourceOrReasonList?.length > 0 && focusInSource){
-                <ul class="list-group suggestion-list">
-                  @for(option of filteredSourceOrReasonList;track $index){
-                  <li class="list-group-item list-group-item-action" (click)="selectSourceOrReason(option)">
-                    {{ option }}
-                  </li>
-                  }
-                </ul>
+              @if(businessDetailsForm.get('sourceOrReason')?.touched &&
+              businessDetailsForm.get('sourceOrReason')?.invalid){
+              <div class="text-danger">
+                @if(businessDetailsForm.get('sourceOrReason')?.errors?.['required']){
+                Source/Reason is required. }
+                @else if(businessDetailsForm.get('sourceOrReason')?.errors?.['pattern']){
+                Invalid source/Reason. }
+              </div>
+              } @if(filteredSourceOrReasonList?.length > 0 && focusInSource){
+              <ul class="list-group suggestion-list">
+                @for(option of filteredSourceOrReasonList;track $index){
+                <li class="list-group-item list-group-item-action" (click)="selectSourceOrReason(option)">
+                  {{ option }}
+                </li>
                 }
-              </div>
-              <div class="col-3">
-                <label>Payment</label>
-                <select placeholder="Paid" aria-label="Paid"
-                  class="form-control form-control-lg text-dark bg-transparent form-select">
-                  <option value="Pending">Pending</option>
-                  <option value="Paid Fully">Paid Fully</option>
-                  <option value="Paid Partially">Paid Partially</option>
-                  <option value="Advance">Advance</option>
-                </select>
-              </div>
-              <div class="col-3">
-                <label>Deal Amount</label>
-                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                  (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-
-              <!-- <div class="col-4">
-                                <label>Sale/Purchase</label> &nbsp;
-                                <span class="d-flex">
-                                    <input type="radio" value="Purchase"> Purchase
-                                </span>
-                                <span class="d-flex">
-                                    <input type="radio" value="Sale"> Sale
-                                </span>
-                            </div> -->
+              </ul>
+              }
             </div>
-            <div class="row mt-4">
-              <div class="col-3">
-                <label>Product</label>
-                <input formControlName="sbiAccount" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col-3">
-                <label>Quantity</label>
-                <input formControlName="sbiAccount" class="form-control form-control-lg text-dark bg-transparent"
-                  (keydown)="globalService.validateAmount($event)" (keyup)="validateAmountFields()" />
-              </div>
-              <div class="col-3">
-                <label>Unit</label>
-                <input formControlName="cash" (keyup)="validateAmountFields()"
-                  class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col-3">
-                <label> Delevery date</label>
-                <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                  placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
+            <div class="col-3">
+              <label>Payment</label>
+              <select placeholder="Paid" aria-label="Paid"
+                class="form-control form-control-lg text-dark bg-transparent form-select">
+                <option value="Pending">Pending</option>
+                <option value="Paid Fully">Paid Fully</option>
+                <option value="Paid Partially">Paid Partially</option>
+                <option value="Advance">Advance</option>
+              </select>
+            </div>
+            <div class="col-3">
+              <label>Deal Amount</label>
+              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+                (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-3">
+              <label>Product</label>
+              <input formControlName="sbiAccount" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col-3">
+              <label>Quantity</label>
+              <input formControlName="sbiAccount" class="form-control form-control-lg text-dark bg-transparent"
+                (keydown)="globalService.validateAmount($event)" (keyup)="validateAmountFields()" />
+            </div>
+            <div class="col-3">
+              <label>Unit</label>
+              <input formControlName="cash" (keyup)="validateAmountFields()"
+                class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col-3">
+              <label> Delevery date</label>
+              <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
                     'error-border':
                       businessDetailsForm.get('businessDate')?.touched &&
                       businessDetailsForm.get('businessDate')?.invalid
                   }" />
-                @if(businessDetailsForm.get('businessDate')?.touched &&
-                businessDetailsForm.get('businessDate')?.invalid){
-                <div class="text-danger">
-                  @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
-                  Date is required. }
-                  @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
-                  Invalid Date. }
-                </div>
-                }
+              @if(businessDetailsForm.get('businessDate')?.touched &&
+              businessDetailsForm.get('businessDate')?.invalid){
+              <div class="text-danger">
+                @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
+                Date is required. }
+                @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
+                Invalid Date. }
               </div>
+              }
             </div>
-            <div class="row mt-4">
-              <div class="col-3">
-                <label>Payment date</label>
-                <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                  placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <label>Payment date</label>
+              <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
                     'error-border':
                       businessDetailsForm.get('businessDate')?.touched &&
                       businessDetailsForm.get('businessDate')?.invalid
                   }" />
-                @if(businessDetailsForm.get('businessDate')?.touched &&
-                businessDetailsForm.get('businessDate')?.invalid){
-                <div class="text-danger">
-                  @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
-                  Date is required. }
-                  @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
-                  Invalid Date. }
-                </div>
-                }
+              @if(businessDetailsForm.get('businessDate')?.touched &&
+              businessDetailsForm.get('businessDate')?.invalid){
+              <div class="text-danger">
+                @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
+                Date is required. }
+                @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
+                Invalid Date. }
               </div>
-              <div class="col">
-                <label>Paid Amount</label>
-                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                  (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col">
-                <label>Paid By</label>
-                <input formControlName="cash" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col">
-                <label>Pending Amount</label>
-                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                  (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col-1">
-                <label> &nbsp;</label>
-                <button class="btn btn-primary rounded-button" data-bs-toggle="modal"
-                  data-bs-target="#expenseDetailsPopup">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" />
-                    <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" />
-                  </svg>
-                </button>
-
-              </div>
+              }
             </div>
-            <div class="row mt-4">
-              <div class="col-12">
-                <label>More Details (if any)</label>
-                <textarea formControlName="description" (input)="onDescriptionChange($event)"
-                  (focus)="focusInDescription = true" (focusout)="focusOutDescription()"
-                  placeholder="Details about business"
-                  class="form-control form-control-lg text-dark bg-transparent"></textarea>
+            <div class="col">
+              <label>Paid Amount</label>
+              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+                (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col">
+              <label>Paid By</label>
+              <input formControlName="cash" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col">
+              <label>Pending Amount</label>
+              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+                (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col-1">
+              <label> &nbsp;</label>
+              <button class="btn btn-primary rounded-button" (click)="addBusinessPayment()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </button>
 
-                @if(filteredDescriptionList?.length > 0 && focusInDescription){
-                <ul class="list-group position-absolute w-50 mt-0 overflow-auto"
-                  style="max-height: 300px; overflow-y: auto">
-                  @for(option of filteredDescriptionList;track $index){
-                  <li class="list-group-item list-group-item-action" (click)="selectDescription(option)">
-                    {{ option }}
-                  </li>
-                  }
-                </ul>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-12">
+              <div formArrayName="businessPayments">
+                @for(payment of businessPaymentControls; track $index; let i = $index) {
+                <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
+                  <div class="col-3">
+                    <label>Payment Date</label>
+                    <input type="date" class="form-control" formControlName="paymentDate" />
+                  </div>
+                  <div class="col">
+                    <label>Paid Amount</label>
+                    <input type="text" class="form-control" formControlName="paidAmount"
+                      (keydown)="globalService.validateAmount($event)" />
+                  </div>
+                  <div class="col">
+                    <label>Paid By</label>
+                    <input type="text" class="form-control" formControlName="paidBy" />
+                  </div>
+                  <div class="col">
+                    <label>Pending Amount</label>
+                    <input type="text" class="form-control" formControlName="pendingAmount" readonly />
+                  </div>
+                  <div class="col-1">
+                    <button type="button" class="btn btn-danger" (click)="removeBusinessPayment(i)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </div>
                 }
               </div>
             </div>
           </div>
+
+          <div class="row mb-4">
+            <div class="col-12">
+              <label>More Details (if any)</label>
+              <textarea formControlName="description" (input)="onDescriptionChange($event)"
+                (focus)="focusInDescription = true" (focusout)="focusOutDescription()"
+                placeholder="Details about business"
+                class="form-control form-control-lg text-dark bg-transparent"></textarea>
+
+              @if(filteredDescriptionList?.length > 0 && focusInDescription){
+              <ul class="list-group position-absolute w-50 mt-0 overflow-auto"
+                style="max-height: 300px; overflow-y: auto">
+                @for(option of filteredDescriptionList;track $index){
+                <li class="list-group-item list-group-item-action" (click)="selectDescription(option)">
+                  {{ option }}
+                </li>
+                }
+              </ul>
+              }
+            </div>
+          </div>
         </div>
-        <div class="modal-header mt-4">
+        <div class="modal-header mb-4">
           <h2 class="modal-title">Broker</h2>
-          <button  class="btn-close" (click)="togleBrokerData()"></button>
+          <button class="btn-close" (click)="togleBrokerData()"></button>
         </div>
         <div class="modal-body" id="broker-form">
-          <div>
-            <div class="row">
-              <div class="col-3">
-                <label>Broker Name</label>
-                <input type="text" placeholder="Enter Driver Name" aria-label="Driver Name"
-                  class="form-control form-control-lg text-dark bg-transparent" formControlName="sourceOrReason"
-                  (input)="onSourceReasonChange($event)" (focus)="focusInSource = true" (focusout)="focusOutSource()"
-                  [ngClass]="{
+          <div class="row mb-4">
+            <div class="col-3">
+              <label>Broker Name</label>
+              <input type="text" placeholder="Enter Driver Name" aria-label="Driver Name"
+                class="form-control form-control-lg text-dark bg-transparent" formControlName="sourceOrReason"
+                (input)="onSourceReasonChange($event)" (focus)="focusInSource = true" (focusout)="focusOutSource()"
+                [ngClass]="{
                     'error-border':
                       businessDetailsForm.get('sourceOrReason')?.touched &&
                       businessDetailsForm.get('sourceOrReason')?.invalid
                   }" />
-                @if(businessDetailsForm.get('sourceOrReason')?.touched &&
-                businessDetailsForm.get('sourceOrReason')?.invalid){
-                <div class="text-danger">
-                  @if(businessDetailsForm.get('sourceOrReason')?.errors?.['required']){
-                  Source/Reason is required. }
-                  @else if(businessDetailsForm.get('sourceOrReason')?.errors?.['pattern']){
-                  Invalid source/Reason. }
-                </div>
-                } @if(filteredSourceOrReasonList?.length > 0 && focusInSource){
-                <ul class="list-group suggestion-list">
-                  @for(option of filteredSourceOrReasonList;track $index){
-                  <li class="list-group-item list-group-item-action" (click)="selectSourceOrReason(option)">
-                    {{ option }}
-                  </li>
-                  }
-                </ul>
+              @if(businessDetailsForm.get('sourceOrReason')?.touched &&
+              businessDetailsForm.get('sourceOrReason')?.invalid){
+              <div class="text-danger">
+                @if(businessDetailsForm.get('sourceOrReason')?.errors?.['required']){
+                Source/Reason is required. }
+                @else if(businessDetailsForm.get('sourceOrReason')?.errors?.['pattern']){
+                Invalid source/Reason. }
+              </div>
+              } @if(filteredSourceOrReasonList?.length > 0 && focusInSource){
+              <ul class="list-group suggestion-list">
+                @for(option of filteredSourceOrReasonList;track $index){
+                <li class="list-group-item list-group-item-action" (click)="selectSourceOrReason(option)">
+                  {{ option }}
+                </li>
                 }
-              </div>
-              <div class="col-3">
-                <label>Payment status</label>
-                <select placeholder="Paid" aria-label="Paid"
-                  class="form-control form-control-lg text-dark bg-transparent form-select">
-                  <option value="Pending">Pending</option>
-                  <option value="Paid Fully">Paid Fully</option>
-                  <option value="Paid Partially">Paid Partially</option>
-                  <option value="Advance">Advance</option>
-                </select>
-              </div>
-              <div class="col-3">
-                <label>Brokerage Amount</label>
-                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                  (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
+              </ul>
+              }
             </div>
-            <div class="row mt-4">
-              <div class="col-3">
-                <label>Payment date</label>
-                <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                  placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
+            <div class="col-3">
+              <label>Payment status</label>
+              <select placeholder="Paid" aria-label="Paid"
+                class="form-control form-control-lg text-dark bg-transparent form-select">
+                <option value="Pending">Pending</option>
+                <option value="Paid Fully">Paid Fully</option>
+                <option value="Paid Partially">Paid Partially</option>
+                <option value="Advance">Advance</option>
+              </select>
+            </div>
+            <div class="col-3">
+              <label>Brokerage Amount</label>
+              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+                (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <label>Payment date</label>
+              <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
                     'error-border':
                       businessDetailsForm.get('businessDate')?.touched &&
                       businessDetailsForm.get('businessDate')?.invalid
                   }" />
-                @if(businessDetailsForm.get('businessDate')?.touched &&
-                businessDetailsForm.get('businessDate')?.invalid){
-                <div class="text-danger">
-                  @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
-                  Date is required. }
-                  @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
-                  Invalid Date. }
+              @if(businessDetailsForm.get('businessDate')?.touched &&
+              businessDetailsForm.get('businessDate')?.invalid){
+              <div class="text-danger">
+                @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
+                Date is required. }
+                @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
+                Invalid Date. }
+              </div>
+              }
+            </div>
+            <div class="col">
+              <label>Paid Amount</label>
+              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+                (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col">
+              <label>Paid By</label>
+              <input formControlName="cash" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col">
+              <label>Pending Amount</label>
+              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+                (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col-1">
+              <label> &nbsp;</label>
+              <button class="btn btn-primary rounded-button" (click)="addBrokerPayment()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </button>
+
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-12">
+              <div formArrayName="brokerPayments">
+                @for(payment of brokerPaymentControls; track $index; let i = $index) {
+                <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
+                  <div class="col-3">
+                    <label>Payment Date</label>
+                    <input type="date" class="form-control" formControlName="paymentDate" />
+                  </div>
+                  <div class="col">
+                    <label>Paid Amount</label>
+                    <input type="text" class="form-control" formControlName="paidAmount"
+                      (keydown)="globalService.validateAmount($event)" />
+                  </div>
+                  <div class="col">
+                    <label>Paid By</label>
+                    <input type="text" class="form-control" formControlName="paidBy" />
+                  </div>
+                  <div class="col">
+                    <label>Pending Amount</label>
+                    <input type="text" class="form-control" formControlName="pendingAmount" readonly />
+                  </div>
+                  <div class="col-1">
+                    <button type="button" class="btn btn-danger" (click)="removeBrokerPayment(i)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
                 </div>
                 }
               </div>
-              <div class="col">
-                <label>Paid Amount</label>
-                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                  (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col">
-                <label>Paid By</label>
-                <input formControlName="cash" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col">
-                <label>Pending Amount</label>
-                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                  (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col-1">
-                <label> &nbsp;</label>
-                <button class="btn btn-primary rounded-button" data-bs-toggle="modal"
-                  data-bs-target="#expenseDetailsPopup">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" />
-                    <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" />
-                  </svg>
-                </button>
-
-              </div>
             </div>
-            <div class="row mt-4">
-              <div class="col-12">
-                <label>More Details (if any)</label>
-                <textarea formControlName="description" (input)="onDescriptionChange($event)"
-                  (focus)="focusInDescription = true" (focusout)="focusOutDescription()"
-                  placeholder="Details about business"
-                  class="form-control form-control-lg text-dark bg-transparent"></textarea>
+          </div>
 
-                @if(filteredDescriptionList?.length > 0 && focusInDescription){
-                <ul class="list-group position-absolute w-50 mt-0 overflow-auto"
-                  style="max-height: 300px; overflow-y: auto">
-                  @for(option of filteredDescriptionList;track $index){
-                  <li class="list-group-item list-group-item-action" (click)="selectDescription(option)">
-                    {{ option }}
-                  </li>
-                  }
-                </ul>
+          <div class="row mb-4">
+            <div class="col-12">
+              <label>More Details (if any)</label>
+              <textarea formControlName="description" (input)="onDescriptionChange($event)"
+                (focus)="focusInDescription = true" (focusout)="focusOutDescription()"
+                placeholder="Details about broker"
+                class="form-control form-control-lg text-dark bg-transparent"></textarea>
+
+              @if(filteredDescriptionList?.length > 0 && focusInDescription){
+              <ul class="list-group position-absolute w-50 mt-0 overflow-auto"
+                style="max-height: 300px; overflow-y: auto">
+                @for(option of filteredDescriptionList;track $index){
+                <li class="list-group-item list-group-item-action" (click)="selectDescription(option)">
+                  {{ option }}
+                </li>
                 }
-              </div>
+              </ul>
+              }
             </div>
           </div>
         </div>
 
 
-        <div class="modal-header mt-4">
+        <div class="modal-header mt-4 mb-4">
           <h2 class="modal-title">Driver</h2>
-          <button class="btn-close" (click)="togleDriverData()"
-            data-bs-dismiss="modal" id="driver-form"></button>
+          <button class="btn-close" (click)="togleDriverData()" data-bs-dismiss="modal" id="driver-form"></button>
         </div>
         <div class="modal-body">
-          <div>
-            <div class="row">
-              <div class="col-3">
-                <label>Driver Name</label>
-                <input type="text" placeholder="Enter Driver Name" aria-label="Driver Name"
-                  class="form-control form-control-lg text-dark bg-transparent" formControlName="sourceOrReason"
-                  (input)="onSourceReasonChange($event)" (focus)="focusInSource = true" (focusout)="focusOutSource()"
-                  [ngClass]="{
+          <div class="row mb-4">
+            <div class="col-3">
+              <label>Driver Name</label>
+              <input type="text" placeholder="Enter Driver Name" aria-label="Driver Name"
+                class="form-control form-control-lg text-dark bg-transparent" formControlName="sourceOrReason"
+                (input)="onSourceReasonChange($event)" (focus)="focusInSource = true" (focusout)="focusOutSource()"
+                [ngClass]="{
                     'error-border':
                       businessDetailsForm.get('sourceOrReason')?.touched &&
                       businessDetailsForm.get('sourceOrReason')?.invalid
                   }" />
-                @if(businessDetailsForm.get('sourceOrReason')?.touched &&
-                businessDetailsForm.get('sourceOrReason')?.invalid){
-                <div class="text-danger">
-                  @if(businessDetailsForm.get('sourceOrReason')?.errors?.['required']){
-                  Source/Reason is required. }
-                  @else if(businessDetailsForm.get('sourceOrReason')?.errors?.['pattern']){
-                  Invalid source/Reason. }
-                </div>
-                } @if(filteredSourceOrReasonList?.length > 0 && focusInSource){
-                <ul class="list-group suggestion-list">
-                  @for(option of filteredSourceOrReasonList;track $index){
-                  <li class="list-group-item list-group-item-action" (click)="selectSourceOrReason(option)">
-                    {{ option }}
-                  </li>
-                  }
-                </ul>
+              @if(businessDetailsForm.get('sourceOrReason')?.touched &&
+              businessDetailsForm.get('sourceOrReason')?.invalid){
+              <div class="text-danger">
+                @if(businessDetailsForm.get('sourceOrReason')?.errors?.['required']){
+                Source/Reason is required. }
+                @else if(businessDetailsForm.get('sourceOrReason')?.errors?.['pattern']){
+                Invalid source/Reason. }
+              </div>
+              } @if(filteredSourceOrReasonList?.length > 0 && focusInSource){
+              <ul class="list-group suggestion-list">
+                @for(option of filteredSourceOrReasonList;track $index){
+                <li class="list-group-item list-group-item-action" (click)="selectSourceOrReason(option)">
+                  {{ option }}
+                </li>
                 }
-              </div>
-              <div class="col-3">
-                <label>Payment</label>
-                <select placeholder="Paid" aria-label="Paid"
-                  class="form-control form-control-lg text-dark bg-transparent form-select">
-                  <option value="Pending">Pending</option>
-                  <option value="Paid Fully">Paid Fully</option>
-                  <option value="Paid Partially">Paid Partially</option>
-                  <option value="Advance">Advance</option>
-                </select>
-              </div>
-              <div class="col-3">
-                <label>Deal Amount</label>
-                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                  (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
+              </ul>
+              }
             </div>
-            <div class="row mt-4">
-              <div class="col-3">
-                <label>Payment date</label>
-                <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                  placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
+            <div class="col-3">
+              <label>Payment</label>
+              <select placeholder="Paid" aria-label="Paid"
+                class="form-control form-control-lg text-dark bg-transparent form-select">
+                <option value="Pending">Pending</option>
+                <option value="Paid Fully">Paid Fully</option>
+                <option value="Paid Partially">Paid Partially</option>
+                <option value="Advance">Advance</option>
+              </select>
+            </div>
+            <div class="col-3">
+              <label>Deal Amount</label>
+              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+                (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <label>Payment date</label>
+              <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
                     'error-border':
                       businessDetailsForm.get('businessDate')?.touched &&
                       businessDetailsForm.get('businessDate')?.invalid
                   }" />
-                @if(businessDetailsForm.get('businessDate')?.touched &&
-                businessDetailsForm.get('businessDate')?.invalid){
-                <div class="text-danger">
-                  @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
-                  Date is required. }
-                  @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
-                  Invalid Date. }
+              @if(businessDetailsForm.get('businessDate')?.touched &&
+              businessDetailsForm.get('businessDate')?.invalid){
+              <div class="text-danger">
+                @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
+                Date is required. }
+                @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
+                Invalid Date. }
+              </div>
+              }
+            </div>
+            <div class="col">
+              <label>Paid Amount</label>
+              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+                (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col">
+              <label>Paid By</label>
+              <input formControlName="cash" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col">
+              <label>Pending Amount</label>
+              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+                (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
+            </div>
+            <div class="col-1">
+              <label> &nbsp;</label>
+              <button class="btn btn-primary rounded-button" (click)="addDriverPayment()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </button>
+
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-12">
+              <div formArrayName="driverPayments">
+                @for(payment of driverPaymentControls; track $index; let i = $index) {
+                <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
+                  <div class="col-3">
+                    <label>Payment Date</label>
+                    <input type="date" class="form-control" formControlName="paymentDate" />
+                  </div>
+                  <div class="col">
+                    <label>Paid Amount</label>
+                    <input type="text" class="form-control" formControlName="paidAmount"
+                      (keydown)="globalService.validateAmount($event)" />
+                  </div>
+                  <div class="col">
+                    <label>Paid By</label>
+                    <input type="text" class="form-control" formControlName="paidBy" />
+                  </div>
+                  <div class="col">
+                    <label>Pending Amount</label>
+                    <input type="text" class="form-control" formControlName="pendingAmount" readonly />
+                  </div>
+                  <div class="col-1">
+                    <button type="button" class="btn btn-danger" (click)="removeDriverPayment(i)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
                 </div>
                 }
               </div>
-              <div class="col">
-                <label>Paid Amount</label>
-                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                  (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col">
-                <label>Paid By</label>
-                <input formControlName="cash" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col">
-                <label>Pending Amount</label>
-                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                  (keyup)="validateAmountFields()" class="form-control form-control-lg text-dark bg-transparent" />
-              </div>
-              <div class="col-1">
-                <label> &nbsp;</label>
-                <button class="btn btn-primary rounded-button" data-bs-toggle="modal"
-                  data-bs-target="#expenseDetailsPopup">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" />
-                    <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" />
-                  </svg>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-12">
+              <label>More Details (if any)</label>
+              <textarea formControlName="description" (input)="onDescriptionChange($event)"
+                (focus)="focusInDescription = true" (focusout)="focusOutDescription()"
+                placeholder="Details about driver"
+                class="form-control form-control-lg text-dark bg-transparent"></textarea>
+
+              @if(filteredDescriptionList?.length > 0 && focusInDescription){
+              <ul class="list-group position-absolute w-50 mt-0 overflow-auto"
+                style="max-height: 300px; overflow-y: auto">
+                @for(option of filteredDescriptionList;track $index){
+                <li class="list-group-item list-group-item-action" (click)="selectDescription(option)">
+                  {{ option }}
+                </li>
+                }
+              </ul>
+              }
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-12 col-sm-12">
+              <div class="action d-flex justify-content-end">
+                <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()"
+                  data-bs-dismiss="modal">
+                  Cancel
                 </button>
-
-              </div>
-            </div>
-            <div class="row mt-4">
-              <div class="col-12">
-                <label>More Details (if any)</label>
-                <textarea formControlName="description" (input)="onDescriptionChange($event)"
-                  (focus)="focusInDescription = true" (focusout)="focusOutDescription()"
-                  placeholder="Details about business"
-                  class="form-control form-control-lg text-dark bg-transparent"></textarea>
-
-                @if(filteredDescriptionList?.length > 0 && focusInDescription){
-                <ul class="list-group position-absolute w-50 mt-0 overflow-auto"
-                  style="max-height: 300px; overflow-y: auto">
-                  @for(option of filteredDescriptionList;track $index){
-                  <li class="list-group-item list-group-item-action" (click)="selectDescription(option)">
-                    {{ option }}
-                  </li>
-                  }
-                </ul>
-                }
-              </div>
-            </div>
-            <div class="row mt-4">
-              <div class="col-12 col-sm-12">
-                <div class="action d-flex justify-content-end">
-                  <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()"
-                    data-bs-dismiss="modal">
-                    Cancel
-                  </button>
-                  <button class="btn btn-danger rounded-button" type="reset">
-                    Reset
-                  </button>
-                  <button class="btn btn-primary rounded-button" type="submit"
-                    [disabled]="businessDetailsForm.invalid || !isValidAmount">
-                    Save
-                  </button>
-                </div>
+                <button class="btn btn-danger rounded-button" type="reset">
+                  Reset
+                </button>
+                <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()"
+                  [disabled]="businessDetailsForm.invalid || !isValidAmount">
+                  Save
+                </button>
               </div>
             </div>
           </div>
