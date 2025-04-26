@@ -36,28 +36,10 @@ export class BusinessDetailsComponent {
   @Input() lastBusinessDate!: Date;
 
   businessDetailsForm: FormGroup;
-  sbiValid = false;
-  cbiValid = false;
-  cashValid = false;
-  otherValid = false;
-
-  commonSuggestionList: any;
-  sourceOrReasonList: any;
-  purposeList: any;
-  descriptionList: any;
-
-  filteredSourceOrReasonList: any;
-  filteredPurposeList: any;
-  filteredDescriptionList: any;
-
-  focusInSource: boolean = false;
-  focusInPurpose: boolean = false;
-  focusInDescription: boolean = false;
-  isValidAmount: boolean = false;
-
   businessPayments: FormArray;
   brokerPayments: FormArray;
   driverPayments: FormArray;
+  commonSuggestionList: any;
 
   constructor(
     private _details: FormBuilder,
@@ -71,7 +53,7 @@ export class BusinessDetailsComponent {
       businessId: 0,
       businessDate: ["", Validators.required],
       customerName: ["", Validators.required],
-      paymentStatus: ["Pending", Validators.required],
+      businessPaymentStatus: ["Pending", Validators.required],
       dealAmount: ["", [Validators.required, Validators.min(0)]],
       productName: ["", Validators.required],
       quantity: ["", [Validators.required, Validators.min(0)]],
@@ -84,12 +66,14 @@ export class BusinessDetailsComponent {
       
       // Broker Section
       brokerName: "",
+      brokerPaymentStatus: "",
       brokerAmount: ["", [Validators.min(0)]],
       brokerPayments: this._details.array([]),
       brokerDescription: "",
       
       // Driver Section
       driverName: "",
+      driverPaymentStatus: "",
       driverAmount: ["", [Validators.min(0)]],
       driverPayments: this._details.array([]),
       driverDescription: ""
@@ -150,130 +134,6 @@ export class BusinessDetailsComponent {
     });
   }
 
-  onSourceReasonChange(event: any) {
-    const inputValue = event?.target?.value?.toLowerCase();
-    if (!inputValue) {
-      this.filteredSourceOrReasonList = [];
-      this.filteredPurposeList = [];
-      this.filteredDescriptionList = [];
-    } else {
-      this.filteredSourceOrReasonList = Array.from(
-        new Set(
-          this.commonSuggestionList
-            .filter(
-              (option: any) =>
-                option?.sourceOrReason &&
-                option.sourceOrReason.trim() !== "" &&
-                option.sourceOrReason.toLowerCase().includes(inputValue)
-            )
-            .map((item: any) => item.sourceOrReason) // Extract only the 'purpose' values
-            .filter((sourceOrReason: any) => sourceOrReason) // Remove any falsy values
-        ).values()
-      );
-      console.log(
-        "1 this.filteredSourceOrReasonList :",
-        this.filteredSourceOrReasonList
-      );
-
-      this.filteredPurposeList = Array.from(
-        new Set(
-          this.commonSuggestionList
-            .filter(
-              (option: any) =>
-                option?.sourceOrReason &&
-                option.sourceOrReason.trim() !== "" &&
-                option.sourceOrReason.toLowerCase().includes(inputValue)
-            )
-            .map((item: any) => item.purpose) // Extract only the 'purpose' values
-            .filter((purpose: any) => purpose) // Remove any falsy values
-        )
-      );
-      console.log("2 this.filteredPurposeList :", this.filteredPurposeList);
-
-      this.filteredDescriptionList = Array.from(
-        new Set(
-          this.commonSuggestionList
-            .filter(
-              (option: any) =>
-                option?.sourceOrReason &&
-                option.sourceOrReason.trim() !== "" &&
-                option.sourceOrReason.toLowerCase().includes(inputValue)
-            )
-            .map((item: any) => item.description) // Extract only the 'description' values
-            .filter((description: any) => description) // Remove any falsy values
-        )
-      );
-      console.log(
-        "3 this.filteredDescriptionList :",
-        this.filteredDescriptionList
-      );
-    }
-  }
-
-  selectSourceOrReason(selectedValue: string) {
-    this.businessDetailsForm.controls["sourceOrReason"].patchValue(
-      selectedValue
-    );
-    this.filteredSourceOrReasonList = [];
-  }
-
-  onDescriptionChange(event: any) {
-    const inputValue = event?.target?.value?.toLowerCase();
-    if (!inputValue) {
-      this.filteredDescriptionList = [];
-    } else {
-      this.filteredDescriptionList = Array.from(
-        new Set(
-          this.commonSuggestionList
-            .filter(
-              (option: any) =>
-                option?.description &&
-                option.description.trim() !== "" &&
-                option.description.toLowerCase().includes(inputValue)
-            )
-            .map((item: any) => item.description) // Extract only the 'description' values
-            .filter((description: any) => description) // Remove any falsy values
-        )
-      );
-      console.log(
-        "5 this.filteredDescriptionList :",
-        this.filteredDescriptionList
-      );
-    }
-  }
-
-  selectDescription(selectedValue: string) {
-    this.businessDetailsForm.controls["description"].patchValue(selectedValue);
-    this.filteredDescriptionList = [];
-  }
-
-  onPurposeChange(event: any) {
-    const inputValue = event?.target?.value?.toLowerCase();
-    if (!inputValue) {
-      this.filteredPurposeList = [];
-    } else {
-      this.filteredPurposeList = Array.from(
-        new Set(
-          this.commonSuggestionList
-            .filter(
-              (option: any) =>
-                option?.purpose &&
-                option.purpose.trim() !== "" &&
-                option.purpose.toLowerCase().includes(inputValue)
-            )
-            .map((item: any) => item.purpose) // Extract only the 'purpose' values
-            .filter((purpose: any) => purpose) // Remove any falsy values
-        )
-      );
-      console.log("4 this.filteredPurposeList :", this.filteredPurposeList);
-    }
-  }
-
-  selectPurpose(selectedValue: string) {
-    this.businessDetailsForm.controls["purpose"].patchValue(selectedValue);
-    this.filteredPurposeList = [];
-  }
-
   getBusinessDetails(businessId: string) {
     this.businessService.getBusinessDetails(businessId).subscribe({
       next: (res: any) => {
@@ -288,24 +148,6 @@ export class BusinessDetailsComponent {
     });
   }
 
-  focusOutSource() {
-    setTimeout(() => {
-      this.focusInSource = false;
-    }, 200);
-  }
-
-  focusOutPurpose() {
-    setTimeout(() => {
-      this.focusInPurpose = false;
-    }, 200);
-  }
-
-  focusOutDescription() {
-    setTimeout(() => {
-      this.focusInDescription = false;
-    }, 200);
-  }
-
   patchValues(res: any) {
     this.businessDetailsForm.controls["businessId"].patchValue(
       res["businessId"]
@@ -315,9 +157,6 @@ export class BusinessDetailsComponent {
         res["businessDate"],
         ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT
       )
-    );
-    this.businessDetailsForm.controls["sourceOrReason"].patchValue(
-      res["sourceOrReason"]
     );
 
     // Patch payment arrays
@@ -347,9 +186,26 @@ export class BusinessDetailsComponent {
     });
   }
 
+  logInvalidControls(form: FormGroup): void {
+    const invalid = [];
+    const controls = form.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+        console.warn(`Control "${name}" is invalid`, controls[name].errors);
+      }
+    }
+    if (invalid.length === 0) {
+      console.log('All controls are valid!');
+    } else {
+      console.log('Invalid controls:', invalid);
+    }
+  }
   submitBusinessDetails() {
+    debugger
+    this.logInvalidControls(this.businessDetailsForm);
+    debugger
     this.loaderService.showLoader();
-    if (this.isValidAmount) {
       if (!this.businessDetailsForm.valid) {
         this.toaster.showMessage("Please fill valid details.", "error");
         this.loaderService.hideLoader();
@@ -388,10 +244,7 @@ export class BusinessDetailsComponent {
       } catch (error) {
         this.handleErrorResponse(error);
       }
-    } else {
-      this.toaster.showMessage("Amount cannot be blank or 0", "error");
       this.loaderService.hideLoader();
-    }
   }
 
   private formatDate(date: string): string {

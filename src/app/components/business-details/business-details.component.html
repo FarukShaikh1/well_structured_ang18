@@ -22,31 +22,34 @@
                       businessDetailsForm.get('businessDate')?.touched &&
                       businessDetailsForm.get('businessDate')?.invalid
                   }" />
-              @if(businessDetailsForm.get('businessDate')?.touched &&
-              businessDetailsForm.get('businessDate')?.invalid){
-              <div class="text-danger">
-                @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
-                Date is required. }
+              <div class="error-message">
+                @if(businessDetailsForm.get('businessDate')?.touched &&
+                businessDetailsForm.get('businessDate')?.invalid){
+                <div class="text-danger">
+                  @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
+                  Date is required. }
+                </div>
+                }
               </div>
-              }
             </div>
 
             <div class="col-3">
               <label>Customer Name</label>
               <input type="text" placeholder="Enter Customer Name" aria-label="Customer Name"
-                class="form-control form-control-lg text-dark bg-transparent" formControlName="customerName"
-                [ngClass]="{
+                class="form-control form-control-lg text-dark bg-transparent" formControlName="customerName" [ngClass]="{
                     'error-border':
                       businessDetailsForm.get('customerName')?.touched &&
                       businessDetailsForm.get('customerName')?.invalid
                   }" />
-              @if(businessDetailsForm.get('customerName')?.touched &&
-              businessDetailsForm.get('customerName')?.invalid){
-              <div class="text-danger">
-                @if(businessDetailsForm.get('customerName')?.errors?.['required']){
-                Customer Name is required. }
+              <div class="error-message">
+                @if(businessDetailsForm.get('customerName')?.touched &&
+                businessDetailsForm.get('customerName')?.invalid){
+                <div class="text-danger">
+                  @if(businessDetailsForm.get('customerName')?.errors?.['required']){
+                  Customer Name is required. }
+                </div>
+                }
               </div>
-              }
             </div>
             <div class="col-3">
               <label>Payment Status</label>
@@ -60,20 +63,22 @@
             <div class="col-3">
               <label>Deal Amount</label>
               <input formControlName="dealAmount" (keydown)="globalService.validateAmount($event)"
-                 class="form-control form-control-lg text-dark bg-transparent" [ngClass]="{
+                class="form-control form-control-lg text-dark bg-transparent" [ngClass]="{
                     'error-border': businessDetailsForm.get('dealAmount')?.touched &&
                       businessDetailsForm.get('dealAmount')?.invalid
                   }" />
-              @if(businessDetailsForm.get('dealAmount')?.touched && businessDetailsForm.get('dealAmount')?.invalid){
+              <div class="error-message">
+                @if(businessDetailsForm.get('dealAmount')?.touched && businessDetailsForm.get('dealAmount')?.invalid){
                 <div class="text-danger">
                   @if(businessDetailsForm.get('dealAmount')?.errors?.['required']){
-                    Deal Amount is required.
+                  Deal Amount is required.
                   }
                   @if(businessDetailsForm.get('dealAmount')?.errors?.['min']){
-                    Deal Amount must be greater than 0.
+                  Deal Amount must be greater than 0.
                   }
                 </div>
-              }
+                }
+              </div>
             </div>
           </div>
           <div class="row mb-4">
@@ -84,11 +89,13 @@
                     'error-border': businessDetailsForm.get('productName')?.touched &&
                       businessDetailsForm.get('productName')?.invalid
                   }" />
-              @if(businessDetailsForm.get('productName')?.touched && businessDetailsForm.get('productName')?.invalid){
+              <div class="error-message">
+                @if(businessDetailsForm.get('productName')?.touched && businessDetailsForm.get('productName')?.invalid){
                 <div class="text-danger">
                   Product Name is required.
                 </div>
-              }
+                }
+              </div>
             </div>
             <div class="col-3">
               <label>Quantity</label>
@@ -97,29 +104,32 @@
                     'error-border': businessDetailsForm.get('quantity')?.touched &&
                       businessDetailsForm.get('quantity')?.invalid
                   }" />
-              @if(businessDetailsForm.get('quantity')?.touched && businessDetailsForm.get('quantity')?.invalid){
+              <div class="error-message">
+                @if(businessDetailsForm.get('quantity')?.touched && businessDetailsForm.get('quantity')?.invalid){
                 <div class="text-danger">
                   @if(businessDetailsForm.get('quantity')?.errors?.['required']){
-                    Quantity is required.
+                  Quantity is required.
                   }
                   @if(businessDetailsForm.get('quantity')?.errors?.['min']){
-                    Quantity must be greater than 0.
+                  Quantity must be greater than 0.
                   }
                 </div>
-              }
+                }
+              </div>
             </div>
             <div class="col-3">
               <label>Unit</label>
-              <input formControlName="unit" class="form-control form-control-lg text-dark bg-transparent"
-                [ngClass]="{
+              <input formControlName="unit" class="form-control form-control-lg text-dark bg-transparent" [ngClass]="{
                     'error-border': businessDetailsForm.get('unit')?.touched &&
                       businessDetailsForm.get('unit')?.invalid
                   }" />
-              @if(businessDetailsForm.get('unit')?.touched && businessDetailsForm.get('unit')?.invalid){
+              <div class="error-message">
+                @if(businessDetailsForm.get('unit')?.touched && businessDetailsForm.get('unit')?.invalid){
                 <div class="text-danger">
                   Unit is required.
                 </div>
-              }
+                }
+              </div>
             </div>
             <div class="col-3">
               <label>Delivery Date</label>
@@ -128,11 +138,14 @@
                     'error-border': businessDetailsForm.get('deliveryDate')?.touched &&
                       businessDetailsForm.get('deliveryDate')?.invalid
                   }" />
-              @if(businessDetailsForm.get('deliveryDate')?.touched && businessDetailsForm.get('deliveryDate')?.invalid){
+              <div class="error-message">
+                @if(businessDetailsForm.get('deliveryDate')?.touched &&
+                businessDetailsForm.get('deliveryDate')?.invalid){
                 <div class="text-danger">
                   Delivery Date is required.
                 </div>
-              }
+                }
+              </div>
             </div>
           </div>
           <div class="row">
@@ -157,7 +170,7 @@
             <div class="col">
               <label>Paid Amount</label>
               <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                 class="form-control form-control-lg text-dark bg-transparent" />
+                class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col">
               <label>Paid By</label>
@@ -166,7 +179,7 @@
             <div class="col">
               <label>Pending Amount</label>
               <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                 class="form-control form-control-lg text-dark bg-transparent" />
+                class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col-1">
               <label> &nbsp;</label>
@@ -228,20 +241,40 @@
           <div class="row mb-4">
             <div class="col-3">
               <label>Broker Name</label>
-              <input type="text" class="form-control form-control-lg text-dark bg-transparent" formControlName="brokerName" />
+              <input type="text" class="form-control form-control-lg text-dark bg-transparent"
+                formControlName="brokerName" />
             </div>
             <div class="col-3">
               <label>Broker Amount</label>
-              <input type="text" class="form-control form-control-lg text-dark bg-transparent" formControlName="brokerAmount"
-                (keydown)="globalService.validateAmount($event)" [ngClass]="{
+              <input type="text" class="form-control form-control-lg text-dark bg-transparent"
+                formControlName="brokerAmount" (keydown)="globalService.validateAmount($event)" [ngClass]="{
                   'error-border': businessDetailsForm.get('brokerAmount')?.touched &&
                     businessDetailsForm.get('brokerAmount')?.invalid
                 }" />
-              @if(businessDetailsForm.get('brokerAmount')?.touched && businessDetailsForm.get('brokerAmount')?.invalid){
+              <div class="error-message">
+                @if(businessDetailsForm.get('brokerAmount')?.touched &&
+                businessDetailsForm.get('brokerAmount')?.invalid){
                 <div class="text-danger">
                   Broker Amount must be greater than or equal to 0.
                 </div>
-              }
+                }
+              </div>
+            </div>
+            <div class="col-3">
+              <label>Payment Status</label>
+              <input type="text" class="form-control form-control-lg text-dark bg-transparent"
+                formControlName="brokerPaymentStatus"[ngClass]="{
+                  'error-border': businessDetailsForm.get('brokerPaymentStatus')?.touched &&
+                    businessDetailsForm.get('brokerPaymentStatus')?.invalid
+                }" />
+              <div class="error-message">
+                @if(businessDetailsForm.get('brokerPaymentStatus')?.touched &&
+                businessDetailsForm.get('brokerPaymentStatus')?.invalid){
+                <div class="text-danger">
+                  Broker Payment Status.
+                </div>
+                }
+              </div>
             </div>
           </div>
           <div class="row">
@@ -266,7 +299,7 @@
             <div class="col">
               <label>Paid Amount</label>
               <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                 class="form-control form-control-lg text-dark bg-transparent" />
+                class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col">
               <label>Paid By</label>
@@ -275,7 +308,7 @@
             <div class="col">
               <label>Pending Amount</label>
               <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                 class="form-control form-control-lg text-dark bg-transparent" />
+                class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col-1">
               <label> &nbsp;</label>
@@ -324,7 +357,8 @@
           <div class="row mb-4">
             <div class="col-12">
               <label>Broker Description</label>
-              <textarea formControlName="brokerDescription" class="form-control form-control-lg text-dark bg-transparent"
+              <textarea formControlName="brokerDescription"
+                class="form-control form-control-lg text-dark bg-transparent"
                 placeholder="Enter broker description"></textarea>
             </div>
           </div>
@@ -339,20 +373,40 @@
           <div class="row mb-4">
             <div class="col-3">
               <label>Driver Name</label>
-              <input type="text" class="form-control form-control-lg text-dark bg-transparent" formControlName="driverName" />
+              <input type="text" class="form-control form-control-lg text-dark bg-transparent"
+                formControlName="driverName" />
             </div>
             <div class="col-3">
               <label>Driver Amount</label>
-              <input type="text" class="form-control form-control-lg text-dark bg-transparent" formControlName="driverAmount"
-                (keydown)="globalService.validateAmount($event)" [ngClass]="{
+              <input type="text" class="form-control form-control-lg text-dark bg-transparent"
+                formControlName="driverAmount" (keydown)="globalService.validateAmount($event)" [ngClass]="{
                   'error-border': businessDetailsForm.get('driverAmount')?.touched &&
                     businessDetailsForm.get('driverAmount')?.invalid
                 }" />
-              @if(businessDetailsForm.get('driverAmount')?.touched && businessDetailsForm.get('driverAmount')?.invalid){
+              <div class="error-message">
+                @if(businessDetailsForm.get('driverAmount')?.touched &&
+                businessDetailsForm.get('driverAmount')?.invalid){
                 <div class="text-danger">
                   Driver Amount must be greater than or equal to 0.
                 </div>
-              }
+                }
+              </div>
+            </div>
+            <div class="col-3">
+              <label>Payment Status</label>
+              <input type="text" class="form-control form-control-lg text-dark bg-transparent"
+                formControlName="driverPaymentStatus"[ngClass]="{
+                  'error-border': businessDetailsForm.get('driverPaymentStatus')?.touched &&
+                    businessDetailsForm.get('driverPaymentStatus')?.invalid
+                }" />
+              <div class="error-message">
+                @if(businessDetailsForm.get('driverPaymentStatus')?.touched &&
+                businessDetailsForm.get('driverPaymentStatus')?.invalid){
+                <div class="text-danger">
+                  Driver Payment Status.
+                </div>
+                }
+              </div>
             </div>
           </div>
           <div class="row">
@@ -377,7 +431,7 @@
             <div class="col">
               <label>Paid Amount</label>
               <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                 class="form-control form-control-lg text-dark bg-transparent" />
+                class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col">
               <label>Paid By</label>
@@ -386,7 +440,7 @@
             <div class="col">
               <label>Pending Amount</label>
               <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                 class="form-control form-control-lg text-dark bg-transparent" />
+                class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col-1">
               <label> &nbsp;</label>
@@ -435,7 +489,8 @@
           <div class="row mb-4">
             <div class="col-12">
               <label>Driver Description</label>
-              <textarea formControlName="driverDescription" class="form-control form-control-lg text-dark bg-transparent"
+              <textarea formControlName="driverDescription"
+                class="form-control form-control-lg text-dark bg-transparent"
                 placeholder="Enter driver description"></textarea>
             </div>
           </div>
@@ -449,8 +504,8 @@
                 <button class="btn btn-danger rounded-button" type="reset">
                   Reset
                 </button>
-                <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()"
-                  [disabled]="businessDetailsForm.invalid">
+                <!-- <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()" [disabled]="businessDetailsForm.invalid"> -->
+                  <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()" [disabled]="businessDetailsForm.invalid">
                   Save
                 </button>
               </div>
