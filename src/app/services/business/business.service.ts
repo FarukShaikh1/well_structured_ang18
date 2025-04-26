@@ -88,7 +88,7 @@ export class BusinessService {
   }
 
   adjustBusiness(businessAdjustmentForm: any): Observable<any> {
-    return this.http.post(
+    return this.http.post( 
       API_URL.BUSINESS_ADJUSTMENT + this.loggedInUserId,
       businessAdjustmentForm
     );
