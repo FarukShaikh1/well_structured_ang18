@@ -83,18 +83,11 @@ export const API_URL = {
   REACTIVATE_USER: `${serverUrl}${apiPrefix}/auth/reactivateuser?userid=`,
   VERIFY_OTP: `${serverUrl}${apiPrefix}/auth/verifyotp?emailId={0}&otpCode={1}`,
 
-  // Customer API URLs
-  GET_ALL_CUSTOMERS: `${serverUrl}${apiPrefix}/customers/getcustomers`,
-  GET_CUSTOMER_DETAILS_BY_ID: `${serverUrl}${apiPrefix}/customers/getcustomersbyid?customerId=`,
-  ADD_CUSTOMER: `${serverUrl}${apiPrefix}/customers/addcustomer`,
-  UPDATE_CUSTOMER: `${serverUrl}${apiPrefix}/customers/updatecustomer`,
-
   // Client API URLs
-  GET_ALL_CLIENTS: `${serverUrl}${apiPrefix}/client/getclients`,
-  GET_CLIENT_DETAILS_BY_ID: `${serverUrl}${apiPrefix}/client/getclientbyid?clientId=`,
-  ADD_CLIENT: `${serverUrl}${apiPrefix}/client/addclient`,
-  UPDATE_CLIENT: `${serverUrl}${apiPrefix}/client/updateclient`,
-  GET_CLIENT_SERVICE_LIST: `${serverUrl}${apiPrefix}/client/getclientservices`,
+  GET_ALL_CLIENTS: `${serverUrl}${apiPrefix}/clients/getclients`,
+  GET_CLIENT_DETAILS_BY_ID: `${serverUrl}${apiPrefix}/clients/getclientsbyid?clientId=`,
+  ADD_CLIENT: `${serverUrl}${apiPrefix}/clients/addclient`,
+  UPDATE_CLIENT: `${serverUrl}${apiPrefix}/clients/updateclient`,
 
   // Role-Module-Mapping URLs
   UPDATE_ROLE_MODULE_MAPPING: `${serverUrl}${apiPrefix}/rolemodulemapping/updaterolemodulemapping`,

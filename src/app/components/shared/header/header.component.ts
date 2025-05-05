@@ -145,8 +145,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.localStorageService.getLoggedInUserData()?.userName;
   }
 
-  customerList() {
-    this.router.navigate([NavigationURLs.CUSTOMER_LIST]);
+  clientList() {
+    this.router.navigate([NavigationURLs.CLIENT_LIST]);
   }
 
   navigateToExpenseList() {

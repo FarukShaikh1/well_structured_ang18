@@ -7,7 +7,6 @@
           <button #btnCloseBusinessDetailsPopup class="btn-close" (click)="closePopup()"
             data-bs-dismiss="modal"></button>
         </div>
-
         <div class="modal-body">
           <div style="display: none">
             <p>businessId</p>
@@ -34,19 +33,19 @@
             </div>
 
             <div class="col-3">
-              <label>Customer Name</label>
-              <input type="text" placeholder="Enter Customer Name" aria-label="Customer Name"
-                class="form-control form-control-lg text-dark bg-transparent" formControlName="customerName" [ngClass]="{
+              <label>Client Name</label>
+              <input type="text" placeholder="Enter Client Name" aria-label="Client Name"
+                class="form-control form-control-lg text-dark bg-transparent" formControlName="clientName" [ngClass]="{
                     'error-border':
-                      businessDetailsForm.get('customerName')?.touched &&
-                      businessDetailsForm.get('customerName')?.invalid
+                      businessDetailsForm.get('clientName')?.touched &&
+                      businessDetailsForm.get('clientName')?.invalid
                   }" />
               <div class="error-message">
-                @if(businessDetailsForm.get('customerName')?.touched &&
-                businessDetailsForm.get('customerName')?.invalid){
+                @if(businessDetailsForm.get('clientName')?.touched &&
+                businessDetailsForm.get('clientName')?.invalid){
                 <div class="text-danger">
-                  @if(businessDetailsForm.get('customerName')?.errors?.['required']){
-                  Customer Name is required. }
+                  @if(businessDetailsForm.get('clientName')?.errors?.['required']){
+                  Client Name is required. }
                 </div>
                 }
               </div>
@@ -148,7 +147,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-3">
               <label>Payment date</label>
               <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
@@ -191,11 +190,11 @@
               </button>
 
             </div>
-          </div>
+          </div> -->
           <div class="row mb-4">
             <div class="col-12">
               <div formArrayName="businessPayments">
-                @for(payment of businessPaymentControls; track $index; let i = $index) {
+                <!-- @for(payment of businessPaymentControls; track $index; let i = $index) {
                 <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
                   <div class="col-3">
                     <label>Payment Date</label>
@@ -220,7 +219,7 @@
                     </button>
                   </div>
                 </div>
-                }
+                } -->
               </div>
             </div>
           </div>
@@ -233,6 +232,7 @@
             </div>
           </div>
         </div>
+
         <div class="modal-header mb-4">
           <h2 class="modal-title">Broker</h2>
           <button class="btn-close" (click)="togleBrokerData()"></button>
@@ -277,7 +277,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-3">
               <label>Payment date</label>
               <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
@@ -298,16 +298,16 @@
             </div>
             <div class="col">
               <label>Paid Amount</label>
-              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+              <input formControlName="paidAmount" (keydown)="globalService.validateAmount($event)"
                 class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col">
               <label>Paid By</label>
-              <input formControlName="cash" class="form-control form-control-lg text-dark bg-transparent" />
+              <input formControlName="paidBy" class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col">
               <label>Pending Amount</label>
-              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+              <input formControlName="pendingAmount" (keydown)="globalService.validateAmount($event)"
                 class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col-1">
@@ -320,11 +320,11 @@
               </button>
 
             </div>
-          </div>
+          </div> -->
           <div class="row mb-4">
             <div class="col-12">
               <div formArrayName="brokerPayments">
-                @for(payment of brokerPaymentControls; track $index; let i = $index) {
+                <!-- @for(payment of brokerPaymentControls; track $index; let i = $index) {
                 <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
                   <div class="col-3">
                     <label>Payment Date</label>
@@ -349,7 +349,7 @@
                     </button>
                   </div>
                 </div>
-                }
+                } -->
               </div>
             </div>
           </div>
@@ -363,7 +363,6 @@
             </div>
           </div>
         </div>
-
 
         <div class="modal-header mt-4 mb-4">
           <h2 class="modal-title">Driver</h2>
@@ -409,7 +408,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-3">
               <label>Payment date</label>
               <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
@@ -430,16 +429,16 @@
             </div>
             <div class="col">
               <label>Paid Amount</label>
-              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+              <input formControlName="paidAmount" (keydown)="globalService.validateAmount($event)"
                 class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col">
               <label>Paid By</label>
-              <input formControlName="cash" class="form-control form-control-lg text-dark bg-transparent" />
+              <input formControlName="paidBy" class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col">
               <label>Pending Amount</label>
-              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
+              <input formControlName="pendingAmount" (keydown)="globalService.validateAmount($event)"
                 class="form-control form-control-lg text-dark bg-transparent" />
             </div>
             <div class="col-1">
@@ -452,11 +451,11 @@
               </button>
 
             </div>
-          </div>
+          </div> -->
           <div class="row mb-4">
             <div class="col-12">
               <div formArrayName="driverPayments">
-                @for(payment of driverPaymentControls; track $index; let i = $index) {
+                <!-- @for(payment of driverPaymentControls; track $index; let i = $index) {
                 <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
                   <div class="col-3">
                     <label>Payment Date</label>
@@ -481,7 +480,7 @@
                     </button>
                   </div>
                 </div>
-                }
+                } -->
               </div>
             </div>
           </div>
@@ -505,12 +504,13 @@
                   Reset
                 </button>
                 <!-- <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()" [disabled]="businessDetailsForm.invalid"> -->
-                  <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()" [disabled]="businessDetailsForm.invalid">
+                  <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()" >
                   Save
                 </button>
               </div>
             </div>
           </div>
+          {{logInvalidControls(businessDetailsForm)}}
         </div>
       </form>
     </div>

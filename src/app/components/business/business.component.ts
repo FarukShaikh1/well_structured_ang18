@@ -61,7 +61,6 @@ export class BusinessComponent implements OnInit {
   sourceOrReason: string = "";
   minAmount: number = 0;
   maxAmount: number = 0;
-  sourceOrReasonList: any;
   businessId: string = "";
 
   optionsMenu = [
@@ -108,7 +107,6 @@ export class BusinessComponent implements OnInit {
     this.loaderService.showLoader();
     this.businessColumnConfiguration();
     this.fromDate.setDate(this.toDate.getDate() - 30);
-    this.getSourceOrReasonList();
     this.LoadGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.BUSINESS) {
@@ -124,50 +122,55 @@ export class BusinessComponent implements OnInit {
   businessColumnConfiguration() {
     this.tableColumnConfig = [
       {
-        title: "Transaction Date",
-        field: "businessDate",
+        title: "Deal Date",
+        field: "dealDate",
         sorter: "alphanum",
         formatter: this.dateFormatter.bind(this),
       },
       {
-        title: "Customer Name",
-        field: "sourceOrReason",
+        title: "Client Name",
+        field: "clientName",
         sorter: "alphanum",
       },
       {
         title: "Product",
-        field: "description",
+        field: "productName",
+        sorter: "alphanum",
+      },
+      {
+        title: "Quantity",
+        field: "quantity",
+        sorter: "alphanum",
+      },
+      {
+        title: "unit",
+        field: "unit",
+        sorter: "alphanum",
+      },
+      {
+        title: "Delevered On",
+        field: "deliveryDate",
         sorter: "alphanum",
         formatter: this.dateFormatter.bind(this),
       },
       {
-        title: "Delevered On",
-        field: "modeOfTransaction",
+        title: "Payment Status",
+        field: "paymentStatus",
         sorter: "alphanum",
       },
       {
         title: "Deal Amount",
-        field: "debit",
+        field: "dealAmount",
         sorter: "alphanum",
       },
-      {
-        title: "Paid Amount",
-        field: "credit",
-        sorter: "alphanum",
-      },
-      {
-        title: "Paid through",
-        field: "credit",
-        sorter: "alphanum",
-      },
-      {
-        title: "Pending Amount",
-        field: "credit",
-        sorter: "alphanum",
-      },
+      // {
+      //   title: "Pending Amount",
+      //   field: "pendingAmount",
+      //   sorter: "alphanum",
+      // },
       {
         title: "Other Details",
-        field: "credit",
+        field: "description",
         sorter: "alphanum",
       },
       {
@@ -269,26 +272,6 @@ export class BusinessComponent implements OnInit {
     }
   }
 
-  getSourceOrReasonList() {
-    this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
-    this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-    this.businessService
-      .getSourceOrReasonList(
-        this.fromDate.toString(),
-        this.toDate.toString(),
-        this.sourceOrReason
-      )
-      .subscribe({
-        next: (res: any) => {
-          this.sourceOrReasonList = res;
-          this.loaderService.hideLoader();
-        },
-        error: (error: any) => {
-          console.log("error : ", error);
-          this.loaderService.hideLoader();
-        },
-      });
-  }
 
   applyFilters() {
     this.filteredTableData = this.tableData.filter((item: any) => {
@@ -331,7 +314,6 @@ export class BusinessComponent implements OnInit {
 
   onSourceOrReasonChange(valueToFilter: any) {
     this.sourceOrReason = valueToFilter.target.value.toLowerCase();
-    this.getSourceOrReasonList();
     this.applyFilters();
   }
 
@@ -341,14 +323,7 @@ export class BusinessComponent implements OnInit {
       ["SourceOrReason", "emailId"].includes(col.field ?? "")
     );
     this.businessService
-      .getBusinessList(
-        this.formattedFromDate,
-        this.formattedToDate,
-        "",
-        0,
-        0,
-        ""
-      )
+      .getBusinessList()
       .subscribe({
         next: (res: any) => {
           this.tableData = res;
@@ -412,14 +387,12 @@ export class BusinessComponent implements OnInit {
     this.fromDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
     console.log("fromDate : ", this.fromDate);
     this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
-    this.getSourceOrReasonList();
     this.LoadGrid();
   }
 
   filterGridByToDate(date: any) {
     this.toDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
     this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-    this.getSourceOrReasonList();
     this.LoadGrid();
   }
 

@@ -52,8 +52,8 @@ export class BusinessDetailsComponent {
     this.businessDetailsForm = this._details.group({
       businessId: 0,
       businessDate: ["", Validators.required],
-      customerName: ["", Validators.required],
-      businessPaymentStatus: ["Pending", Validators.required],
+      clientName: ["", Validators.required],
+      paymentStatus: ["Pending", Validators.required],
       dealAmount: ["", [Validators.required, Validators.min(0)]],
       productName: ["", Validators.required],
       quantity: ["", [Validators.required, Validators.min(0)]],
@@ -202,7 +202,6 @@ export class BusinessDetailsComponent {
     }
   }
   submitBusinessDetails() {
-    debugger
     this.logInvalidControls(this.businessDetailsForm);
     debugger
     this.loaderService.showLoader();
@@ -320,7 +319,7 @@ export class BusinessDetailsComponent {
   }
 
   updatePendingAmount(paymentEntry: FormGroup): void {
-    const dealAmount = this.businessDetailsForm.get('cash')?.value || 0;
+    const dealAmount = this.businessDetailsForm.get('dealAmount')?.value || 0;
     const paidAmount = paymentEntry.get('paidAmount')?.value || 0;
     const pendingAmount = dealAmount - paidAmount;
     paymentEntry.get('pendingAmount')?.setValue(pendingAmount, { emitEvent: false });

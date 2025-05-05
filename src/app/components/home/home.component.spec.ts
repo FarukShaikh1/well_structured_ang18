@@ -58,12 +58,12 @@ describe('HomeComponent', () => {
     expect(signalRService.getUnreadChatCountForNotification).toHaveBeenCalled();
   });
 
-  it('customerList(): should call router.navigate with CUSTOMER_LIST URL on customerList', () => {
+  it('clientList(): should call router.navigate with CLIENT_LIST URL on clientList', () => {
     // Act
-    component.customerList();
+    component.clientList();
 
     // Assert
-    expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.CUSTOMER_LIST]);
+    expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.CLIENT_LIST]);
   });
 
   it('userList(): should call router.navigate with USER_LIST URL on userList', () => {

@@ -2,12 +2,15 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable, of, Subject } from "rxjs";
 import { catchError, map } from "rxjs/operators";
-import { NavigationURLs } from "../../../utils/application-constants";
+import { ApplicationConstants, NavigationURLs } from "../../../utils/application-constants";
 import { LocalStorageService } from "../local-storage/local-storage.service";
 import { RoleService } from "../role/role.service";
 import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { API_URL } from "../../../utils/api-url";
 import { HttpClient, HttpParams } from "@angular/common/http";
+import { CellComponent } from "tabulator-tables";
+import { DatePipe } from "@angular/common";
+import { DateUtils } from "../../../utils/date-utils";
 
 @Injectable({
   providedIn: "root",
@@ -16,7 +19,9 @@ export class GlobalService {
   constructor(
     private http: HttpClient,
     private localStorageService: LocalStorageService,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private datePipe: DatePipe,
+    
   ) {}
 
   private reloadComponentSubject = new Subject<void>();
@@ -89,7 +94,7 @@ export class GlobalService {
       (m: any) => m.moduleName.toLowerCase() === module.toLowerCase()
     );
 
-    if (!mapping) {
+    if (!mapping) { 
       return false;
     }
 

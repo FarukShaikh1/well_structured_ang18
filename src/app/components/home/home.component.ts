@@ -73,8 +73,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.setDropDownColor();
     }
 
-    customerList() {
-        this.router.navigate([NavigationURLs.CUSTOMER_LIST]);
+    clientList() {
+        this.router.navigate([NavigationURLs.CLIENT_LIST]);
     }
 
     userList() {

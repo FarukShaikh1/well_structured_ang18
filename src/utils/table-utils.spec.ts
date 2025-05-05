@@ -1,7 +1,7 @@
 // import { TestBed } from '@angular/core/testing';
 // import { TableUtils } from './table-utils';
 // import { GlobalService } from '../../services/global/global.service';
-// import { CustomerMockDataService } from '../test-helpers/customer-mock-data.service';
+// import { ClientMockDataService } from '../test-helpers/client-mock-data.service';
 // import { ApplicationConstants } from './application-constants';
 
 // describe('TableUtils', () => {
@@ -18,7 +18,7 @@
 //             ]
 //         });
 //         tableUtils = TestBed.inject(TableUtils);
-//         tableUtils.dataToDisplayInGrid = CustomerMockDataService.getCustomerList();
+//         tableUtils.dataToDisplayInGrid = ClientMockDataService.getClientList();
 
 //         // Mocking the event with a target having classList
 //         mockEvent = {
@@ -36,7 +36,7 @@
 //         // Simulate no sort classes present
 //         mockEvent.currentTarget.classList.contains.and.returnValue(false);
 
-//         tableUtils.onSortClick(mockEvent, 'name', 'customers');
+//         tableUtils.onSortClick(mockEvent, 'name', 'clients');
 
 //         expect(mockEvent.currentTarget.classList.add).toHaveBeenCalledWith('bi-arrow-up');
 //         expect(mockEvent.currentTarget.classList.remove).not.toHaveBeenCalled();
@@ -48,7 +48,7 @@
 //         // Simulate the ascending sort class present
 //         mockEvent.currentTarget.classList.contains.and.callFake((className: string) => className === 'bi-arrow-up');
 
-//         tableUtils.onSortClick(mockEvent, 'name', 'customers');
+//         tableUtils.onSortClick(mockEvent, 'name', 'clients');
 
 //         expect(mockEvent.currentTarget.classList.remove).toHaveBeenCalledWith('bi-arrow-up');
 //         expect(mockEvent.currentTarget.classList.add).toHaveBeenCalledWith('bi-arrow-down');
@@ -60,17 +60,17 @@
 //         // Simulate the descending sort class present
 //         mockEvent.currentTarget.classList.contains.and.callFake((className: string) => className === 'bi-arrow-down');
 
-//         tableUtils.onSortClick(mockEvent, 'name', 'customers');
+//         tableUtils.onSortClick(mockEvent, 'name', 'clients');
 
 //         // Check that remove was called with both 'bi-arrow-up' and 'bi-arrow-down' together
 //         expect(mockEvent.currentTarget.classList.remove.calls.argsFor(0)).toEqual(['bi-arrow-up', 'bi-arrow-down']);
-//         expect(mockGlobalService.triggerApplyFilter).toHaveBeenCalledWith('customers');
+//         expect(mockGlobalService.triggerApplyFilter).toHaveBeenCalledWith('clients');
 //     });
 
 //     describe('previousPage():', () => {
 //         it('should decrement the selected page if it is greater than 1', () => {
 //             // Arrange
-//             const filteredDataSource = CustomerMockDataService.getCustomerList();
+//             const filteredDataSource = ClientMockDataService.getClientList();
 //             tableUtils.paginationStatus = { selectedPage: 2, itemsPerPage: 10, totalPages: 5 };
 
 //             spyOn(tableUtils, 'refreshTable');
@@ -85,7 +85,7 @@
 
 //         it('should not decrement the selected page if it is already 1', () => {
 //             // Arrange
-//             const filteredDataSource = CustomerMockDataService.getCustomerList();
+//             const filteredDataSource = ClientMockDataService.getClientList();
 //             tableUtils.paginationStatus = { selectedPage: 2, itemsPerPage: 10, totalPages: 5 };
 
 //             spyOn(tableUtils, 'refreshTable');
@@ -109,7 +109,7 @@
 
 //         it('should update the selected page and refresh the table', () => {
 //             const selectedPage = 3;
-//             const filteredDataSource = CustomerMockDataService.getCustomerList();
+//             const filteredDataSource = ClientMockDataService.getClientList();
 
 //             // Act
 //             tableUtils.pageChange(selectedPage, filteredDataSource);
@@ -122,7 +122,7 @@
 //         it('should update the selected page even if it is the same as the current page', () => {
 //             // Arrange
 //             const selectedPage = tableUtils.paginationStatus.selectedPage;
-//             const filteredDataSource = CustomerMockDataService.getCustomerList();
+//             const filteredDataSource = ClientMockDataService.getClientList();
 
 //             // Act
 //             tableUtils.pageChange(selectedPage, filteredDataSource);
@@ -135,7 +135,7 @@
 //         it('should update the selected page if it is the last page', () => {
 //             // Arrange
 //             const selectedPage = tableUtils.paginationStatus.totalPages;
-//             const filteredDataSource = CustomerMockDataService.getCustomerList();
+//             const filteredDataSource = ClientMockDataService.getClientList();
 
 //             // Act
 //             tableUtils.pageChange(selectedPage, filteredDataSource);
@@ -155,7 +155,7 @@
 
 //         it('should increment the selected page by 1', () => {
 //             // Arrange
-//             const filteredDataSource = CustomerMockDataService.getCustomerList();
+//             const filteredDataSource = ClientMockDataService.getClientList();
 //             tableUtils.paginationStatus = { selectedPage: 1, itemsPerPage: 10, totalPages: 5 };
 
 //             spyOn(tableUtils, 'refreshTable');
@@ -170,7 +170,7 @@
 
 //         it('should handle the case when selectedPage is at the last page', () => {
 //             // Arrange
-//             const filteredDataSource = CustomerMockDataService.getCustomerList();
+//             const filteredDataSource = ClientMockDataService.getClientList();
 //             tableUtils.paginationStatus = { selectedPage: 5, itemsPerPage: 10, totalPages: 5 };
 
 //             spyOn(tableUtils, 'refreshTable');

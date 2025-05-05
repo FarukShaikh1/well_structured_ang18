@@ -81,7 +81,7 @@ describe('GlobalService', () => {
 
   it('should return false for inaccessible module/action', () => {
     localStorageService.getRoleModuleMapping.and.returnValue([]);
-    const module = 'Customer';
+    const module = 'Client';
     const action = 'Add';
 
     expect(service.isAccessible(module, action)).toBeFalse();
@@ -125,7 +125,7 @@ describe('GlobalService', () => {
   });
 
   it('should emit module name when triggerGridReload is called', (done: DoneFn) => {
-    const moduleName = 'Customers';
+    const moduleName = 'Clients';
     
     service.reloadGrid$.subscribe((emittedModuleName) => {
       expect(emittedModuleName).toBe(moduleName);
@@ -136,7 +136,7 @@ describe('GlobalService', () => {
   });
 
   it('should emit module name when triggerApplyFilter is called', (done: DoneFn) => {
-    const moduleName = 'Customers';
+    const moduleName = 'Clients';
     
     service.refreshList$.subscribe((emittedModuleName) => {
       expect(emittedModuleName).toBe(moduleName);

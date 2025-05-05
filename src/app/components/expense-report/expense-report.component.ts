@@ -152,14 +152,14 @@ export class ExpenseReportComponent implements OnInit {
         field: "firstDate",
         sorter: "alphanum",
         width: 100,
-        formatter: this.uploadedDateFormatter.bind(this),
+        formatter: this.dateFormatter.bind(this),
       },
       {
         title: "LastDate",
         field: "lastDate",
         sorter: "alphanum",
         width: 100,
-        formatter: this.uploadedDateFormatter.bind(this),
+        formatter: this.dateFormatter.bind(this),
       },
       {
         title: "Source/Reason",
@@ -228,7 +228,7 @@ export class ExpenseReportComponent implements OnInit {
     });
   }
 
-  uploadedDateFormatter(cell: CellComponent) {
+  dateFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
     const projectData = cell.getRow().getData();
     const dateColumn = projectData[columnName];
