@@ -12,9 +12,9 @@
             <p>businessId</p>
             <input formControlName="businessId" />
           </div>
-          <div class="row mb-4">
+          <div class="row mb-1">
             <div class="col-3">
-              <label>Business Date</label>
+              <label>Deal Date</label>
               <input id="dealDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
                 placeholder="DD/MM/YYYY" appearance="outline" formControlName="dealDate" [ngClass]="{
                     'error-border':
@@ -80,7 +80,7 @@
               </div>
             </div>
           </div>
-          <div class="row mb-4">
+          <div class="row mb-1">
             <div class="col-3">
               <label>Product Name</label>
               <input formControlName="productName" class="form-control form-control-lg text-dark bg-transparent"
@@ -147,54 +147,10 @@
               </div>
             </div>
           </div>
-          <!-- <div class="row">
-            <div class="col-3">
-              <label>Payment date</label>
-              <input id="dealDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                placeholder="DD/MM/YYYY" appearance="outline" formControlName="dealDate" [ngClass]="{
-                    'error-border':
-                      businessDetailsForm.get('dealDate')?.touched &&
-                      businessDetailsForm.get('dealDate')?.invalid
-                  }" />
-              @if(businessDetailsForm.get('dealDate')?.touched &&
-              businessDetailsForm.get('dealDate')?.invalid){
-              <div class="text-danger">
-                @if(businessDetailsForm.get('dealDate')?.errors?.['required']){
-                Date is required. }
-                @else if(businessDetailsForm.get('dealDate')?.errors?.['pattern']){
-                Invalid Date. }
-              </div>
-              }
-            </div>
-            <div class="col">
-              <label>Paid Amount</label>
-              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                class="form-control form-control-lg text-dark bg-transparent" />
-            </div>
-            <div class="col">
-              <label>Paid By</label>
-              <input formControlName="cash" class="form-control form-control-lg text-dark bg-transparent" />
-            </div>
-            <div class="col">
-              <label>Pending Amount</label>
-              <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                class="form-control form-control-lg text-dark bg-transparent" />
-            </div>
-            <div class="col-1">
-              <label> &nbsp;</label>
-              <button class="btn btn-primary rounded-button" (click)="addBusinessPayment()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                  <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-              </button>
-
-            </div>
-          </div> -->
-          <div class="row mb-4">
+          <div class="row mb-1">
             <div class="col-12">
               <div formArrayName="businessPayments">
-                <!-- @for(payment of businessPaymentControls; track $index; let i = $index) {
+                @for(payment of businessPaymentControls; track $index; let i = $index) {
                 <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
                   <div class="col-3">
                     <label>Payment Date</label>
@@ -213,18 +169,26 @@
                     <label>Pending Amount</label>
                     <input type="text" class="form-control" formControlName="pendingAmount" readonly />
                   </div>
-                  <div class="col-1">
-                    <button type="button" class="btn btn-danger" (click)="removeBusinessPayment(i)">
+                  <div class="col-2 d-flex">
+                    <button class="btn btn-primary rounded-button" (click)="addBusinessPayment()">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" />
+                        <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" />
+                      </svg>
+                    </button>
+                    <button type="button" class="btn btn-danger rounded-button" (click)="removeBusinessPayment(i)">
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
                 </div>
-                } -->
+                }
               </div>
             </div>
           </div>
 
-          <div class="row mb-4">
+          <div class="row mb-1">
             <div class="col-12">
               <label>Business Description</label>
               <textarea formControlName="description" class="form-control form-control-lg text-dark bg-transparent"
@@ -233,13 +197,14 @@
           </div>
         </div>
 
-        <div class="modal-header mb-4">
+        <div class="modal-header mt-4">
           <h2 class="modal-title">Broker</h2>
           <button class="btn-close" (click)="togleBrokerData()"></button>
         </div>
-        <div class="modal-body" id="broker-form">
+        <div  class="modal-body" id="broker-form">
+        <div formGroupName="brokerRequest">
 
-          <div class="row mb-4">
+          <div class="row mb-1">
             <div style="display: none">
               <p>brokerId</p>
               <input formControlName="brokerId" />
@@ -268,7 +233,7 @@
             <div class="col-3">
               <label>Payment Status</label>
               <input type="text" class="form-control form-control-lg text-dark bg-transparent"
-                formControlName="brokerPaymentStatus"[ngClass]="{
+                formControlName="brokerPaymentStatus" [ngClass]="{
                   'error-border': businessDetailsForm.get('brokerPaymentStatus')?.touched &&
                     businessDetailsForm.get('brokerPaymentStatus')?.invalid
                 }" />
@@ -282,84 +247,7 @@
               </div>
             </div>
           </div>
-          <!-- <div class="row">
-            <div class="col-3">
-              <label>Payment date</label>
-              <input id="dealDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                placeholder="DD/MM/YYYY" appearance="outline" formControlName="dealDate" [ngClass]="{
-                    'error-border':
-                      businessDetailsForm.get('dealDate')?.touched &&
-                      businessDetailsForm.get('dealDate')?.invalid
-                  }" />
-              @if(businessDetailsForm.get('dealDate')?.touched &&
-              businessDetailsForm.get('dealDate')?.invalid){
-              <div class="text-danger">
-                @if(businessDetailsForm.get('dealDate')?.errors?.['required']){
-                Date is required. }
-                @else if(businessDetailsForm.get('dealDate')?.errors?.['pattern']){
-                Invalid Date. }
-              </div>
-              }
-            </div>
-            <div class="col">
-              <label>Paid Amount</label>
-              <input formControlName="paidAmount" (keydown)="globalService.validateAmount($event)"
-                class="form-control form-control-lg text-dark bg-transparent" />
-            </div>
-            <div class="col">
-              <label>Paid By</label>
-              <input formControlName="paidBy" class="form-control form-control-lg text-dark bg-transparent" />
-            </div>
-            <div class="col">
-              <label>Pending Amount</label>
-              <input formControlName="pendingAmount" (keydown)="globalService.validateAmount($event)"
-                class="form-control form-control-lg text-dark bg-transparent" />
-            </div>
-            <div class="col-1">
-              <label> &nbsp;</label>
-              <button class="btn btn-primary rounded-button" (click)="addBrokerPayment()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                  <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-              </button>
-
-            </div>
-          </div> -->
-          <div class="row mb-4">
-            <div class="col-12">
-              <div formArrayName="brokerPayments">
-                <!-- @for(payment of brokerPaymentControls; track $index; let i = $index) {
-                <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
-                  <div class="col-3">
-                    <label>Payment Date</label>
-                    <input type="date" class="form-control" formControlName="paymentDate" />
-                  </div>
-                  <div class="col">
-                    <label>Paid Amount</label>
-                    <input type="text" class="form-control" formControlName="paidAmount"
-                      (keydown)="globalService.validateAmount($event)" />
-                  </div>
-                  <div class="col">
-                    <label>Paid By</label>
-                    <input type="text" class="form-control" formControlName="paidBy" />
-                  </div>
-                  <div class="col">
-                    <label>Pending Amount</label>
-                    <input type="text" class="form-control" formControlName="pendingAmount" readonly />
-                  </div>
-                  <div class="col-1">
-                    <button type="button" class="btn btn-danger" (click)="removeBrokerPayment(i)">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </div>
-                </div>
-                } -->
-              </div>
-            </div>
-          </div>
-
-          <div class="row mb-4">
+          <div class="row mb-1">
             <div class="col-12">
               <label>Broker Description</label>
               <textarea formControlName="brokerDescription"
@@ -368,13 +256,56 @@
             </div>
           </div>
         </div>
+        <div class="row mb-1">
+          <div class="col-12">
+            <div formArrayName="brokerPayments">
+              @for(payment of brokerPaymentControls; track $index; let i = $index) {
+              <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
+                <div class="col-3">
+                  <label>Payment Date</label>
+                  <input type="date" class="form-control" formControlName="paymentDate" />
+                </div>
+                <div class="col">
+                  <label>Paid Amount</label>
+                  <input type="text" class="form-control" formControlName="paidAmount"
+                    (keydown)="globalService.validateAmount($event)" />
+                </div>
+                <div class="col">
+                  <label>Paid By</label>
+                  <input type="text" class="form-control" formControlName="paidBy" />
+                </div>
+                <div class="col">
+                  <label>Pending Amount</label>
+                  <input type="text" class="form-control" formControlName="pendingAmount" readonly />
+                </div>
+                <div class="col-2 d-flex">
+                  <button class="btn btn-primary rounded-button" (click)="addBrokerPayment()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                      <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                    </svg>
+                  </button>
 
-        <div class="modal-header mt-4 mb-4">
+                  <button type="button" class="btn btn-danger rounded-button" (click)="removeBrokerPayment(i)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        </div>
+
+        <div class="modal-header mt-4">
           <h2 class="modal-title">Driver</h2>
           <button class="btn-close" (click)="togleDriverData()"></button>
         </div>
         <div class="modal-body" id="driver-form">
-          <div class="row mb-4">
+        <div formGroupName="driverRequest">
+          <div class="row mb-1">
             <div style="display: none">
               <p>driverId</p>
               <input formControlName="driverId">
@@ -403,7 +334,7 @@
             <div class="col-3">
               <label>Payment Status</label>
               <input type="text" class="form-control form-control-lg text-dark bg-transparent"
-                formControlName="driverPaymentStatus"[ngClass]="{
+                formControlName="driverPaymentStatus" [ngClass]="{
                   'error-border': businessDetailsForm.get('driverPaymentStatus')?.touched &&
                     businessDetailsForm.get('driverPaymentStatus')?.invalid
                 }" />
@@ -417,84 +348,7 @@
               </div>
             </div>
           </div>
-          <!-- <div class="row">
-            <div class="col-3">
-              <label>Payment date</label>
-              <input id="dealDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                placeholder="DD/MM/YYYY" appearance="outline" formControlName="dealDate" [ngClass]="{
-                    'error-border':
-                      businessDetailsForm.get('dealDate')?.touched &&
-                      businessDetailsForm.get('dealDate')?.invalid
-                  }" />
-              @if(businessDetailsForm.get('dealDate')?.touched &&
-              businessDetailsForm.get('dealDate')?.invalid){
-              <div class="text-danger">
-                @if(businessDetailsForm.get('dealDate')?.errors?.['required']){
-                Date is required. }
-                @else if(businessDetailsForm.get('dealDate')?.errors?.['pattern']){
-                Invalid Date. }
-              </div>
-              }
-            </div>
-            <div class="col">
-              <label>Paid Amount</label>
-              <input formControlName="paidAmount" (keydown)="globalService.validateAmount($event)"
-                class="form-control form-control-lg text-dark bg-transparent" />
-            </div>
-            <div class="col">
-              <label>Paid By</label>
-              <input formControlName="paidBy" class="form-control form-control-lg text-dark bg-transparent" />
-            </div>
-            <div class="col">
-              <label>Pending Amount</label>
-              <input formControlName="pendingAmount" (keydown)="globalService.validateAmount($event)"
-                class="form-control form-control-lg text-dark bg-transparent" />
-            </div>
-            <div class="col-1">
-              <label> &nbsp;</label>
-              <button class="btn btn-primary rounded-button" (click)="addDriverPayment()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                  <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-              </button>
-
-            </div>
-          </div> -->
-          <div class="row mb-4">
-            <div class="col-12">
-              <div formArrayName="driverPayments">
-                <!-- @for(payment of driverPaymentControls; track $index; let i = $index) {
-                <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
-                  <div class="col-3">
-                    <label>Payment Date</label>
-                    <input type="date" class="form-control" formControlName="paymentDate" />
-                  </div>
-                  <div class="col">
-                    <label>Paid Amount</label>
-                    <input type="text" class="form-control" formControlName="paidAmount"
-                      (keydown)="globalService.validateAmount($event)" />
-                  </div>
-                  <div class="col">
-                    <label>Paid By</label>
-                    <input type="text" class="form-control" formControlName="paidBy" />
-                  </div>
-                  <div class="col">
-                    <label>Pending Amount</label>
-                    <input type="text" class="form-control" formControlName="pendingAmount" readonly />
-                  </div>
-                  <div class="col-1">
-                    <button type="button" class="btn btn-danger" (click)="removeDriverPayment(i)">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </div>
-                </div>
-                } -->
-              </div>
-            </div>
-          </div>
-
-          <div class="row mb-4">
+          <div class="row mb-1">
             <div class="col-12">
               <label>Driver Description</label>
               <textarea formControlName="driverDescription"
@@ -502,25 +356,68 @@
                 placeholder="Enter driver description"></textarea>
             </div>
           </div>
-          <div class="row mb-4">
-            <div class="col-12 col-sm-12">
-              <div class="action d-flex justify-content-end">
-                <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()"
-                  data-bs-dismiss="modal">
-                  Cancel
-                </button>
-                <button class="btn btn-danger rounded-button" type="reset">
-                  Reset
-                </button>
-                <!-- <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()" [disabled]="businessDetailsForm.invalid"> -->
-                  <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()" >
-                  Save
-                </button>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div formArrayName="driverPayments">
+              @for(payment of driverPaymentControls; track $index; let i = $index) {
+              <div [formGroupName]="i" class="payment-entry pt-3 pb-3 border rounded row">
+                <div class="col-3">
+                  <label>Payment Date</label>
+                  <input type="date" class="form-control" formControlName="paymentDate" />
+                </div>
+                <div class="col">
+                  <label>Paid Amount</label>
+                  <input type="text" class="form-control" formControlName="paidAmount"
+                    (keydown)="globalService.validateAmount($event)" />
+                </div>
+                <div class="col">
+                  <label>Paid By</label>
+                  <input type="text" class="form-control" formControlName="paidBy" />
+                </div>
+                <div class="col">
+                  <label>Pending Amount</label>
+                  <input type="text" class="form-control" formControlName="pendingAmount" readonly />
+                </div>
+                <div class="col-2 d-flex">
+                  <button class="btn btn-primary rounded-button" (click)="addDriverPayment()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                      <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                    </svg>
+                  </button>
+                  <button type="button" class="btn btn-danger rounded-button" (click)="removeDriverPayment(i)">
+                    <i class="bi bi-trash" ></i>
+                  </button>
+
+                </div>
               </div>
+              }
             </div>
           </div>
-          <!-- {{logInvalidControls(businessDetailsForm)}} -->
         </div>
+        </div>
+        <div class="row mb-1">
+          <div class="col-12 col-sm-12">
+            <div class="action d-flex justify-content-end">
+              <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()"
+                data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button class="btn btn-danger rounded-button" type="reset">
+                Reset
+              </button>
+              <!-- <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()" [disabled]="businessDetailsForm.invalid"> -->
+              <button class="btn btn-primary rounded-button" type="button" (click)="submitBusinessDetails()">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- {{logInvalidControls(businessDetailsForm)}} -->
+
       </form>
     </div>
   </div>

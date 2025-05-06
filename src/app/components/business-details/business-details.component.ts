@@ -40,7 +40,13 @@ export class BusinessDetailsComponent {
   brokerPayments: FormArray;
   driverPayments: FormArray;
   commonSuggestionList: any;
+  get brokerRequestGroup(): FormGroup {
+    return this.businessDetailsForm.get('brokerRequest') as FormGroup;
+  }
 
+  get driverRequestGroup(): FormGroup {
+    return this.businessDetailsForm.get('driverRequest') as FormGroup;
+  }
   constructor(
     private _details: FormBuilder,
     private businessService: BusinessService,
@@ -60,30 +66,38 @@ export class BusinessDetailsComponent {
       unit: ["", Validators.required],
       deliveryDate: ["", Validators.required],
       description: "",
-      
+
       // Business Payments
       businessPayments: this._details.array([]),
-      
+
       // Broker Section
-      brokerId: "",
-      brokerName: "",
-      brokerPaymentStatus: "",
-      brokerPaymentAmount: ["", [Validators.min(0)]],
+      brokerRequest: this._details.group({
+        brokerId: [""],
+        brokerName: [""],
+        brokerPaymentStatus: [""],
+        brokerPaymentAmount: ["", [Validators.min(0)]],
+        brokerDescription: [""],
+      }),
       brokerPayments: this._details.array([]),
-      brokerDescription: "",
-      
+
       // Driver Section
-      driverId: "",
-      driverName: "",
-      driverPaymentStatus: "",
-      driverPaymentAmount: ["", [Validators.min(0)]],
+      driverRequest: this._details.group({
+        driverId: [""],
+        driverName: [""],
+        driverPaymentStatus: [""],
+        driverPaymentAmount: [0, [Validators.min(0)]],
+        driverDescription: [""]
+      }),
       driverPayments: this._details.array([]),
-      driverDescription: ""
     });
 
     this.businessPayments = this.businessDetailsForm.get('businessPayments') as FormArray;
     this.brokerPayments = this.businessDetailsForm.get('brokerPayments') as FormArray;
     this.driverPayments = this.businessDetailsForm.get('driverPayments') as FormArray;
+
+    this.addBusinessPayment();
+    this.addBrokerPayment();
+    this.addDriverPayment();
   }
 
   openDetailsPopup(businessId: string) {
@@ -140,7 +154,7 @@ export class BusinessDetailsComponent {
     this.businessService.getBusinessDetails(businessId).subscribe({
       next: (res: any) => {
         console.log("res : ", res);
-        this.patchValues(res);
+        this.patchBusinessForm(res);
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -150,51 +164,92 @@ export class BusinessDetailsComponent {
     });
   }
 
-  patchValues(res: any) {
-    debugger
-    this.businessDetailsForm.controls["businessId"].patchValue(res["businessId"]);
-    this.businessDetailsForm.controls["dealDate"].patchValue(
-      this.datepipe.transform(
-        res["dealDate"],
-        ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT
-      )
-    );
-    this.businessDetailsForm.controls["clientName"].patchValue(res["clientName"]);
-    this.businessDetailsForm.controls["dealAmount"].patchValue(res["dealAmount"]);
-    this.businessDetailsForm.controls["paymentStatus"].patchValue(res["paymentStatus"]);
-    this.businessDetailsForm.controls["productName"].patchValue(res["productName"]);
-    this.businessDetailsForm.controls["quantity"].patchValue(res["quantity"]);
-    this.businessDetailsForm.controls["unit"].patchValue(res["unit"]);
-    this.businessDetailsForm.controls["description"].patchValue(res["description"]);
-    this.businessDetailsForm.controls["deliveryDate"].patchValue(
-      this.datepipe.transform(
-        res["deliveryDate"],
-        ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT
-      )
-    );
-    this.businessDetailsForm.controls["driverId"].patchValue(res["driverId"]);
-    this.businessDetailsForm.controls["driverName"].patchValue(res["driverName"]);
-    this.businessDetailsForm.controls["driverPaymentAmount"].patchValue(res["driverPaymentAmount"]);
-    this.businessDetailsForm.controls["paymentStatus"].patchValue(res["paymentStatus"]);
-    this.businessDetailsForm.controls["driverDescription"].patchValue(res["driverDescription"]);
-
-    this.businessDetailsForm.controls["brokerId"].patchValue(res["brokerId"]);
-    this.businessDetailsForm.controls["brokerName"].patchValue(res["brokerName"]);
-    this.businessDetailsForm.controls["brokerPaymentAmount"].patchValue(res["brokerPaymentAmount"]);
-    this.businessDetailsForm.controls["paymentStatus"].patchValue(res["paymentStatus"]);
-    this.businessDetailsForm.controls["brokerDescription"].patchValue(res["brokerDescription"]);
-
-    // Patch payment arrays
-    if (res.businessPayments) {
-      this.patchPaymentArray(this.businessPayments, res.businessPayments);
-    }
-    if (res.brokerPayments) {
-      this.patchPaymentArray(this.brokerPayments, res.brokerPayments);
-    }
-    if (res.driverPayments) {
-      this.patchPaymentArray(this.driverPayments, res.driverPayments);
-    }
+  patchBusinessForm(business: any) {
+    // Patch top-level business info
+    this.businessDetailsForm.patchValue({
+      businessId: business.businessId,
+      dealDate: business.dealDate,
+      clientName: business.clientName,
+      paymentStatus: business.paymentStatus,
+      dealAmount: business.dealAmount,
+      productName: business.productName,
+      quantity: business.quantity,
+      unit: business.unit,
+      deliveryDate: business.deliveryDate,
+      description: business.description,
+  
+      // Broker section
+      brokerRequest: {
+        brokerId: business.brokerResponse?.brokerId || '',
+        brokerName: business.brokerResponse?.brokerName || '',
+        brokerPaymentStatus: business.brokerResponse?.brokerPaymentStatus || '',
+        brokerPaymentAmount: business.brokerResponse?.brokerPaymentAmount || 0,
+        brokerDescription: business.brokerResponse?.brokerDescription || '',
+      },
+  
+      // Driver section
+      driverRequest: {
+        driverId: business.driverResponse?.driverId || '',
+        driverName: business.driverResponse?.driverName || '',
+        driverPaymentStatus: business.driverResponse?.driverPaymentStatus || '',
+        driverPaymentAmount: business.driverResponse?.driverPaymentAmount || 0,
+        driverDescription: business.driverResponse?.driverDescription || '',
+      }
+    });
+  
+    // Clear and patch Business Payments
+    const businessPaymentsFGs = business.businessPaymentResponse?.map((p: any) => this.createPaymentGroup(p)) || [];
+    this.businessPayments.clear();
+    businessPaymentsFGs.forEach((fg: any) => this.businessPayments.push(fg));
+  
+    // Clear and patch Broker Payments
+    const brokerPaymentsFGs = business.brokerPaymentResponse?.map((p: any) => this.createPaymentGroup(p)) || [];
+    this.brokerPayments.clear();
+    brokerPaymentsFGs.forEach((fg: any) => this.brokerPayments.push(fg));
+  
+    // Clear and patch Driver Payments
+    const driverPaymentsFGs = business.driverPaymentResponse?.map((p: any) => this.createPaymentGroup(p)) || [];
+    this.driverPayments.clear();
+    driverPaymentsFGs.forEach((fg: any) => this.driverPayments.push(fg));
   }
+  
+  // Create Payment FormGroup
+  createPaymentGroup(data?: any): FormGroup {
+    return this._details.group({
+      paymentDate: [data?.paymentDate || ''],
+      paidAmount: [data?.paidAmount || ''],
+      paidBy: [data?.paymentMode || ''],  // Assuming 'paidBy' in UI maps to 'paymentMode' from backend
+      pendingAmount: [data?.pendingAmount || '']
+    });
+  }
+  
+  // patchValues(res: any) {
+  //   this.businessDetailsForm.patchValue({
+  //     businessId: res.businessId,
+  //     dealDate: this.datepipe.transform(res.dealDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
+  //     clientName: res.clientName,
+  //     dealAmount: res.dealAmount,
+  //     paymentStatus: res.paymentStatus,
+  //     productName: res.productName,
+  //     quantity: res.quantity,
+  //     unit: res.unit,
+  //     description: res.description,
+  //     deliveryDate: this.datepipe.transform(res.deliveryDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
+  //   });
+
+  //   this.driverRequestGroup.patchValue(res.driverRequest || {});
+  //   this.brokerRequestGroup.patchValue(res.brokerRequest || {});
+
+  //   if (res.businessPayments) {
+  //     this.patchPaymentArray(this.businessPayments, res.businessPayments);
+  //   }
+  //   if (res.brokerPayments) {
+  //     this.patchPaymentArray(this.brokerPayments, res.brokerPayments);
+  //   }
+  //   if (res.driverPayments) {
+  //     this.patchPaymentArray(this.driverPayments, res.driverPayments);
+  //   }
+  // }
 
   patchPaymentArray(formArray: FormArray, payments: any[]): void {
     formArray.clear();
@@ -229,47 +284,31 @@ export class BusinessDetailsComponent {
   }
   submitBusinessDetails() {
     this.logInvalidControls(this.businessDetailsForm);
-    debugger
     this.loaderService.showLoader();
-      if (!this.businessDetailsForm.valid) {
-        this.toaster.showMessage("Please fill valid details.", "error");
-        this.loaderService.hideLoader();
-        return;
-      }
-      try {
-        const formValue = this.businessDetailsForm.getRawValue();
-        
-        // Format dates
-        formValue.dealDate = this.formatDate(formValue.dealDate);
-        
-        // Format payment dates
-        this.formatPaymentDates(formValue.businessPayments);
-        this.formatPaymentDates(formValue.brokerPayments);
-        this.formatPaymentDates(formValue.driverPayments);
-
-        if (formValue.businessId > 0) {
-          this.businessService.updateBusiness(formValue).subscribe({
-            next: (result: any) => {
-              this.handleSuccessResponse(result, "Record Updated Successfully.");
-            },
-            error: (error: any) => {
-              this.handleErrorResponse(error);
-            }
-          });
-        } else {
-          this.businessService.addBusiness(formValue).subscribe({
-            next: (result: any) => {
-              this.handleSuccessResponse(result, "Record Added Successfully.");
-            },
-            error: (error: any) => {
-              this.handleErrorResponse(error);
-            }
-          });
-        }
-      } catch (error) {
-        this.handleErrorResponse(error);
-      }
+    if (!this.businessDetailsForm.valid) {
+      this.toaster.showMessage("Please fill valid details.", "error");
       this.loaderService.hideLoader();
+      return;
+    }
+    try {
+      const formValue = this.businessDetailsForm.getRawValue();
+      formValue.dealDate = this.formatDate(formValue.dealDate);
+      this.formatPaymentDates(formValue.businessPayments);
+      this.formatPaymentDates(formValue.brokerPayments);
+      this.formatPaymentDates(formValue.driverPayments);
+
+      const submitCall = formValue.businessId > 0
+        ? this.businessService.updateBusiness(formValue)
+        : this.businessService.addBusiness(formValue);
+
+      submitCall.subscribe({
+        next: (result: any) => this.handleSuccessResponse(result, formValue.businessId > 0 ? "Record Updated Successfully." : "Record Added Successfully."),
+        error: (error: any) => this.handleErrorResponse(error)
+      });
+    } catch (error) {
+      this.handleErrorResponse(error);
+    }
+    this.loaderService.hideLoader();
   }
 
   private formatDate(date: string): string {
