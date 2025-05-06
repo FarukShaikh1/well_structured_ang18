@@ -1,16 +1,13 @@
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable, of, Subject } from "rxjs";
 import { catchError, map } from "rxjs/operators";
-import { ApplicationConstants, NavigationURLs } from "../../../utils/application-constants";
+import { API_URL } from "../../../utils/api-url";
+import { NavigationURLs } from "../../../utils/application-constants";
 import { LocalStorageService } from "../local-storage/local-storage.service";
 import { RoleService } from "../role/role.service";
-import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
-import { API_URL } from "../../../utils/api-url";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { CellComponent } from "tabulator-tables";
-import { DatePipe } from "@angular/common";
-import { DateUtils } from "../../../utils/date-utils";
 
 @Injectable({
   providedIn: "root",
@@ -20,7 +17,6 @@ export class GlobalService {
     private http: HttpClient,
     private localStorageService: LocalStorageService,
     private roleService: RoleService,
-    private datePipe: DatePipe,
     
   ) {}
 

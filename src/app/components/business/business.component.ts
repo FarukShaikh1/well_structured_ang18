@@ -297,7 +297,7 @@ export class BusinessComponent implements OnInit {
       return new Date(); // Return null if no data is available
     }
     this.loaderService.hideLoader();
-    return this.filteredTableData[0]["businessDate"];
+    return this.filteredTableData[0]["dealDate"];
   }
 
   // hideBusiness(businessId: number) {
@@ -340,9 +340,9 @@ export class BusinessComponent implements OnInit {
       });
   }
 
-  businessDetails(data: any) {
+  businessDetails(businessId: any) {
     this.loaderService.showLoader();
-    this.businessDetailsComponent.openDetailsPopup(data);
+    this.businessDetailsComponent.openDetailsPopup(businessId);
   }
 
   deleteBusiness(businessId: string) {

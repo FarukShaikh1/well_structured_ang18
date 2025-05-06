@@ -51,7 +51,7 @@ export class BusinessDetailsComponent {
   ) {
     this.businessDetailsForm = this._details.group({
       businessId: 0,
-      businessDate: ["", Validators.required],
+      dealDate: ["", Validators.required],
       clientName: ["", Validators.required],
       paymentStatus: ["Pending", Validators.required],
       dealAmount: ["", [Validators.required, Validators.min(0)]],
@@ -65,16 +65,18 @@ export class BusinessDetailsComponent {
       businessPayments: this._details.array([]),
       
       // Broker Section
+      brokerId: "",
       brokerName: "",
       brokerPaymentStatus: "",
-      brokerAmount: ["", [Validators.min(0)]],
+      brokerPaymentAmount: ["", [Validators.min(0)]],
       brokerPayments: this._details.array([]),
       brokerDescription: "",
       
       // Driver Section
+      driverId: "",
       driverName: "",
       driverPaymentStatus: "",
-      driverAmount: ["", [Validators.min(0)]],
+      driverPaymentAmount: ["", [Validators.min(0)]],
       driverPayments: this._details.array([]),
       driverDescription: ""
     });
@@ -94,7 +96,7 @@ export class BusinessDetailsComponent {
     if (businessId) {
       this.getBusinessDetails(businessId);
     } else {
-      this.businessDetailsForm.controls["businessDate"].patchValue(
+      this.businessDetailsForm.controls["dealDate"].patchValue(
         this.datepipe.transform(
           this.lastBusinessDate,
           ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT
@@ -114,7 +116,7 @@ export class BusinessDetailsComponent {
   }
 
   ngAfterViewInit() {
-    flatpickr("#businessDate", {
+    flatpickr("#dealDate", {
       dateFormat: "d/m/Y",
       defaultDate: new Date(),
     });
@@ -149,15 +151,38 @@ export class BusinessDetailsComponent {
   }
 
   patchValues(res: any) {
-    this.businessDetailsForm.controls["businessId"].patchValue(
-      res["businessId"]
-    );
-    this.businessDetailsForm.controls["businessDate"].patchValue(
+    debugger
+    this.businessDetailsForm.controls["businessId"].patchValue(res["businessId"]);
+    this.businessDetailsForm.controls["dealDate"].patchValue(
       this.datepipe.transform(
-        res["businessDate"],
+        res["dealDate"],
         ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT
       )
     );
+    this.businessDetailsForm.controls["clientName"].patchValue(res["clientName"]);
+    this.businessDetailsForm.controls["dealAmount"].patchValue(res["dealAmount"]);
+    this.businessDetailsForm.controls["paymentStatus"].patchValue(res["paymentStatus"]);
+    this.businessDetailsForm.controls["productName"].patchValue(res["productName"]);
+    this.businessDetailsForm.controls["quantity"].patchValue(res["quantity"]);
+    this.businessDetailsForm.controls["unit"].patchValue(res["unit"]);
+    this.businessDetailsForm.controls["description"].patchValue(res["description"]);
+    this.businessDetailsForm.controls["deliveryDate"].patchValue(
+      this.datepipe.transform(
+        res["deliveryDate"],
+        ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT
+      )
+    );
+    this.businessDetailsForm.controls["driverId"].patchValue(res["driverId"]);
+    this.businessDetailsForm.controls["driverName"].patchValue(res["driverName"]);
+    this.businessDetailsForm.controls["driverPaymentAmount"].patchValue(res["driverPaymentAmount"]);
+    this.businessDetailsForm.controls["paymentStatus"].patchValue(res["paymentStatus"]);
+    this.businessDetailsForm.controls["driverDescription"].patchValue(res["driverDescription"]);
+
+    this.businessDetailsForm.controls["brokerId"].patchValue(res["brokerId"]);
+    this.businessDetailsForm.controls["brokerName"].patchValue(res["brokerName"]);
+    this.businessDetailsForm.controls["brokerPaymentAmount"].patchValue(res["brokerPaymentAmount"]);
+    this.businessDetailsForm.controls["paymentStatus"].patchValue(res["paymentStatus"]);
+    this.businessDetailsForm.controls["brokerDescription"].patchValue(res["brokerDescription"]);
 
     // Patch payment arrays
     if (res.businessPayments) {
@@ -198,6 +223,7 @@ export class BusinessDetailsComponent {
     if (invalid.length === 0) {
       console.log('All controls are valid!');
     } else {
+      alert('Check Consol Logs')
       console.log('Invalid controls:', invalid);
     }
   }
@@ -214,7 +240,7 @@ export class BusinessDetailsComponent {
         const formValue = this.businessDetailsForm.getRawValue();
         
         // Format dates
-        formValue.businessDate = this.formatDate(formValue.businessDate);
+        formValue.dealDate = this.formatDate(formValue.dealDate);
         
         // Format payment dates
         this.formatPaymentDates(formValue.businessPayments);

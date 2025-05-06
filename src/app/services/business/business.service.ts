@@ -91,7 +91,7 @@ export class BusinessService {
 
   getBusinessSuggestionList(): Observable<any> {
     const params = new HttpParams().set("userid", this.loggedInUserId);
-    return this.http.get(API_URL.GET_BUSINESS_SUGGESTION_LIST, {
+    return this.http.get(API_URL.GET_EXPENSE_SUGGESTION_LIST, {
       params: params,
     }); //?businessId=' + businessId + '&userId=' + Number(localStorage.getItem("userId")));
   }

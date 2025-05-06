@@ -15,17 +15,17 @@
           <div class="row mb-4">
             <div class="col-3">
               <label>Business Date</label>
-              <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
+              <input id="dealDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                placeholder="DD/MM/YYYY" appearance="outline" formControlName="dealDate" [ngClass]="{
                     'error-border':
-                      businessDetailsForm.get('businessDate')?.touched &&
-                      businessDetailsForm.get('businessDate')?.invalid
+                      businessDetailsForm.get('dealDate')?.touched &&
+                      businessDetailsForm.get('dealDate')?.invalid
                   }" />
               <div class="error-message">
-                @if(businessDetailsForm.get('businessDate')?.touched &&
-                businessDetailsForm.get('businessDate')?.invalid){
+                @if(businessDetailsForm.get('dealDate')?.touched &&
+                businessDetailsForm.get('dealDate')?.invalid){
                 <div class="text-danger">
-                  @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
+                  @if(businessDetailsForm.get('dealDate')?.errors?.['required']){
                   Date is required. }
                 </div>
                 }
@@ -150,18 +150,18 @@
           <!-- <div class="row">
             <div class="col-3">
               <label>Payment date</label>
-              <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
+              <input id="dealDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                placeholder="DD/MM/YYYY" appearance="outline" formControlName="dealDate" [ngClass]="{
                     'error-border':
-                      businessDetailsForm.get('businessDate')?.touched &&
-                      businessDetailsForm.get('businessDate')?.invalid
+                      businessDetailsForm.get('dealDate')?.touched &&
+                      businessDetailsForm.get('dealDate')?.invalid
                   }" />
-              @if(businessDetailsForm.get('businessDate')?.touched &&
-              businessDetailsForm.get('businessDate')?.invalid){
+              @if(businessDetailsForm.get('dealDate')?.touched &&
+              businessDetailsForm.get('dealDate')?.invalid){
               <div class="text-danger">
-                @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
+                @if(businessDetailsForm.get('dealDate')?.errors?.['required']){
                 Date is required. }
-                @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
+                @else if(businessDetailsForm.get('dealDate')?.errors?.['pattern']){
                 Invalid Date. }
               </div>
               }
@@ -238,7 +238,12 @@
           <button class="btn-close" (click)="togleBrokerData()"></button>
         </div>
         <div class="modal-body" id="broker-form">
+
           <div class="row mb-4">
+            <div style="display: none">
+              <p>brokerId</p>
+              <input formControlName="brokerId" />
+            </div>
             <div class="col-3">
               <label>Broker Name</label>
               <input type="text" class="form-control form-control-lg text-dark bg-transparent"
@@ -247,13 +252,13 @@
             <div class="col-3">
               <label>Broker Amount</label>
               <input type="text" class="form-control form-control-lg text-dark bg-transparent"
-                formControlName="brokerAmount" (keydown)="globalService.validateAmount($event)" [ngClass]="{
-                  'error-border': businessDetailsForm.get('brokerAmount')?.touched &&
-                    businessDetailsForm.get('brokerAmount')?.invalid
+                formControlName="brokerPaymentAmount" (keydown)="globalService.validateAmount($event)" [ngClass]="{
+                  'error-border': businessDetailsForm.get('brokerPaymentAmount')?.touched &&
+                    businessDetailsForm.get('brokerPaymentAmount')?.invalid
                 }" />
               <div class="error-message">
-                @if(businessDetailsForm.get('brokerAmount')?.touched &&
-                businessDetailsForm.get('brokerAmount')?.invalid){
+                @if(businessDetailsForm.get('brokerPaymentAmount')?.touched &&
+                businessDetailsForm.get('brokerPaymentAmount')?.invalid){
                 <div class="text-danger">
                   Broker Amount must be greater than or equal to 0.
                 </div>
@@ -280,18 +285,18 @@
           <!-- <div class="row">
             <div class="col-3">
               <label>Payment date</label>
-              <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
+              <input id="dealDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                placeholder="DD/MM/YYYY" appearance="outline" formControlName="dealDate" [ngClass]="{
                     'error-border':
-                      businessDetailsForm.get('businessDate')?.touched &&
-                      businessDetailsForm.get('businessDate')?.invalid
+                      businessDetailsForm.get('dealDate')?.touched &&
+                      businessDetailsForm.get('dealDate')?.invalid
                   }" />
-              @if(businessDetailsForm.get('businessDate')?.touched &&
-              businessDetailsForm.get('businessDate')?.invalid){
+              @if(businessDetailsForm.get('dealDate')?.touched &&
+              businessDetailsForm.get('dealDate')?.invalid){
               <div class="text-danger">
-                @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
+                @if(businessDetailsForm.get('dealDate')?.errors?.['required']){
                 Date is required. }
-                @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
+                @else if(businessDetailsForm.get('dealDate')?.errors?.['pattern']){
                 Invalid Date. }
               </div>
               }
@@ -370,6 +375,10 @@
         </div>
         <div class="modal-body" id="driver-form">
           <div class="row mb-4">
+            <div style="display: none">
+              <p>driverId</p>
+              <input formControlName="driverId">
+            </div>
             <div class="col-3">
               <label>Driver Name</label>
               <input type="text" class="form-control form-control-lg text-dark bg-transparent"
@@ -378,13 +387,13 @@
             <div class="col-3">
               <label>Driver Amount</label>
               <input type="text" class="form-control form-control-lg text-dark bg-transparent"
-                formControlName="driverAmount" (keydown)="globalService.validateAmount($event)" [ngClass]="{
-                  'error-border': businessDetailsForm.get('driverAmount')?.touched &&
-                    businessDetailsForm.get('driverAmount')?.invalid
+                formControlName="driverPaymentAmount" (keydown)="globalService.validateAmount($event)" [ngClass]="{
+                  'error-border': businessDetailsForm.get('driverPaymentAmount')?.touched &&
+                    businessDetailsForm.get('driverPaymentAmount')?.invalid
                 }" />
               <div class="error-message">
-                @if(businessDetailsForm.get('driverAmount')?.touched &&
-                businessDetailsForm.get('driverAmount')?.invalid){
+                @if(businessDetailsForm.get('driverPaymentAmount')?.touched &&
+                businessDetailsForm.get('driverPaymentAmount')?.invalid){
                 <div class="text-danger">
                   Driver Amount must be greater than or equal to 0.
                 </div>
@@ -411,18 +420,18 @@
           <!-- <div class="row">
             <div class="col-3">
               <label>Payment date</label>
-              <input id="businessDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                placeholder="DD/MM/YYYY" appearance="outline" formControlName="businessDate" [ngClass]="{
+              <input id="dealDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                placeholder="DD/MM/YYYY" appearance="outline" formControlName="dealDate" [ngClass]="{
                     'error-border':
-                      businessDetailsForm.get('businessDate')?.touched &&
-                      businessDetailsForm.get('businessDate')?.invalid
+                      businessDetailsForm.get('dealDate')?.touched &&
+                      businessDetailsForm.get('dealDate')?.invalid
                   }" />
-              @if(businessDetailsForm.get('businessDate')?.touched &&
-              businessDetailsForm.get('businessDate')?.invalid){
+              @if(businessDetailsForm.get('dealDate')?.touched &&
+              businessDetailsForm.get('dealDate')?.invalid){
               <div class="text-danger">
-                @if(businessDetailsForm.get('businessDate')?.errors?.['required']){
+                @if(businessDetailsForm.get('dealDate')?.errors?.['required']){
                 Date is required. }
-                @else if(businessDetailsForm.get('businessDate')?.errors?.['pattern']){
+                @else if(businessDetailsForm.get('dealDate')?.errors?.['pattern']){
                 Invalid Date. }
               </div>
               }
@@ -510,7 +519,7 @@
               </div>
             </div>
           </div>
-          {{logInvalidControls(businessDetailsForm)}}
+          <!-- {{logInvalidControls(businessDetailsForm)}} -->
         </div>
       </form>
     </div>
