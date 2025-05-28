@@ -425,7 +425,6 @@ export class ExpenseComponent implements OnInit {
               action: (_e: any, cell: CellComponent) => {
                 const expenseData = cell.getRow().getData();
                 this.activeComponent = NavigationURLs.EXPENSE_LIST;
-                debugger;
                 this.sourceOrReason = expenseData["sourceOrReason"];
                 this.reportFirstDate = this.dateUtil.formatStringDate(
                   expenseData["firstDate"]
@@ -613,7 +612,6 @@ export class ExpenseComponent implements OnInit {
           (item.otherAmount !== null &&
             item.otherAmount !== 0 &&
             Math.abs(item.otherAmount) <= this.maxAmount);
-        debugger;
         return searchText && minAmountCondition && maxAmountCondition;
       });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
@@ -692,7 +690,6 @@ export class ExpenseComponent implements OnInit {
   }
 
   LoadGrid() {
-    debugger;
     this.loaderService.showLoader();
     if (this.reportFirstDate) {
       this.formattedFromDate = this.reportFirstDate;
@@ -821,7 +818,6 @@ export class ExpenseComponent implements OnInit {
   }
 
   filterGridByMaxAmount(data: any) {
-    debugger;
     setTimeout(() => {
       this.maxInput.nativeElement.focus();
     }, 0);
@@ -834,7 +830,6 @@ export class ExpenseComponent implements OnInit {
   }
 
   filterGridByMinAmount(data: any) {
-    debugger;
     setTimeout(() => {
       this.minInput.nativeElement.focus();
     }, 0);
@@ -847,7 +842,6 @@ export class ExpenseComponent implements OnInit {
   }
 
   filterGridBySearch(data: any) {
-    debugger;
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
     }, 0);

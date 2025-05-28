@@ -56,6 +56,7 @@ export class DayService {
     documentType: string,
     dayDetailsForm: any
   ): Observable<any> {
+    if(assetId){
     return this.http.post(
       API_URL.UPLOAD_IMAGE +
       String(localStorage.getItem("userId")) +
@@ -66,6 +67,18 @@ export class DayService {
       dayDetailsForm
     );
   }
+  else{
+    return this.http.post(
+      API_URL.UPLOAD_IMAGE +
+      String(localStorage.getItem("userId")) +
+      "&documentType=" +
+      documentType,
+      dayDetailsForm
+    );
+  }
+
+  }
+
 
   deleteDay(dayId: string): Observable<any> {
     return this.http.get(

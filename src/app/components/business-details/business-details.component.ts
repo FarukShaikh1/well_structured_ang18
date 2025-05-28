@@ -22,6 +22,7 @@ import { BusinessService } from "../../services/business/business.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { DateUtils } from "../../../utils/date-utils";
 
 @Component({
   selector: "app-business-details",
@@ -36,9 +37,9 @@ export class BusinessDetailsComponent {
   @Input() lastBusinessDate!: Date;
 
   businessDetailsForm: FormGroup;
-  businessPayments: FormArray;
-  brokerPayments: FormArray;
-  driverPayments: FormArray;
+  businessPaymentRequest: FormArray;
+  brokerPaymentRequest: FormArray;
+  driverPaymentRequest: FormArray;
   commonSuggestionList: any;
   get brokerRequestGroup(): FormGroup {
     return this.businessDetailsForm.get('brokerRequest') as FormGroup;
@@ -56,7 +57,7 @@ export class BusinessDetailsComponent {
     private datepipe: DatePipe
   ) {
     this.businessDetailsForm = this._details.group({
-      businessId: 0,
+      businessId: '',
       dealDate: ["", Validators.required],
       clientName: ["", Validators.required],
       paymentStatus: ["Pending", Validators.required],
@@ -68,7 +69,7 @@ export class BusinessDetailsComponent {
       description: "",
 
       // Business Payments
-      businessPayments: this._details.array([]),
+      businessPaymentRequest: this._details.array([]),
 
       // Broker Section
       brokerRequest: this._details.group({
@@ -78,7 +79,8 @@ export class BusinessDetailsComponent {
         brokerPaymentAmount: ["", [Validators.min(0)]],
         brokerDescription: [""],
       }),
-      brokerPayments: this._details.array([]),
+      brokerPaymentRequest: this._details.array([
+      ]),
 
       // Driver Section
       driverRequest: this._details.group({
@@ -88,16 +90,20 @@ export class BusinessDetailsComponent {
         driverPaymentAmount: [0, [Validators.min(0)]],
         driverDescription: [""]
       }),
-      driverPayments: this._details.array([]),
+      driverPaymentRequest: this._details.array([
+        //   {
+        //   paymentId: [""],
+        //   paymentDate: [""],
+        //   paymentAmount: [""],
+        //   paymentMode: [""],
+        //   pendingAmount: [""],
+        // }
+      ]),
     });
 
-    this.businessPayments = this.businessDetailsForm.get('businessPayments') as FormArray;
-    this.brokerPayments = this.businessDetailsForm.get('brokerPayments') as FormArray;
-    this.driverPayments = this.businessDetailsForm.get('driverPayments') as FormArray;
-
-    this.addBusinessPayment();
-    this.addBrokerPayment();
-    this.addDriverPayment();
+    this.businessPaymentRequest = this.businessDetailsForm.get('businessPaymentRequest') as FormArray;
+    this.brokerPaymentRequest = this.businessDetailsForm.get('brokerPaymentRequest') as FormArray;
+    this.driverPaymentRequest = this.businessDetailsForm.get('driverPaymentRequest') as FormArray;
   }
 
   openDetailsPopup(businessId: string) {
@@ -116,9 +122,13 @@ export class BusinessDetailsComponent {
           ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT
         )
       );
+      this.addBusinessPayment();
+      this.addBrokerPayment();
+      this.addDriverPayment();
+
       this.loaderService.hideLoader();
     }
-    this.getBusinessSuggestionList();
+    // this.getBusinessSuggestionList();
   }
 
   closePopup() {
@@ -130,10 +140,18 @@ export class BusinessDetailsComponent {
   }
 
   ngAfterViewInit() {
-    flatpickr("#dealDate", {
-      dateFormat: "d/m/Y",
-      defaultDate: new Date(),
-    });
+    // flatpickr("#dealDate", {
+    //   dateFormat: "d/m/Y",
+    //   defaultDate: new Date(),
+    // });
+    // flatpickr("#deliveryDate", {
+    //   dateFormat: "d/m/Y",
+    //   defaultDate: new Date(),
+    // });
+    // flatpickr("#paymentDate", {
+    //   dateFormat: "d/m/Y",
+    //   defaultDate: new Date(),
+    // });
   }
 
   getBusinessSuggestionList() {
@@ -168,16 +186,18 @@ export class BusinessDetailsComponent {
     // Patch top-level business info
     this.businessDetailsForm.patchValue({
       businessId: business.businessId,
-      dealDate: business.dealDate,
+      dealDate: business.dealDate,//this.datepipe.transform(business.dealDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
+      deliveryDate: business.deliveryDate,//this.datepipe.transform(business.deliveryDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
+      // dealDate: this.datepipe.transform(business.dealDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
       clientName: business.clientName,
       paymentStatus: business.paymentStatus,
       dealAmount: business.dealAmount,
       productName: business.productName,
       quantity: business.quantity,
       unit: business.unit,
-      deliveryDate: business.deliveryDate,
+      // deliveryDate: this.datepipe.transform(business.deliveryDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
       description: business.description,
-  
+
       // Broker section
       brokerRequest: {
         brokerId: business.brokerResponse?.brokerId || '',
@@ -186,7 +206,7 @@ export class BusinessDetailsComponent {
         brokerPaymentAmount: business.brokerResponse?.brokerPaymentAmount || 0,
         brokerDescription: business.brokerResponse?.brokerDescription || '',
       },
-  
+
       // Driver section
       driverRequest: {
         driverId: business.driverResponse?.driverId || '',
@@ -196,60 +216,39 @@ export class BusinessDetailsComponent {
         driverDescription: business.driverResponse?.driverDescription || '',
       }
     });
-  
+
+    setTimeout(() => {
     // Clear and patch Business Payments
     const businessPaymentsFGs = business.businessPaymentResponse?.map((p: any) => this.createPaymentGroup(p)) || [];
-    this.businessPayments.clear();
-    businessPaymentsFGs.forEach((fg: any) => this.businessPayments.push(fg));
-  
+    this.businessPaymentRequest.clear();
+    businessPaymentsFGs.forEach((fg: any) => this.businessPaymentRequest.push(fg));
+}, 1000)
+
+    setTimeout(() => {
     // Clear and patch Broker Payments
     const brokerPaymentsFGs = business.brokerPaymentResponse?.map((p: any) => this.createPaymentGroup(p)) || [];
-    this.brokerPayments.clear();
-    brokerPaymentsFGs.forEach((fg: any) => this.brokerPayments.push(fg));
-  
+    this.brokerPaymentRequest.clear();
+    brokerPaymentsFGs.forEach((fg: any) => this.brokerPaymentRequest.push(fg));
+}, 1000)
+
+    setTimeout(() => {
     // Clear and patch Driver Payments
     const driverPaymentsFGs = business.driverPaymentResponse?.map((p: any) => this.createPaymentGroup(p)) || [];
-    this.driverPayments.clear();
-    driverPaymentsFGs.forEach((fg: any) => this.driverPayments.push(fg));
+    this.driverPaymentRequest.clear();
+    driverPaymentsFGs.forEach((fg: any) => this.driverPaymentRequest.push(fg));
+}, 1000)
   }
-  
+
   // Create Payment FormGroup
   createPaymentGroup(data?: any): FormGroup {
     return this._details.group({
+      // paymentId: [data?.paymentId || ''],
       paymentDate: [data?.paymentDate || ''],
       paidAmount: [data?.paidAmount || ''],
-      paidBy: [data?.paymentMode || ''],  // Assuming 'paidBy' in UI maps to 'paymentMode' from backend
+      paymentMode: [data?.paymentMode || ''],  // Assuming 'paymentMode' in UI maps to 'paymentMode' from backend
       pendingAmount: [data?.pendingAmount || '']
     });
   }
-  
-  // patchValues(res: any) {
-  //   this.businessDetailsForm.patchValue({
-  //     businessId: res.businessId,
-  //     dealDate: this.datepipe.transform(res.dealDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
-  //     clientName: res.clientName,
-  //     dealAmount: res.dealAmount,
-  //     paymentStatus: res.paymentStatus,
-  //     productName: res.productName,
-  //     quantity: res.quantity,
-  //     unit: res.unit,
-  //     description: res.description,
-  //     deliveryDate: this.datepipe.transform(res.deliveryDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
-  //   });
-
-  //   this.driverRequestGroup.patchValue(res.driverRequest || {});
-  //   this.brokerRequestGroup.patchValue(res.brokerRequest || {});
-
-  //   if (res.businessPayments) {
-  //     this.patchPaymentArray(this.businessPayments, res.businessPayments);
-  //   }
-  //   if (res.brokerPayments) {
-  //     this.patchPaymentArray(this.brokerPayments, res.brokerPayments);
-  //   }
-  //   if (res.driverPayments) {
-  //     this.patchPaymentArray(this.driverPayments, res.driverPayments);
-  //   }
-  // }
 
   patchPaymentArray(formArray: FormArray, payments: any[]): void {
     formArray.clear();
@@ -259,7 +258,7 @@ export class BusinessDetailsComponent {
         paymentId: payment.paymentId,
         paymentDate: this.datepipe.transform(payment.paymentDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
         paidAmount: payment.paidAmount,
-        paidBy: payment.paidBy,
+        paymentMode: payment.paymentMode,
         pendingAmount: payment.pendingAmount
       });
       formArray.push(paymentGroup);
@@ -288,16 +287,17 @@ export class BusinessDetailsComponent {
     if (!this.businessDetailsForm.valid) {
       this.toaster.showMessage("Please fill valid details.", "error");
       this.loaderService.hideLoader();
-      return;
+      // return;
     }
     try {
       const formValue = this.businessDetailsForm.getRawValue();
-      formValue.dealDate = this.formatDate(formValue.dealDate);
-      this.formatPaymentDates(formValue.businessPayments);
-      this.formatPaymentDates(formValue.brokerPayments);
-      this.formatPaymentDates(formValue.driverPayments);
+      formValue.dealDate = this.formatFlatPckrDate(formValue.dealDate);
+      formValue.deliveryDate = this.formatFlatPckrDate(formValue.deliveryDate);
+      this.formatPaymentDates(formValue.businessPaymentRequest);
+      this.formatPaymentDates(formValue.brokerPaymentRequest);
+      this.formatPaymentDates(formValue.driverPaymentRequest);
 
-      const submitCall = formValue.businessId > 0
+      const submitCall = formValue.businessId
         ? this.businessService.updateBusiness(formValue)
         : this.businessService.addBusiness(formValue);
 
@@ -311,16 +311,21 @@ export class BusinessDetailsComponent {
     this.loaderService.hideLoader();
   }
 
-  private formatDate(date: string): string {
-    const [day, month, year] = date.split('/');
-    return `${day}/${month}/${year}`;
+  // private formatFlatPckrDate(date: string): string {
+  //   const [year, month, day] =date.split(/[-\/]/);
+  //   return `${day}/${month}/${year}`;
+  // }
+
+  private formatFlatPckrDate(date: string): string {
+    const parsedDate = new Date(date);
+    return this.datepipe.transform(parsedDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT) ?? '';
   }
 
   private formatPaymentDates(payments: any[]): void {
     if (payments) {
       payments.forEach(payment => {
         if (payment.paymentDate) {
-          payment.paymentDate = this.formatDate(payment.paymentDate);
+          payment.paymentDate = this.formatFlatPckrDate(payment.paymentDate);
         }
       });
     }
@@ -345,42 +350,42 @@ export class BusinessDetailsComponent {
 
   createPaymentEntry(): FormGroup {
     return this._details.group({
-      paymentId: 0,
+      paymentId: '',
       paymentDate: ['', Validators.required],
       paidAmount: [0, [Validators.required, Validators.min(0)]],
-      paidBy: [''],
+      paymentMode: [''],
       pendingAmount: [{ value: 0, disabled: true }]
     });
   }
 
   addBusinessPayment(): void {
     const paymentEntry = this.createPaymentEntry();
-    this.businessPayments.push(paymentEntry);
+    this.businessPaymentRequest.push(paymentEntry);
     this.updatePendingAmount(paymentEntry);
   }
 
   addBrokerPayment(): void {
     const paymentEntry = this.createPaymentEntry();
-    this.brokerPayments.push(paymentEntry);
+    this.brokerPaymentRequest.push(paymentEntry);
     this.updatePendingAmount(paymentEntry);
   }
 
   addDriverPayment(): void {
     const paymentEntry = this.createPaymentEntry();
-    this.driverPayments.push(paymentEntry);
+    this.driverPaymentRequest.push(paymentEntry);
     this.updatePendingAmount(paymentEntry);
   }
 
   removeBusinessPayment(index: number): void {
-    this.businessPayments.removeAt(index);
+    this.businessPaymentRequest.removeAt(index);
   }
 
   removeBrokerPayment(index: number): void {
-    this.brokerPayments.removeAt(index);
+    this.brokerPaymentRequest.removeAt(index);
   }
 
   removeDriverPayment(index: number): void {
-    this.driverPayments.removeAt(index);
+    this.driverPaymentRequest.removeAt(index);
   }
 
   updatePendingAmount(paymentEntry: FormGroup): void {
@@ -391,15 +396,15 @@ export class BusinessDetailsComponent {
   }
 
   get businessPaymentControls() {
-    return this.businessPayments.controls;
+    return this.businessPaymentRequest.controls;
   }
 
   get brokerPaymentControls() {
-    return this.brokerPayments.controls;
+    return this.brokerPaymentRequest.controls;
   }
 
   get driverPaymentControls() {
-    return this.driverPayments.controls;
+    return this.driverPaymentRequest.controls;
   }
 
   togleDriverData(): void {

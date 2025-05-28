@@ -144,6 +144,22 @@
                     Address is required }
                   </div>
                 </div>
+                <div class="col d-flex">
+                  <label class="pr1">
+                    <input type="radio" formControlName="gender" value="M" />
+                    Male
+                  </label>
+
+                  <label class="pr1">
+                    <input type="radio" formControlName="gender" value="F" />
+                    Female
+                  </label>
+
+                  <label>
+                    <input type="radio" formControlName="gender" value="O" />
+                    Other
+                  </label>
+                </div>
               </div>
               @if(isApprovable && isVerified){
               <div class="row">
@@ -169,7 +185,7 @@
               }
             </div>
             <div class="col-6 image-container">
-              <input type="file" (change)="onFileSelected($event)" accept="image/*" formControlName="image" />
+              <input type="file" (change)="onFileSelected($event)" accept="image/*" formControlName="picture" />
               <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
                 <div id="image">
                   <img [src]="selectedImage" />

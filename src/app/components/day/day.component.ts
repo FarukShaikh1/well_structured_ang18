@@ -2,6 +2,7 @@ import { CommonModule, DatePipe } from "@angular/common";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
 import {
+  ApplicationConstants,
   ApplicationModules,
   ApplicationTableConstants,
   DBConstants,
@@ -9,6 +10,7 @@ import {
 import { DayService } from "../../services/day/day.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
+import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 import { DayDetailsComponent } from "../day-details/day-details.component";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
@@ -48,6 +50,7 @@ export class DayComponent implements OnInit {
 
   monthList: any;
   dayTypeList: any = "";
+  relationTypeList: any = "";
   month: any = "";
   selectedDayTypeIds: any = "";
   dayType: any = "";
@@ -61,18 +64,21 @@ export class DayComponent implements OnInit {
   selectedMonths: string[] = []; // Array to store selected months
   DayType: string[] = []; // Array to store selected months
   lableForDayTypeDropDown = "";
+  lableForRelationTypeDropDown = "";
   selectedDayType: string[] = []; // Array to store selected DayTypes
-
+  selectedRelationType: string[] = []; // Array to store selected DayTypes
+  loggedInUser = null;
   constructor(
     private _dayService: DayService,
     // public tableUtils: TableUtils,
+    public localStorageService: LocalStorageService,
     public globalService: GlobalService,
     private loaderService: LoaderService,
     public datePipe: DatePipe
-  ) {}
+  ) { }
 
   ngOnInit() {
-    // this.loaderService.showLoader();
+    this.loggedInUser = this.localStorageService.getLoggedInUserData().userName;
     this.globalService.getCommonListItems(DBConstants.MONTH).subscribe({
       next: (res: any) => {
         this.monthList = res;
@@ -89,6 +95,15 @@ export class DayComponent implements OnInit {
       next: (res: any) => {
         this.dayTypeList = res;
         // this.loaderService.hideLoader();
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+        this.loaderService.hideLoader();
+      },
+    });
+    this.globalService.getCommonListItems(DBConstants.RELATION).subscribe({
+      next: (res: any) => {
+        this.relationTypeList = res;
       },
       error: (error: any) => {
         console.log("error : ", error);
@@ -148,7 +163,7 @@ export class DayComponent implements OnInit {
       {
         title: "Person Name",
         titleFormatter(_cell, _formatterParams, onRendered) {
-          onRendered(() => {});
+          onRendered(() => { });
           return `
             <div class="client-name-header">
               Person Name
@@ -196,6 +211,13 @@ export class DayComponent implements OnInit {
         headerSort: false,
       },
     ];
+
+    if (this.loggedInUser == ApplicationConstants.APPLICATIONS_OWNER_EMAILID) {
+      this.tableColumnConfig.splice(4, 0, {
+        title: "Relation",
+        field: "relationShipName"
+      })
+    }
   }
 
   personNameFormatter(cell: CellComponent) {
@@ -203,8 +225,8 @@ export class DayComponent implements OnInit {
     const clientId = rowData["id"];
     const html = `
        <button class="text-link view-projects-btn" data-client-id="${clientId}">
-         ${rowData["personName"]}
-      </button>
+         ${rowData["personName"]} 
+      </button> 
     `;
     return html;
   }
@@ -214,7 +236,7 @@ export class DayComponent implements OnInit {
     const clientId = rowData["assetId"];
     if (clientId) {
       const html = `
-        <i class="fa fa-user-circle-o action-buttons"></i>
+        <i class="bi bi-person-circle" style="color: blue;"></i>
    `;
       return html;
     }
@@ -327,6 +349,41 @@ export class DayComponent implements OnInit {
     }
   }
 
+  // Handle "Select All" checkbox
+  toggleAllRelationTypeCheck(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+
+    this.selectedRelationType = checked
+      ? this.relationTypeList.map((m: any) => m.listItemDescription)
+      : [];
+
+    this.getRelationTypeDropdownLabel();
+    this.applyFilters();
+  }
+  // Handle individual relationtype selection
+  toggleRelationTypeCheck(event: Event, relationtypeName: string) {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.selectedRelationType.push(relationtypeName);
+    } else {
+      this.selectedRelationType = this.selectedRelationType.filter(
+        (m) => m !== relationtypeName
+      );
+    }
+    this.getRelationTypeDropdownLabel();
+    this.applyFilters();
+  }
+
+  getRelationTypeDropdownLabel() {
+    if (this.selectedRelationType.length === 0) {
+      this.lableForRelationTypeDropDown = "";
+    } else if (this.selectedRelationType.length === this.relationTypeList.length) {
+      this.lableForRelationTypeDropDown = "All";
+    } else {
+      this.lableForRelationTypeDropDown = this.selectedRelationType.join(", ");
+    }
+  }
+
   openPopup(dayId: any) {
     console.log("dayDetails clicked");
     this.dayDetailsComponent.openDetailsPopup(dayId);
@@ -339,9 +396,9 @@ export class DayComponent implements OnInit {
     });
   }
 
-  approveDay() {}
+  approveDay() { }
 
-  deleteDay() {}
+  deleteDay() { }
 
   filterGridSearchText(event: any) {
     setTimeout(() => {
@@ -446,10 +503,14 @@ export class DayComponent implements OnInit {
       const matchesDayType =
         this.selectedDayType.length === 0 ||
         this.selectedDayType.includes(item.type);
+      const matchesRelationType =
+        this.selectedRelationType.length === 0 ||
+        this.selectedRelationType.includes(item.relationShipName);
       return (
         (matchesName || email || address || date || mobileNumber) &&
         matchesMonth &&
-        matchesDayType
+        matchesDayType &&
+        matchesRelationType
       );
     });
   }

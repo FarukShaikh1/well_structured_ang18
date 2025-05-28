@@ -32,7 +32,7 @@ export const ApplicationConstants = {
 
     REGEX_DASH_DOT_UNDERSCORE_WITH_SPACE: /(?<=[a-zA-Z0-9])[-_.](?=[a-zA-Z0-9])/g, // Replace dash, dot, underscore with space
     REGEX_CAPITALIZE_FIRST_LETTER: /\b\w/g, // Capitalize first letter of every word
-
+    APPLICATIONS_OWNER_EMAILID:'farukshaikh908@gmail.com'
 };
 
 export const ButtonLabels = {
@@ -241,7 +241,7 @@ export const ApplicationRoles = {
 export const DBConstants = {
     DAYTYPE: 'B37BB6EC-F172-4EEF-BB70-C0FD5C47FCEA',
     COINTYPE: '899773F6-EC60-4B0B-95F6-5DB190C23F99',
-    RELATION: 15,
+    RELATION: '4A920596-928E-40CD-AC1A-549E9A3B7427',
     MONTH: '7E0F0170-7206-48C9-8679-82A111CA45B1',
     MODEOFTRANSACTION: 'E1A5F08E-8FAD-4341-B4E6-A17C68FB4E47',
 }

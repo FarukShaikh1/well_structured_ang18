@@ -78,7 +78,7 @@ export class DayDetailsComponent implements OnInit {
       address: "",
       assetId: '',
       gender: 'M',
-      image: null,
+      picture: null,
       createdBy: "",
       createdOn: "",
       modifiedBy: "",
@@ -181,8 +181,8 @@ export class DayDetailsComponent implements OnInit {
       );
       this.dayDetailsForm.controls["emailId"].patchValue(res["emailId"]);
       this.dayDetailsForm.controls["address"].patchValue(res["address"]);
-      this.dayDetailsForm.controls["gender"].patchValue(res["gender"]);
-      this.dayDetailsForm.controls["image"].patchValue(res["image"]);
+      this.dayDetailsForm.controls["gender"].patchValue(res["gender"]??'M');
+      this.dayDetailsForm.controls["picture"].patchValue(res["image"]);
       this.dayDetailsForm.controls["assetId"].patchValue(res["assetId"]);
       // if(res['isApprovable'] && !res['isVerified']){
       this.dayDetailsForm.controls["createdOn"].patchValue(res["createdOn"]);

@@ -143,7 +143,7 @@ export class GlobalService {
     // Trim whitespace from all form control values
     Object.keys(form?.controls).forEach((key) => {
       const control = form?.get(key);
-      if (control && typeof control.value === "string") {
+      if (key!=='picture' && control && typeof control.value === "string") {
         control.setValue(control.value.trim());
       }
     });

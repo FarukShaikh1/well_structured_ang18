@@ -64,11 +64,9 @@ export class CurrencyCoinComponent implements OnInit {
     private currencyCoinService: CurrencyCoinService,
     public globalService: GlobalService,
     private loaderService: LoaderService) { 
-  debugger;
     }
 
   ngOnInit() {
-    debugger
     this.loaderService.showLoader();
     this.collectioncoinColumnConfiguration();
     this.LoadGrid();
@@ -91,7 +89,6 @@ export class CurrencyCoinComponent implements OnInit {
 
 
   // ngOnInit() {
-  //   debugger;
   //   this.basePath = API_URL.ATTACHMENT;
   //   this.getCurrencyCoinRecords();
 
@@ -171,7 +168,6 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   LoadGrid() {
-    debugger
     this.currencyCoinService.getCurrencyCoinRecords().subscribe((res: any) => {
       this.tableData = res;
       this.filteredTableData = res;
