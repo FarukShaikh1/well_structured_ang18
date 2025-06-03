@@ -8,6 +8,7 @@ import { API_URL } from "../../../utils/api-url";
 import { NavigationURLs } from "../../../utils/application-constants";
 import { LocalStorageService } from "../local-storage/local-storage.service";
 import { RoleService } from "../role/role.service";
+import { CellComponent } from "tabulator-tables";
 
 @Injectable({
   providedIn: "root",
@@ -139,6 +140,10 @@ export class GlobalService {
     return this.http.get(API_URL.GET_COMMON_LIST_ITEMS, { params: params });
   }
 
+    getCountryList() {
+    return this.http.get(API_URL.GET_COUNTRY_LIST);
+  }
+
   trimAllFields(form: any) {
     // Trim whitespace from all form control values
     Object.keys(form?.controls).forEach((key) => {
@@ -155,4 +160,8 @@ export class GlobalService {
       event.preventDefault();
     }
   }
+
+    hidebuttonFormatter(cell: CellComponent) {
+      return `<button class="action-buttons" title="Hide Expense" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
+    }
 }

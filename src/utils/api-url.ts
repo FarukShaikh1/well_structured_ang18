@@ -59,6 +59,7 @@ export const API_URL = {
   GET_ASSET_DETAILS: `${serverUrl}${apiPrefix}/asset/getAssetDetail`,
 
   GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/common/getCommonListItems`,
+  GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/common/GetCountryList`,
   // GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/common/getCommonListItems?commonListId=`,
 
   DAYURL: "day/",

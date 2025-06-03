@@ -53,7 +53,16 @@
       >
         User
       </button>
-
+          &nbsp;
+      <button
+        (click)="navigateToCurrencyList()"
+        class="font-weight-bold p-2 txt-btn"
+        [ngClass]="{
+          'active-link': isActiveMenu(NavigationURLs.CURRENCY_LIST)
+        }"
+      >
+        Currency
+      </button>
       <!-- @if(globalService.isAccessible(Modules.CLIENT, Module_Actions.VIEW)) {
       <button
         (click)="clientList()"

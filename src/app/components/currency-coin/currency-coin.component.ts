@@ -8,19 +8,26 @@ import { ApplicationTableConstants } from '../../../utils/application-constants'
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
+import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-currency-coin',
   standalone: true,
   templateUrl: './currency-coin.component.html',
-  imports: [CommonModule, TabulatorGridComponent, CurrencyCoinDetailsComponent],
+  imports: [CommonModule, TabulatorGridComponent, ConfirmationDialogComponent, CurrencyCoinDetailsComponent],
   styleUrls: ['./currency-coin.component.scss']
 })
 
 export class CurrencyCoinComponent implements OnInit {
+  @ViewChild(CurrencyCoinDetailsComponent)
+  currencyCoinDetailsComponent!: CurrencyCoinDetailsComponent;
+  @ViewChild(ConfirmationDialogComponent, { static: false })
+  confirmationDialog!: ConfirmationDialogComponent;
+
   @ViewChild("searchInput") searchInput!: ElementRef;
   basePath: string = API_URL.ATTACHMENT;
   searchText: string = '';
+  currencyCoinId: string = '';
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
   public tableColumnConfig: ColumnDefinition[] = [];
@@ -31,15 +38,16 @@ export class CurrencyCoinComponent implements OnInit {
   optionsMenu = [
     {
       label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#collectioncoinDetailsPopup">
+              data-bs-toggle="modal" data-bs-target="#currencyCoinDetailsPopup">
                   <i class="bi bi-pencil"></i>
                     &nbsp;Edit
                   </a>
                   `,
       action: (_e: any, cell: CellComponent) => {
-        const collectioncoinData = cell.getRow().getData();
-        const collectioncoinId = collectioncoinData["collectioncoinId"];
-        this.currencyCoinDetails(collectioncoinId);
+        const collectionCoinData = cell.getRow().getData();
+        debugger
+        const collectionCoinId = collectionCoinData["collectionCoinId"];
+        this.currencyCoinDetails(collectionCoinId);
       },
     },
     {
@@ -53,9 +61,9 @@ export class CurrencyCoinComponent implements OnInit {
                   </a>
                   `,
       action: (_e: any, cell: CellComponent) => {
-        const collectioncoinData = cell.getRow().getData();
-        const collectioncoinId = collectioncoinData["collectioncoinId"];
-        this.currencyCoinDetails(collectioncoinId);
+        const collectionCoinData = cell.getRow().getData();
+        const collectionCoinId = collectionCoinData["collectionCoinId"];
+        this.deleteCurrencyCoin(collectionCoinId);
       },
     },
   ];
@@ -63,12 +71,12 @@ export class CurrencyCoinComponent implements OnInit {
   constructor(
     private currencyCoinService: CurrencyCoinService,
     public globalService: GlobalService,
-    private loaderService: LoaderService) { 
-    }
+    private loaderService: LoaderService) {
+  }
 
   ngOnInit() {
-    this.loaderService.showLoader();
-    this.collectioncoinColumnConfiguration();
+    // this.loaderService.showLoader();
+    this.collectionCoinColumnConfiguration();
     this.LoadGrid();
     this.globalService.reloadGrid$.subscribe(() => {
       // if (listName === ApplicationModules.COLLECTIONCOIN) {
@@ -93,7 +101,7 @@ export class CurrencyCoinComponent implements OnInit {
   //   this.getCurrencyCoinRecords();
 
   // }
-  collectioncoinColumnConfiguration() {
+  collectionCoinColumnConfiguration() {
     this.tableColumnConfig = [
       {
         title: "collectionCoinId",
@@ -109,12 +117,14 @@ export class CurrencyCoinComponent implements OnInit {
         title: "countryName",
         field: "countryName",
         sorter: "alphanum",
-        width: 400,
       },
       {
         title: "actualValue",
         field: "actualValue",
         sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
+        bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
       },
       {
         title: "indianValue",
@@ -129,19 +139,15 @@ export class CurrencyCoinComponent implements OnInit {
         title: "description",
         field: "description",
         sorter: "alphanum",
-        formatter: this.amountColorFormatter.bind(this),
-        bottomCalc: "sum", // This will calculate the sum
-        bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
-        bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
       },
       {
         title: "-",
         field: "-",
         maxWidth: 50,
-        formatter: this.hidebuttonFormatter.bind(this),
+        formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const collectioncoinId = cell.getRow().getData()["collectioncoinId"];
-          this.hideCollectionCoin(collectioncoinId); // Call the hideCollectionCoin method
+          const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
+          this.hideCollectionCoin(collectionCoinId); // Call the hideCollectionCoin method
         },
       },
       {
@@ -157,23 +163,23 @@ export class CurrencyCoinComponent implements OnInit {
     ];
   }
 
-  hidebuttonFormatter(cell: CellComponent) {
-    return `<button class="action-buttons" title="Hide CollectionCoin" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
-  }
-
-  hideCollectionCoin(collectioncoinId: any) {
+  hideCollectionCoin(collectionCoinId: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.collectioncoinId != collectioncoinId;
+      return item.collectionCoinId != collectionCoinId;
     });
   }
 
   LoadGrid() {
-    this.currencyCoinService.getCurrencyCoinRecords().subscribe((res: any) => {
-      this.tableData = res;
-      this.filteredTableData = res;
-      this.collectioncoinColumnConfiguration();
-
-
+    this.currencyCoinService.getCurrencyCoinRecords().subscribe({
+      next: (res: any) => {
+        this.tableData = res;
+        this.filteredTableData = res;
+        this.loaderService.hideLoader();
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+        this.loaderService.hideLoader();
+      },
     },
     )
   }
@@ -187,10 +193,10 @@ export class CurrencyCoinComponent implements OnInit {
       currency: "INR",
     }).format(columnValue);
     if (columnValue > 0) {
-      return `<span style="color:#129D0A; font-weight:bold">${formattedValue}</span>`;
+      return `<span style="font-weight:bold">${formattedValue}</span>`;
     }
     if (columnValue < 0) {
-      return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
+      return `<span style="font-weight:bold">${formattedValue}</span>`;
     }
     return `<span></span>`;
   }
@@ -204,6 +210,34 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   currencyCoinDetails(data: any) {
+    debugger;
+    this.currencyCoinDetailsComponent.openDetailsPopup(data);
+  }
+
+  deleteCurrencyCoin(currencyCoinId: string) {
+    if (currencyCoinId) {
+      this.currencyCoinId = currencyCoinId;
+      this.confirmationDialog.openConfirmationPopup(
+        "Confirmation",
+        "Are you sure you want to delete this currencyCoin? This action cannot be undone."
+      );
+    }
+  }
+
+  handleConfirmResult(isConfirmed: boolean) {
+    console.log(isConfirmed);
+    if (isConfirmed) {
+      // this.loaderService.showLoader();
+      this.currencyCoinService.deleteCurrencyCoin(this.currencyCoinId).subscribe({
+        next: (res: any) => {
+          this.LoadGrid();
+        },
+        error: (error: any) => {
+          console.log("error : ", error);
+          this.loaderService.hideLoader();
+        },
+      });
+    }
   }
 
   applyFilters() {

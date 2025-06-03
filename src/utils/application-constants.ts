@@ -82,6 +82,7 @@ export const NavigationURLs = {
     EXPENSE_REPORT: '/home/expense-report',
     BUSINESS_LIST: '/home/business',
     REPORT_LIST: '/home/expenses/reports',
+    CURRENCY_LIST: '/home/currency-coin',
     ALL_NOTIFICATIONS: '/home/notifications',
 };
 

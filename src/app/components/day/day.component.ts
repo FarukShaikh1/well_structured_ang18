@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
 import {
   ApplicationConstants,
+  ApplicationModuleActions,
   ApplicationModules,
   ApplicationTableConstants,
   DBConstants,
@@ -27,7 +28,7 @@ export interface Task {
   standalone: true,
   templateUrl: "./day.component.html",
   styleUrls: ["./day.component.scss"],
-  imports: [TabulatorGridComponent, CommonModule, DayDetailsComponent],
+  imports: [TabulatorGridComponent, CommonModule, DayDetailsComponent, ConfirmationDialogComponent],
   providers: [DatePipe],
 })
 export class DayComponent implements OnInit {
@@ -68,6 +69,7 @@ export class DayComponent implements OnInit {
   selectedDayType: string[] = []; // Array to store selected DayTypes
   selectedRelationType: string[] = []; // Array to store selected DayTypes
   loggedInUser = null;
+  birthdayId: string = '';
   constructor(
     private _dayService: DayService,
     // public tableUtils: TableUtils,
@@ -201,6 +203,16 @@ export class DayComponent implements OnInit {
         formatter: this.picFormatter.bind(this),
       },
       {
+        title: "-",
+        field: "-",
+        maxWidth: 50,
+        formatter: this.globalService.hidebuttonFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const birthdayId = cell.getRow().getData()["birthdayId"];
+          this.hideDay(birthdayId); // Call the hideExpense method
+        },
+      },
+      {
         title: "",
         field: "options",
         maxWidth: 50,
@@ -236,7 +248,7 @@ export class DayComponent implements OnInit {
     const clientId = rowData["assetId"];
     if (clientId) {
       const html = `
-        <i class="bi bi-person-circle" style="color: blue;"></i>
+        <i class="bi bi-person-circle fs-3" style="color: blue;"></i>
    `;
       return html;
     }
@@ -283,6 +295,64 @@ export class DayComponent implements OnInit {
     }
     const nullDate = "";
     return `<span>${nullDate}</span>`;
+  }
+
+  generateOptionsMenu(rowData: Record<string, any>) {
+    const menu = [];
+    if (
+      rowData['birthdayId'] &&
+      this.globalService.isAccessible(ApplicationModules.DAY, ApplicationModuleActions.EDIT)
+    ) {
+      menu.push({
+        label: `<a class="dropdown-item btn-link options-menu-item"
+            data-bs-toggle="modal" data-bs-target="#userDetailsPopup">
+                <i class="bi bi-pencil"></i>
+                  &nbsp;Edit
+                </a>
+                `,
+        action: () => this.openPopup(rowData['birthdayId']),
+      });
+
+      menu.push({
+        label: `<a class="dropdown-item btn-link options-menu-item"
+                data-bs-toggle="modal" data-bs-target="#confirmModal">
+                    <i class="bi bi-trash"></i>
+                      &nbsp;Deactivate
+                    </a>
+                    `,
+        action: () => this.confirmationDialog.openConfirmationPopup(
+          "Confirmation",
+          "Are you sure you want to delete this user? This action cannot be undone."
+        )
+      });
+    }
+    return menu;
+  }
+
+  deleteDay(birthdayId: string) {
+    if (birthdayId) {
+      this.birthdayId = birthdayId;
+      this.confirmationDialog.openConfirmationPopup(
+        "Confirmation",
+        "Are you sure you want to delete this expense? This action cannot be undone."
+      );
+    }
+  }
+
+  handleConfirmResult(isConfirmed: boolean) {
+    console.log(isConfirmed);
+    if (isConfirmed) {
+      this.loaderService.showLoader();
+      this._dayService.deleteDay(this.birthdayId).subscribe({
+        next: (res: any) => {
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          console.log("error : ", error);
+          this.loaderService.hideLoader();
+        },
+      });
+    }
   }
 
   // Handle "Select All" checkbox
@@ -389,16 +459,14 @@ export class DayComponent implements OnInit {
     this.dayDetailsComponent.openDetailsPopup(dayId);
   }
 
-  hideDay(BirthdayId: number) {
+  hideDay(dayId: number) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      const includeDay = item.BirthdayId != BirthdayId;
+      const includeDay = item.birthdayId != dayId;
       return includeDay;
     });
   }
 
   approveDay() { }
-
-  deleteDay() { }
 
   filterGridSearchText(event: any) {
     setTimeout(() => {
@@ -486,7 +554,6 @@ export class DayComponent implements OnInit {
 
   applyFilters() {
     console.log("this.tableData : ", this.tableData);
-
     this.filteredTableData = this.tableData.filter((item: any) => {
       const matchesName = item.personName
         ?.toLowerCase()

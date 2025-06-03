@@ -46,7 +46,7 @@ export class DayService {
 
   updateDay(dayDetailsForm: any): Observable<any> {
     return this.http.post(
-      API_URL.UPDATE_EXPENSE + String(localStorage.getItem("userId")),
+      API_URL.UPDATE_DAY + String(localStorage.getItem("userId")),
       dayDetailsForm
     );
   }

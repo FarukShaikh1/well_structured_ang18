@@ -173,7 +173,7 @@ export class ExpenseComponent implements OnInit {
           title: "-",
           field: "-",
           maxWidth: 50,
-          formatter: this.hidebuttonFormatter.bind(this),
+          formatter: this.globalService.hidebuttonFormatter.bind(this),
           cellClick: (e, cell) => {
             const expenseId = cell.getRow().getData()["expenseId"];
             this.hideExpense(expenseId); // Call the hideExpense method
@@ -312,7 +312,7 @@ export class ExpenseComponent implements OnInit {
           title: "-",
           field: "-",
           maxWidth: 50,
-          formatter: this.hidebuttonFormatter.bind(this),
+          formatter: this.globalService.hidebuttonFormatter.bind(this),
           cellClick: (e, cell) => {
             const expenseId = cell.getRow().getData()["expenseId"];
             this.hideExpense(expenseId); // Call the hideExpense method
@@ -402,7 +402,7 @@ export class ExpenseComponent implements OnInit {
           title: "",
           field: "",
           maxWidth: 70,
-          formatter: this.hidebuttonFormatter.bind(this),
+          formatter: this.globalService.hidebuttonFormatter.bind(this),
           cellClick: (e, cell) => {
             const sourceOrReason = cell.getRow().getData()["sourceOrReason"];
             this.hideExpenseBySource(sourceOrReason); // Call the hideExpense method
@@ -500,10 +500,6 @@ export class ExpenseComponent implements OnInit {
       return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
     }
     return `<span></span>`;
-  }
-
-  hidebuttonFormatter(cell: CellComponent) {
-    return `<button class="action-buttons" title="Hide Expense" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
   }
 
   getColorForText(cell: CellComponent): any {

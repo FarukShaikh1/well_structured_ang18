@@ -41,7 +41,7 @@ export class CurrencyCoinService {
     return this.http.post(API_URL.UPLOAD_IMAGE + String(localStorage.getItem("userId")) + '&assetId=' + assetId + '&documentType=' + documentType, currencyCoinDetailsForm);
   }
 
-  daleteCurrencyCoin(dayId: string): Observable<any> {
+  deleteCurrencyCoin(dayId: string): Observable<any> {
     return this.http.get(API_URL.DELETE_COLLECTION_COIN + dayId + '&userId=' + String(localStorage.getItem("userId")));
   }
 

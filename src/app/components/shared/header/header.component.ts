@@ -169,6 +169,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([NavigationURLs.USER_LIST]);
   }
 
+  navigateToCurrencyList() {
+    this.router.navigate([NavigationURLs.CURRENCY_LIST]);
+  }
+
   roleModuleMapping() {
     this.router.navigate([NavigationURLs.ROLE_MODULE_MAPPING]);
   }

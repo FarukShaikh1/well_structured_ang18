@@ -1,21 +1,34 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { CommonModule, DatePipe } from "@angular/common";
+import { GlobalService } from "../../services/global/global.service";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 import { API_URL } from "../../../utils/api-url";
 import { AssetService } from "../../services/asset/asset.service";
 import { CurrencyCoinService } from "../../services/currency-coin/currency-coin.service";
+import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { LoaderService } from "../../services/loader/loader.service";
+import { DBConstants } from "../../../utils/application-constants";
 
 
 @Component({
   selector: "app-currency-details",
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ToasterComponent, CommonModule],
   templateUrl: "./currency-coin-details.component.html",
   styleUrls: ["./currency-coin-details.component.scss"],
 })
 export class CurrencyCoinDetailsComponent implements OnInit {
+  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
+  @ViewChild("btnCloseCoinDetailsPopup") btnCloseDayPopup!: ElementRef;
   currencyCoinDetailsForm: FormGroup;
   user: any;
   countryList: any;
+  currencyTypeList: any;
   collectionCoinId: string = "";
   selectedImage!: string | ArrayBuffer | null;
   selectedImageFile: File | null = null;
@@ -27,6 +40,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   constructor(
     private _details: FormBuilder,
     private _currencyCoinService: CurrencyCoinService,
+    private loaderService: LoaderService,
+    public globalService: GlobalService,
     private _assetService: AssetService,
   ) {
     this.currencyCoinDetailsForm = this._details.group<any>({
@@ -35,15 +50,25 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         "",
         [Validators.required, Validators.pattern(/^[a-zA-Z. ]{3,40}$/)],
       ],
+      collectionCoinType: [0, Validators.required], // Already present
       countryId: [0, Validators.required],
-      mobileNumber: ["", Validators.pattern(/^[0-9]{8,12}$/)],
-      mobileNumber2: ["", Validators.pattern(/^[0-9]{8,12}$/)],
-      address: "",
+      address: "", // Already present
       assetId: 0,
       image: null,
+      coinWeightInGrams: [0],
+      actualValue: [0],
+      indianValue: [0],
+      printedYear: [null],
+      speciality: [""],
+      diameterOfCoin: [0],
+      lengthOfNote: [0],
+      breadthOfNote: [0],
+      description: [""],
+      metalUsed: [""],
+      isVerified: [false],
+      isEditable: [false],
     });
   }
-
   onDragOver(event: any) {
     event.preventDefault();
   }
@@ -74,14 +99,70 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
+
+  openDetailsPopup(currencyCoinId: string) {
+    this.loaderService.showLoader();
+    this.globalService.getCommonListItems(DBConstants.COINTYPE).subscribe({
+      next: (res: any) => {
+        this.currencyTypeList = res;
+        console.log('currencyTypeList : ',this.currencyTypeList);
+        
+        this.loaderService.hideLoader();
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+        this.loaderService.hideLoader();
+      },
+    });
+
+    this.globalService.getCountryList().subscribe({
+      next: (res: any) => {
+        this.countryList = res;
+        this.loaderService.hideLoader();
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+        this.loaderService.hideLoader();
+      },
+    });
+
+    this.currencyCoinDetailsForm?.reset();
+    const model = document.getElementById("currencyCoinDetailsPopup");
+    if (model !== null) {
+      model.style.display = "block";
+    }
+    if (currencyCoinId) {
+      this.getCurrencyCoinDetails(currencyCoinId);
+    }
+    else {
+      this.loaderService.hideLoader();
+
+    }
+  }
+
+  closePopup() {
+    const model = document.getElementById("currencyCoinDetailsPopup");
+    if (model !== null) {
+      model.style.display = "none";
+    }
+    this.currencyCoinDetailsForm.reset();
+  }
+
+
 
   getCurrencyCoinDetails(collectionCoinId: string) {
     this._currencyCoinService
       .getCurrencyCoinDetails(collectionCoinId)
-      .subscribe((res: any) => {
-        this.currencyCoinDetails = res[0];
-        this.patchValues(res);
+      .subscribe({
+        next: (res: any) => {
+          this.currencyCoinDetails = res[0];
+          this.patchValues(res);
+          this.loaderService.hideLoader();
+        },
+        error: (err) => {
+          this.loaderService.hideLoader();
+        }
       });
   }
   getAssetDetails(assetId: string) {
@@ -94,6 +175,9 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     if (res != undefined) {
       this.currencyCoinDetailsForm.controls["collectionCoinId"].patchValue(
         res["birthcollectionCoinId"]
+      );
+      this.currencyCoinDetailsForm.controls["collectionCoinType"].patchValue(
+        res["collectionCurrencyTypeId"]
       );
       this.currencyCoinDetailsForm.controls["collectionCoinName"].patchValue(
         res["collectionCoinName"]

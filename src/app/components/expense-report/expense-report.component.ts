@@ -200,7 +200,7 @@ export class ExpenseReportComponent implements OnInit {
         title: "-",
         field: "",
         maxWidth: 70,
-        formatter: this.hidebuttonFormatter.bind(this),
+        formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const expenseId = cell.getRow().getData()["sourceOrReason"];
           this.hideExpense(expenseId); // Call the hideExpense method
@@ -219,9 +219,7 @@ export class ExpenseReportComponent implements OnInit {
       },
     ];
   }
-  hidebuttonFormatter(cell: CellComponent) {
-    return `<button class="action-buttons" title="Hide Expense" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
-  }
+
   hideExpense(expenseId: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
       return item.sourceOrReason != expenseId;

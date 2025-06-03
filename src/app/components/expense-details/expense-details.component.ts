@@ -149,72 +149,58 @@ export class ExpenseDetailsComponent {
     });
   }
 
-  onSourceReasonChange(event: any) {
-    const inputValue = event?.target?.value?.toLowerCase();
-    if (!inputValue) {
-      this.filteredSourceOrReasonList = [];
-      this.filteredPurposeList = [];
-      this.filteredDescriptionList = [];
-    } else {
-      this.filteredSourceOrReasonList = Array.from(
-        new Set(
-          this.commonSuggestionList
-            .filter(
-              (option: any) =>
-                option?.sourceOrReason &&
-                option.sourceOrReason.trim() !== "" &&
-                option.sourceOrReason.toLowerCase().includes(inputValue)
-            )
-            .map((item: any) => item.sourceOrReason) // Extract only the 'purpose' values
-            .filter((sourceOrReason: any) => sourceOrReason) // Remove any falsy values
-        ).values()
-      );
-      console.log(
-        "1 this.filteredSourceOrReasonList :",
-        this.filteredSourceOrReasonList
-      );
+private capitalizeWords(text: string): string {
+  return text
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
 
-      this.filteredPurposeList = Array.from(
-        new Set(
-          this.commonSuggestionList
-            .filter(
-              (option: any) =>
-                option?.sourceOrReason &&
-                option.sourceOrReason.trim() !== "" &&
-                option.sourceOrReason.toLowerCase().includes(inputValue)
-            )
-            .map((item: any) => item.purpose) // Extract only the 'purpose' values
-            .filter((purpose: any) => purpose) // Remove any falsy values
-        )
-      );
-      console.log("2 this.filteredPurposeList :", this.filteredPurposeList);
+private extractUniqueCapitalized(filteredList: any[], key: string): string[] {
+  return Array.from(
+    new Set(
+      filteredList
+        .map((item) => item[key]?.trim())
+        .filter((value) => value)
+        .map((value) => this.capitalizeWords(value))
+    )
+  );
+}
 
-      this.filteredDescriptionList = Array.from(
-        new Set(
-          this.commonSuggestionList
-            .filter(
-              (option: any) =>
-                option?.sourceOrReason &&
-                option.sourceOrReason.trim() !== "" &&
-                option.sourceOrReason.toLowerCase().includes(inputValue)
-            )
-            .map((item: any) => item.description) // Extract only the 'description' values
-            .filter((description: any) => description) // Remove any falsy values
-        )
-      );
-      console.log(
-        "3 this.filteredDescriptionList :",
-        this.filteredDescriptionList
-      );
-    }
-  }
-
-  selectSourceOrReason(selectedValue: string) {
-    this.expenseDetailsForm.controls["sourceOrReason"].patchValue(
-      selectedValue
-    );
+private updateFilteredLists(inputValue: string): void {
+  if (!inputValue) {
     this.filteredSourceOrReasonList = [];
+    this.filteredPurposeList = [];
+    this.filteredDescriptionList = [];
+    return;
   }
+
+  const filteredList = this.commonSuggestionList.filter(
+    (option: any) =>
+      option?.sourceOrReason &&
+      option.sourceOrReason.trim() !== "" &&
+      option.sourceOrReason.toLowerCase().includes(inputValue.toLowerCase())
+  );
+
+  this.filteredSourceOrReasonList = this.extractUniqueCapitalized(filteredList, "sourceOrReason");
+  console.log("1 this.filteredSourceOrReasonList:", this.filteredSourceOrReasonList);
+
+  this.filteredPurposeList = this.extractUniqueCapitalized(filteredList, "purpose");
+  console.log("2 this.filteredPurposeList:", this.filteredPurposeList);
+
+  this.filteredDescriptionList = this.extractUniqueCapitalized(filteredList, "description");
+  console.log("3 this.filteredDescriptionList:", this.filteredDescriptionList);
+}
+
+onSourceReasonChange(event: any): void {
+  const inputValue = event?.target?.value?.toLowerCase() || "";
+  this.updateFilteredLists(inputValue);
+}
+
+selectSourceOrReason(inputValue: string): void {
+  this.expenseDetailsForm.controls["sourceOrReason"].patchValue(inputValue);
+  this.updateFilteredLists(inputValue.toLowerCase());
+}
 
   onDescriptionChange(event: any) {
     const inputValue = event?.target?.value?.toLowerCase();
