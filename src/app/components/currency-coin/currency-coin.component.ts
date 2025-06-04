@@ -45,7 +45,6 @@ export class CurrencyCoinComponent implements OnInit {
                   `,
       action: (_e: any, cell: CellComponent) => {
         const collectionCoinData = cell.getRow().getData();
-        debugger
         const collectionCoinId = collectionCoinData["collectionCoinId"];
         this.currencyCoinDetails(collectionCoinId);
       },
@@ -201,16 +200,17 @@ export class CurrencyCoinComponent implements OnInit {
     return `<span></span>`;
   }
 
-  filterGridBySearch(data: any) {
+  
+  filterGridSearchText(event: any) {
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
     }, 0);
-    this.searchText = data?.target?.value?.toLowerCase();
+
+    this.searchText = event.target.value.toLowerCase();
     this.applyFilters();
   }
 
   currencyCoinDetails(data: any) {
-    debugger;
     this.currencyCoinDetailsComponent.openDetailsPopup(data);
   }
 
@@ -242,11 +242,18 @@ export class CurrencyCoinComponent implements OnInit {
 
   applyFilters() {
     this.filteredTableData = this.tableData.filter((item: any) => {
-      const matchesName = item.PersonName.toLowerCase().includes(this.searchText);
-      return matchesName;
+      const matchesCoinName = item.collectionCoinName?.toLowerCase().includes(this.searchText);
+      const matchesCountryName = item.countryName?.toLowerCase().includes(this.searchText);
+      const matchesActulaValue = item.actualValue?.toString()?.toLowerCase().includes(this.searchText);
+      const matchesIndianValue = item.indianValue?.toString()?.toLowerCase().includes(this.searchText);
+      const matchesDescription = item.description?.toLowerCase().includes(this.searchText);
+      return matchesCoinName || matchesCountryName || matchesActulaValue || matchesIndianValue || matchesDescription;
     });
   }
 
+  currencyCoinGallery(){
+
+  }
 
 }
 

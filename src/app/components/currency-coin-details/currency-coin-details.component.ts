@@ -54,7 +54,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       countryId: [0, Validators.required],
       address: "", // Already present
       assetId: 0,
-      image: null,
+      picture: null,
       coinWeightInGrams: [0],
       actualValue: [0],
       indianValue: [0],
@@ -156,9 +156,16 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       .getCurrencyCoinDetails(collectionCoinId)
       .subscribe({
         next: (res: any) => {
-          this.currencyCoinDetails = res[0];
+        console.log("res : ", res);
           this.patchValues(res);
+          this.currencyCoinDetails = res;
+          console.log("this.currencyCoinDetails?.assetId : ", this.currencyCoinDetails?.assetId);
+
+        if (this.currencyCoinDetails?.assetId) {
+          this.getAssetDetails(this.currencyCoinDetails.assetId);
           this.loaderService.hideLoader();
+        }
+        this.loaderService.hideLoader();
         },
         error: (err) => {
           this.loaderService.hideLoader();
@@ -166,8 +173,19 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       });
   }
   getAssetDetails(assetId: string) {
-    this._assetService.getAssetDetails(assetId).subscribe((res: any) => {
-      this.selectedImage = API_URL.ATTACHMENT + res.OriginalPath;
+    this._assetService.getAssetDetails(assetId).subscribe({
+      next: (res: any) => {
+        console.log();
+
+        this.selectedImage = API_URL.ATTACHMENT + res.originalPath;
+        console.log("this.selectedImage : ", this.selectedImage);
+
+        this.loaderService.hideLoader();
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+        this.loaderService.hideLoader();
+      },
     });
   }
 
@@ -215,7 +233,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       this.currencyCoinDetailsForm.controls["metalUsed"].patchValue(
         res["metalUsed"]
       );
-      this.currencyCoinDetailsForm.controls["image"].patchValue(res["image"]);
+      this.currencyCoinDetailsForm.controls["picture"].patchValue(res["image"]);
       this.currencyCoinDetailsForm.controls["assetId"].patchValue(
         res["assetId"]
       );
