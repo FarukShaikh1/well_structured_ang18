@@ -4,11 +4,12 @@ import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-
 import { CommonModule } from '@angular/common';
 import { API_URL } from '../../../utils/api-url';
 import { ColumnDefinition, CellComponent } from 'tabulator-tables';
-import { ApplicationTableConstants } from '../../../utils/application-constants';
+import { ApplicationTableConstants, NavigationURLs } from '../../../utils/application-constants';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-currency-coin',
@@ -68,6 +69,7 @@ export class CurrencyCoinComponent implements OnInit {
   ];
 
   constructor(
+    private router: Router,
     private currencyCoinService: CurrencyCoinService,
     public globalService: GlobalService,
     private loaderService: LoaderService) {
@@ -90,16 +92,6 @@ export class CurrencyCoinComponent implements OnInit {
 
   }
 
-  // constructor( private _currencyCoinService: CurrencyCoinService) {
-
-  // }
-
-
-  // ngOnInit() {
-  //   this.basePath = API_URL.ATTACHMENT;
-  //   this.getCurrencyCoinRecords();
-
-  // }
   collectionCoinColumnConfiguration() {
     this.tableColumnConfig = [
       {
@@ -252,7 +244,7 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   currencyCoinGallery(){
-
+    this.router.navigate([NavigationURLs.CURRENCY_GALLERY]);
   }
 
 }

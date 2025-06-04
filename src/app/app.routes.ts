@@ -10,6 +10,7 @@ import { ExpenseComponent } from "./components/expense/expense.component";
 import { BusinessComponent } from "./components/business/business.component";
 import { publicGuard } from "./guards/public.guard";
 import { authGuard } from "./guards/auth.guard";
+import { CurrencyGalleryComponent } from "./components/currency-gallery/currency-gallery.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -62,8 +63,8 @@ export const routes: Routes = [
         component: CurrencyCoinComponent,
       },
       {
-        path: "currency-coin-details",
-        component: CurrencyCoinDetailsComponent,
+        path: "currency-gallery",
+        component: CurrencyGalleryComponent,
       },
       {
         path: "manage-users",

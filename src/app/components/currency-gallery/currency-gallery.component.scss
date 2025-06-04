@@ -1,0 +1,15 @@
+.note-image,
+.coin-image {
+  height: 400px; /* set your preferred height */
+  overflow: hidden;
+}
+
+.note-image img {
+  height: 400px;
+  object-fit: cover;
+}
+
+.coin-image img {
+  height: 400px;
+  object-fit: cover;
+}

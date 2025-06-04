@@ -1,0 +1,58 @@
+<div class="main-body">
+  <button (click)="currencyCoinDetails('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
+    data-bs-target="#currencyCoinDetailsPopup">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+    Add Collection Item
+  </button>
+  <button (click)="currencyCoinList()" class="btn btn-primary rounded-button">
+    Gallery
+  </button>
+  <div class="row pb-2">
+    <div class="col-5 col-sm-4 col-md-3 col-lg-2">
+      <div appearance="outline">
+        <label>Search</label>
+        <input #searchInput (input)="filterGridSearchText($event)"
+          class="form-control form-control-lg text-dark bg-transparent" />
+      </div>
+    </div>
+    <div class="col-5">
+      <div class="col">
+        <label>Coin Type</label>
+        <select
+          class="form-select form-control form-control-lg text-dark bg-transparent styled-select dropdown-toggle scrollable-button">
+          @for(item of currencyTypeList; track $index){
+          <option [value]="item.commonListItemId">
+            {{ item.listItemName }}
+          </option>
+          }
+        </select>
+      </div>
+
+    </div>
+    <div class="col-5">
+      <label>Country</label>
+      <select formControlName="countryId" class="form-select form-control-lg bg-transparent">
+        @for(item of countryList; track $index){
+        <option [value]="item.countryId">
+          {{ item.countryName }}
+        </option>
+        }
+      </select>
+
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-12 d-flex flex-wrap">
+    <div *ngFor="let coin of filteredCoinList" class="m-2 border shadow-sm rounded overflow-hidden"
+      [ngClass]="coin.isNote ? 'note-image' : 'coin-image'">
+      <img [src]="basePath + coin.imagePath" alt="Currency Image" class="img-fluid" />
+    </div>
+  </div>
+
+  <app-currency-details></app-currency-details>
+  <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
