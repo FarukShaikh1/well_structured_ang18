@@ -1483,3 +1483,20 @@ input.ng-invalid.ng-touched {
 .action-buttons:focus {
   outline: none;
 }
+
+.scrollable-button {
+    display: block; /* Ensure block-level behavior */
+    width: 100%; /* Adjust width as needed */
+    height: 40px; /* Adjust height */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent text wrapping */
+    text-align: left; /* Align text */
+    border: 1px solid #ccc; /* Optional styling */
+    padding: 5px;
+  }
+
+ .dropdown-menu {
+    max-height: 300px; 
+    padding: 0 10px 0 10px;
+    overflow-y: auto;
+}

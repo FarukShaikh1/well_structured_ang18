@@ -8,7 +8,7 @@
     Add Collection Item
   </button>
   <button (click)="currencyCoinList()" class="btn btn-primary rounded-button">
-    Gallery
+    Data
   </button>
   <div class="row pb-2">
     <div class="col-5 col-sm-4 col-md-3 col-lg-2">
@@ -18,30 +18,68 @@
           class="form-control form-control-lg text-dark bg-transparent" />
       </div>
     </div>
-    <div class="col-5">
-      <div class="col">
+    <div class="col-lg-2">
         <label>Coin Type</label>
-        <select
-          class="form-select form-control form-control-lg text-dark bg-transparent styled-select dropdown-toggle scrollable-button">
-          @for(item of currencyTypeList; track $index){
-          <option [value]="item.commonListItemId">
-            {{ item.listItemName }}
-          </option>
+              <button
+          class="form-select form-control form-control-lg text-dark bg-transparent styled-select dropdown-toggle scrollable-button"
+          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
+          style="text-align: left">
+          {{ lableForTypeDropDown }}
+        </button>
+
+        <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllTypeCheck($event)"
+                [checked]="selectedTypes.length === typeList?.length" />
+              <label class="form-check-label" for="selectAll">All</label>
+            </div>
+          </li>
+          @for(item of currencyTypeList;track $index){
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" [id]="item.listItemName"
+                [checked]="selectedTypes.includes(item.listItemDescription)"
+                (change)="toggleTypeCheck($event, item.listItemDescription)" />
+              <label class="form-check-label" [for]="item.listItemName">
+                {{ item.listItemDescription }}
+              </label>
+            </div>
+          </li>
           }
-        </select>
-      </div>
+        </ul>
 
     </div>
-    <div class="col-5">
+    <div class="col-lg-2">
       <label>Country</label>
-      <select formControlName="countryId" class="form-select form-control-lg bg-transparent">
-        @for(item of countryList; track $index){
-        <option [value]="item.countryId">
-          {{ item.countryName }}
-        </option>
-        }
-      </select>
+              <button
+          class="form-select form-control form-control-lg text-dark bg-transparent styled-select dropdown-toggle scrollable-button"
+          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
+          style="text-align: left">
+          {{ lableForCountryDropDown }}
+        </button>
 
+        <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllCountryCheck($event)"
+                [checked]="selectedCountries.length === countryList?.length" />
+              <label class="form-check-label" for="selectAll">All</label>
+            </div>
+          </li>
+          @for(item of countryList;track $index){
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" [id]="item.countryName"
+                [checked]="selectedCountries.includes(item.countryName)"
+                (change)="toggleCountryCheck($event, item.countryName)" />
+              <label class="form-check-label" [for]="item.countryName">
+                {{ item.countryName }}
+              </label>
+            </div>
+          </li>
+          }
+        </ul>
     </div>
   </div>
 </div>
