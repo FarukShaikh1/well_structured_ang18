@@ -29,19 +29,18 @@ export class CurrencySummaryComponent implements OnInit {
   basePath: string = API_URL.ATTACHMENT;
   searchText: string = '';
   currencyCoinId: string = '';
-  public tableData: Record<string, unknown>[] = [];
-  public filteredTableData: Record<string, unknown>[] = [];
-  public tableColumnConfig: ColumnDefinition[] = [];
+  public summaryTableData: Record<string, unknown>[] = [];
+  public filteredSummaryTableData: Record<string, unknown>[] = [];
+  public summaryTableColumnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
 
   optionsMenu = [
     {
-      label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#currencyCoinDetailsPopup">
+      label: `<a class="dropdown-item btn-link">
                   <i class="bi bi-pencil"></i>
-                    &nbsp;Edit
+                    &nbsp;Data
                   </a>
                   `,
       action: (_e: any, cell: CellComponent) => {
@@ -54,10 +53,9 @@ export class CurrencySummaryComponent implements OnInit {
       separator: true,
     },
     {
-      label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
-                  <i class="bi bi-trash"></i>
-                    &nbsp;Delete
+      label: `<a class="dropdown-item btn-link">
+                  <i class="bi bi-pencil"></i>
+                    &nbsp;Gallery
                   </a>
                   `,
       action: (_e: any, cell: CellComponent) => {
@@ -93,7 +91,7 @@ export class CurrencySummaryComponent implements OnInit {
   }
 
   collectionCoinColumnConfiguration() {
-    this.tableColumnConfig = [
+    this.summaryTableColumnConfig = [
       {
         title: "Country",
         field: "countryName",
@@ -162,7 +160,7 @@ export class CurrencySummaryComponent implements OnInit {
   }
 
   hideCollectionCoin(collectionCoinId: any) {
-    this.filteredTableData = this.filteredTableData.filter((item: any) => {
+    this.filteredSummaryTableData = this.filteredSummaryTableData.filter((item: any) => {
       return item.collectionCoinId != collectionCoinId;
     });
   }
@@ -170,8 +168,8 @@ export class CurrencySummaryComponent implements OnInit {
   LoadGrid() {
     this.currencyCoinService.getCurrencyCoinSummary().subscribe({
       next: (res: any) => {
-        this.tableData = res;
-        this.filteredTableData = res;
+        this.summaryTableData = res;
+        this.filteredSummaryTableData = res;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -240,7 +238,7 @@ export class CurrencySummaryComponent implements OnInit {
   }
 
   applyFilters() {
-    this.filteredTableData = this.tableData.filter((item: any) => {
+    this.filteredSummaryTableData = this.summaryTableData.filter((item: any) => {
       const matchesCoinName = item.collectionCoinName?.toLowerCase().includes(this.searchText);
       const matchesCountryName = item.countryName?.toLowerCase().includes(this.searchText);
       const matchesActulaValue = item.actualValue?.toString()?.toLowerCase().includes(this.searchText);
