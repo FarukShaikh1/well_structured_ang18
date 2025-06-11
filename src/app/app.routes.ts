@@ -11,6 +11,7 @@ import { BusinessComponent } from "./components/business/business.component";
 import { publicGuard } from "./guards/public.guard";
 import { authGuard } from "./guards/auth.guard";
 import { CurrencyGalleryComponent } from "./components/currency-gallery/currency-gallery.component";
+import { CurrencySummaryComponent } from "./components/currency-summary/currency-summary.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -61,6 +62,11 @@ export const routes: Routes = [
         path: "currency-coin",
         title: "Currency Collection",
         component: CurrencyCoinComponent,
+      },
+      {
+        path: "currency-summary",
+        title: "Currency summary",
+        component: CurrencySummaryComponent,
       },
       {
         path: "currency-gallery",

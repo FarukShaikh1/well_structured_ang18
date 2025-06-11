@@ -21,6 +21,12 @@ export class CurrencyCoinService {
     return this.http.get(API_URL.GET_COLLECTION_COIN_LIST, { params: params });//?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
   }
 
+  getCurrencyCoinSummary(): Observable<any> {
+    const params = new HttpParams()
+      .set('userid', String(localStorage.getItem("userId")))
+    return this.http.get(API_URL.GET_COLLECTION_SUMMARY, { params: params });//?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+  }
+
   getCurrencyCoinDetails(collectionCoinId: string) {
     const params = new HttpParams()
       .set('userid', String(localStorage.getItem("userId")))

@@ -32,10 +32,9 @@ export class CurrencyGalleryComponent implements OnInit {
   images: any;
   currencyTypeList: any;
   countryList: any;
-  lableForTypeDropDown = "";
-  typeList: any;
   selectedTypes: string[] = []; // Array to store selected months
   selectedCountries: string[] = []; // Array to store selected months
+  lableForTypeDropDown = "";
   lableForCountryDropDown: string = '';
 
   constructor(
@@ -51,7 +50,15 @@ export class CurrencyGalleryComponent implements OnInit {
         this.coinList = res;
         this.filteredCoinList = res;
         console.log('this.coinList : ', this.coinList);
-                this.getTypeDropdownLabel();
+            //     this.countryList = res;
+// Assuming you have CurrencyList as an array of objects
+this.countryList = Array.from(
+  new Map(
+    res.map((item:any) => [item.countryName, { countryName: item.countryName, countryId: item.countryName }])
+  ).values()
+).sort((a:any, b:any) => a.countryName.localeCompare(b.countryName));;
+
+        this.getTypeDropdownLabel();
         this.applyFilters();
 
         this.loaderService.hideLoader();
@@ -78,16 +85,16 @@ export class CurrencyGalleryComponent implements OnInit {
       },
     });
 
-    this.globalService.getCountryList().subscribe({
-      next: (res: any) => {
-        this.countryList = res;
-        this.loaderService.hideLoader();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
+    // this.globalService.getCountryList().subscribe({
+    //   next: (res: any) => {
+    //     this.countryList = res;
+    //     this.loaderService.hideLoader();
+    //   },
+    //   error: (error: any) => {
+    //     console.log("error : ", error);
+    //     this.loaderService.hideLoader();
+    //   },
+    // });
 
 
   }
@@ -162,9 +169,10 @@ export class CurrencyGalleryComponent implements OnInit {
 
   // Handle "Select All" checkbox
   toggleAllTypeCheck(event: Event) {
+    debugger
     const checked = (event.target as HTMLInputElement).checked;
     this.selectedTypes = checked
-      ? this.typeList.map((m: any) => m.listItemName)
+      ? this.currencyTypeList.map((m: any) => m.listItemName)
       : [];
     this.getTypeDropdownLabel();
     this.applyFilters();
@@ -180,10 +188,10 @@ export class CurrencyGalleryComponent implements OnInit {
     this.getTypeDropdownLabel();
     this.applyFilters();
   }
-  getTypeDropdownLabel() {
+  getTypeDropdownLabel() {    
     if (this.selectedTypes?.length === 0) {
       this.lableForTypeDropDown = "";
-    } else if (this.selectedTypes?.length === this.typeList?.length) {
+    } else if (this.selectedTypes?.length === this.currencyTypeList?.length) {
       this.lableForTypeDropDown = "All";
     } else {
       this.lableForTypeDropDown = this.selectedTypes.join(", ");

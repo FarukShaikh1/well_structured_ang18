@@ -49,6 +49,7 @@ export const API_URL = {
 
   GET_COLLECTION_COIN_DETAILS: `${serverUrl}${apiPrefix}/collectionCoin/getCurrencyCoinDetails`,
   GET_COLLECTION_COIN_LIST: `${serverUrl}${apiPrefix}/collectionCoin/LoadCollectionRecords`,
+  GET_COLLECTION_SUMMARY : `${serverUrl}${apiPrefix}/collectionCoin/LoadCollectionSummary`,
   GET_COLLECTION_COIN_GALLERY: `${serverUrl}${apiPrefix}/collectionCoin/CollectionGallery`,
   ADD_COLLECTION_COIN: `${serverUrl}${apiPrefix}/collectionCoin/addCurrencyCoin?userId=`,
   UPDATE_COLLECTION_COIN: `${serverUrl}${apiPrefix}/collectionCoin/updateCurrencyCoin?userId=`,
