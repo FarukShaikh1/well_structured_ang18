@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import * as forms from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { environmentDev } from '../../../environments/environment.dev';
 import { PopupStats } from '../../interfaces/popup-stats';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
