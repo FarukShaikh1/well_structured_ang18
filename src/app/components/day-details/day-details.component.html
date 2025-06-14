@@ -43,7 +43,7 @@
                         dayDetailsForm.get('dayTypeId')?.touched &&
                         dayDetailsForm.get('dayTypeId')?.invalid
                     }">
-                    @for(item of dayType; track $index){
+                    @for(item of dayTypeList; track $index){
                     <option [value]="item.commonListItemId">
                       {{ item.listItemName }}
                     </option>
@@ -78,6 +78,25 @@
                   }
                 </div>
                 <div class="col">
+                  <label>Relation with Admin</label>
+                  <select formControlName="relationId"
+                    class="form-select form-control form-control-lg text-dark bg-transparent styled-select dropdown-toggle"
+                    [ngClass]="{
+                      'error-border':
+                        dayDetailsForm.get('dayTypeId')?.touched &&
+                        dayDetailsForm.get('dayTypeId')?.invalid
+                    }">
+                    @for(item of relationList; track $index){
+                    <option [value]="item.commonListItemId">
+                      {{ item.listItemName }}
+                    </option>
+                    }
+                  </select>
+                </div>
+              </div>
+
+              <div class="row mt-4">
+                <div class="col">
                   <label>Mobile Number</label>
                   <input formControlName="mobileNumber" class="form-control form-control-lg text-dark bg-transparent"
                     [ngClass]="{
@@ -95,8 +114,6 @@
                   </div>
                   }
                 </div>
-              </div>
-              <div class="row mt-4">
                 <div class="col">
                   <label>Contact Number</label>
                   <input formControlName="mobileNumber2" class="form-control form-control-lg text-dark bg-transparent"
@@ -115,6 +132,8 @@
                   </div>
                   }
                 </div>
+              </div>
+              <div class="row mt-4">
                 <div class="col">
                   <label>Email Id</label>
                   <input formControlName="emailId" class="form-control form-control-lg text-dark bg-transparent"
@@ -132,17 +151,6 @@
                     Invalid Email Id }
                   </div>
                   }
-                </div>
-              </div>
-              <div class="row mt-4">
-                <div class="col">
-                  <label>Address of a person</label>
-                  <textarea placeholder="" formControlName="address"
-                    class="form-control form-control-lg text-dark bg-transparent"></textarea>
-                  <div class="text-danger">
-                    @if(dayDetailsForm.get('address')?.errors?.['required']){
-                    Address is required }
-                  </div>
                 </div>
                 <div class="col d-flex">
                   <label class="pe-1">
@@ -164,6 +172,18 @@
                     <input type="radio" formControlName="gender" value="O" />
                     Other
                   </label>
+                </div>
+              </div>
+
+              <div class="row mt-4">
+                <div class="col">
+                  <label>Address of a person</label>
+                  <textarea placeholder="" formControlName="address"
+                    class="form-control form-control-lg text-dark bg-transparent"></textarea>
+                  <div class="text-danger">
+                    @if(dayDetailsForm.get('address')?.errors?.['required']){
+                    Address is required }
+                  </div>
                 </div>
               </div>
               @if(isApprovable && isVerified){
@@ -197,20 +217,20 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row mt-4">
-            <div class="col-12 col-sm-12">
-              <div class="action d-flex justify-content-end">
-                <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()"
-                  data-bs-dismiss="modal">
-                  Cancel
-                </button>
-                <button class="btn btn-danger rounded-button" type="reset">
-                  Reset
-                </button>
-                <button class="btn btn-primary rounded-button" type="submit" [disabled]="dayDetailsForm.invalid">
-                  Save
-                </button>
+            <div class="row mt-4">
+              <div class="col-12 col-sm-12">
+                <div class="action d-flex justify-content-end">
+                  <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()"
+                    data-bs-dismiss="modal">
+                    Cancel
+                  </button>
+                  <button class="btn btn-danger rounded-button" type="reset">
+                    Reset
+                  </button>
+                  <button class="btn btn-primary rounded-button" type="submit" [disabled]="dayDetailsForm.invalid">
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
           </div>

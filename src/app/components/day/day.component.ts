@@ -52,9 +52,6 @@ export class DayComponent implements OnInit {
   monthList: any;
   dayTypeList: any = "";
   relationTypeList: any = "";
-  month: any = "";
-  selectedDayTypeIds: any = "";
-  dayType: any = "";
   isToday: boolean = false;
   isTomorrow: boolean = false;
   isYesterday: boolean = false;
@@ -62,12 +59,17 @@ export class DayComponent implements OnInit {
   searchText: string = "";
   selectedData!: { value: any; text: any };
   lableForMonthDropDown = "";
+  lableForMonthDropDownIds = "";
   selectedMonths: string[] = []; // Array to store selected months
-  DayType: string[] = []; // Array to store selected months
+  selectedMonthsIds: string[] = []; // Array to store selected months
   lableForDayTypeDropDown = "";
+  lableForDayTypeDropDownIds = "";
   lableForRelationTypeDropDown = "";
+  lableForRelationTypeDropDownIds = "";
   selectedDayType: string[] = []; // Array to store selected DayTypes
+  selectedDayTypeIds: string[] = []; // Array to store selected DayTypes
   selectedRelationType: string[] = []; // Array to store selected DayTypes
+  selectedRelationTypeIds: string[] = []; // Array to store selected DayTypes
   loggedInUser = null;
   birthdayId: string = '';
   constructor(
@@ -131,8 +133,9 @@ export class DayComponent implements OnInit {
     this.loaderService.showLoader();
     this._dayService
       .getDayList(
-        this.month,
-        this.dayType,
+        this.lableForMonthDropDownIds,
+        this.lableForDayTypeDropDownIds,
+        this.lableForRelationTypeDropDownIds,
         this.searchText,
         this.isToday,
         this.isTomorrow,
@@ -365,12 +368,14 @@ export class DayComponent implements OnInit {
     this.applyFilters();
   }
   // Handle individual month selection
-  toggleMonthCheck(event: Event, monthName: string) {
+  toggleMonthCheck(event: Event, monthName: string, monthId: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedMonths.push(monthName);
+      this.selectedMonthsIds.push(monthId);
     } else {
       this.selectedMonths = this.selectedMonths.filter((m) => m !== monthName);
+      this.selectedMonthsIds = this.selectedMonthsIds.filter((m) => m !== monthId);
     }
     this.getMonthDropdownLabel();
     this.applyFilters();
@@ -380,8 +385,10 @@ export class DayComponent implements OnInit {
       this.lableForMonthDropDown = "";
     } else if (this.selectedMonths.length === this.monthList.length) {
       this.lableForMonthDropDown = "All";
+      this.lableForMonthDropDownIds = "";
     } else {
       this.lableForMonthDropDown = this.selectedMonths.join(", ");
+      this.lableForMonthDropDownIds = this.selectedMonthsIds.join(", ");
     }
   }
   // Handle "Select All" checkbox
@@ -396,14 +403,14 @@ export class DayComponent implements OnInit {
     this.applyFilters();
   }
   // Handle individual daytype selection
-  toggleDayTypeCheck(event: Event, daytypeName: string) {
+  toggleDayTypeCheck(event: Event, daytypeName: string, dayId: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedDayType.push(daytypeName);
+      this.selectedDayTypeIds.push(dayId);
     } else {
-      this.selectedDayType = this.selectedDayType.filter(
-        (m) => m !== daytypeName
-      );
+      this.selectedDayType = this.selectedDayType.filter((m) => m !== daytypeName);
+      this.selectedDayTypeIds = this.selectedDayTypeIds.filter((m) => m !== dayId);
     }
     this.getDayTypeDropdownLabel();
     this.applyFilters();
@@ -414,8 +421,10 @@ export class DayComponent implements OnInit {
       this.lableForDayTypeDropDown = "";
     } else if (this.selectedDayType.length === this.dayTypeList.length) {
       this.lableForDayTypeDropDown = "All";
+      this.lableForDayTypeDropDownIds = '';
     } else {
       this.lableForDayTypeDropDown = this.selectedDayType.join(", ");
+      this.lableForDayTypeDropDownIds = this.selectedDayTypeIds.join(", ");
     }
   }
 
@@ -431,14 +440,14 @@ export class DayComponent implements OnInit {
     this.applyFilters();
   }
   // Handle individual relationtype selection
-  toggleRelationTypeCheck(event: Event, relationtypeName: string) {
+  toggleRelationTypeCheck(event: Event, relationtypeName: string, relationId: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedRelationType.push(relationtypeName);
+      this.selectedRelationTypeIds.push(relationId);
     } else {
-      this.selectedRelationType = this.selectedRelationType.filter(
-        (m) => m !== relationtypeName
-      );
+      this.selectedRelationType = this.selectedRelationType.filter((m) => m !== relationtypeName);
+      this.selectedRelationTypeIds = this.selectedRelationTypeIds.filter((m) => m !== relationId);
     }
     this.getRelationTypeDropdownLabel();
     this.applyFilters();
@@ -449,8 +458,10 @@ export class DayComponent implements OnInit {
       this.lableForRelationTypeDropDown = "";
     } else if (this.selectedRelationType.length === this.relationTypeList.length) {
       this.lableForRelationTypeDropDown = "All";
+      this.lableForRelationTypeDropDownIds = "";
     } else {
       this.lableForRelationTypeDropDown = this.selectedRelationType.join(", ");
+      this.lableForRelationTypeDropDownIds = this.selectedRelationTypeIds.join(", ");
     }
   }
 

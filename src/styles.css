@@ -1500,3 +1500,19 @@ input.ng-invalid.ng-touched {
     padding: 0 10px 0 10px;
     overflow-y: auto;
 }
+
+.note-image,
+.coin-image {
+  height: 400px; /* set your preferred height */
+  overflow: hidden;
+}
+
+.note-image img {
+  height: 400px;
+  object-fit: cover;
+}
+
+.coin-image img {
+  height: 400px;
+  object-fit: cover;
+}

@@ -216,7 +216,7 @@ selectSourceOrReason(inputValue: string): void {
                 option.description.trim() !== "" &&
                 option.description.toLowerCase().includes(inputValue)
             )
-            .map((item: any) => item.description) // Extract only the 'description' values
+            .map((item: any) => item.description?.trim()) // Extract only the 'description' values
             .filter((description: any) => description) // Remove any falsy values
         )
       );
@@ -246,7 +246,7 @@ selectSourceOrReason(inputValue: string): void {
                 option.purpose.trim() !== "" &&
                 option.purpose.toLowerCase().includes(inputValue)
             )
-            .map((item: any) => item.purpose) // Extract only the 'purpose' values
+            .map((item: any) => item.purpose?.trim()) // Extract only the 'purpose' values
             .filter((purpose: any) => purpose) // Remove any falsy values
         )
       );

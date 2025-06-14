@@ -54,7 +54,7 @@
             <div class="form-check">
               <input type="checkbox" class="form-check-input" [id]="item.listItemName"
                 [checked]="selectedMonths.includes(item.listItemDescription)"
-                (change)="toggleMonthCheck($event, item.listItemDescription)" />
+                (change)="toggleMonthCheck($event, item.listItemDescription,item.sequenceNumber )" />
               <label class="form-check-label" [for]="item.listItemName">
                 {{ item.listItemDescription }}
               </label>
@@ -87,7 +87,7 @@
             <div class="form-check">
               <input type="checkbox" class="form-check-input" [id]="item.listItemDescription"
                 [checked]="selectedDayType.includes(item.listItemDescription)"
-                (change)="toggleDayTypeCheck($event, item.listItemDescription)" />
+                (change)="toggleDayTypeCheck($event, item.listItemDescription, item.commonListItemId)" />
               <label class="form-check-label" [for]="item.listItemDescription">
                 {{ item.listItemDescription }}
               </label>
@@ -127,7 +127,7 @@
             <div class="form-check">
               <input type="checkbox" class="form-check-input" [id]="item.listItemDescription"
                 [checked]="selectedRelationType.includes(item.listItemDescription)"
-                (change)="toggleRelationTypeCheck($event, item.listItemDescription)" />
+                (change)="toggleRelationTypeCheck($event, item.listItemDescription, item.commonListItemId)" />
               <label class="form-check-label" [for]="item.listItemDescription">
                 {{ item.listItemDescription }}
               </label>

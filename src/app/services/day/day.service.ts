@@ -21,6 +21,7 @@ export class DayService {
   getDayList(
     month: string,
     dayType: string,
+    relation: string,
     searchText: string,
     isToday: boolean = false,
     isTomorrow: boolean = false,
@@ -31,6 +32,7 @@ export class DayService {
       .set("searchText", searchText)
       .set("month", month)
       .set("dayType", dayType)
+      .set("relation", relation)
       .set("isToday", isToday)
       .set("isTomorrow", isTomorrow)
       .set("isYesterday", isYesterday);

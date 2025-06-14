@@ -38,7 +38,8 @@ export class DayDetailsComponent implements OnInit {
   startDate = new Date();
   dayDetailsForm: FormGroup;
   user: any;
-  dayType: any;
+  dayTypeList: any;
+  relationList: any;
   userId: string = "";
   dayId: string = "";
   selectedImage!: string | ArrayBuffer | null;
@@ -61,11 +62,11 @@ export class DayDetailsComponent implements OnInit {
   ) {
     this.dayDetailsForm = this._details.group<any>({
       dayId: '',
-      personName: [
-        "",
-        [Validators.required, Validators.pattern(/^[a-zA-Z. ]{3,40}$/)],
+      personName: ["",
+        [Validators.required, Validators.pattern(/^[a-zA-Z.\- ]{3,40}$/)],
       ],
       dayTypeId: ["", Validators.required],
+      relationId: [""],
       birthdate: ["", Validators.required],
       mobileNumber: ["", Validators.pattern(/^[0-9]{8,12}$/)],
       mobileNumber2: ["", Validators.pattern(/^[0-9]{8,12}$/)],
@@ -170,6 +171,7 @@ export class DayDetailsComponent implements OnInit {
       this.dayDetailsForm.controls["dayId"].patchValue(res["birthdayId"]);
       this.dayDetailsForm.controls["personName"].patchValue(res["personName"]);
       this.dayDetailsForm.controls["dayTypeId"].patchValue(res["dayTypeId"]);
+      this.dayDetailsForm.controls["relationId"].patchValue(res["relationId"]);
       this.dayDetailsForm.controls["birthdate"].patchValue(
         this.datepipe.transform(res["birthdate"], "dd/MM/yyyy")
       );
@@ -228,7 +230,17 @@ export class DayDetailsComponent implements OnInit {
 
     this.globalService.getCommonListItems(DBConstants.DAYTYPE).subscribe({
       next: (res: any) => {
-        this.dayType = res;
+        this.dayTypeList = res;
+        this.loaderService.hideLoader();
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+        this.loaderService.hideLoader();
+      },
+    });
+    this.globalService.getCommonListItems(DBConstants.RELATION).subscribe({
+      next: (res: any) => {
+        this.relationList = res;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
