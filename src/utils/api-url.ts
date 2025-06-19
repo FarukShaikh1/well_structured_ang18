@@ -1,7 +1,7 @@
-import { environmentDev } from "../environments/environment.dev";
+import { environment } from "../environments/environment";
 
-const serverUrl = environmentDev.serverUrl;
-const apiPrefix = environmentDev.apiPrefix;
+const serverUrl = environment.serverUrl;
+const apiPrefix = environment.apiPrefix;
 
 export const API_URL = {
   // Auth and User API URLs

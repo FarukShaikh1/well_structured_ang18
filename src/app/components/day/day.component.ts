@@ -16,6 +16,7 @@ import { DayDetailsComponent } from "../day-details/day-details.component";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { API_URL } from "../../../utils/api-url";
 
 export interface Task {
   name: string;
@@ -248,11 +249,19 @@ export class DayComponent implements OnInit {
 
   picFormatter(cell: CellComponent) {
     const rowData = cell.getRow().getData();
-    const clientId = rowData["assetId"];
-    if (clientId) {
-      const html = `
-        <i class="bi bi-person-circle fs-3" style="color: blue;"></i>
-   `;
+    let thumbnailPath = rowData["thumbailPath"];
+    if (thumbnailPath) {
+             thumbnailPath  = API_URL.ATTACHMENT + thumbnailPath;
+          
+      // const html = `<i class="bi bi-person-circle fs-3" style="color: blue;"></i>`;
+    const html = `<img src="${thumbnailPath}" style="width: 40px; height: 40px; object-fit: cover;" />`;
+      console.log('html : ',html);
+      
+      return html;
+    }
+    const assetId = rowData["assetId"];
+    if (assetId) {
+      const html = `<i class="bi bi-person-circle fs-3" style="color: blue;"></i>`;
       return html;
     }
     const html = "";

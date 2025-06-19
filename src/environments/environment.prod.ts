@@ -1,7 +1,7 @@
-export const environmentDev = {
+export const environment = {
   production: false,
   // serverUrl: 'https://localhost:7069/',
-  serverUrl: 'http://localhost:8282/prod/',
+  serverUrl: 'http://localhost:8181/',
   apiPrefix: 'api',
   msalConfig: {
     auth: {
@@ -15,7 +15,6 @@ export const environmentDev = {
     scopes: ['api://057cdc86-008c-41b0-b766-cdf91b956c92/ReadWrite'],
     uri: 'https://graph.microsoft.com/v1.0/me'
   },
-  ssoEmailDomains: ['Application.com', 'cfbm.com', 'skbiotek.ie', 'apfc.com', 'yposkesi.com'],
 
   // Local
   oktaConfig: {

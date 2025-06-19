@@ -2,9 +2,9 @@ import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
-import { environmentDev } from './environments/environment.dev';
+import { environment } from './environments/environment';
 
-if (environmentDev.production) {
+if (environment.production) {
   enableProdMode();
 }
 
