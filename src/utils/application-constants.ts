@@ -220,6 +220,7 @@ export const ApplicationModules = {
     EXPENSE: 'Expense',
     BUSINESS: 'Business',
     DAY: 'Day',
+    COIN_NOTE_COLLECTION: 'Coin Note Collection',
     USER: 'AUTH',
     DOCUMENT: 'Documents',
     ROLE_MODULE_MAPPING: 'RoleModuleMapping',

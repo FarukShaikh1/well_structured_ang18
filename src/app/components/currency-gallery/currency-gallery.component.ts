@@ -147,7 +147,7 @@ this.countryList = Array.from(
       // Text search logic
       const matchesText =
         !searchText ||
-        item.collectionCoinName?.toLowerCase().includes(searchText) ||
+        item.coinNoteName?.toLowerCase().includes(searchText) ||
         item.countryName?.toLowerCase().includes(searchText) ||
         item.actualValue?.toString().toLowerCase().includes(searchText) ||
         item.indianValue?.toString().toLowerCase().includes(searchText) ||
@@ -169,7 +169,6 @@ this.countryList = Array.from(
 
   // Handle "Select All" checkbox
   toggleAllTypeCheck(event: Event) {
-    debugger
     const checked = (event.target as HTMLInputElement).checked;
     this.selectedTypes = checked
       ? this.currencyTypeList.map((m: any) => m.listItemName)

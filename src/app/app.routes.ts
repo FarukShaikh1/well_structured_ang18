@@ -7,7 +7,7 @@ import { DayComponent } from "./components/day/day.component";
 // import { ExpenseReportComponent } from "./components/expense-report/expense-report.component";
 // import { ExpenseSummaryComponent } from "./components/expense-summary/expense-summary.component";
 import { ExpenseComponent } from "./components/expense/expense.component";
-import { BusinessComponent } from "./components/business/business.component";
+// import { BusinessComponent } from "./components/business/business.component";
 import { publicGuard } from "./guards/public.guard";
 import { authGuard } from "./guards/auth.guard";
 import { CurrencyGalleryComponent } from "./components/currency-gallery/currency-gallery.component";
@@ -51,11 +51,11 @@ export const routes: Routes = [
         title: "Expenses",
         component: ExpenseComponent,
       },
-      {
-        path: "business",
-        title: "Business",
-        component: BusinessComponent,
-      },
+      // {
+      //   path: "business",
+      //   title: "Business",
+      //   component: BusinessComponent,
+      // },
       // { path: "expense-summary", component: ExpenseSummaryComponent },
       // { path: "expense-report", component: ExpenseReportComponent },
       {

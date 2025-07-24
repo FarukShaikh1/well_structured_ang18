@@ -14,7 +14,6 @@ import {
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 import { NotificationService } from '../../services/notification/notification.service';
 import { HeaderComponent } from '../shared/header/header.component';
-import { LoaderComponent } from '../shared/loader/loader.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 @Component({
@@ -22,7 +21,6 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
     standalone: true,
     imports: [
         CommonModule,
-        LoaderComponent,
         HeaderComponent,
         RouterModule,
         ToasterComponent
@@ -49,7 +47,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     formDetails: any;
     unreadSystemNotificationCount = 0;
 
-
     constructor(
         private route: ActivatedRoute,
         private loaderService: LoaderService,
@@ -66,6 +63,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             this.unreadSystemNotificationCount = count;
         });
         // this.signalRService.getUnreadChatCountForNotification();
+        this.getLoggedInUserData();
         this.getLoggedInUserData();
     }
 
@@ -94,7 +92,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     closeFeedback() {
         this.displayFeedback = false;
     }
-
 
     getLoggedInUserData() {
         const userData = this.localStorageService.getLoggedInUserData();

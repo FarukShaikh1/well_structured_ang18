@@ -35,7 +35,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   public filteredTableData: Record<string, unknown>[] = [];
   public tableData: Record<string, unknown>[] = [];
   public columnConfig: ColumnDefinition[] = [];
-  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; 
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
   searchText: string = '';

@@ -1,6 +1,5 @@
 import { CommonModule, DatePipe } from "@angular/common";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
 import flatpickr from "flatpickr";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
 import {
@@ -17,6 +16,7 @@ import { ExpenseDetailsComponent } from "../expense-details/expense-details.comp
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
 export interface Task {
   name: string;
   completed: boolean;
@@ -50,21 +50,28 @@ export class ExpenseComponent implements OnInit {
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
   public tableColumnConfig: ColumnDefinition[] = [];
-  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; 
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
 
   lastExpenseDate: Date = new Date();
 
-  fromDate = new Date();
-  toDate = new Date();
-  formattedFromDate: any;
-  formattedToDate: any;
+  fromDate =DateUtils.GetDateBeforeDays(30);
+  toDate = DateUtils.GetDateBeforeDays(0);
   sourceOrReason: string = "";
   minAmount: number = 0;
   maxAmount: number = 0;
-  sourceOrReasonList: any;
   expenseId: string = "";
+  activeComponent: string = NavigationURLs.EXPENSE_LIST;
+  reportLastDate = "";
+  reportFirstDate = "";
+  expensefilterRequest : ExpenseFilterRequest = {
+    fromDate: this.fromDate,
+    toDate: this.toDate,          
+    minAmount: this.minAmount,
+    maxAmount: this.maxAmount,
+    sourceOrReason: ''
+  };
 
   optionsMenu = [
     {
@@ -76,7 +83,7 @@ export class ExpenseComponent implements OnInit {
                   `,
       action: (_e: any, cell: CellComponent) => {
         const expenseData = cell.getRow().getData();
-        const expenseId = expenseData["expenseId"];
+        const expenseId = expenseData["id"];
         this.expenseDetails(expenseId);
       },
     },
@@ -92,26 +99,19 @@ export class ExpenseComponent implements OnInit {
                   `,
       action: (_e: any, cell: CellComponent) => {
         const expenseData = cell.getRow().getData();
-        const expenseId = expenseData["expenseId"];
+        const expenseId = expenseData["id"];
         this.deleteExpense(expenseId);
       },
     },
   ];
-  activeComponent: string = NavigationURLs.EXPENSE_LIST;
-  reportLastDate = "";
-  reportFirstDate = "";
 
   constructor(
     private expenseService: ExpenseService,
     public datePipe: DatePipe,
     public globalService: GlobalService,
-    private loaderService: LoaderService,
-    private activatedRoute: ActivatedRoute,
-    private dateUtil: DateUtils
-  ) {}
+    private loaderService: LoaderService  ) {}
 
   ngOnInit() {
-    this.fromDate.setDate(this.toDate.getDate() - 30);
     this.ClearFilter();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
@@ -156,18 +156,18 @@ export class ExpenseComponent implements OnInit {
           field: "debit",
           sorter: "alphanum",
           formatter: this.amountColorFormatter.bind(this),
-          bottomCalc: "sum", // This will calculate the sum
-          bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
-          bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
+          bottomCalc: "sum", 
+          bottomCalcFormatter: this.amountColorFormatter.bind(this), 
+          bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
         },
         {
           title: "Credit",
           field: "credit",
           sorter: "alphanum",
           formatter: this.amountColorFormatter.bind(this),
-          bottomCalc: "sum", // This will calculate the sum
-          bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
-          bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
+          bottomCalc: "sum", 
+          bottomCalcFormatter: this.amountColorFormatter.bind(this), 
+          bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
         },
         {
           title: "-",
@@ -175,8 +175,8 @@ export class ExpenseComponent implements OnInit {
           maxWidth: 50,
           formatter: this.globalService.hidebuttonFormatter.bind(this),
           cellClick: (e, cell) => {
-            const expenseId = cell.getRow().getData()["expenseId"];
-            this.hideExpense(expenseId); // Call the hideExpense method
+            const expenseId = cell.getRow().getData()["id"];
+            this.hideExpense(expenseId);
           },
         },
         {
@@ -246,7 +246,7 @@ export class ExpenseComponent implements OnInit {
         },
         {
           title: "Other Account",
-          field: "otherAmount",
+          field: "other",
           sorter: "alphanum",
           formatter: this.amountColorFormatter.bind(this),
           headerHozAlign: "right",
@@ -314,8 +314,8 @@ export class ExpenseComponent implements OnInit {
           maxWidth: 50,
           formatter: this.globalService.hidebuttonFormatter.bind(this),
           cellClick: (e, cell) => {
-            const expenseId = cell.getRow().getData()["expenseId"];
-            this.hideExpense(expenseId); // Call the hideExpense method
+            const expenseId = cell.getRow().getData()["id"];
+            this.hideExpense(expenseId);
           },
         },
         {
@@ -405,7 +405,7 @@ export class ExpenseComponent implements OnInit {
           formatter: this.globalService.hidebuttonFormatter.bind(this),
           cellClick: (e, cell) => {
             const sourceOrReason = cell.getRow().getData()["sourceOrReason"];
-            this.hideExpenseBySource(sourceOrReason); // Call the hideExpense method
+            this.hideExpenseBySource(sourceOrReason);
           },
           headerSort: false,
         },
@@ -426,10 +426,10 @@ export class ExpenseComponent implements OnInit {
                 const expenseData = cell.getRow().getData();
                 this.activeComponent = NavigationURLs.EXPENSE_LIST;
                 this.sourceOrReason = expenseData["sourceOrReason"];
-                this.reportFirstDate = this.dateUtil.formatStringDate(
+                this.reportFirstDate = DateUtils.formatStringDate(
                   expenseData["firstDate"]
                 );
-                this.reportLastDate = this.dateUtil.formatStringDate(
+                this.reportLastDate = DateUtils.formatStringDate(
                   expenseData["lastDate"]
                 );
                 this.LoadGrid();
@@ -447,7 +447,7 @@ export class ExpenseComponent implements OnInit {
                           `,
               action: (_e: any, cell: CellComponent) => {
                 const expenseData = cell.getRow().getData();
-                const expenseId = expenseData["expenseId"];
+                const expenseId = expenseData["id"];
                 this.deleteExpense(expenseId);
               },
             },
@@ -461,7 +461,7 @@ export class ExpenseComponent implements OnInit {
 
   hideExpense(expenseId: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.expenseId != expenseId;
+      return item.id != expenseId;
     });
   }
 
@@ -509,50 +509,40 @@ export class ExpenseComponent implements OnInit {
 
     if (columnValue?.toLowerCase().includes("emergency")) {
       return `<span style="color:#FF0000; font-weight:bold">${sourceValue}</span>`;
-    } else if (columnValue.toLowerCase().includes("return")) {
+    } else if (columnValue?.toLowerCase().includes("return")) {
       return `<span style="color:#129D0A; font-weight:bold">${sourceValue}</span>`;
-    } else if (columnValue.toLowerCase().includes("recharge")) {
+    } else if (columnValue?.toLowerCase().includes("recharge")) {
       return `<span style="color:#F29D0A; font-weight:bold">${sourceValue}</span>`;
     } else {
       return `<span style="color:#000000; font-weight:bold">${sourceValue}</span>`;
-    } // Default style (no style)
+    } 
   }
 
+  
   ngAfterViewInit() {
+
     flatpickr("#fromDate", {
       dateFormat: "d/m/Y",
       defaultDate: (() => {
-        let date = new Date(); // Get the current date
-        date.setDate(date.getDate() - 30); // Subtract 30 days
+        let date = DateUtils.strFormatToDDMMYYYY(this.fromDate);
         return date;
       })(),
       onChange: (selectedDates, dateStr) => {
+        let fromDate = dateStr;
         if (!dateStr) {
-          const today = new Date();
-          today.setDate(today.getDate() - 30); // Subtract 30 days
-
-          const dd = ("0" + today.getDate()).slice(-2);
-          const mm = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based
-          const yyyy = today.getFullYear();
-
-          dateStr = `${dd}/${mm}/${yyyy}`; // Format as "DD/MM/YYYY"
+          const fromDate = DateUtils.GetDateBeforeDays(30)
         }
-        this.filterGridByFromDate(dateStr);
+        this.filterGridByFromDate(fromDate);
       },
     });
 
     flatpickr("#toDate", {
-      dateFormat: "d/m/Y", // Adjust the date format as per your requirement
-      defaultDate: this.toDate,
+      dateFormat: "d/m/Y", 
+      defaultDate: DateUtils.strFormatToDDMMYYYY(this.toDate),
       onChange: (selectedDates, dateStr) => {
         if (!dateStr) {
-          const today = new Date();
-
-          const dd = ("0" + today.getDate()).slice(-2);
-          const mm = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based
-          const yyyy = today.getFullYear();
-
-          dateStr = `${dd}/${mm}/${yyyy}`; // Format as "DD/MM/YYYY"
+          const today = DateUtils.GetDateBeforeDays(0);
+          dateStr = today;
         }
         this.filterGridByToDate(dateStr);
       },
@@ -563,8 +553,8 @@ export class ExpenseComponent implements OnInit {
     if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
       this.filteredTableData = this.tableData.filter((item: any) => {
         const searchText =
-          item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) ||
-          item.description.toLowerCase().includes(this.sourceOrReason);
+          item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
+          item.description?.toLowerCase().includes(this.sourceOrReason);
         const minAmountCondition =
           this.minAmount == 0 ||
           (item.debit !== 0 && Math.abs(item.debit) >= this.minAmount) ||
@@ -578,65 +568,48 @@ export class ExpenseComponent implements OnInit {
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
       this.filteredTableData = this.tableData.filter((item: any) => {
         const searchText =
-          item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) ||
-          item.description.toLowerCase().includes(this.sourceOrReason);
+          item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
+          item.description?.toLowerCase().includes(this.sourceOrReason);
         const minAmountCondition =
           this.minAmount == 0 ||
-          (item.sbiAccount !== null &&
-            item.sbiAccount !== 0 &&
-            Math.abs(item.sbiAccount) >= this.minAmount) ||
-          (item.cbiAccount !== null &&
-            item.cbiAccount !== 0 &&
-            Math.abs(item.cbiAccount) >= this.minAmount) ||
-          (item.cash !== null &&
-            item.cash !== 0 &&
-            Math.abs(item.cash) >= this.minAmount) ||
-          (item.otherAmount !== null &&
-            item.otherAmount !== 0 &&
-            Math.abs(item.otherAmount) >= this.minAmount);
+          (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) >= this.minAmount) || 
+          (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) >= this.minAmount) ||
+          (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) >= this.minAmount) ||
+          (item.other !== null && item.other !== 0 && Math.abs(item.other) >= this.minAmount);
+          // (item.sbiBalance !== null && item.sbiBalance !== 0 && Math.abs(item.sbiBalance) >= this.minAmount) || 
+          // (item.cbiBalance !== null && item.cbiBalance !== 0 && Math.abs(item.cbiBalance) >= this.minAmount) ||
+          // (item.cashBalance !== null && item.cashBalance !== 0 && Math.abs(item.cashBalance) >= this.minAmount) ||
+          // (item.otherBalance !== null && item.otherBalance !== 0 && Math.abs(item.otherBalance) >= this.minAmount) ||
+          // (item.totalAvailable !== null && item.totalAvailable !== 0 && Math.abs(item.totalAvailable) >= this.minAmount);
         const maxAmountCondition =
           this.maxAmount == 0 ||
-          (item.sbiAccount !== null &&
-            item.sbiAccount !== 0 &&
-            Math.abs(item.sbiAccount) <= this.maxAmount) ||
-          (item.cbiAccount !== null &&
-            item.cbiAccount !== 0 &&
-            Math.abs(item.cbiAccount) <= this.maxAmount) ||
-          (item.cash !== null &&
-            item.cash !== 0 &&
-            Math.abs(item.cash) <= this.maxAmount) ||
-          (item.otherAmount !== null &&
-            item.otherAmount !== 0 &&
-            Math.abs(item.otherAmount) <= this.maxAmount);
+          (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) <= this.maxAmount) || 
+          (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) <= this.maxAmount) ||
+          (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) <= this.maxAmount) ||
+          (item.other !== null && item.other !== 0 && Math.abs(item.other) <= this.maxAmount);
+          // (item.sbiBalance !== null && item.sbiBalance !== 0 && Math.abs(item.sbiBalance) <= this.maxAmount) || 
+          // (item.cbiBalance !== null && item.cbiBalance !== 0 && Math.abs(item.cbiBalance) <= this.maxAmount) ||
+          // (item.cashBalance !== null && item.cashBalance !== 0 && Math.abs(item.cashBalance) <= this.maxAmount) ||
+          // (item.otherBalance !== null && item.otherBalance !== 0 && Math.abs(item.otherBalance) <= this.maxAmount)||
+          // (item.totalAvailable !== null && item.totalAvailable !== 0 && Math.abs(item.totalAvailable) <= this.minAmount);
+
         return searchText && minAmountCondition && maxAmountCondition;
       });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
       this.filteredTableData = this.tableData.filter((item: any) => {
         const searchText =
-          item.sourceOrReason.toLowerCase().includes(this.sourceOrReason) ||
-          item.description.toLowerCase().includes(this.sourceOrReason);
+          item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
+          item.description?.toLowerCase().includes(this.sourceOrReason);
         const minAmountCondition =
           this.minAmount == 0 ||
-          (item.givenAmount !== null &&
-            item.givenAmount !== 0 &&
-            Math.abs(item.givenAmount) >= this.minAmount) ||
-          (item.totalAmount !== null &&
-            item.totalAmount !== 0 &&
-            Math.abs(item.totalAmount) >= this.minAmount) ||
-          (item.takenAmount !== null &&
-            item.takenAmount !== 0 &&
-            Math.abs(item.takenAmount) >= this.minAmount);
+          (item.givenAmount !== null && item.givenAmount !== 0 && Math.abs(item.givenAmount) >= this.minAmount) ||
+          (item.totalAmount !== null && item.totalAmount !== 0 && Math.abs(item.totalAmount) >= this.minAmount) ||
+          (item.takenAmount !== null && item.takenAmount !== 0 && Math.abs(item.takenAmount) >= this.minAmount);
         const maxAmountCondition =
           this.maxAmount == 0 ||
-          (item.givenAmount !== null &&
-            item.givenAmount !== 0 &&
-            Math.abs(item.givenAmount) <= this.maxAmount) ||
-          (item.totalAmount !== null &&
-            item.totalAmount !== 0 &&
-            Math.abs(item.totalAmount) <= this.maxAmount) ||
-          (item.takenAmount !== null &&
-            item.takenAmount !== 0 &&
-            Math.abs(item.takenAmount) <= this.maxAmount);
+          (item.givenAmount !== null && item.givenAmount !== 0 && Math.abs(item.givenAmount) <= this.maxAmount) ||
+          (item.totalAmount !== null && item.totalAmount !== 0 && Math.abs(item.totalAmount) <= this.maxAmount) ||
+          (item.takenAmount !== null && item.takenAmount !== 0 && Math.abs(item.takenAmount) <= this.maxAmount);
         return searchText && minAmountCondition && maxAmountCondition;
       });
     }
@@ -661,57 +634,41 @@ export class ExpenseComponent implements OnInit {
   getLatestExpenseDate(): any {
     if (!this.filteredTableData || this.filteredTableData.length === 0) {
       this.loaderService.hideLoader();
-      return new Date(); // Return null if no data is available
+      return new Date(); 
     }
     this.loaderService.hideLoader();
     return this.filteredTableData[0]["expenseDate"];
   }
 
   goToExpenseList() {
-    // this.router.navigate([NavigationURLs.EXPENSE_SUMMARY_LIST]);
     this.activeComponent = NavigationURLs.EXPENSE_LIST;
     this.LoadGrid();
   }
 
   goToExpenseSummary() {
-    // this.router.navigate([NavigationURLs.EXPENSE_SUMMARY_LIST]);
     this.activeComponent = NavigationURLs.EXPENSE_SUMMARY_LIST;
     this.LoadGrid();
   }
 
   goToExpenseReport() {
-    // this.router.navigate([NavigationURLs.EXPENSE_REPORT]);
     this.activeComponent = NavigationURLs.EXPENSE_REPORT;
     this.LoadGrid();
   }
 
   LoadGrid() {
+    debugger;
     this.loaderService.showLoader();
-    if (this.reportFirstDate) {
-      this.formattedFromDate = this.reportFirstDate;
-      this.reportFirstDate = "";
-    } else {
-      this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(
-        this.fromDate
-      );
-    }
-    if (this.reportLastDate) {
-      this.formattedToDate = this.reportLastDate;
-      this.reportLastDate = "";
-    } else {
-      this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
-    }
     this.columnConfiguration();
+    this.expensefilterRequest = {
+      fromDate: this.fromDate,
+      toDate:  this.toDate,     
+      minAmount: this.minAmount,                
+      maxAmount: this.maxAmount,
+      sourceOrReason: this.sourceOrReason,
+    };
     if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
       this.expenseService
-        .getExpenseList(
-          this.formattedFromDate,
-          this.formattedToDate,
-          this.sourceOrReason,
-          this.minAmount,
-          this.maxAmount,
-          ""
-        )
+        .getExpenseList(this.expensefilterRequest)
         .subscribe({
           next: (res: any) => {
             this.tableData = res;
@@ -726,14 +683,7 @@ export class ExpenseComponent implements OnInit {
         });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
       this.expenseService
-        .getExpenseSummaryList(
-          this.formattedFromDate,
-          this.formattedToDate,
-          this.sourceOrReason,
-          this.minAmount,
-          this.maxAmount,
-          ""
-        )
+        .getExpenseSummaryList(this.expensefilterRequest)
         .subscribe({
           next: (res: any) => {
             this.tableData = res;
@@ -748,14 +698,7 @@ export class ExpenseComponent implements OnInit {
         });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
       this.expenseService
-        .getExpenseReportList(
-          this.formattedFromDate,
-          this.formattedToDate,
-          this.sourceOrReason,
-          this.minAmount,
-          this.maxAmount,
-          ""
-        )
+        .getExpenseReportList(this.expensefilterRequest)
         .subscribe({
           next: (res: any) => {
             this.tableData = res;
@@ -802,14 +745,14 @@ export class ExpenseComponent implements OnInit {
   }
 
   filterGridByFromDate(date: any) {
-    this.fromDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
-    // this.formattedFromDate = this.dateUtil.formatDateToMMDDYYYY(this.fromDate);
+    debugger
+    this.fromDate = DateUtils.CorrectedDate(date); 
     this.LoadGrid();
   }
 
   filterGridByToDate(date: any) {
-    this.toDate = this.dateUtil.convertDDMMYYYYToDate(date); // this.datepipe.transform(data.value, 'MM-dd-yyyy');
-    // this.formattedToDate = this.dateUtil.formatDateToMMDDYYYY(this.toDate);
+    debugger
+    this.toDate = DateUtils.CorrectedDate(date); 
     this.LoadGrid();
   }
 

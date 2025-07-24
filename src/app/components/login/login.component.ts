@@ -28,7 +28,7 @@ export class LoginComponent {
   }
   loginForm: FormGroup;
 
-  userList: any; // {id:number,email:string,password:string};
+  userList: any; // {id:number,userName:string,password:string};
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -38,8 +38,8 @@ export class LoginComponent {
   ) {
     localStorage.setItem("currentUser", "false");
     this.loginForm = this.fb.group({
-      email: "",
-      password: "",
+      userName: "farukshaikh908@gmail.com",
+      password: "Faruk",
     });
   }
   parameters = "";
@@ -47,8 +47,8 @@ export class LoginComponent {
   data: any;
   submitLogin() {
     if (
-      this.loginForm.value["email"] != null &&
-      this.loginForm.value["email"].length <= 0
+      this.loginForm.value["userName"] != null &&
+      this.loginForm.value["userName"].length <= 0
     ) {
       //this.globalService.openSnackBar("email should not be blank")
       return;
@@ -63,28 +63,31 @@ export class LoginComponent {
         if (this.data.length <= 0) {
           //this.globalService.openSnackBar("Invalid credentials, Please check the details correctly.");
           // localStorage.setItem("currentUser", "false");
-          // localStorage.setItem("email","")
+          // localStorage.setItem("userName","")
           // localStorage.setItem("userId","")
           localStorage.clear();
           return;
         }
 
         if (
-          this.data[0] != null &&
-          this.data[0].emailAddr != null &&
-          this.data[0].emailAddr.length > 0
+          this.data != null &&
+          this.data?.userName != null &&
+          this.data?.userName?.length > 0
         ) {
-          localStorage.setItem("user", JSON.stringify(this.data[0])); // Convert object to string
+          console.log('this.data : ', this.data);
+          
+          localStorage.setItem("user", JSON.stringify(this.data)); // Convert object to string
           localStorage.setItem("currentUser", "true");
-          localStorage.setItem("email", this.data[0].emailAddr);
-          localStorage.setItem("userId", this.data[0].userId);
+          localStorage.setItem("userName", this.data.userName);
+          localStorage.setItem("userId", this.data.id);
+          localStorage.setItem("accessibleModuleIds", this.data.accessibleModuleIds);
           //this.globalService.openSnackBar("Log in successfully")
           this.reload();
-          if (this.data[0].roleName == "super admin")
+          if (this.data.roleName?.toLowerCase() === "super admin")
             this.router.navigate([
               "/home/manage-users/",
-            ]); //, this.data[0].UserId]);
-          else this.router.navigate(["/home/day/"]); //, this.data[0].UserId]);
+            ]); //, this.data.UserId]);
+          else this.router.navigate(["/home/day/"]); //, this.data.UserId]);
         }
       } else {
         // this.toaster("Invalid credentials, Please check the details correctly.");

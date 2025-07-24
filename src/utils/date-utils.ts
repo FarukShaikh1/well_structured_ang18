@@ -1,5 +1,6 @@
 import { DatePipe } from "@angular/common";
 
+import { formatDate } from '@angular/common';
 export class DateUtils {
   datePipe = new DatePipe("en-US");
   formatTimestamp(date: Date | null | string, forChat?: boolean): string {
@@ -145,29 +146,6 @@ export class DateUtils {
    * @param {string | null | undefined} dateString The date string to convert
    * @returns {string} The converted date string
    */
-  static formatDateStringToYYYYMMDD(
-    dateString: string | null | undefined
-  ): string {
-    if (!dateString) {
-      return "";
-    }
-
-    if (!dateString.includes("T")) {
-      return ""; // date string without "T" separator
-    }
-
-    const dateParts = dateString.split("T")[0].split("-");
-    if (dateParts.length !== 3) {
-      return ""; // invalid date string
-    }
-
-    const [year, month, day] = dateParts;
-    if (!year || !month || !day) {
-      return ""; // invalid date string
-    }
-
-    return `${year}-${month}-${day}`;
-  }
 
   static formatDateToDateTime(inputDate: string): string {
     // Split the input date string into components
@@ -182,35 +160,71 @@ export class DateUtils {
     return isoDateTime;
   }
 
-  convertDDMMYYYYToDate(dateString: string): Date {
-    if (dateString == "") {
-      dateString = this.formatDateToMMDDYYYY(new Date());
-      const [mon, day, year] = dateString.split("/").map(Number);
-      return new Date(year, mon - 1, day);
+  static strFormatToDDMMYYYY(inputDateStr: string): string {
+    const date = new Date(inputDateStr);
+    // Check for invalid date
+    if (isNaN(date.getTime())) {
+      // Use today's date if invalid
+      const today = new Date();
+      return DateUtils.DDMMYYYY(today);
     }
-    const [day, mon, year] = dateString.split("/").map(Number);
-    // Months are 0-based in JavaScript Date objects, so subtract 1 from month
-    return new Date(year, mon - 1, day);
-  }
-  formatDateToMMDDYYYY(date: Date): string {
-    // Check if the provided date is valid
-    if (!(date instanceof Date) || isNaN(date.getTime())) {
-      date = new Date();
-      // If invalid, set date to 60 days ago
-      // date.setDate(date.getDate() - 60);
-    }
-    const mm = ("0" + (date.getMonth() + 1)).slice(-2); // Months are zero-based
-    const dd = ("0" + date.getDate()).slice(-2);
-    const yyyy = date.getFullYear();
-    return `${mm}/${dd}/${yyyy}`;
+    return DateUtils.DDMMYYYY(date);
   }
 
-  formatStringDate(dateString: string) {
+  static DDMMYYYY(date: Date): string {
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  }
+
+  static formatStringDate(dateString: string) {
     const date = new Date(dateString);
     const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
 
-    return `${month}/${day}/${year}`;
+    return `${day}/${month}/${year}`;
+  }
+
+  static IstDate(dateValue: any) {
+    return formatDate(dateValue, 'yyyy-MM-ddTHH:mm:ss', 'en-IN');
+  }
+
+  static CorrectedDate(dateValue: any) { // use only when you are sending date to api/backend
+    debugger
+    const selectedDate1 = new Date(
+      // this.expen
+      // seDetailsForm.value["expenseDate"]
+      dateValue);
+    // // Ensure the date is valid
+    if (!isNaN(selectedDate1.getTime())) {
+      const day = selectedDate1.getDate().toString().padStart(2, "0");
+      const month = (selectedDate1.getMonth() + 1)
+        .toString()
+        .padStart(2, "0"); // Months are 0-based
+      const year = selectedDate1.getFullYear();
+
+      // Format the date as DD/MM/YYYY
+      const returnDate = new Date(`${year}-${day}-${month}T00:00:00`);
+      returnDate.setHours(0, 0, 0, 0);
+      return DateUtils.IstDate(returnDate);
+
+    } else {
+      // Split the string and create a Date object in 'yyyy-MM-dd' format.
+      const [day, month, year] = dateValue
+        .split("/")
+        .map(Number);
+      const returnDate = new Date(new Date(year, month - 1, day)); // month is 0-indexed
+      returnDate.setHours(0, 0, 0, 0);
+      return DateUtils.IstDate(returnDate);
+    }
+  }
+
+  static GetDateBeforeDays(days: number): string {
+    const date = new Date();
+    date.setDate(date.getDate() - days);
+    date.setHours(0, 0, 0, 0);
+    return DateUtils.IstDate(date);
   }
 }

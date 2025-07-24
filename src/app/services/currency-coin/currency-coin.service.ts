@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URL } from '../../../utils/api-url';
+import { CoinNoteCollectionRequest } from '../../interfaces/coin-note-collection-request';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,25 +33,20 @@ export class CurrencyCoinService {
   getCurrencyCoinDetails(collectionCoinId: string) {
     const params = new HttpParams()
       .set('userid', String(localStorage.getItem("userId")))
-      .set('collectionCoinId', collectionCoinId)
+      .set('coinNoteCollectionId', collectionCoinId)
     return this.http.get(API_URL.GET_COLLECTION_COIN_DETAILS, { params: params })
 
   }
 
-  addCurrencyCoin(currencyCoinDetailsForm: any): Observable<any> {
-    return this.http.post(API_URL.ADD_COLLECTION_COIN + String(localStorage.getItem("userId")), currencyCoinDetailsForm);
+  addCurrencyCoin(coinNoteCollectionRequest: CoinNoteCollectionRequest): Observable<any> {
+    return this.http.post(API_URL.ADD_COLLECTION_COIN + String(localStorage.getItem("userId")), coinNoteCollectionRequest);
   }
 
-  updateCurrencyCoin(currencyCoinDetailsForm: any): Observable<any> {
-    return this.http.post(API_URL.UPDATE_COLLECTION_COIN + String(localStorage.getItem("userId")), currencyCoinDetailsForm);
-  }
-
-  uploadImage(assetId: string, documentType: string, currencyCoinDetailsForm: any): Observable<any> {
-    return this.http.post(API_URL.UPLOAD_IMAGE + String(localStorage.getItem("userId")) + '&assetId=' + assetId + '&documentType=' + documentType, currencyCoinDetailsForm);
+  updateCurrencyCoin(coinNoteCollectionRequest: CoinNoteCollectionRequest): Observable<any> {
+    return this.http.post(API_URL.UPDATE_COLLECTION_COIN + String(localStorage.getItem("userId")), coinNoteCollectionRequest);
   }
 
   deleteCurrencyCoin(dayId: string): Observable<any> {
     return this.http.get(API_URL.DELETE_COLLECTION_COIN + dayId + '&userId=' + String(localStorage.getItem("userId")));
   }
-
 }

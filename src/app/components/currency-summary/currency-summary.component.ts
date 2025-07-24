@@ -39,8 +39,8 @@ export class CurrencySummaryComponent implements OnInit {
   showGallery: boolean = false;
 ;
   public tableColumnConfig: ColumnDefinition[] = [];
-  public summaryPaginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
-  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
+  public summaryPaginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; 
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; 
   public allowCSVExport = false;
 
   summaryOptionsMenu = [
@@ -186,8 +186,8 @@ export class CurrencySummaryComponent implements OnInit {
         sorter: "alphanum",
       },
       {
-        title: "collectionCoinName",
-        field: "collectionCoinName",
+        title: "coinNoteName",
+        field: "coinNoteName",
         sorter: "alphanum",
       },
       {
@@ -335,7 +335,7 @@ export class CurrencySummaryComponent implements OnInit {
 
   applyFilters() {
     this.filteredSummaryTableData = this.summaryTableData.filter((item: any) => {
-      const matchesCoinName = item.collectionCoinName?.toLowerCase().includes(this.searchText);
+      const matchesCoinName = item.coinNoteName?.toLowerCase().includes(this.searchText);
       const matchesCountryName = item.countryName?.toLowerCase().includes(this.searchText);
       const matchesActulaValue = item.actualValue?.toString()?.toLowerCase().includes(this.searchText);
       const matchesIndianValue = item.indianValue?.toString()?.toLowerCase().includes(this.searchText);

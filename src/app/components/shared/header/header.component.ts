@@ -55,6 +55,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ApplicationRoles = ApplicationRoles;
   loggedInUserName: string = "";
   userNameInitials: string = "";
+  moduleList: any;
   // profilePicUrl: string = '';
 
   constructor(
@@ -84,7 +85,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.alreadyLoggedIn = this.localStorageService.isAuthenticated();
     this.loggedInUserName = this.getLoggedInUserName();
     this.userNameInitials = this.getUserNameInitials();
+    this.getModuleList();
   }
+
+      getModuleList() {
+        const userData = this.localStorageService.getLoggedInUserData();
+        if (userData) {
+            this.moduleList = userData.accessibleModuleIds;
+        }
+    }
 
   setLoginDisplay() {
     // this.loginDisplay =

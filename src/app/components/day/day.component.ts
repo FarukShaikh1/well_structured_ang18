@@ -29,7 +29,7 @@ export interface Task {
   standalone: true,
   templateUrl: "./day.component.html",
   styleUrls: ["./day.component.scss"],
-  imports: [TabulatorGridComponent, CommonModule, DayDetailsComponent, ConfirmationDialogComponent],
+  imports: [TabulatorGridComponent, CommonModule, DayDetailsComponent, ConfirmationDialogComponent, ToasterComponent],
   providers: [DatePipe],
 })
 export class DayComponent implements OnInit {
@@ -46,7 +46,7 @@ export class DayComponent implements OnInit {
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
   public tableColumnConfig: ColumnDefinition[] = [];
-  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
 
@@ -62,17 +62,15 @@ export class DayComponent implements OnInit {
   lableForMonthDropDown = "";
   lableForMonthDropDownIds = "";
   selectedMonths: string[] = []; // Array to store selected months
-  selectedMonthsIds: string[] = []; // Array to store selected months
+  selectedMonthsIds: number[] = []; // Array to store selected months
   lableForDayTypeDropDown = "";
   lableForDayTypeDropDownIds = "";
   lableForRelationTypeDropDown = "";
   lableForRelationTypeDropDownIds = "";
   selectedDayType: string[] = []; // Array to store selected DayTypes
-  selectedDayTypeIds: string[] = []; // Array to store selected DayTypes
   selectedRelationType: string[] = []; // Array to store selected DayTypes
-  selectedRelationTypeIds: string[] = []; // Array to store selected DayTypes
   loggedInUser = null;
-  birthdayId: string = '';
+  id: string = '';
   constructor(
     private _dayService: DayService,
     // public tableUtils: TableUtils,
@@ -144,8 +142,8 @@ export class DayComponent implements OnInit {
       )
       .subscribe({
         next: (res: any) => {
-          this.tableData = res.data;
-          this.filteredTableData = res.data;
+          this.tableData = res;
+          this.filteredTableData = res;
           console.log("res : ", res);
 
           this.loaderService.hideLoader();
@@ -160,8 +158,8 @@ export class DayComponent implements OnInit {
   columnConfiguration() {
     this.tableColumnConfig = [
       {
-        title: "Birth date",
-        field: "birthdate",
+        title: "Date",
+        field: "specialOccasionDate",
         sorter: "alphanum",
         maxWidth: 100,
         formatter: this.dateFormatter.bind(this),
@@ -197,13 +195,13 @@ export class DayComponent implements OnInit {
         sorter: "alphanum",
       },
       {
-        title: "Type",
-        field: "type",
+        title: "Day Type",
+        field: "dayType",
         sorter: "alphanum",
       },
       {
         title: "Pic",
-        field: "assetId",
+        field: "thumbnailPath",
         formatter: this.picFormatter.bind(this),
       },
       {
@@ -212,8 +210,8 @@ export class DayComponent implements OnInit {
         maxWidth: 50,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const birthdayId = cell.getRow().getData()["birthdayId"];
-          this.hideDay(birthdayId); // Call the hideExpense method
+          const birthdayId = cell.getRow().getData()["id"];
+          this.hideDay(birthdayId);
         },
       },
       {
@@ -222,7 +220,7 @@ export class DayComponent implements OnInit {
         maxWidth: 50,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-        clickMenu: this.optionsMenu,
+        clickMenu: this.generateOptionsMenu(this),
         hozAlign: "left",
         headerSort: false,
       },
@@ -249,18 +247,18 @@ export class DayComponent implements OnInit {
 
   picFormatter(cell: CellComponent) {
     const rowData = cell.getRow().getData();
-    let thumbnailPath = rowData["thumbailPath"];
+    let thumbnailPath = rowData["thumbnailPath"];
     if (thumbnailPath) {
-             thumbnailPath  = API_URL.ATTACHMENT + thumbnailPath;
-          
+      thumbnailPath = API_URL.ATTACHMENT + thumbnailPath;
+
       // const html = `<i class="bi bi-person-circle fs-3" style="color: blue;"></i>`;
-    const html = `<img src="${thumbnailPath}" style="width: 40px; height: 40px; object-fit: cover;" />`;
-      console.log('html : ',html);
-      
+      const html = `<img src="${thumbnailPath}" style="width: 40px; height: 40px; object-fit: cover;" />`;
+      console.log('html : ', html);
+
       return html;
     }
-    const assetId = rowData["assetId"];
-    if (assetId) {
+    const imagePath = rowData["imagePath"];
+    if (imagePath) {
       const html = `<i class="bi bi-person-circle fs-3" style="color: blue;"></i>`;
       return html;
     }
@@ -268,36 +266,6 @@ export class DayComponent implements OnInit {
     return html;
   }
 
-  optionsMenu = [
-    {
-      label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#dayDetailsPopup">
-                  <i class="bi bi-pencil"></i>
-                    &nbsp;Edit
-                  </a>
-                  `,
-      action: (_e: any, cell: CellComponent) => {
-        const rowData = cell.getRow().getData();
-        this.openPopup(rowData["birthdayId"]);
-      },
-    },
-    {
-      separator: true,
-    },
-    //  {
-    //      label: `
-    //<a class="btn-link"
-    //  style="color: #67686B; padding: 5px">
-    //    <i class="bi bi-trash"></i>
-    //        &nbsp;Deactivate
-    //</a>`,
-    //      action: (_e: any, cell: CellComponent) => {
-    //          const rowData = cell.getRow().getData();
-    //          const clientId = rowData['id'];
-    //          this.deactivateClient(clientId);
-    //      }
-    //  },
-  ];
   dateFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
     const projectData = cell.getRow().getData();
@@ -311,10 +279,11 @@ export class DayComponent implements OnInit {
 
   generateOptionsMenu(rowData: Record<string, any>) {
     const menu = [];
-    if (
-      rowData['birthdayId'] &&
-      this.globalService.isAccessible(ApplicationModules.DAY, ApplicationModuleActions.EDIT)
-    ) {
+    // if (
+    //   rowData['id'] &&
+    //   this.globalService.isAccessible(ApplicationModules.DAY, ApplicationModuleActions.EDIT)
+    // )
+    {
       menu.push({
         label: `<a class="dropdown-item btn-link options-menu-item"
             data-bs-toggle="modal" data-bs-target="#userDetailsPopup">
@@ -322,20 +291,21 @@ export class DayComponent implements OnInit {
                   &nbsp;Edit
                 </a>
                 `,
-        action: () => this.openPopup(rowData['birthdayId']),
+        action: () => this.openPopup(rowData['id']),
       });
 
       menu.push({
-        label: `<a class="dropdown-item btn-link options-menu-item"
-                data-bs-toggle="modal" data-bs-target="#confirmModal">
-                    <i class="bi bi-trash"></i>
-                      &nbsp;Deactivate
-                    </a>
-                    `,
-        action: () => this.confirmationDialog.openConfirmationPopup(
-          "Confirmation",
-          "Are you sure you want to delete this user? This action cannot be undone."
-        )
+        label: `<a class="dropdown-item btn-link"
+              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
+                  <i class="bi bi-trash"></i>
+                    &nbsp;Delete
+                  </a>
+                  `,
+        action: (_e: any, cell: CellComponent) => {
+          const expenseData = cell.getRow().getData();
+          const expenseId = expenseData["id"];
+          this.deleteDay(expenseId);
+        },
       });
     }
     return menu;
@@ -343,25 +313,30 @@ export class DayComponent implements OnInit {
 
   deleteDay(birthdayId: string) {
     if (birthdayId) {
-      this.birthdayId = birthdayId;
+      this.id = birthdayId;
       this.confirmationDialog.openConfirmationPopup(
         "Confirmation",
-        "Are you sure you want to delete this expense? This action cannot be undone."
+        "Are you sure you want to delete this record? This action cannot be undone."
       );
     }
   }
 
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
+    debugger
     if (isConfirmed) {
       this.loaderService.showLoader();
-      this._dayService.deleteDay(this.birthdayId).subscribe({
+      this._dayService.deleteDay(this.id).subscribe({
         next: (res: any) => {
           this.loaderService.hideLoader();
+          this.toaster.showMessage("Record deleted successfully.", "success");
+          this.hideDay(this.id);
+
         },
         error: (error: any) => {
           console.log("error : ", error);
           this.loaderService.hideLoader();
+          this.toaster.showMessage("Failed to delete the record.", "error");
         },
       });
     }
@@ -370,22 +345,33 @@ export class DayComponent implements OnInit {
   // Handle "Select All" checkbox
   toggleAllMonthCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    this.selectedMonths = checked
-      ? this.monthList.map((m: any) => m.listItemName)
-      : [];
+    if (checked) {
+      this.selectedMonths = this.monthList.map((m: any) => m.listItemName);
+      this.selectedMonthsIds = this.monthList.map((m: any) => m.sequenceNumber);
+    } else {
+      this.selectedMonths = [];
+      this.selectedMonthsIds = [];
+    }
     this.getMonthDropdownLabel();
     this.applyFilters();
   }
   // Handle individual month selection
-  toggleMonthCheck(event: Event, monthName: string, monthId: string) {
+  toggleMonthCheck(event: Event, monthName: string, seqNum: number) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedMonths.push(monthName);
-      this.selectedMonthsIds.push(monthId);
+      this.selectedMonthsIds.push(seqNum);
     } else {
       this.selectedMonths = this.selectedMonths.filter((m) => m !== monthName);
-      this.selectedMonthsIds = this.selectedMonthsIds.filter((m) => m !== monthId);
+      this.selectedMonthsIds = this.selectedMonthsIds.filter((m) => m !== seqNum);
     }
+    // if (checked) {
+    //   this.selectedMonths.push(monthName);
+    //   this.selectedMonthsIds.push(seqNum);
+    // } else {
+    //   this.selectedMonths = this.selectedMonths.filter((m) => m !== monthName);
+    //   this.selectedMonthsIds = this.selectedMonthsIds.filter((m) => m !== seqNum);
+    // }
     this.getMonthDropdownLabel();
     this.applyFilters();
   }
@@ -416,10 +402,8 @@ export class DayComponent implements OnInit {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedDayType.push(daytypeName);
-      this.selectedDayTypeIds.push(dayId);
     } else {
       this.selectedDayType = this.selectedDayType.filter((m) => m !== daytypeName);
-      this.selectedDayTypeIds = this.selectedDayTypeIds.filter((m) => m !== dayId);
     }
     this.getDayTypeDropdownLabel();
     this.applyFilters();
@@ -433,7 +417,6 @@ export class DayComponent implements OnInit {
       this.lableForDayTypeDropDownIds = '';
     } else {
       this.lableForDayTypeDropDown = this.selectedDayType.join(", ");
-      this.lableForDayTypeDropDownIds = this.selectedDayTypeIds.join(", ");
     }
   }
 
@@ -453,10 +436,8 @@ export class DayComponent implements OnInit {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedRelationType.push(relationtypeName);
-      this.selectedRelationTypeIds.push(relationId);
     } else {
       this.selectedRelationType = this.selectedRelationType.filter((m) => m !== relationtypeName);
-      this.selectedRelationTypeIds = this.selectedRelationTypeIds.filter((m) => m !== relationId);
     }
     this.getRelationTypeDropdownLabel();
     this.applyFilters();
@@ -470,7 +451,6 @@ export class DayComponent implements OnInit {
       this.lableForRelationTypeDropDownIds = "";
     } else {
       this.lableForRelationTypeDropDown = this.selectedRelationType.join(", ");
-      this.lableForRelationTypeDropDownIds = this.selectedRelationTypeIds.join(", ");
     }
   }
 
@@ -479,9 +459,9 @@ export class DayComponent implements OnInit {
     this.dayDetailsComponent.openDetailsPopup(dayId);
   }
 
-  hideDay(dayId: number) {
+  hideDay(dayId: string) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      const includeDay = item.birthdayId != dayId;
+      const includeDay = item.id != dayId;
       return includeDay;
     });
   }
@@ -522,7 +502,6 @@ export class DayComponent implements OnInit {
   //     this.monthInput.value = [];
   //   }
   //   if (this.typeInput) {
-  //     this.selectedDayTypeIds = '';
   //     this.typeInput.value = [];
   //   }
 
@@ -556,7 +535,6 @@ export class DayComponent implements OnInit {
   //     this.monthInput.value = [];
   //   }
   //   if (this.typeInput) {
-  //     this.selectedDayTypeIds = '';
   //     this.typeInput.value = [];
   //   }
 
@@ -584,12 +562,21 @@ export class DayComponent implements OnInit {
       const mobileNumber = item.mobileNumber
         ?.toLowerCase()
         .includes(this.searchText);
+
+      const month = item.specialOccasionDate
+        ? new Date(item.specialOccasionDate).getMonth() + 1
+        : null;
+
       const matchesMonth =
         this.selectedMonths.length === 0 ||
-        this.selectedMonths.includes(item.month);
+        (month !== null && this.selectedMonthsIds.includes(month));
+
+      // const matchesMonth =
+      //   this.selectedMonths.length === 0 ||
+      //   this.selectedMonths.includes(item.month);
       const matchesDayType =
         this.selectedDayType.length === 0 ||
-        this.selectedDayType.includes(item.type);
+        this.selectedDayType.includes(item.dayType);
       const matchesRelationType =
         this.selectedRelationType.length === 0 ||
         this.selectedRelationType.includes(item.relationShipName);
@@ -600,5 +587,6 @@ export class DayComponent implements OnInit {
         matchesRelationType
       );
     });
+    console.log("this.filteredTableData : ", this.filteredTableData);
   }
 }

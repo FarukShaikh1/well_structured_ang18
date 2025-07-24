@@ -14,7 +14,7 @@ export class UserServiceService {
   }
 
   getUser(userLoginRequest: UserLoginRequest) {
-    return this.http.post(API_URL.GET_USER , userLoginRequest);
+    return this.http.post(API_URL.LOGIN , userLoginRequest);
   }
 
   updateUserDetails(userDetailsForm: any): Observable<any> {

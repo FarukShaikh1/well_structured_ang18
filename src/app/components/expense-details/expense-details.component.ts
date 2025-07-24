@@ -21,6 +21,8 @@ import { ExpenseService } from "../../services/expense/expense.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { ExpenseRequest } from "../../interfaces/expense-request";
+import { DateUtils } from "../../../utils/date-utils";
 
 @Component({
   selector: "app-expense-details",
@@ -53,6 +55,18 @@ export class ExpenseDetailsComponent {
   focusInPurpose: boolean = false;
   focusInDescription: boolean = false;
   isValidAmount: boolean = false;
+  expenseRequest: ExpenseRequest = {
+    id: '',
+    expenseDate:DateUtils.GetDateBeforeDays(30),
+    sourceOrReason: '',
+    cash: 0,
+    sbiAccount: 0,
+    cbiAccount: 0,
+    other: 0,
+    purpose: '',
+    description: '',
+
+  }
 
   constructor(
     private _details: FormBuilder,
@@ -63,13 +77,13 @@ export class ExpenseDetailsComponent {
     private datepipe: DatePipe
   ) {
     this.expenseDetailsForm = this._details.group({
-      expenseId: 0,
+      expenseId: '',
       expenseDate: ["", Validators.required],
       sourceOrReason: ["", Validators.required],
       cash: "",
       sbiAccount: "",
       cbiAccount: "",
-      otherAmount: "",
+      other: "",
       totalAmount: "",
       isInvoiceAvailable: false,
       referenceNumber: "",
@@ -128,8 +142,8 @@ export class ExpenseDetailsComponent {
       this.expenseDetailsForm.controls["cash"].value &&
       this.expenseDetailsForm.controls["cash"].value != 0;
     this.otherValid =
-      this.expenseDetailsForm.controls["otherAmount"].value &&
-      this.expenseDetailsForm.controls["otherAmount"].value != 0;
+      this.expenseDetailsForm.controls["other"].value &&
+      this.expenseDetailsForm.controls["other"].value != 0;
 
     this.isValidAmount =
       this.sbiValid || this.cbiValid || this.cashValid || this.otherValid;
@@ -149,58 +163,58 @@ export class ExpenseDetailsComponent {
     });
   }
 
-private capitalizeWords(text: string): string {
-  return text
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
-}
-
-private extractUniqueCapitalized(filteredList: any[], key: string): string[] {
-  return Array.from(
-    new Set(
-      filteredList
-        .map((item) => item[key]?.trim())
-        .filter((value) => value)
-        .map((value) => this.capitalizeWords(value))
-    )
-  );
-}
-
-private updateFilteredLists(inputValue: string): void {
-  if (!inputValue) {
-    this.filteredSourceOrReasonList = [];
-    this.filteredPurposeList = [];
-    this.filteredDescriptionList = [];
-    return;
+  private capitalizeWords(text: string): string {
+    return text
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
   }
 
-  const filteredList = this.commonSuggestionList.filter(
-    (option: any) =>
-      option?.sourceOrReason &&
-      option.sourceOrReason.trim() !== "" &&
-      option.sourceOrReason.toLowerCase().includes(inputValue.toLowerCase())
-  );
+  private extractUniqueCapitalized(filteredList: any[], key: string): string[] {
+    return Array.from(
+      new Set(
+        filteredList
+          .map((item) => item[key]?.trim())
+          .filter((value) => value)
+          .map((value) => this.capitalizeWords(value))
+      )
+    );
+  }
 
-  this.filteredSourceOrReasonList = this.extractUniqueCapitalized(filteredList, "sourceOrReason");
-  console.log("1 this.filteredSourceOrReasonList:", this.filteredSourceOrReasonList);
+  private updateFilteredLists(inputValue: string): void {
+    if (!inputValue) {
+      this.filteredSourceOrReasonList = [];
+      this.filteredPurposeList = [];
+      this.filteredDescriptionList = [];
+      return;
+    }
 
-  this.filteredPurposeList = this.extractUniqueCapitalized(filteredList, "purpose");
-  console.log("2 this.filteredPurposeList:", this.filteredPurposeList);
+    const filteredList = this.commonSuggestionList.filter(
+      (option: any) =>
+        option?.sourceOrReason &&
+        option.sourceOrReason.trim() !== "" &&
+        option.sourceOrReason.toLowerCase().includes(inputValue.toLowerCase())
+    );
 
-  this.filteredDescriptionList = this.extractUniqueCapitalized(filteredList, "description");
-  console.log("3 this.filteredDescriptionList:", this.filteredDescriptionList);
-}
+    this.filteredSourceOrReasonList = this.extractUniqueCapitalized(filteredList, "sourceOrReason");
+    console.log("1 this.filteredSourceOrReasonList:", this.filteredSourceOrReasonList);
 
-onSourceReasonChange(event: any): void {
-  const inputValue = event?.target?.value?.toLowerCase() || "";
-  this.updateFilteredLists(inputValue);
-}
+    this.filteredPurposeList = this.extractUniqueCapitalized(filteredList, "purpose");
+    console.log("2 this.filteredPurposeList:", this.filteredPurposeList);
 
-selectSourceOrReason(inputValue: string): void {
-  this.expenseDetailsForm.controls["sourceOrReason"].patchValue(inputValue);
-  this.updateFilteredLists(inputValue.toLowerCase());
-}
+    this.filteredDescriptionList = this.extractUniqueCapitalized(filteredList, "description");
+    console.log("3 this.filteredDescriptionList:", this.filteredDescriptionList);
+  }
+
+  onSourceReasonChange(event: any): void {
+    const inputValue = event?.target?.value?.toLowerCase() || "";
+    this.updateFilteredLists(inputValue);
+  }
+
+  selectSourceOrReason(inputValue: string): void {
+    this.expenseDetailsForm.controls["sourceOrReason"].patchValue(inputValue);
+    this.updateFilteredLists(inputValue.toLowerCase());
+  }
 
   onDescriptionChange(event: any) {
     const inputValue = event?.target?.value?.toLowerCase();
@@ -294,34 +308,25 @@ selectSourceOrReason(inputValue: string): void {
   }
 
   patchValues(res: any) {
-    this.expenseDetailsForm.controls["expenseId"].patchValue(res["expenseId"]);
+    this.expenseDetailsForm.controls["expenseId"].patchValue(res["id"]);
     this.expenseDetailsForm.controls["expenseDate"].patchValue(
       this.datepipe.transform(
         res["expenseDate"],
         ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT
       )
     );
-    this.expenseDetailsForm.controls["sourceOrReason"].patchValue(
-      res["sourceOrReason"]
-    );
+    this.expenseDetailsForm.controls["sourceOrReason"].patchValue(res["sourceOrReason"]);
     this.expenseDetailsForm.controls["purpose"].patchValue(res["purpose"]);
-    this.expenseDetailsForm.controls["description"].patchValue(
-      res["description"]
-    );
-    this.expenseDetailsForm.controls["sbiAccount"].patchValue(
-      res["sbiAccount"]
-    );
+    this.expenseDetailsForm.controls["description"].patchValue(res["description"]);
+    this.expenseDetailsForm.controls["sbiAccount"].patchValue(res["sbiAccount"]);
     this.expenseDetailsForm.controls["cash"].patchValue(res["cash"]);
-    this.expenseDetailsForm.controls["otherAmount"].patchValue(
-      res["otherAmount"]
-    );
-    this.expenseDetailsForm.controls["cbiAccount"].patchValue(
-      res["cbiAccount"]
-    );
+    this.expenseDetailsForm.controls["other"].patchValue(res["other"]);
+    this.expenseDetailsForm.controls["cbiAccount"].patchValue(res["cbiAccount"]);
     this.expenseDetailsForm.controls["assetId"].patchValue(res["assetId"]);
   }
 
   submitExpenseDetails() {
+    debugger
     this.globalService.trimAllFields(this.expenseDetailsForm);
     this.loaderService.showLoader();
     this.validateAmountFields();
@@ -336,71 +341,56 @@ selectSourceOrReason(inputValue: string): void {
           this.expenseDetailsForm.value["description"] =
             this.expenseDetailsForm.value["purpose"];
         }
-
-        const selectedDate1 = new Date(
-          this.expenseDetailsForm.value["expenseDate"]
-        );
-        // // Ensure the date is valid
-        if (!isNaN(selectedDate1.getTime())) {
-          const day = selectedDate1.getDate().toString().padStart(2, "0");
-          const month = (selectedDate1.getMonth() + 1)
-            .toString()
-            .padStart(2, "0"); // Months are 0-based
-          const year = selectedDate1.getFullYear();
-
-          // Format the date as DD/MM/YYYY
-          this.expenseDetailsForm.value[
-            "expenseDate"
-          ] = `${day}/${month}/${year}`;
-        } else {
-          // Split the string and create a Date object in 'yyyy-MM-dd' format.
-          const [day, month, year] = this.expenseDetailsForm.value[
-            "expenseDate"
-          ]
-            .split("/")
-            .map(Number);
-          const selectedDate = new Date(Date.UTC(year, month - 1, day)); // month is 0-indexed
-          this.expenseDetailsForm.value["expenseDate"] = selectedDate;
-          // this.expenseDetailsForm.value['expenseDate'] = DateUtils.formatDateStringToYYYYMMDD(this.expenseDetailsForm.value['expenseDate'])
+        this.expenseDetailsForm.value["expenseDate"] = DateUtils.CorrectedDate(this.expenseDetailsForm.value["expenseDate"]);
+        debugger;
+        this.expenseRequest = {
+          id: this.expenseDetailsForm.value["expenseId"],
+          expenseDate: DateUtils.IstDate(this.expenseDetailsForm.value["expenseDate"]),
+          sourceOrReason: this.expenseDetailsForm.value["sourceOrReason"],
+          cash: this.expenseDetailsForm.value["cash"],
+          sbiAccount: this.expenseDetailsForm.value["sbiAccount"],
+          cbiAccount: this.expenseDetailsForm.value["cbiAccount"],
+          other: this.expenseDetailsForm.value["other"],
+          purpose: this.expenseDetailsForm.value["purpose"],
+          description: this.expenseDetailsForm.value["description"],
         }
-
-        if (this.expenseDetailsForm.value["expenseId"]) {
+        if (this.expenseRequest.id) {
           this.expenseService
-            .updateExpense(this.expenseDetailsForm.value)
-            .subscribe({
-              next: (result: any) => {
-                if (result) {
-                  //this.globalService.openSnackBar('Record Updated Successfully');
-                  this.toaster.showMessage(
-                    "Record Updated Successfully.",
-                    "success"
-                  );
-                  this.loaderService.hideLoader();
-                  this.renderer
-                    .selectRootElement(this.btnCloseExpensePopup?.nativeElement)
-                    .click();
-                  this.globalService.triggerGridReload(
-                    ApplicationModules.EXPENSE
-                  );
-                } else {
-                  this.loaderService.hideLoader();
-                  this.toaster.showMessage(
-                    "Some issue is in update the data.",
-                    "error"
-                  );
-                  //this.globalService.openSnackBar('some issue is in update the data');
-                  return;
-                }
-              },
-              error: (error: any) => {
+          .updateExpense(this.expenseRequest)
+          .subscribe({
+            next: (result: any) => {
+              if (result) {
+                //this.globalService.openSnackBar('Record Updated Successfully');
+                this.toaster.showMessage(
+                  "Record Updated Successfully.",
+                  "success"
+                );
                 this.loaderService.hideLoader();
-                this.toaster.showMessage(error?.message, "error");
-              },
-            });
+                this.renderer
+                  .selectRootElement(this.btnCloseExpensePopup?.nativeElement)
+                  .click();
+                this.globalService.triggerGridReload(
+                  ApplicationModules.EXPENSE
+                );
+              } else {
+                this.loaderService.hideLoader();
+                this.toaster.showMessage(
+                  "Some issue is in update the data.",
+                  "error"
+                );
+                //this.globalService.openSnackBar('some issue is in update the data');
+                return;
+              }
+            },
+            error: (error: any) => {
+              this.loaderService.hideLoader();
+              this.toaster.showMessage(error?.message, "error");
+            },
+          });
         } else {
           this.loaderService.showLoader();
           this.expenseService
-            .addExpense(this.expenseDetailsForm.value)
+            .addExpense(this.expenseRequest)
             .subscribe({
               next: (result: any) => {
                 if (result) {
@@ -445,3 +435,4 @@ selectSourceOrReason(inputValue: string): void {
     }
   }
 }
+

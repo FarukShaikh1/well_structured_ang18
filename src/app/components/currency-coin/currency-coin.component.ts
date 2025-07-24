@@ -20,6 +20,11 @@ import { Router } from '@angular/router';
 })
 
 export class CurrencyCoinComponent implements OnInit {
+  selectedCountry: string[] = [];
+  selectedCountryCode: string[] = [];
+  countryList: any;
+  lableForCountryDropDown: string = '';
+
   @ViewChild(CurrencyCoinDetailsComponent)
   currencyCoinDetailsComponent!: CurrencyCoinDetailsComponent;
   @ViewChild(ConfirmationDialogComponent, { static: false })
@@ -32,7 +37,7 @@ export class CurrencyCoinComponent implements OnInit {
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
   public tableColumnConfig: ColumnDefinition[] = [];
-  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; // Set default pagination size
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
 
@@ -46,7 +51,7 @@ export class CurrencyCoinComponent implements OnInit {
                   `,
       action: (_e: any, cell: CellComponent) => {
         const collectionCoinData = cell.getRow().getData();
-        const collectionCoinId = collectionCoinData["collectionCoinId"];
+        const collectionCoinId = collectionCoinData["id"];
         this.currencyCoinDetails(collectionCoinId);
       },
     },
@@ -62,7 +67,7 @@ export class CurrencyCoinComponent implements OnInit {
                   `,
       action: (_e: any, cell: CellComponent) => {
         const collectionCoinData = cell.getRow().getData();
-        const collectionCoinId = collectionCoinData["collectionCoinId"];
+        const collectionCoinId = collectionCoinData["id"];
         this.deleteCurrencyCoin(collectionCoinId);
       },
     },
@@ -76,8 +81,19 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.loaderService.showLoader();
+    this.loaderService.showLoader();
     this.collectionCoinColumnConfiguration();
+    this.globalService.getCountryList().subscribe({
+      next: (res: any) => {
+        this.countryList = res;
+        this.loaderService.hideLoader();
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+        this.loaderService.hideLoader();
+      },
+    });
+
     this.LoadGrid();
     this.globalService.reloadGrid$.subscribe(() => {
       // if (listName === ApplicationModules.COLLECTIONCOIN) {
@@ -95,22 +111,17 @@ export class CurrencyCoinComponent implements OnInit {
   collectionCoinColumnConfiguration() {
     this.tableColumnConfig = [
       {
-        title: "collectionCoinId",
-        field: "collectionCoinId",
+        title: "Coin/Note Name",
+        field: "coinNoteName",
         sorter: "alphanum",
       },
       {
-        title: "collectionCoinName",
-        field: "collectionCoinName",
-        sorter: "alphanum",
-      },
-      {
-        title: "countryName",
+        title: "Country",
         field: "countryName",
         sorter: "alphanum",
       },
       {
-        title: "actualValue",
+        title: "Real Value",
         field: "actualValue",
         sorter: "alphanum",
         formatter: this.amountColorFormatter.bind(this),
@@ -118,7 +129,7 @@ export class CurrencyCoinComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
       },
       {
-        title: "indianValue",
+        title: "Indian Value",
         field: "indianValue",
         sorter: "alphanum",
         formatter: this.amountColorFormatter.bind(this),
@@ -127,7 +138,7 @@ export class CurrencyCoinComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
       },
       {
-        title: "description",
+        title: "Other details",
         field: "description",
         sorter: "alphanum",
       },
@@ -137,16 +148,17 @@ export class CurrencyCoinComponent implements OnInit {
         maxWidth: 50,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
+          const collectionCoinId = cell.getRow().getData()["id"];
           this.hideCollectionCoin(collectionCoinId); // Call the hideCollectionCoin method
         },
+        headerSort: false,
       },
       {
         title: "",
         field: "",
         maxWidth: 50,
         formatter: (_cell) =>
-          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+          '<button class="action-buttons" title="More Actions" style="padding-right:0px;"><i class="bi bi-three-dots btn-link"></i></button>',
         clickMenu: this.optionsMenu,
         hozAlign: "left",
         headerSort: false,
@@ -156,7 +168,7 @@ export class CurrencyCoinComponent implements OnInit {
 
   hideCollectionCoin(collectionCoinId: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.collectionCoinId != collectionCoinId;
+      return item.id != collectionCoinId;
     });
   }
 
@@ -192,7 +204,7 @@ export class CurrencyCoinComponent implements OnInit {
     return `<span></span>`;
   }
 
-  
+
   filterGridSearchText(event: any) {
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
@@ -234,16 +246,56 @@ export class CurrencyCoinComponent implements OnInit {
 
   applyFilters() {
     this.filteredTableData = this.tableData.filter((item: any) => {
-      const matchesCoinName = item.collectionCoinName?.toLowerCase().includes(this.searchText);
+      const matchesCoinName = item.coinNoteName?.toLowerCase().includes(this.searchText);
       const matchesCountryName = item.countryName?.toLowerCase().includes(this.searchText);
       const matchesActulaValue = item.actualValue?.toString()?.toLowerCase().includes(this.searchText);
       const matchesIndianValue = item.indianValue?.toString()?.toLowerCase().includes(this.searchText);
       const matchesDescription = item.description?.toLowerCase().includes(this.searchText);
-      return matchesCoinName || matchesCountryName || matchesActulaValue || matchesIndianValue || matchesDescription;
+
+      const matchesCountry =
+        this.selectedCountry.length === 0 ||
+        this.selectedCountry.includes(item.countryName);
+
+      return (matchesCoinName || matchesCountryName || matchesActulaValue || matchesIndianValue || matchesDescription) && matchesCountry;
     });
   }
 
-  currencyCoinGallery(){
+  // Handle "Select All" checkbox
+  toggleAllCountryCheck(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+
+    this.selectedCountry = checked
+      ? this.countryList.map((m: any) => m.listItemDescription)
+      : [];
+
+    this.getCountryDropdownLabel();
+    this.applyFilters();
+  }
+  // Handle individual daytype selection
+  toggleCountryCheck(event: Event, countryName: string, code: string) {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.selectedCountry.push(countryName);
+      this.selectedCountryCode.push(code);
+    } else {
+      this.selectedCountry = this.selectedCountry.filter((m) => m !== countryName);
+      this.selectedCountryCode = this.selectedCountryCode.filter((m) => m !== code);
+    }
+    this.getCountryDropdownLabel();
+    this.applyFilters();
+  }
+
+  getCountryDropdownLabel() {
+    if (this.selectedCountry.length === 0) {
+      this.lableForCountryDropDown = "";
+    } else if (this.selectedCountry.length === this.countryList.length) {
+      this.lableForCountryDropDown = "All";
+    } else {
+      this.lableForCountryDropDown = this.selectedCountryCode.join(", ");
+    }
+  }
+
+  currencyCoinGallery() {
     this.router.navigate([NavigationURLs.CURRENCY_GALLERY]);
   }
 

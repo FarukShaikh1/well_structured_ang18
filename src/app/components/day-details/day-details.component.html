@@ -9,15 +9,15 @@
       <div class="modal-body">
         <form [formGroup]="dayDetailsForm" (ngSubmit)="submitDayDetails()">
           <div style="display: none">
-            <p>dayId</p>
-            <input formControlName="dayId" />
+            <p>specialOccasionId</p>
+            <input formControlName="specialOccasionId" />
             <input formControlName="assetId" />
           </div>
           <div class="row">
             <div class="col-12 col-lg-6">
               <div class="row">
                 <div class="col-6">
-                  <label>Person Name</label>
+                  <label>Person Name<span class="required"></span></label>
                   <input formControlName="personName" class="form-control form-control-lg text-dark bg-transparent"
                     [ngClass]="{
                       'error-border':
@@ -35,7 +35,7 @@
                   }
                 </div>
                 <div class="col">
-                  <label>Day Type</label>
+                  <label>Day Type<span class="required"></span></label>
                   <select formControlName="dayTypeId"
                     class="form-select form-control form-control-lg text-dark bg-transparent styled-select dropdown-toggle"
                     [ngClass]="{
@@ -44,7 +44,7 @@
                         dayDetailsForm.get('dayTypeId')?.invalid
                     }">
                     @for(item of dayTypeList; track $index){
-                    <option [value]="item.commonListItemId">
+                    <option [value]="item.id">
                       {{ item.listItemName }}
                     </option>
                     }
@@ -60,20 +60,20 @@
               </div>
               <div class="row mt-4">
                 <div class="col">
-                  <label>Choose a date</label>
-                  <input id="birthdate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                    placeholder="DD/MM/YYYY" appearance="outline" formControlName="birthdate" [ngClass]="{
+                  <label>Choose a date<span class="required"></span></label>
+                  <input id="specialOccasionDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                    placeholder="DD/MM/YYYY" appearance="outline" formControlName="specialOccasionDate" [ngClass]="{
                       'error-border':
-                        dayDetailsForm.get('birthdate')?.touched &&
-                        dayDetailsForm.get('birthdate')?.invalid
+                        dayDetailsForm.get('specialOccasionDate')?.touched &&
+                        dayDetailsForm.get('specialOccasionDate')?.invalid
                     }" />
-                  @if(dayDetailsForm.get('birthdate')?.touched &&
-                  dayDetailsForm.get('birthdate')?.invalid){
+                  @if(dayDetailsForm.get('specialOccasionDate')?.touched &&
+                  dayDetailsForm.get('specialOccasionDate')?.invalid){
                   <div class="text-danger">
-                    @if(dayDetailsForm.get('birthdate')?.errors?.['required']){
+                    @if(dayDetailsForm.get('specialOccasionDate')?.errors?.['required']){
                     Date is required }
-                    @else if(dayDetailsForm.get('birthdate')?.errors?.['pattern']){
-                    Invalid birthdate }
+                    @else if(dayDetailsForm.get('specialOccasionDate')?.errors?.['pattern']){
+                    Invalid specialOccasionDate }
                   </div>
                   }
                 </div>
@@ -87,7 +87,7 @@
                         dayDetailsForm.get('dayTypeId')?.invalid
                     }">
                     @for(item of relationList; track $index){
-                    <option [value]="item.commonListItemId">
+                    <option [value]="item.id">
                       {{ item.listItemName }}
                     </option>
                     }
@@ -116,18 +116,18 @@
                 </div>
                 <div class="col">
                   <label>Contact Number</label>
-                  <input formControlName="mobileNumber2" class="form-control form-control-lg text-dark bg-transparent"
+                  <input formControlName="alternateNumber" class="form-control form-control-lg text-dark bg-transparent"
                     [ngClass]="{
                       'error-border':
-                        dayDetailsForm.get('mobileNumber2')?.touched &&
-                        dayDetailsForm.get('mobileNumber2')?.invalid
+                        dayDetailsForm.get('alternateNumber')?.touched &&
+                        dayDetailsForm.get('alternateNumber')?.invalid
                     }" />
-                  @if(dayDetailsForm.get('mobileNumber2')?.touched &&
-                  dayDetailsForm.get('mobileNumber2')?.invalid){
+                  @if(dayDetailsForm.get('alternateNumber')?.touched &&
+                  dayDetailsForm.get('alternateNumber')?.invalid){
                   <div class="text-danger">
-                    @if(dayDetailsForm.get('mobileNumber2')?.errors?.['required']){
+                    @if(dayDetailsForm.get('alternateNumber')?.errors?.['required']){
                     Date is required }
-                    @else if(dayDetailsForm.get('mobileNumber2')?.errors?.['pattern']){
+                    @else if(dayDetailsForm.get('alternateNumber')?.errors?.['pattern']){
                     Invalid Contact Number }
                   </div>
                   }

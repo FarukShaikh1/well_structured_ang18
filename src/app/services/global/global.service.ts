@@ -162,6 +162,6 @@ export class GlobalService {
   }
 
     hidebuttonFormatter(cell: CellComponent) {
-      return `<button class="action-buttons" title="Hide Expense" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
+      return `<button class="action-buttons" title="Hide" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
     }
 }

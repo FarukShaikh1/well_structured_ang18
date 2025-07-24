@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/internal/Observable";
 import { API_URL } from "../../../utils/api-url";
+import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
+import { ExpenseRequest } from "../../interfaces/expense-request";
 // import { DataSource } from '@angular/cdk/collections';
 
 @Injectable({
@@ -15,74 +17,32 @@ export class ExpenseService {
 
   getExpenseDetails(expenseId: string) {
     const params = new HttpParams()
-      .set("userid", this.loggedInUserId)
+      .set("userId", this.loggedInUserId)
       .set("expenseId", expenseId);
     return this.http.get(API_URL.GET_EXPENSE_DETAILS, { params: params });
   }
 
-  getExpenseSummaryList(
-    fromDate: string,
-    toDate: string,
-    sourceOrReason: string,
-    minAmount: number,
-    maxAmount: number,
-    modeOfTransaction: string
-  ): Observable<any> {
-    const params = new HttpParams()
-      .set("userid", this.loggedInUserId)
-      .set("fromDate", fromDate)
-      .set("toDate", toDate)
-      .set("sourceOrReason", sourceOrReason)
-      .set("minAmount", minAmount)
-      .set("maxAmount", maxAmount)
-      .set("modeOfTransaction", modeOfTransaction);
-    return this.http.get(API_URL.GET_EXPENSE_SUMMARY_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+  getExpenseSummaryList(filter: ExpenseFilterRequest): Observable<any> {
+    debugger
+    const params = new HttpParams().set("userid", this.loggedInUserId);
+    return this.http.post(API_URL.GET_EXPENSE_SUMMARY_LIST, filter, { params });
   }
 
-  getExpenseReportList(
-    fromDate: string,
-    toDate: string,
-    sourceOrReason: string,
-    minAmount: number,
-    maxAmount: number,
-    modeOfTransaction: string
-  ): Observable<any> {
-    const params = new HttpParams()
-      .set("userid", this.loggedInUserId)
-      .set("fromDate", fromDate)
-      .set("toDate", toDate)
-      .set("sourceOrReason", sourceOrReason)
-      .set("minAmount", minAmount)
-      .set("maxAmount", maxAmount)
-      .set("modeOfTransaction", modeOfTransaction);
-
-    return this.http.get(API_URL.GET_EXPENSE_REPORT_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+  getExpenseReportList(filter: ExpenseFilterRequest): Observable<any> {
+    const params = new HttpParams().set("userid", this.loggedInUserId);
+    return this.http.post(API_URL.GET_EXPENSE_REPORT_LIST, filter, { params });
   }
 
-  getExpenseList(
-    fromDate: string,
-    toDate: string,
-    sourceOrReason: string,
-    minAmount: number,
-    maxAmount: number,
-    modeOfTransaction: string
-  ): Observable<any> {
-    const params = new HttpParams()
-      .set("userid", this.loggedInUserId)
-      .set("fromDate", fromDate)
-      .set("toDate", toDate)
-      .set("sourceOrReason", sourceOrReason)
-      .set("minAmount", minAmount)
-      .set("maxAmount", maxAmount)
-      .set("modeOfTransaction", modeOfTransaction);
-
-    return this.http.get(API_URL.GET_EXPENSE_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+  getExpenseList(filter: ExpenseFilterRequest): Observable<any> {
+    debugger
+    const params = new HttpParams().set("userid", this.loggedInUserId);
+    return this.http.post(API_URL.GET_EXPENSE_LIST, filter, { params });
   }
 
-  addExpense(expenseDetailsForm: any): Observable<any> {
+  addExpense(ExpenseRequest: ExpenseRequest): Observable<any> {
     return this.http.post(
       API_URL.ADD_EXPENSE + this.loggedInUserId,
-      expenseDetailsForm
+      ExpenseRequest
     );
   }
 
@@ -93,19 +53,19 @@ export class ExpenseService {
     );
   }
 
-  updateExpense(expenseDetailsForm: any): Observable<any> {
+  updateExpense(ExpenseRequest: ExpenseRequest): Observable<any> {
     return this.http.post(
       API_URL.UPDATE_EXPENSE + this.loggedInUserId,
-      expenseDetailsForm
+      ExpenseRequest
     );
   }
 
   deleteExpense(expenseId: string): Observable<any> {
     return this.http.get(
       API_URL.DELETE_EXPENSE +
-        expenseId +
-        "&userId=" +
-        String(localStorage.getItem("userId"))
+      expenseId +
+      "&userId=" +
+      String(localStorage.getItem("userId"))
     );
   }
 
