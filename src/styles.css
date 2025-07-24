@@ -206,7 +206,9 @@ input.form-control.rounded-button.rounded-button-right.rounded-button-small {
 .tabulator .tabulator-range-selected.tabulator-range-only-cell-selected {
   border-color: #ff7a00;
 }
-
+.tabulator-menu-item{
+  padding:0px !important;
+}
 /* Css for webkit started here */
 ::-webkit-scrollbar {
   width: 6px;
@@ -927,7 +929,7 @@ input {
 .btn-link {
   color: #FF7A00;
   text-decoration: none;
-  padding: 0px;
+  padding: 5px 10px;
   margin: 0px;
   font: normal normal bold 13px/16px;
   background-color: rgba(0, 0, 0, 0);
