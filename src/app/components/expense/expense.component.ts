@@ -9,6 +9,7 @@ import {
   NavigationURLs,
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
+import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
 import { ExpenseService } from "../../services/expense/expense.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
@@ -16,7 +17,6 @@ import { ExpenseDetailsComponent } from "../expense-details/expense-details.comp
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
 export interface Task {
   name: string;
   completed: boolean;
@@ -465,6 +465,12 @@ export class ExpenseComponent implements OnInit {
     });
   }
 
+  removeExpense(expenseId: any) {
+    this.tableData = this.tableData.filter((item: any) => {
+      return item.id != expenseId;
+    });
+  }
+
   hideExpenseBySource(sourceOrReason: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
       return item.sourceOrReason != sourceOrReason;
@@ -473,8 +479,8 @@ export class ExpenseComponent implements OnInit {
 
   dateFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
-    const projectData = cell.getRow().getData();
-    const dateColumn = projectData[columnName];
+    const expenseData = cell.getRow().getData();
+    const dateColumn = expenseData[columnName];
     if (dateColumn) {
       return `<span>${this.datePipe.transform(
         dateColumn,
@@ -487,8 +493,8 @@ export class ExpenseComponent implements OnInit {
 
   amountColorFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
-    const projectData = cell.getRow().getData();
-    const columnValue = projectData[columnName];
+    const expenseData = cell.getRow().getData();
+    const columnValue = expenseData[columnName];
     const formattedValue = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
@@ -503,9 +509,9 @@ export class ExpenseComponent implements OnInit {
   }
 
   getColorForText(cell: CellComponent): any {
-    const projectData = cell.getRow().getData();
-    const columnValue = projectData["purpose"];
-    const sourceValue = projectData["sourceOrReason"];
+    const expenseData = cell.getRow().getData();
+    const columnValue = expenseData["purpose"];
+    const sourceValue = expenseData["sourceOrReason"];
 
     if (columnValue?.toLowerCase().includes("emergency")) {
       return `<span style="color:#FF0000; font-weight:bold">${sourceValue}</span>`;
@@ -734,7 +740,8 @@ export class ExpenseComponent implements OnInit {
       this.loaderService.showLoader();
       this.expenseService.deleteExpense(this.expenseId).subscribe({
         next: (res: any) => {
-          this.LoadGrid();
+          this.removeExpense(this.expenseId);
+          this.loaderService.hideLoader();
         },
         error: (error: any) => {
           console.log("error : ", error);
@@ -745,13 +752,11 @@ export class ExpenseComponent implements OnInit {
   }
 
   filterGridByFromDate(date: any) {
-    debugger
     this.fromDate = DateUtils.CorrectedDate(date); 
     this.LoadGrid();
   }
 
   filterGridByToDate(date: any) {
-    debugger
     this.toDate = DateUtils.CorrectedDate(date); 
     this.LoadGrid();
   }

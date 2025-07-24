@@ -29,7 +29,7 @@ import { UserDetailsComponent } from '../user-details/user-details.component';
   styleUrl: './user-list.component.css',
   providers: [],
 })
-export class UserListComponent implements OnInit, AfterViewInit {
+export class UserListComponent implements OnInit {
   @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
   @ViewChild('searchInput') searchInput!: ElementRef;
   public filteredTableData: Record<string, unknown>[] = [];
@@ -41,8 +41,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
   searchText: string = '';
   noDataMessage = 'No Data Exists.';
   noMatchingDataMessage = 'No Data Exists.';
-  idForDeactivation: string = '';
-  isdeactivate: boolean = false;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(UserDetailsComponent) userDetailsComponent!: UserDetailsComponent;
   @ViewChild(ConfirmationDialogComponent)
@@ -210,30 +208,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    document.addEventListener('click', (event: Event) => {
-      const target = event.target as HTMLElement;
-      const viewProjectsBtn = target.closest('.view-projects-btn');
-      if (viewProjectsBtn) {
-        const userId = viewProjectsBtn.getAttribute('data-user-id');
-        this.viewUserProfile(userId);
-      }
-      // For options menu on three dots
-      else if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
-        const button = target.closest(
-          '.OPTIONS_MENU_THREE_DOTS'
-        ) as HTMLElement;
-        const rowId = button.getAttribute('data-row-id');
-        if (rowId) {
-          const rowData = this.tableData.find((row) => row['id'] === rowId);
-          if (rowData) {
-            this.populateOptionsMenu(rowData, rowId);
-          }
-        }
-      }
-    });
-  }
-
   populateOptionsMenu(rowData: any, rowId: string) {
     const menuElement = document.getElementById(`dropdownMenuItems${rowId}`);
     if (!menuElement) {
@@ -270,8 +244,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   deactivateUser(id: string, isdeactivate: boolean) {
     if (id) {
-      this.idForDeactivation = id;
-      this.isdeactivate = isdeactivate;
       // Logic to handle user deactivation
       if (isdeactivate) {
         this.confirmModalComponent.openConfirmationPopup(
@@ -285,45 +257,11 @@ export class UserListComponent implements OnInit, AfterViewInit {
         );
       }
     } else {
-      this.idForDeactivation = '';
     }
   }
 
   handleConfirmResult(result: boolean) {
-    if (result) {
-      this.loaderService.showLoader();
-      this.userService
-        .deactivateUser(this.idForDeactivation, this.isdeactivate)
-        .subscribe({
-          next: (result : any) => {
-            if (result?.data) {
-              this.loadGrid();
-              if (this.isdeactivate) {
-                this.toaster.showMessage(
-                  Messages.USER_DEACTIVATED_SUCCESS,
-                  'success'
-                );
-              } else {
-                this.toaster.showMessage(
-                  Messages.USER_REACTIVATED_SUCCESS,
-                  'success'
-                );
-              }
-            } else {
-              console.error(Messages.ERROR_IN_DEACTIVATING_USER);
-              this.loaderService.hideLoader();
-              this.toaster.showMessage(
-                Messages.ERROR_IN_DEACTIVATING_USER,
-                'error'
-              );
-            }
-          },
-          error: (error : any) => {
-            console.error(Messages.ERROR_IN_DEACTIVATING_USER, error);
-            this.loaderService.hideLoader();
-          },
-        });
-    }
+    if (result) {    }
   }
 
   loadGrid() {
@@ -378,6 +316,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
   }
 
   openUserDetailsPopup(id: string) {
-    this.userDetailsComponent.openUserDetailsPopup(id, null);
+    this.userDetailsComponent.openUserDetailsPopup(id);
   }
 }

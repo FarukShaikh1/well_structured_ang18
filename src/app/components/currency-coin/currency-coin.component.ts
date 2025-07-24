@@ -189,8 +189,8 @@ export class CurrencyCoinComponent implements OnInit {
 
   amountColorFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
-    const projectData = cell.getRow().getData();
-    const columnValue = projectData[columnName];
+    const coinData = cell.getRow().getData();
+    const columnValue = coinData[columnName];
     const formattedValue = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",

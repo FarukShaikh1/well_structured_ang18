@@ -1,12 +1,12 @@
 import { CommonModule, DatePipe } from "@angular/common";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
+import { API_URL } from "../../../utils/api-url";
 import {
   ApplicationConstants,
-  ApplicationModuleActions,
   ApplicationModules,
   ApplicationTableConstants,
-  DBConstants,
+  DBConstants
 } from "../../../utils/application-constants";
 import { DayService } from "../../services/day/day.service";
 import { GlobalService } from "../../services/global/global.service";
@@ -16,7 +16,6 @@ import { DayDetailsComponent } from "../day-details/day-details.component";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { API_URL } from "../../../utils/api-url";
 
 export interface Task {
   name: string;
@@ -58,7 +57,6 @@ export class DayComponent implements OnInit {
   isYesterday: boolean = false;
   daySelected: number[] = [];
   searchText: string = "";
-  selectedData!: { value: any; text: any };
   lableForMonthDropDown = "";
   lableForMonthDropDownIds = "";
   selectedMonths: string[] = []; // Array to store selected months
@@ -69,7 +67,6 @@ export class DayComponent implements OnInit {
   lableForRelationTypeDropDownIds = "";
   selectedDayType: string[] = []; // Array to store selected DayTypes
   selectedRelationType: string[] = []; // Array to store selected DayTypes
-  loggedInUser = null;
   id: string = '';
   constructor(
     private _dayService: DayService,
@@ -81,7 +78,6 @@ export class DayComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loggedInUser = this.localStorageService.getLoggedInUserData().userName;
     this.globalService.getCommonListItems(DBConstants.MONTH).subscribe({
       next: (res: any) => {
         this.monthList = res;
@@ -177,7 +173,11 @@ export class DayComponent implements OnInit {
 
         field: "personName",
         sorter: "string",
-        formatter: this.personNameFormatter.bind(this),
+      },
+
+      {
+        title: "Relation",
+        field: "relationShipName"
       },
       {
         title: "Email Id",
@@ -226,23 +226,6 @@ export class DayComponent implements OnInit {
       },
     ];
 
-    if (this.loggedInUser == ApplicationConstants.APPLICATIONS_OWNER_EMAILID) {
-      this.tableColumnConfig.splice(4, 0, {
-        title: "Relation",
-        field: "relationShipName"
-      })
-    }
-  }
-
-  personNameFormatter(cell: CellComponent) {
-    const rowData = cell.getRow().getData();
-    const clientId = rowData["id"];
-    const html = `
-       <button class="text-link view-projects-btn" data-client-id="${clientId}">
-         ${rowData["personName"]} 
-      </button> 
-    `;
-    return html;
   }
 
   picFormatter(cell: CellComponent) {
@@ -268,8 +251,8 @@ export class DayComponent implements OnInit {
 
   dateFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
-    const projectData = cell.getRow().getData();
-    const dateColumn = projectData[columnName];
+    const occasionData = cell.getRow().getData();
+    const dateColumn = occasionData[columnName];
     if (dateColumn) {
       return `<span>${this.datePipe.transform(dateColumn, "dd-MMM")}</span>`;
     }
@@ -291,7 +274,7 @@ export class DayComponent implements OnInit {
                   &nbsp;Edit
                 </a>
                 `,
-        action: () => this.openPopup(rowData['id']),
+        action: () => this.openDetailsPopup(rowData['id']),
       });
 
       menu.push({
@@ -328,15 +311,14 @@ export class DayComponent implements OnInit {
       this.loaderService.showLoader();
       this._dayService.deleteDay(this.id).subscribe({
         next: (res: any) => {
-          this.loaderService.hideLoader();
           this.toaster.showMessage("Record deleted successfully.", "success");
-          this.hideDay(this.id);
-
+          this.removeDay(this.id);
+          this.loaderService.hideLoader();
         },
         error: (error: any) => {
           console.log("error : ", error);
-          this.loaderService.hideLoader();
           this.toaster.showMessage("Failed to delete the record.", "error");
+          this.loaderService.hideLoader();
         },
       });
     }
@@ -454,13 +436,19 @@ export class DayComponent implements OnInit {
     }
   }
 
-  openPopup(dayId: any) {
+  openDetailsPopup(dayId: any) {
     console.log("dayDetails clicked");
     this.dayDetailsComponent.openDetailsPopup(dayId);
   }
 
   hideDay(dayId: string) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
+      const includeDay = item.id != dayId;
+      return includeDay;
+    });
+  }
+  removeDay(dayId: string) {
+    this.tableData = this.tableData.filter((item: any) => {
       const includeDay = item.id != dayId;
       return includeDay;
     });

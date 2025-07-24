@@ -156,7 +156,7 @@ this.countryList = Array.from(
       // Multi-select dropdown logic
       const matchesCurrencyType =
         this.selectedTypes?.length === 0 ||
-        this.selectedTypes.includes(item.collectionCurrencyType);
+        this.selectedTypes.includes(item.currencyCoinType);
 
       const matchesCountry =
         this.selectedCountries?.length === 0 ||

@@ -33,13 +33,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     Modules = ApplicationModules;
     Module_Actions = ApplicationModuleActions;
-    displayFeedback: boolean = false;
     currentModuleName: string = '';
-    displayFeedbackButton: boolean = true;
-    clientId: string = '';
-    projectId: string = '';
-    formId: string = '';
-    formIdOpenedByOtherUser: string = '';
     NavigationURLs = NavigationURLs;
     userName: string = '';
     roleName: string = '';
@@ -81,16 +75,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     chatSystem() {
         this.router.navigate([NavigationURLs.NAV_CHAT_PANEL]);
-    }
-
-    FeedbackBtnClicked() {
-        //Get currentModuleName according to URL or selscted Module
-        this.currentModuleName = 'Home';
-        this.displayFeedbackButton = !this.displayFeedbackButton;
-    }
-
-    closeFeedback() {
-        this.displayFeedback = false;
     }
 
     getLoggedInUserData() {

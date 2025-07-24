@@ -43,14 +43,6 @@ export class UserService {
     return this.httpService.post<any>(API_URL.REGISTER_USER, userData);
   }
 
-  deactivateUser(id: string, isdeactivate: boolean): Observable<any> {
-    if (isdeactivate) {
-      return this.httpService.delete<any>(API_URL.DEACTIVATE_USER + id);
-    } else {
-      return this.httpService.delete<any>(API_URL.REACTIVATE_USER + id);
-    }
-  }
-
   updateUser(userData: any): Observable<any> {
     return this.httpService.post<any>(API_URL.UPDATE_USER, userData);
   }

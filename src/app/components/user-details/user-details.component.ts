@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import * as forms from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PopupStats } from '../../interfaces/popup-stats';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { RoleService } from '../../services/role/role.service';
@@ -80,7 +79,6 @@ export class UserDetailsComponent implements OnInit {
       ],
       role: ['', [Validators.required]],
       phone: [''],
-      clientID: [''],
     });
   }
 
@@ -90,7 +88,7 @@ export class UserDetailsComponent implements OnInit {
     return guidPattern.test(value);
   }
 
-  openUserDetailsPopup(id: string, popupStats: PopupStats | null) {
+  openUserDetailsPopup(id: string) {
     this.existingUserRole = '';
     this.emailAlreadyExists = false;
     this.enteredEmailId = '';
@@ -98,12 +96,7 @@ export class UserDetailsComponent implements OnInit {
     this.initForm();
 
     this.existingUserRole = '';
-    this.setClientIdAsNonRequired();
-    if (popupStats !== null) {
-      this.isEditMode = popupStats.isEditMode;
-      this.modalTitle = popupStats.popupTitle;
-      this.isRoleDisabled = popupStats.isRoleDisabled;
-    } else {
+
       if (id !== '') {
         this.getUserDetailsById(id);
         this.isEditMode = true;
@@ -111,7 +104,6 @@ export class UserDetailsComponent implements OnInit {
       } else {
         this.isEditMode = false;
         this.modalTitle = 'Add New User';
-      }
     }
 
     const model = document.getElementById('userDetailsPopup');
@@ -154,11 +146,6 @@ export class UserDetailsComponent implements OnInit {
     const formValue = this.userForm.value;
     const payload = { ...formValue };
 
-    // If the role is not "Client Representative", set phoneNo and client to null
-    if (!this.isClientRepresentativeSelected) {
-      payload.phone = null;
-      payload.clientID = null;
-    }
 
     if (this.isEditMode) {
       const selectedRole = payload.role;
@@ -210,7 +197,6 @@ export class UserDetailsComponent implements OnInit {
           username: result.data?.userName,
           email: result.data?.email,
           role: result.data?.role,
-          clientID: result.data?.clientID,
         });
         this.loaderService.hideLoader();
       },
@@ -221,16 +207,6 @@ export class UserDetailsComponent implements OnInit {
     });
   }
 
-  setClientIdAsRequired() {
-    this.isClientRepresentativeSelected = true;
-    this.userForm.get('clientID')?.setValidators(Validators.required);
-    this.userForm.get('clientID')?.updateValueAndValidity(); // Re-evaluate validation state
-  }
-  setClientIdAsNonRequired() {
-    this.isClientRepresentativeSelected = false;
-    this.userForm.get('clientID')?.setValidators(null);
-    this.userForm.get('clientID')?.updateValueAndValidity(); // Re-evaluate validation state
-  }
   getUserDetailsByEmail(email: string) {
     this.existingUserRole = '';
     this.userService.getUserDetailsByEmail(email).subscribe({
@@ -241,20 +217,17 @@ export class UserDetailsComponent implements OnInit {
             id: result.data?.id,
             username: result.data?.userName,
             role: result.data?.role,
-            clientID: result.data?.clientID,
           });
           this.existingUserRole = result.data?.role;
           this.emailAlreadyExists = true;
           this.existingUserRole = result.data?.role;
           this.userForm.get('username')?.disable();
           this.userForm.get('role')?.disable();
-          this.userForm.get('clientID')?.disable();
           this.loaderService.hideLoader();
         } else {
           this.emailAlreadyExists = false;
           this.userForm.get('username')?.enable();
           this.userForm.get('role')?.enable();
-          this.userForm.get('clientID')?.enable();
 
           let partBeforeAt = email.split('@')[0]; // Extract text before @
           partBeforeAt = partBeforeAt?.replace(ApplicationConstants.REGEX_DASH_DOT_UNDERSCORE_WITH_SPACE, ' ');
@@ -264,12 +237,10 @@ export class UserDetailsComponent implements OnInit {
             this.userForm.patchValue({
               username: partBeforeAt,
               role: '',
-              clientID: '',
             });
           } else {
             this.userForm.patchValue({
               username: partBeforeAt,
-              clientID: '',
             });
           }
           this.loaderService.hideLoader();
@@ -304,7 +275,6 @@ export class UserDetailsComponent implements OnInit {
       this.userForm.patchValue({
         username: '',
         role: '',
-        clientID: '',
       });
       this.emailAlreadyExists = false;
       return;
