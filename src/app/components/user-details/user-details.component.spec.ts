@@ -78,10 +78,10 @@
 //     expect(userForm.controls['id']).toBeTruthy();
 //     expect(userForm.controls['id'].value).toBe(0);
 
-//     expect(userForm.controls['username']).toBeTruthy();
-//     expect(userForm.controls['username'].value).toBe('');
+//     expect(userForm.controls['userName']).toBeTruthy();
+//     expect(userForm.controls['userName'].value).toBe('');
 //     expect(
-//       userForm.controls['username'].hasValidator(Validators.required)
+//       userForm.controls['userName'].hasValidator(Validators.required)
 //     ).toBeTrue();
 
 //     expect(userForm.controls['description']).toBeTruthy();
@@ -126,7 +126,7 @@
 
 //     component.userForm = new FormGroup({
 //       id: new FormControl(''),
-//       username: new FormControl(''),
+//       userName: new FormControl(''),
 //       email: new FormControl(''),
 //       role: new FormControl(''),
 //     });
@@ -137,7 +137,7 @@
 //     expect(component.existingUserRole).toEqual(mockData.role);
 //     expect(component.userForm.value).toEqual({
 //       id: mockData.id,
-//       username: mockData.userName,
+//       userName: mockData.userName,
 //       email: mockData.email,
 //       role: mockData.role,
 //     });
@@ -162,7 +162,7 @@
 //   it('resetForm(): should reset the user form and set isEditMode to false', () => {
 //     component.userForm = new FormGroup({
 //       id: new FormControl('a7c00ca1-600d-461b-a931-5dcf93cfae22'),
-//       username: new FormControl('Test_user_name'),
+//       userName: new FormControl('Test_user_name'),
 //       email: new FormControl('testuser@test.com'),
 //       role: new FormControl('Admin'),
 //     });
@@ -172,7 +172,7 @@
 
 //     expect(component.userForm.value).toEqual({
 //       id: null,
-//       username: null,
+//       userName: null,
 //       email: null,
 //       role: null,
 //     });
@@ -190,7 +190,7 @@
 //     component.isEditMode = true;
 //     component.userForm = new FormGroup({
 //       id: new FormControl('id'),
-//       username: new FormControl('username'),
+//       userName: new FormControl('userName'),
 //       email: new FormControl('email@testemail.com'),
 //       role: new FormControl('Admin'),
 //     });
@@ -205,7 +205,7 @@
 //     expect(userServiceMock.updateUser).toHaveBeenCalledTimes(1);
 //     expect(userServiceMock.updateUser).toHaveBeenCalledWith({
 //       id: 'id',
-//       username: 'username',
+//       userName: 'userName',
 //       email: 'email@testemail.com',
 //       role: '8d43d229-3baf-4649-b111-a6e6d42e16ab', // matched role ID
 //     });
@@ -228,7 +228,7 @@
 //     component.isEditMode = true;
 //     component.userForm = new FormGroup({
 //       id: new FormControl('some-id'),
-//       username: new FormControl('some-username'),
+//       userName: new FormControl('some-userName'),
 //       email: new FormControl('some-email'),
 //       role: new FormControl('Admin'),
 //     });
@@ -254,7 +254,7 @@
 
 //     component.isEditMode = false;
 //     component.userForm = new FormGroup({
-//       username: new FormControl('TestUserName'),
+//       userName: new FormControl('TestUserName'),
 //       email: new FormControl('test@test.com'),
 //       role: new FormControl('8d43d229-3baf-4649-b111-a6e6d42e16ab'),
 //     });
@@ -269,7 +269,7 @@
 //     expect(spyLoaderShow).toHaveBeenCalled();
 //     expect(userServiceMock.addUser).toHaveBeenCalledTimes(1);
 //     expect(userServiceMock.addUser).toHaveBeenCalledWith({
-//       username: 'TestUserName',
+//       userName: 'TestUserName',
 //       email: 'test@test.com',
 //       role: '8d43d229-3baf-4649-b111-a6e6d42e16ab', // matched role ID
 //     });
@@ -290,7 +290,7 @@
 
 //     component.isEditMode = false;
 //     component.userForm = new FormGroup({
-//       username: new FormControl('new-username'),
+//       userName: new FormControl('new-userName'),
 //       email: new FormControl('new-email'),
 //       role: new FormControl('Admin'),
 //     });
@@ -389,7 +389,7 @@
 //   it('closePopup(): should reset user role and form', () => {
 //     component.existingUserRole = 'admin';
 //     component.userForm = new FormGroup({
-//       username: new FormControl('new-username'),
+//       userName: new FormControl('new-userName'),
 //       email: new FormControl('new-email'),
 //       role: new FormControl('Admin'),
 //     });
@@ -397,7 +397,7 @@
 //     component.closePopup();
 
 //     expect(component.existingUserRole).toBe('');
-//     expect(component.userForm?.get('username')?.value).toBe(null);
+//     expect(component.userForm?.get('userName')?.value).toBe(null);
 //     expect(component.userForm?.get('email')?.value).toBe(null);
 //     expect(component.userForm?.get('role')?.value).toBe(null);
 //   });

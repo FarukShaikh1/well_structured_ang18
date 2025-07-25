@@ -61,7 +61,7 @@ export class ChangePasswordComponent implements OnInit {
 
     this.userId = this.localStorageService.getLoggedInUserData().userId;
     this.userFullName =
-      this.localStorageService.getLoggedInUserData().username;
+      this.localStorageService.getLoggedInUserData().userName;
     this.loaderService.hideLoader();
 
     this.changePasswordForm = this.fb.group(

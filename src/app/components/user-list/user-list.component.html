@@ -1,31 +1,26 @@
-<!-- @if(globalService.isAccessible(Modules.USER, Module_Actions.VIEW)) { -->
-<div class="px-md-4 px-2 mt-4">
-  <div class="row mt-4 mb-4">
-    <div class="col-2 d-flex justify-content-between list-heading-color">
-      <h4><strong>Users</strong></h4>
-    </div>
-    <div class="col-md-10 d-flex justify-content-end">
-      <!-- @if(globalService.isAccessible(Modules.USER, Module_Actions.ADD)) { -->
-
-      <button class="btn btn-danger rounded-button rounded-button-small" type="button"
-        (click)="openUserDetailsPopup('')" data-bs-toggle="modal" data-bs-target="#userDetailsPopup">
-        <i class="bi bi-plus-lg"></i>
-        Add User
-      </button>
-      <!-- } -->
+<div class="main-body">
+  <button class="btn btn-danger rounded-button rounded-button-small" type="button" (click)="openUserDetailsPopup('')"
+    data-bs-toggle="modal" data-bs-target="#userDetailsPopup">
+    <i class="bi bi-plus-lg"></i>
+    Add User
+  </button>
+  <div class="row pb-2">
+    <div class="col-6 col-sm-4 col-lg-2 col-xl-2">
+      Search
+      <input class="form-control form-control-lg text-dark bg-transparent" type="text" placeholder="Search Something"
+        aria-label="Search Something" #searchInput (keyup)="filterGridBySearch($event)" />
+      <div></div>
     </div>
   </div>
 
-  <!-- <div class="table-container"> -->
-  <div class="mb-2">
-    <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-      [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
-      [noDataMessage]="noDataMessage" [noMatchingDataMessage]="noMatchingDataMessage">
-    </app-tabulator-grid>
+  <div class="row">
+    <div class="mb-2">
+      <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
+        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
+      </app-tabulator-grid>
+    </div>
   </div>
-  <!-- </div> -->
 </div>
-<!-- } -->
 <app-toaster></app-toaster>
 <app-user-details></app-user-details>
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>

@@ -52,7 +52,7 @@ export class UserDetailsComponent implements OnInit {
     private roleService: RoleService,
     private loaderService: LoaderService,
     private renderer: Renderer2
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isEditMode = false;
@@ -61,24 +61,13 @@ export class UserDetailsComponent implements OnInit {
 
   initForm() {
     this.userForm = this.fb.group({
-      id: 0,
-      username: [
-        '',
-        [
-          Validators.required,
-          // Validators.pattern(ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_NAME),
-          Validators.pattern(/^(?!\s+$).+/),
-        ],
-      ],
-      email: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_USERNAME),
-        ],
-      ],
-      role: ['', [Validators.required]],
-      phone: [''],
+      id: [''],
+      userName: ['',[Validators.required,Validators.pattern(/^(?!\s+$).+/),],],
+      firstName: ['',[Validators.pattern(/^(?!\s+$).+/)]],
+      lastName: ['',[Validators.pattern(/^(?!\s+$).+/),],],
+      emailAddress: ['',[Validators.required,Validators.pattern(ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_USERNAME),],],
+      isLocked: [false, [Validators.required]],
+      roleId: ['', [Validators.required]],
     });
   }
 
@@ -97,13 +86,13 @@ export class UserDetailsComponent implements OnInit {
 
     this.existingUserRole = '';
 
-      if (id !== '') {
-        this.getUserDetailsById(id);
-        this.isEditMode = true;
-        this.modalTitle = 'Edit User';
-      } else {
-        this.isEditMode = false;
-        this.modalTitle = 'Add New User';
+    if (id !== '') {
+      this.getUserDetailsById(id);
+      this.isEditMode = true;
+      this.modalTitle = 'Edit User';
+    } else {
+      this.isEditMode = false;
+      this.modalTitle = 'Add New User';
     }
 
     const model = document.getElementById('userDetailsPopup');
@@ -126,7 +115,7 @@ export class UserDetailsComponent implements OnInit {
     this.isEditMode = false;
   }
 
-  trimAllFields(){
+  trimAllFields() {
     // Trim whitespace from all form control values
     Object.keys(this.userForm.controls).forEach(key => {
       const control = this.userForm.get(key);
@@ -134,7 +123,7 @@ export class UserDetailsComponent implements OnInit {
         control.setValue(control.value.trim());
       }
     });
-}
+  }
 
   onSubmit() {
     this.trimAllFields();
@@ -189,64 +178,22 @@ export class UserDetailsComponent implements OnInit {
   getUserDetailsById(id: string) {
     this.existingUserRole = '';
     this.userService.getUserDetailsById(id).subscribe({
-      next: (result : any) => {
+      next: (result: any) => {
         this.loaderService.showLoader();
-        this.existingUserRole = result.data?.role;
+        this.existingUserRole = result.role;
         this.userForm.patchValue({
-          id: result.data?.id,
-          username: result.data?.userName,
-          email: result.data?.email,
-          role: result.data?.role,
+          id: result.id,
+          firstName: result.firstName,
+          lastName: result.lastName,
+          userName: result.userName,
+          emailAddress: result.emailAddress,
+          passwordLastChangeOn: result.passwordLastChangeOn,
+          roleId: result.roleId,
+          isLocked: result.isDeleted,
         });
         this.loaderService.hideLoader();
       },
-      error: (error : any) => {
-        this.loaderService.hideLoader();
-        console.error('Error fetching user data:', error);
-      },
-    });
-  }
-
-  getUserDetailsByEmail(email: string) {
-    this.existingUserRole = '';
-    this.userService.getUserDetailsByEmail(email).subscribe({
-      next: (result : any) => {
-        this.loaderService.showLoader();
-        if (result.data) {
-          this.userForm.patchValue({
-            id: result.data?.id,
-            username: result.data?.userName,
-            role: result.data?.role,
-          });
-          this.existingUserRole = result.data?.role;
-          this.emailAlreadyExists = true;
-          this.existingUserRole = result.data?.role;
-          this.userForm.get('username')?.disable();
-          this.userForm.get('role')?.disable();
-          this.loaderService.hideLoader();
-        } else {
-          this.emailAlreadyExists = false;
-          this.userForm.get('username')?.enable();
-          this.userForm.get('role')?.enable();
-
-          let partBeforeAt = email.split('@')[0]; // Extract text before @
-          partBeforeAt = partBeforeAt?.replace(ApplicationConstants.REGEX_DASH_DOT_UNDERSCORE_WITH_SPACE, ' ');
-          partBeforeAt = partBeforeAt?.replace(ApplicationConstants.REGEX_CAPITALIZE_FIRST_LETTER, (char) => char.toUpperCase());
-
-          if (this.roleList.length > 1) {
-            this.userForm.patchValue({
-              username: partBeforeAt,
-              role: '',
-            });
-          } else {
-            this.userForm.patchValue({
-              username: partBeforeAt,
-            });
-          }
-          this.loaderService.hideLoader();
-        }
-      },
-      error: (error : any) => {
+      error: (error: any) => {
         this.loaderService.hideLoader();
         console.error('Error fetching user data:', error);
       },
@@ -255,11 +202,11 @@ export class UserDetailsComponent implements OnInit {
 
   getRoleList() {
     this.roleService.getAllRoles().subscribe({
-      next: (result : any) => {
-        this.roleListoriginal = result.data;
-        this.roleList = result.data;
+      next: (result: any) => {
+        this.roleListoriginal = result;
+        this.roleList = result;
       },
-      error: (error : any) => {
+      error: (error: any) => {
         console.error(Messages.ERROR_IN_FETCHING_ROLES, error);
       },
     });
@@ -273,12 +220,11 @@ export class UserDetailsComponent implements OnInit {
     ).test(this.enteredEmailId);
     if (!isEmailValid) {
       this.userForm.patchValue({
-        username: '',
+        userName: '',
         role: '',
       });
       this.emailAlreadyExists = false;
       return;
     }
-    this.getUserDetailsByEmail(this.enteredEmailId);
   }
 }

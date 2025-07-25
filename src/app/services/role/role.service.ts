@@ -25,5 +25,9 @@ export class RoleService {
   updateRoleModuleMapping(data: any): Observable<any> {
     return this.httpService.post(API_URL.UPDATE_ROLE_MODULE_MAPPING, data);
   }
+  getModuleList() {
+    return this.httpService.get(API_URL.GET_MODULE_LIST);
+  }
+
 
 }

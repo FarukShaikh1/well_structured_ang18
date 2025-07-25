@@ -4,7 +4,8 @@ import { Router } from "@angular/router";
 import { NavigationURLs } from "../../../utils/application-constants";
 import { GlobalService } from "../../services/global/global.service";
 import { LocalStorageService } from "../../services/local-storage/local-storage.service";
-import { UserServiceService } from "../../services/user/user-service.service";
+import { UserService } from "../../services/user/user.service";
+import { ModuleResponse } from "../../interfaces/module-response";
 
 @Component({
   selector: "app-login",
@@ -32,7 +33,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private userService: UserServiceService,
+    private userService: UserService,
     public globalService: GlobalService,
     private localStorageService: LocalStorageService
   ) {
@@ -57,7 +58,7 @@ export class LoginComponent {
       //this.globalService.openSnackBar("Password should not be blank")
       return;
     }
-    this.userService.getUser(this.loginForm.value).subscribe((res) => {
+    this.userService.getUser(this.loginForm.value).subscribe((res:any) => {
       if (res) {
         this.data = res;
         if (this.data.length <= 0) {

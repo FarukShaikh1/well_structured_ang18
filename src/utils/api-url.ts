@@ -33,6 +33,7 @@ export const API_URL = {
   UPLOAD_IMAGE: `${serverUrl}${apiPrefix}/asset/UploadAndSaveFile?userId=`,
 
   GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/GetCountryList`,
+  GET_MODULE_LIST: `${serverUrl}${apiPrefix}/user/GetModuleList`,
   GET_COLLECTION_COIN_DETAILS: `${serverUrl}${apiPrefix}/coinNoteCollection/GetDetails`,
 
 
@@ -59,9 +60,9 @@ export const API_URL = {
   GET_USER: `${serverUrl}${apiPrefix}/user/GetUser`,
   UPDATE_USER: `${serverUrl}${apiPrefix}/user/updateUserDetails?userId=`,
   Get_USER_BY_USER_ID: `${serverUrl}${apiPrefix}/user/getUserByUserId?userId=`,
-  Get_USER_DETAILS: `${serverUrl}${apiPrefix}/user/GetUserDetails?userId=`,
+  Get_USER_DETAILS: `${serverUrl}${apiPrefix}/user/GetDetails?userId=`,
   Get_USER_LIST: `${serverUrl}${apiPrefix}/user/getUserList?userId=`,
-  GET_ALL_ROLES: `${serverUrl}${apiPrefix}/user/getRoleList?userId=`,
+  GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,
 
 
   EXPENSE_ADJUSTMENT: `${serverUrl}${apiPrefix}/expense/expenseAdjustment?userId=`,

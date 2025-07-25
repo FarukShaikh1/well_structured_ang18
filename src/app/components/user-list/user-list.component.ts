@@ -35,7 +35,7 @@ export class UserListComponent implements OnInit {
   public filteredTableData: Record<string, unknown>[] = [];
   public tableData: Record<string, unknown>[] = [];
   public columnConfig: ColumnDefinition[] = [];
-  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; 
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
   searchText: string = '';
@@ -47,6 +47,8 @@ export class UserListComponent implements OnInit {
   confirmModalComponent!: ConfirmationDialogComponent;
   Modules = ApplicationModules;
   Module_Actions = ApplicationModuleActions;
+  sourceOrReason: any;
+  id: string = '';
 
   constructor(
     private userService: UserService,
@@ -56,6 +58,23 @@ export class UserListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.columnConfiguration();
+
+    this.loadGrid();
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.USER) {
+        this.loadGrid();
+      }
+    });
+    this.globalService.refreshList$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.USER) {
+        this.applySearch();
+      }
+    });
+  }
+
+  columnConfiguration() {
+
     this.columnConfig = [
       {
         title: 'Name',
@@ -80,34 +99,31 @@ export class UserListComponent implements OnInit {
         formatter: this.isLockedFormatter.bind(this),
       },
       {
-        title: '',
-        field: 'options',
-        maxWidth: 100,
-        formatter: this.threeDotsFormatter.bind(this),
-        hozAlign: 'left',
+        title: "-",
+        field: "-",
+        maxWidth: 50,
+        formatter: this.globalService.hidebuttonFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const id = cell.getRow().getData()["id"];
+          // this.hideUser(id);
+        },
         headerSort: false,
       },
+      {
+        title: "",
+        field: "options",
+        maxWidth: 50,
+        formatter: (_cell) =>
+          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+        clickMenu: this.generateOptionsMenu(this),
+        hozAlign: "left",
+        headerSort: false,
+      },
+
     ];
-
-    // Define which columns are available for filtering
-    this.filterColumns = this.columnConfig.filter((col) =>
-      ['userName', 'email', 'role'].includes(col.field ?? '')
-    );
-
-    this.loadGrid();
-    this.globalService.reloadGrid$.subscribe((listName: string) => {
-      if (listName === ApplicationModules.USER) {
-        this.loadGrid();
-      }
-    });
-    this.globalService.refreshList$.subscribe((listName: string) => {
-      if (listName === ApplicationModules.USER) {
-        this.applySearch();
-      }
-    });
   }
-
   threeDotsFormatter(cell: CellComponent) {
+
     const rowData = cell.getRow().getData();
     const rowId = rowData['id'];
     const optionsMenu = this.generateOptionsMenu(rowData); // Generate dynamic menu for row
@@ -130,61 +146,47 @@ export class UserListComponent implements OnInit {
 
   generateOptionsMenu(rowData: Record<string, any>) {
     const menu = [];
-    if (
-      rowData['id'] &&
-      !rowData['isDeactivated'] &&
-      this.globalService.isAccessible(ApplicationModules.USER, ApplicationModuleActions.EDIT)
-    ) {
+    // if (
+    //   rowData['id'] &&
+    //   this.globalService.isAccessible(ApplicationModules.DAY, ApplicationModuleActions.EDIT)
+    // )
+    {
       menu.push({
         label: `<a class="dropdown-item btn-link options-menu-item"
-          data-bs-toggle="modal" data-bs-target="#userDetailsPopup">
-              <i class="bi bi-pencil"></i>
-                &nbsp;Edit
-              </a>
-              `,
-        action: () => this.editUser(rowData['id']),
-      });
-    }
+            data-bs-toggle="modal" data-bs-target="#userDetailsPopup">
+                <i class="bi bi-pencil"></i>
+                  &nbsp;Edit
+                </a>
+                `,
+        action: (_e: any, cell: CellComponent) => {
+          const expenseData = cell.getRow().getData();
+          const expenseId = expenseData["id"];
+          this.openUserDetailsPopup(expenseId);
+        },
 
-    if (
-      rowData['id'] &&
-      !rowData['isDeactivated'] &&
-      this.globalService.isAccessible(
-        ApplicationModules.USER,
-        ApplicationModuleActions.DELETE
-      )
-    ) {
+      });
+
       menu.push({
-        label: `<a class="dropdown-item btn-link options-menu-item"
-              data-bs-toggle="modal" data-bs-target="#confirmModal">
+        label: `<a class="dropdown-item btn-link"
+              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
                   <i class="bi bi-trash"></i>
-                    &nbsp;Deactivate
+                    &nbsp;Delete
                   </a>
                   `,
-        action: () => this.deactivateUser(rowData['id'], true),
+        action: (_e: any, cell: CellComponent) => {
+          const expenseData = cell.getRow().getData();
+          const id = expenseData["id"];
+          this.deactivateUser(id, id);
+        },
       });
     }
-    // Code for future development reactive user
-    // else if (rowData['id'] && rowData['isDeactivated'] &&
-    //   this.globalService.isAccessible(
-    //     ApplicationModules.USER,
-    //     ApplicationModuleActions.ADD
-    //   )
-    // ) {
-    //   menu.push({
-    //     label: `<a class="dropdown-item btn-link"
-    //         data-bs-toggle="modal" data-bs-target="#confirmModal">
-    //             <i class="bi bi-trash"></i>
-    //               &nbsp;Activate
-    //             </a>
-    //             `,
-    //             action: () => this.deactivateUser(rowData['id'],false),
-    //   });
-    // }
     return menu;
   }
 
   nameFormatter(cell: CellComponent) {
+    const firstName = cell.getColumn().getField();
+    const userData = cell.getRow().getData();
+    // const columnValue = userData[firstName] + ' ' + userData[lastName];
     return `<span class="name-col-values">${cell.getValue()}</span>`;
   }
 
@@ -199,35 +201,14 @@ export class UserListComponent implements OnInit {
   }
 
   isLockedFormatter(cell: CellComponent) {
-    const statusValue = cell.getValue();
-    if (statusValue) {
-      this.columnConfig[4].visible = false;
+    const columnName = cell.getColumn().getField();
+    const userData = cell.getRow().getData();
+    const columnValue = userData[columnName];
+    if (columnValue) {
       return '<span style="color:gray">Locked</span>';
     } else {
       return '<span style="color:#ff7a00">Active</span>';
     }
-  }
-
-  populateOptionsMenu(rowData: any, rowId: string) {
-    const menuElement = document.getElementById(`dropdownMenuItems${rowId}`);
-    if (!menuElement) {
-      return;
-    }
-
-    menuElement.innerHTML = '';
-    const menuOptions = this.generateOptionsMenu(rowData);
-
-    menuOptions.forEach((option: any) => {
-      const menuItem = document.createElement('li');
-      menuItem.innerHTML = `
-        <a class="dropdown-item" href="#">${option.label}</a>
-      `;
-      menuItem.addEventListener('click', (event) => {
-        event.preventDefault();
-        option.action();
-      });
-      menuElement.appendChild(menuItem);
-    });
   }
 
   viewUserProfile(id: string | null | undefined) {
@@ -243,6 +224,7 @@ export class UserListComponent implements OnInit {
   }
 
   deactivateUser(id: string, isdeactivate: boolean) {
+    debugger
     if (id) {
       // Logic to handle user deactivation
       if (isdeactivate) {
@@ -261,23 +243,23 @@ export class UserListComponent implements OnInit {
   }
 
   handleConfirmResult(result: boolean) {
-    if (result) {    }
+    if (result) { }
   }
 
   loadGrid() {
     this.loaderService.showLoader();
     this.userService.getAllUsers().subscribe({
-      next: (result : any) => {
-        if (result?.data) {
-          this.tableData = result.data;
-          this.filteredTableData = result.data;
+      next: (result: any) => {
+        if (result) {
+          this.tableData = result;
+          this.filteredTableData = result;
         } else {
           console.error(Messages.ERROR_IN_FETCH_USER);
           this.toaster.showMessage(Messages.ERROR_IN_FETCH_USER, 'error');
         }
         this.loaderService.hideLoader();
       },
-      error: (error : any) => {
+      error: (error: any) => {
         console.error(Messages.ERROR_IN_FETCH_USER, error);
         this.loaderService.hideLoader();
       },
@@ -305,10 +287,10 @@ export class UserListComponent implements OnInit {
       return userNameMatch || emailMatch || roleMatch || statusMatch;
     });
 
-    if(this.filteredTableData && this.filteredTableData.length) {
+    if (this.filteredTableData && this.filteredTableData.length) {
       this.tabulatorGrid.clearEmptyCellSelection();
     }
-    
+
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
     }, 0);
@@ -316,6 +298,26 @@ export class UserListComponent implements OnInit {
   }
 
   openUserDetailsPopup(id: string) {
+    debugger
     this.userDetailsComponent.openUserDetailsPopup(id);
+  }
+
+  filterGridBySearch(data: any) {
+    setTimeout(() => {
+      this.searchInput.nativeElement.focus();
+    }, 0);
+    this.sourceOrReason = data?.target?.value?.toLowerCase();
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    this.filteredTableData = this.tableData.filter((item: any) => {
+      const searchText =
+        item.userName?.toLowerCase().includes(this.sourceOrReason) ||
+        item.userName?.toLowerCase().includes(this.sourceOrReason) ||
+        item.userName?.toLowerCase().includes(this.sourceOrReason) ||
+        item.description?.toLowerCase().includes(this.sourceOrReason);
+      return searchText;
+    });
   }
 }

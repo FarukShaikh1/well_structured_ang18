@@ -18,8 +18,8 @@ export class GlobalService {
     private http: HttpClient,
     private localStorageService: LocalStorageService,
     private roleService: RoleService,
-    
-  ) {}
+
+  ) { }
 
   private reloadComponentSubject = new Subject<void>();
   private reloadBannerOnSubject = new Subject<void>();
@@ -91,7 +91,7 @@ export class GlobalService {
       (m: any) => m.moduleName.toLowerCase() === module.toLowerCase()
     );
 
-    if (!mapping) { 
+    if (!mapping) {
       return false;
     }
 
@@ -140,7 +140,7 @@ export class GlobalService {
     return this.http.get(API_URL.GET_COMMON_LIST_ITEMS, { params: params });
   }
 
-    getCountryList() {
+  getCountryList() {
     return this.http.get(API_URL.GET_COUNTRY_LIST);
   }
 
@@ -148,7 +148,7 @@ export class GlobalService {
     // Trim whitespace from all form control values
     Object.keys(form?.controls).forEach((key) => {
       const control = form?.get(key);
-      if (key!=='picture' && control && typeof control.value === "string") {
+      if (key !== 'picture' && control && typeof control.value === "string") {
         control.setValue(control.value.trim());
       }
     });
@@ -161,7 +161,12 @@ export class GlobalService {
     }
   }
 
-    hidebuttonFormatter(cell: CellComponent) {
-      return `<button class="action-buttons" title="Hide" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
-    }
+  hidebuttonFormatter(cell: CellComponent) {
+    return `<button class="action-buttons" title="Hide" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
+  }
+
+  getModuleList() {
+    return this.http.get(API_URL.GET_COUNTRY_LIST);
+  }
+
 }

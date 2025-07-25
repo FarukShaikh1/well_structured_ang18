@@ -23,20 +23,9 @@ export class UserService {
     return this.httpService.get(API_URL.GET_LOGGED_IN_USER_DETAILS);
   }
 
-  getUserByIdOrEmail(value: string, isId: boolean): Observable<any> {
-    if (isId) {
-      return this.getUserDetailsById(value);
-    } else {
-      return this.getUserDetailsByEmail(value);
-    }
-  }
-
   getUserDetailsById(id: any): Observable<any> {
-    return this.httpService.get(API_URL.GET_ALL_USERS + '?id=' + id);
-  }
-
-  getUserDetailsByEmail(email: string): Observable<any> {
-    return this.httpService.get(API_URL.GET_ALL_USERS + '?email=' + email);
+    debugger
+    return this.httpService.get(API_URL.Get_USER_DETAILS + id);
   }
 
   addUser(userData: any): Observable<any> {
@@ -62,5 +51,23 @@ export class UserService {
   verifyOtp(emailId: string | null, otpCode: string): Observable<any> {
     const url = API_URL.VERIFY_OTP?.replace('{0}', emailId || '')?.replace('{1}', otpCode);
     return this.httpService.get<any>(url);
+  }
+
+  
+  getUser(userLoginRequest: UserLoginRequest) {
+    return this.httpService.post(API_URL.LOGIN, userLoginRequest);
+  }
+
+  updateUserDetails(userDetailsForm: any): Observable<any> {
+    return this.httpService.post(API_URL.UPDATE_USER + 'updateUserDetails?userId=', userDetailsForm);
+  }
+
+  getUserByUserId(id: number) {
+    return API_URL.Get_USER_BY_USER_ID + id;
+  }
+
+
+  getUserList(): Observable<any> {
+    return this.httpService.get(API_URL.Get_USER_LIST );
   }
 }

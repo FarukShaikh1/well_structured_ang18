@@ -50,7 +50,7 @@
                     </td>
                     <td data-label="userId">{{ item.UserId }}</td>
                     <td data-label="personName">{{ item.FirstName +' ' +item.LastName }}</td>
-                    <td data-label="mobileNumber">{{ item.UserName }}</td>
+                    <td data-label="mobileNumber">{{ item.userName }}</td>
                     <td data-label="emailId">{{ item.EmailAddress }}</td>
                     <td data-label="address">{{ item.roleName}}</td>
                     <td data-label="address">{{ item.ModifiedBy}}</td>
@@ -102,7 +102,7 @@
             </ng-container>
             <ng-container matColumnDef="userName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> User Name </th>
-                <td mat-cell *matCellDef="let row"> {{row.UserName}} </td>
+                <td mat-cell *matCellDef="let row"> {{row.userName}} </td>
             </ng-container>
             <ng-container matColumnDef="emailAddress">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Email Address </th>

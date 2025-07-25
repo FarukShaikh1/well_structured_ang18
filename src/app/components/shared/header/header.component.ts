@@ -20,8 +20,10 @@ import {
   ApplicationRoles,
   NavigationURLs,
 } from "../../../../utils/application-constants";
+import { ModuleResponse } from "../../../interfaces/module-response";
 import { SystemNotifications } from "../../../interfaces/system-notifications";
 import { NotificationService } from "../../../services/notification/notification.service";
+import { RoleService } from "../../../services/role/role.service";
 import { ConfirmBoxComponent } from "../confirm-box/confirm-box.component";
 
 @Component({
@@ -55,7 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ApplicationRoles = ApplicationRoles;
   loggedInUserName: string = "";
   userNameInitials: string = "";
-  moduleList: any;
+  moduleList: ModuleResponse[] = [];
   // profilePicUrl: string = '';
 
   constructor(
@@ -64,6 +66,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public globalService: GlobalService,
     // private signalRService: SignalRService,
     private logoutService: LogoutService,
+    private roleService: RoleService,
     private notificationService: NotificationService
   ) {
     this.globalService.getReloadObservable().subscribe(() => {
@@ -71,10 +74,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  isActiveMenu(urlEndPoint: string): boolean {
-    const routePath = this.router.url;
-    return routePath.includes(urlEndPoint);
-  }
   ngOnDestroy(): void {
     this.loggedInUsername = "";
     // Unsubscribe SignalR
@@ -88,13 +87,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.getModuleList();
   }
 
-      getModuleList() {
-        const userData = this.localStorageService.getLoggedInUserData();
-        if (userData) {
-            this.moduleList = userData.accessibleModuleIds;
-        }
-    }
+  getModuleList() {
+    this.roleService.getModuleList().subscribe({
+        next: (res: any) => {
+          this.moduleList = res;
+        },
+        error: (error: any) => {
+          //this.globalService.openSnackBar('some issue is in update the data');
+          return;
+        },
+      });
 
+    // const userData = this.localStorageService.getLoggedInUserData();
+    // if (userData) {
+    //     this.moduleList = userData.accessibleModuleIds;
+    // }
+  }
+
+  isActiveMenu(route: string): boolean {
+    return this.router.url.includes(route);
+  }
+  navigate(route: string) {
+    debugger;
+    this.router.navigate([route]);
+  }
   setLoginDisplay() {
     // this.loginDisplay =
     //   this.ssoInitializationService.authService.instance.getAllAccounts()

@@ -28,7 +28,7 @@ export class ProfileComponent {
     private http: HttpClient,public globalService:GlobalService) {
           this.profileForm = this.fb.group(
       {
-        username: '',
+        userName: '',
         password: '',
         emailAddress: '',
         firstName: '',
@@ -53,7 +53,7 @@ export class ProfileComponent {
   
   onCheckboxChange() {
   if(this.profileForm.controls["userNameCheckbox"].value){
-    this.profileForm.controls["username"].patchValue(this.profileForm.controls["emailAddress"].value)
+    this.profileForm.controls["userName"].patchValue(this.profileForm.controls["emailAddress"].value)
     this.readonly = true;
     }
     else
@@ -61,9 +61,9 @@ export class ProfileComponent {
 
   } 
   updateProfile() {
-    if(this.profileForm.value["username"]!=null && this.profileForm.value["username"].length<=0)
+    if(this.profileForm.value["userName"]!=null && this.profileForm.value["userName"].length<=0)
     {
-      // ////this.globalService.openSnackBar("Username should not be blank")
+      // ////this.globalService.openSnackBar("userName should not be blank")
       return;
     }
     if(this.profileForm.value["emailAddress"]!=null && this.profileForm.value["emailAddress"].length<=0)
@@ -108,14 +108,14 @@ export class ProfileComponent {
       console.log(res);
       console.log("UserId : ",res.UserId);
       console.log("UserId : ", res.UserId);
-      console.log("UserName : ", res.UserName);
+      console.log("userName : ", res.userName);
       console.log("EmailAddress : ", res.EmailAddress);
       console.log("FirstName : ",res.FirstName);
       console.log("LastName : ", res.LastName);
       console.log("MobileNumber : ", res.MobileNumber);
       console.log("MobileNumber1 : ", res.MobileNumber1);
       console.log("roleName : ",res.roleName);
-      this.profileForm.controls['username'].patchValue(res.UserName);
+      this.profileForm.controls['userName'].patchValue(res.userName);
       this.profileForm.controls['emailAddress'].patchValue(res.EmailAddress);
       this.profileForm.controls['firstName'].patchValue(res.FirstName);
       this.profileForm.controls['lastName'].patchValue(res.LastName);

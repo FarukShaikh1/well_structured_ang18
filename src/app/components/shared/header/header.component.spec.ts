@@ -125,13 +125,13 @@
 //     expect(navigateSpy).toHaveBeenCalledWith([NavigationURLs.USER_PROFILE]);
 //   });
 
-//   it('should return the logged-in username', () => {
-//     const mockUserData = { username: 'testUser' };
+//   it('should return the logged-in userName', () => {
+//     const mockUserData = { userName: 'testUser' };
 //     localStorageServiceMock.getLoggedInUserData.and.returnValue(mockUserData);
 
-//     const username = component.getLoggedInUserName();
+//     const userName = component.getLoggedInUserName();
 
-//     expect(username).toBe(mockUserData.username);
+//     expect(userName).toBe(mockUserData.userName);
 //     expect(localStorageServiceMock.getLoggedInUserData).toHaveBeenCalled();
 //   });
 

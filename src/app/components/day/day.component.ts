@@ -260,6 +260,7 @@ export class DayComponent implements OnInit {
     return `<span>${nullDate}</span>`;
   }
 
+  
   generateOptionsMenu(rowData: Record<string, any>) {
     const menu = [];
     // if (

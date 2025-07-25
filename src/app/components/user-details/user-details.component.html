@@ -54,23 +54,23 @@
               type="text"
               class="form-control"
               id="userName"
-              formControlName="username"
+              formControlName="userName"
               placeholder="Enter Name"
               (change)="trimAllFields()"
               [ngClass]="{
                 'error-border':
-                  userForm.get('username')?.touched &&
-                  userForm.get('username')?.invalid
+                  userForm.get('userName')?.touched &&
+                  userForm.get('userName')?.invalid
               }"
             />
-            @if((userForm.get('username')?.dirty ||
-            userForm.get('username')?.touched) &&
-            userForm.get('username')?.invalid) {
+            @if((userForm.get('userName')?.dirty ||
+            userForm.get('userName')?.touched) &&
+            userForm.get('userName')?.invalid) {
             <div class="text-danger">
-              @if(userForm.get('username')?.errors?.['required']) {
+              @if(userForm.get('userName')?.errors?.['required']) {
               <small>Name is required.<br /></small>
-              } @else if(userForm.get('username')?.errors?.['pattern']) {
-              <small>Invalid username<br /></small>
+              } @else if(userForm.get('userName')?.errors?.['pattern']) {
+              <small>Invalid userName<br /></small>
               }
             </div>
             }
@@ -108,9 +108,9 @@
               <!--@if(role.name!==ApplicationRoles.Platform_Admin) {-->
               <option
                 value="{{ role.id }}"
-                [selected]="existingUserRole === role.name"
+                [selected]="existingUserRole === role.roleName"
               >
-                {{ role.name }}
+                {{ role.roleName }}
               </option>
               } <!--}-->
             </select>

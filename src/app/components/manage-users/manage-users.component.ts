@@ -54,7 +54,7 @@ export class ManageUsersComponent {
   applyFilters() {
     this.onTableDataChange(1);
     this.filteredDataSource = this.usersDataSource.filter((item: any) => {
-      const matchesName = item.UserName.toLowerCase().includes(this.searchText);
+      const matchesName = item.userName.toLowerCase().includes(this.searchText);
       return matchesName;
     });
   }
