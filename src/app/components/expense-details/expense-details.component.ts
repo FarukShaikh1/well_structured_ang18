@@ -326,7 +326,7 @@ export class ExpenseDetailsComponent {
   }
 
   submitExpenseDetails() {
-    debugger
+    
     this.globalService.trimAllFields(this.expenseDetailsForm);
     this.loaderService.showLoader();
     this.validateAmountFields();
@@ -342,7 +342,7 @@ export class ExpenseDetailsComponent {
             this.expenseDetailsForm.value["purpose"];
         }
         this.expenseDetailsForm.value["expenseDate"] = DateUtils.CorrectedDate(this.expenseDetailsForm.value["expenseDate"]);
-        debugger;
+        
         this.expenseRequest = {
           id: this.expenseDetailsForm.value["expenseId"],
           expenseDate: DateUtils.IstDate(this.expenseDetailsForm.value["expenseDate"]),

@@ -223,7 +223,7 @@ export const ApplicationModules = {
     COIN_NOTE_COLLECTION: 'Coin Note Collection',
     USER: 'AUTH',
     DOCUMENT: 'Documents',
-    ROLE_MODULE_MAPPING: 'userModulePermission',
+    ROLE_MODULE_MAPPING: 'userPermissions',
 };
 
 export const ActionConstant = {

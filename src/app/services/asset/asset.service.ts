@@ -21,7 +21,7 @@ export class AssetService {
   }
 
   uploadImage(assetId: string, documentType: string, file: any): Observable<any> {
-    debugger
+    
     if (assetId) {
       return this.http.post(API_URL.UPLOAD_IMAGE + String(localStorage.getItem("userId")) + "&assetId=" + assetId + "&documentType=" + documentType, file);
     }

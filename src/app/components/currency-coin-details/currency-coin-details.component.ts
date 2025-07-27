@@ -12,7 +12,7 @@ import { AssetService } from "../../services/asset/asset.service";
 import { CurrencyCoinService } from "../../services/currency-coin/currency-coin.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { LoaderService } from "../../services/loader/loader.service";
-import { ApplicationModules, DBConstants } from "../../../utils/application-constants";
+import { ActionConstant, ApplicationModules, DBConstants } from "../../../utils/application-constants";
 import { CoinNoteCollectionRequest } from "../../interfaces/coin-note-collection-request";
 
 
@@ -39,6 +39,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   assetDetails: any;
   coinNoteCollectionRequest: CoinNoteCollectionRequest = {
   }
+ActionConstant=ActionConstant;
 
   constructor(
     private _details: FormBuilder,
@@ -257,7 +258,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   }
 
   submitCurrencyCoinDetails() {
-    debugger
+    
     this.globalService.trimAllFields(this.currencyCoinDetailsForm);
     this.coinNoteCollectionRequest = {
       id: this.currencyCoinDetailsForm.value["collectionCoinId"],

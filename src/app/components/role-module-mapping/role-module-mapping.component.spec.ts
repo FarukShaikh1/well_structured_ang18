@@ -6,7 +6,7 @@
 // import { RoleService } from '../../services/role/role.service';
 // import { RoleMockDataService } from '../../test-helpers/role-mock-data.service';
 // import { RoleModuleMappingMockDataService } from '../../test-helpers/role-module-mapping-mock-data.service';
-// import { ApplicationModuleActions, ApplicationModules } from '../../utils/application-constants';
+// import { ActionConstant, ApplicationModules } from '../../utils/application-constants';
 // import { RoleModuleMappingComponent } from './role-module-mapping.component';
 
 // describe('RoleModuleMappingComponent', () => {
@@ -148,7 +148,7 @@
 //     mockGlobalService.isAccessible.and.returnValue(true);
 //     const isEditable = component.isMappingEditable();
 //     expect(isEditable).toBeTrue();
-//     expect(mockGlobalService.isAccessible).toHaveBeenCalledWith(ApplicationModules.ROLE_MODULE_MAPPING, ApplicationModuleActions.EDIT);
+//     expect(mockGlobalService.isAccessible).toHaveBeenCalledWith(ApplicationModules.ROLE_MODULE_MAPPING, ActionConstant.EDIT);
 //   });
 
 // });

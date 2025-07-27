@@ -15,6 +15,7 @@ import {
 import flatpickr from "flatpickr";
 import { API_URL } from "../../../utils/api-url";
 import {
+  ActionConstant,
   ApplicationConstants,
   ApplicationModules,
   DBConstants,
@@ -60,12 +61,13 @@ export class DayDetailsComponent implements OnInit {
     dayTypeId: '',
     relationId: '',
     mobileNumber: '',
-    alternateNumber: '',
+    contactNumber: '',
     emailId: '',
     gender: '',
     address: '',
     assetId: ''
   }
+  ActionConstant = ActionConstant;
   constructor(
     private _details: FormBuilder,
     private _dayService: DayService,
@@ -84,7 +86,7 @@ export class DayDetailsComponent implements OnInit {
       relationId: [""],
       specialOccasionDate: ["", Validators.required],
       mobileNumber: ["", Validators.pattern(/^[0-9]{8,12}$/)],
-      alternateNumber: ["", Validators.pattern(/^[0-9]{8,12}$/)],
+      contactNumber: ["", Validators.pattern(/^[0-9]{8,12}$/)],
       emailId: [
         "",
         Validators.pattern(
@@ -137,7 +139,7 @@ export class DayDetailsComponent implements OnInit {
   }
   ngAfterViewInit() {
     flatpickr("#specialOccasionDate", {
-      dateFormat: "d/m/Y", 
+      dateFormat: "d/m/Y",
       defaultDate: new Date(),
     });
   }
@@ -193,8 +195,8 @@ export class DayDetailsComponent implements OnInit {
       this.dayDetailsForm.controls["mobileNumber"].patchValue(
         res["mobileNumber"]
       );
-      this.dayDetailsForm.controls["alternateNumber"].patchValue(
-        res["alternateNumber"]
+      this.dayDetailsForm.controls["contactNumber"].patchValue(
+        res["contactNumber"]
       );
       this.dayDetailsForm.controls["emailId"].patchValue(res["emailId"]);
       this.dayDetailsForm.controls["address"].patchValue(res["address"]);
@@ -211,10 +213,10 @@ export class DayDetailsComponent implements OnInit {
   }
 
   submitDayDetails() {
-    debugger
+    
     this.globalService.trimAllFields(this.dayDetailsForm);
     this.dayDetailsForm.value["specialOccasionDate"] = DateUtils.CorrectedDate(this.dayDetailsForm.value["specialOccasionDate"]);
-console.log('this.dayDetailsForm.value["specialOccasionDate"] : ',this.dayDetailsForm.value["specialOccasionDate"]);
+    console.log('this.dayDetailsForm.value["specialOccasionDate"] : ', this.dayDetailsForm.value["specialOccasionDate"]);
 
     this.specialOccasionRequest = {
       id: this.dayDetailsForm.value["specialOccasionId"] ?? null,
@@ -223,7 +225,7 @@ console.log('this.dayDetailsForm.value["specialOccasionDate"] : ',this.dayDetail
       dayTypeId: this.dayDetailsForm.value["dayTypeId"],
       relationId: this.dayDetailsForm.value["relationId"],
       mobileNumber: this.dayDetailsForm.value["mobileNumber"],
-      alternateNumber: this.dayDetailsForm.value["alternateNumber"],
+      contactNumber: this.dayDetailsForm.value["contactNumber"],
       emailId: this.dayDetailsForm.value["emailId"],
       gender: this.dayDetailsForm.value["gender"],
       address: this.dayDetailsForm.value["address"],
@@ -286,7 +288,7 @@ console.log('this.dayDetailsForm.value["specialOccasionDate"] : ',this.dayDetail
   }
 
   addDayDetails() {
-    debugger
+    
     this._dayService.addDay(this.specialOccasionRequest).subscribe({
       next: () => {
         this.toaster.showMessage("Record Added Successfully.", "success");
@@ -304,7 +306,7 @@ console.log('this.dayDetailsForm.value["specialOccasionDate"] : ',this.dayDetail
     });
   }
   updateDayDetails() {
-    debugger
+    
     this._dayService.updateDay(this.specialOccasionRequest).subscribe({
       next: (res: any) => {
         this.toaster.showMessage("Record Updated Successfully.", "success");
@@ -324,19 +326,19 @@ console.log('this.dayDetailsForm.value["specialOccasionDate"] : ',this.dayDetail
   }
 
   addOrUpdateDayDetails() {
-    debugger
+    
     if (this.specialOccasionRequest.id) {
       this.updateDayDetails();
-      this.formData= new FormData();
+      this.formData = new FormData();
     } else {
       this.addDayDetails();
-      this.formData= new FormData();
+      this.formData = new FormData();
     }
   }
   uploadImageAndSaveData() {
     if (this.selectedImageFile) {
-      debugger
-      this._assetService.uploadImage(this.dayDetailsForm.value["assetId"],API_URL.BIRTHDAYPERSONPIC,this.formData)
+      
+      this._assetService.uploadImage(this.dayDetailsForm.value["assetId"], API_URL.BIRTHDAYPERSONPIC, this.formData)
         .subscribe({
           next: (res: any) => {
             this.dayDetailsForm.value["assetId"] = res;

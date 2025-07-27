@@ -33,7 +33,7 @@ export class RoleModuleMappingComponent implements OnInit {
     this.loaderService.showLoader();
     this.roleService.getPermission(userId).subscribe({
       next: (result : any) => {
-        debugger
+        
         // Sort the data by pageId
         this.rolePageMappingData = result; 
         this.loaderService.hideLoader();

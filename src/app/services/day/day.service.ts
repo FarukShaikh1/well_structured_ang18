@@ -41,7 +41,7 @@ export class DayService {
   }
 
   addDay(specialOccasionRequest: SpecialOccasionRequest): Observable<any> {
-    debugger;
+    
     specialOccasionRequest.id = null;
     return this.http.post(
       API_URL.ADD_SPECIAL_OCCASION + this.loggedInUserId,

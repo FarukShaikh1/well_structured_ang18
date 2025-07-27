@@ -61,8 +61,9 @@
               <div class="row mt-4">
                 <div class="col">
                   <label>Choose a date<span class="required"></span></label>
-                  <input id="specialOccasionDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
-                    placeholder="DD/MM/YYYY" appearance="outline" formControlName="specialOccasionDate" [ngClass]="{
+                  <input id="specialOccasionDate" class="form-control form-control-lg text-dark bg-transparent"
+                    type="date" placeholder="DD/MM/YYYY" appearance="outline" formControlName="specialOccasionDate"
+                    [ngClass]="{
                       'error-border':
                         dayDetailsForm.get('specialOccasionDate')?.touched &&
                         dayDetailsForm.get('specialOccasionDate')?.invalid
@@ -116,18 +117,18 @@
                 </div>
                 <div class="col">
                   <label>Contact Number</label>
-                  <input formControlName="alternateNumber" class="form-control form-control-lg text-dark bg-transparent"
+                  <input formControlName="contactNumber" class="form-control form-control-lg text-dark bg-transparent"
                     [ngClass]="{
                       'error-border':
-                        dayDetailsForm.get('alternateNumber')?.touched &&
-                        dayDetailsForm.get('alternateNumber')?.invalid
+                        dayDetailsForm.get('contactNumber')?.touched &&
+                        dayDetailsForm.get('contactNumber')?.invalid
                     }" />
-                  @if(dayDetailsForm.get('alternateNumber')?.touched &&
-                  dayDetailsForm.get('alternateNumber')?.invalid){
+                  @if(dayDetailsForm.get('contactNumber')?.touched &&
+                  dayDetailsForm.get('contactNumber')?.invalid){
                   <div class="text-danger">
-                    @if(dayDetailsForm.get('alternateNumber')?.errors?.['required']){
+                    @if(dayDetailsForm.get('contactNumber')?.errors?.['required']){
                     Date is required }
-                    @else if(dayDetailsForm.get('alternateNumber')?.errors?.['pattern']){
+                    @else if(dayDetailsForm.get('contactNumber')?.errors?.['pattern']){
                     Invalid Contact Number }
                   </div>
                   }
@@ -227,9 +228,12 @@
                   <button class="btn btn-danger rounded-button" type="reset">
                     Reset
                   </button>
+                  @if(globalService.isAccessible(ActionConstant.ADD) ||
+                  globalService.isAccessible(ActionConstant.EDIT)){
                   <button class="btn btn-primary rounded-button" type="submit" [disabled]="dayDetailsForm.invalid">
                     Save
                   </button>
+                  }
                 </div>
               </div>
             </div>

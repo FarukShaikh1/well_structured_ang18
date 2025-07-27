@@ -73,7 +73,7 @@ export class ExpenseComponent implements OnInit {
     maxAmount: this.maxAmount,
     sourceOrReason: ''
   };
-ApplicationModuleActions=ActionConstant;
+ActionConstant=ActionConstant;
   optionsMenu = [
     {
       label: `<a class="dropdown-item btn-link"
@@ -710,7 +710,7 @@ ApplicationModuleActions=ActionConstant;
   }
 
   LoadGrid() {
-    debugger;
+    
     this.loaderService.showLoader();
     this.columnConfiguration();
     this.expensefilterRequest = {

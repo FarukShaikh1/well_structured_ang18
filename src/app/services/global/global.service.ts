@@ -65,6 +65,7 @@ export class GlobalService {
   }
 
   getRoleModuleMappingData(): Observable<boolean> {
+    
     return this.roleService.getLoggedInUserPermissions().pipe(
       map((result) => {
         if (result) {
@@ -182,8 +183,39 @@ export class GlobalService {
     return `<button class="action-buttons" title="Hide" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
   }
 
-  getModuleList() {
-    return this.http.get(API_URL.GET_COUNTRY_LIST);
-  }
 
+    showGlobalDropdownMenu(button: HTMLElement, menuOptions: any) {
+      
+      // Remove any existing menu
+      const oldMenu = document.getElementById('globalDropdownMenu');
+      if (oldMenu) oldMenu.remove();
+  
+      // Create menu
+      const menu = document.createElement('ul');
+      menu.className = 'dropdown-menu show options-menu';
+      menu.id = 'globalDropdownMenu';
+      menu.style.position = 'absolute';
+      menu.style.zIndex = '9999';
+  
+      // Populate menu
+      menuOptions.forEach((option: any) => {
+        const menuItem = document.createElement('li');
+        menuItem.innerHTML = `<a class="dropdown-item" href="#">${option.label}</a>`;
+        menuItem.addEventListener('click', (event) => {
+          event.preventDefault();
+          option.action();
+          menu.remove();
+        });
+        menu.appendChild(menuItem);
+      });
+  
+      // Position menu
+      const rect = button.getBoundingClientRect();
+      menu.style.top = `${rect.bottom + window.scrollY}px`;
+      menu.style.left = `${rect.left + window.scrollX}px`;
+  
+      // Append to body
+      document.body.appendChild(menu);
+    }
+  
 }

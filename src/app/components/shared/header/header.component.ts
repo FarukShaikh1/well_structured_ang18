@@ -106,10 +106,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   isActiveMenu(route: string): boolean {
+    
     return this.router.url.includes(route);
   }
   navigate(route: string) {
-    debugger;
+    
     this.router.navigate([route]);
   }
   setLoginDisplay() {
@@ -203,7 +204,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([NavigationURLs.CURRENCY_LIST]);
   }
 
-  userModulePermission() {
+  userPermissions() {
     this.router.navigate([NavigationURLs.ROLE_MODULE_MAPPING]);
   }
 

@@ -24,7 +24,7 @@ export class UserService {
   }
 
   getUserDetailsById(id: any): Observable<any> {
-    debugger
+    
     return this.httpService.get(API_URL.Get_USER_DETAILS + id);
   }
 

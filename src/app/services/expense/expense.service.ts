@@ -23,7 +23,7 @@ export class ExpenseService {
   }
 
   getExpenseSummaryList(filter: ExpenseFilterRequest): Observable<any> {
-    debugger
+    
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.post(API_URL.GET_EXPENSE_SUMMARY_LIST, filter, { params });
   }
@@ -34,7 +34,7 @@ export class ExpenseService {
   }
 
   getExpenseList(filter: ExpenseFilterRequest): Observable<any> {
-    debugger
+    
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.post(API_URL.GET_EXPENSE_LIST, filter, { params });
   }

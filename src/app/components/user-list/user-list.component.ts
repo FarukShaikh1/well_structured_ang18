@@ -139,11 +139,10 @@ export class UserListComponent implements OnInit {
       `;
   }
   generateOptionsMenu(rowData: Record<string, any>) {
-    debugger;
     const menu = [];
     if (
       // rowData['id'] &&
-      // this.globalService.isAccessible(ApplicationModules.DAY, ApplicationModuleActions.EDIT)
+      // this.globalService.isAccessible(ApplicationModules.DAY, ActionConstant.EDIT)
       this.globalService.isAccessible(ActionConstant.EDIT)
     )
     {
@@ -220,7 +219,6 @@ export class UserListComponent implements OnInit {
   }
 
   deactivateUser(id: string, isdeactivate: boolean) {
-    debugger
     if (id) {
       // Logic to handle user deactivation
       if (isdeactivate) {
@@ -294,7 +292,6 @@ export class UserListComponent implements OnInit {
   }
 
   openUserDetailsPopup(id: string) {
-    debugger
     this.userDetailsComponent.openUserDetailsPopup(id);
   }
 

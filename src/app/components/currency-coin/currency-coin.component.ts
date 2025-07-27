@@ -4,7 +4,7 @@ import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-
 import { CommonModule } from '@angular/common';
 import { API_URL } from '../../../utils/api-url';
 import { ColumnDefinition, CellComponent } from 'tabulator-tables';
-import { ApplicationTableConstants, NavigationURLs } from '../../../utils/application-constants';
+import { ActionConstant, ApplicationTableConstants, NavigationURLs } from '../../../utils/application-constants';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
@@ -24,7 +24,7 @@ export class CurrencyCoinComponent implements OnInit {
   selectedCountryCode: string[] = [];
   countryList: any;
   lableForCountryDropDown: string = '';
-
+  ActionConstant = ActionConstant;
   @ViewChild(CurrencyCoinDetailsComponent)
   currencyCoinDetailsComponent!: CurrencyCoinDetailsComponent;
   @ViewChild(ConfirmationDialogComponent, { static: false })
@@ -164,6 +164,67 @@ export class CurrencyCoinComponent implements OnInit {
         headerSort: false,
       },
     ];
+  }
+
+    ngAfterViewInit() {
+    document.addEventListener('click', (event: Event) => {
+      
+      const target = event.target as HTMLElement;
+      if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+        const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
+        const rowId = button.getAttribute('data-row-id');
+        
+        if (rowId) {
+          const rowData = this.tableData.find((row) => row['id'] == rowId);
+          if (rowData) {
+            
+            const menuOptions = this.generateOptionsMenu(rowData);
+            this.globalService.showGlobalDropdownMenu(button, menuOptions);
+          }
+        }
+        event.stopPropagation();
+      } else {
+        // Hide global dropdown
+        const globalMenu = document.getElementById('globalDropdownMenu');
+        if (globalMenu) globalMenu.remove();
+      }
+    });
+  }
+  generateOptionsMenu(rowData: Record<string, any>) {
+    
+    const menu = [];
+    if (
+      this.globalService.isAccessible(ActionConstant.EDIT)
+    ) {
+      menu.push({
+        label: `<a class="dropdown-item btn-link"
+              data-bs-toggle="modal" data-bs-target="#dayDetailsPopup">
+                  <i class="bi bi-pencil"></i>
+                    &nbsp;Edit
+                  </a>
+                  `,
+        action: () => {
+          this.currencyCoinDetails(rowData['id']);
+        },
+      });
+    }
+    if (
+      this.globalService.isAccessible(ActionConstant.DELETE)
+    ) {
+      menu.push({
+        label: `<a class="dropdown-item btn-link"
+              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
+                  <i class="bi bi-trash"></i>
+                    &nbsp;Delete
+                  </a>
+                  `,
+        action: () => {
+          this.deleteCurrencyCoin(rowData['id']);
+        },
+      });
+    }
+
+    return menu;
   }
 
   hideCollectionCoin(collectionCoinId: any) {

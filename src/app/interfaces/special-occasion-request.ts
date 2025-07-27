@@ -5,7 +5,7 @@ export interface SpecialOccasionRequest {
     dayTypeId: string,
     relationId: string,
     mobileNumber: string,
-    alternateNumber: string,
+    contactNumber: string,
     emailId: string,
     gender: string,
     address: string,

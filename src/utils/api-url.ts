@@ -33,9 +33,8 @@ export const API_URL = {
   UPLOAD_IMAGE: `${serverUrl}${apiPrefix}/asset/UploadAndSaveFile?userId=`,
 
   GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/GetCountryList`,
-  GET_MODULE_LIST: `${serverUrl}${apiPrefix}/user/GetModuleList`,
   GET_COLLECTION_COIN_DETAILS: `${serverUrl}${apiPrefix}/coinNoteCollection/GetDetails`,
-  GET_MODULE_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetModulePermissionList?userId=`,
+  GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetUserPermission?userId=`,
 
 
 
@@ -120,9 +119,9 @@ export const API_URL = {
   VERIFY_OTP: `${serverUrl}${apiPrefix}/auth/verifyotp?emailId={0}&otpCode={1}`,
 
   // Role-Module-Mapping URLs
-  UPDATE_ROLE_MODULE_MAPPING: `${serverUrl}${apiPrefix}/userModulePermission/updaterolemodulemapping`,
-  GET_MODULE_MAPPED_TO_LOGGEDIN_USER: `${serverUrl}${apiPrefix}/userModulePermission/getmodulemappedtologgedinuser`,
-  GET_ROLE_MODULE_MAPPING_BY_ROLE_ID: `${serverUrl}${apiPrefix}/userModulePermission/getmodulemappedbyroleid?roleId=`,
+  UPDATE_ROLE_MODULE_MAPPING: `${serverUrl}${apiPrefix}/userPermissions/updaterolemodulemapping`,
+  GET_MODULE_MAPPED_TO_LOGGEDIN_USER: `${serverUrl}${apiPrefix}/userPermissions/getmodulemappedtologgedinuser`,
+  GET_ROLE_MODULE_MAPPING_BY_ROLE_ID: `${serverUrl}${apiPrefix}/userPermissions/getmodulemappedbyroleid?roleId=`,
 
   //chat API URLs
   GET_CHAT_USERS: `${serverUrl}${apiPrefix}/chats/getusersforchat`,

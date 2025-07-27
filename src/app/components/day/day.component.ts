@@ -48,7 +48,7 @@ export class DayComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  ApplicationModuleActions = ActionConstant;
+  ActionConstant = ActionConstant;
   monthList: any;
   dayTypeList: any = "";
   relationTypeList: any = "";
@@ -228,32 +228,25 @@ export class DayComponent implements OnInit {
         title: "",
         field: "option2",
         maxWidth: 50,
-        formatter: this.threeDotsFormatter.bind(this),
+        formatter: this.threeDotsFormatter.bind(this),//will used for row-wise condition
         hozAlign: "left",
         headerSort: false,
       },
     ];
   }
 
-      threeDotsFormatter(cell: CellComponent) {
-        const rowData = cell.getRow().getData();
-        const rowId = rowData['id'];
-        const optionsMenu = this.generateOptionsMenu(rowData);
-        // If no menu items to show
-        if (optionsMenu.length === 0) {
-            return '';
-            // Use this if need to show disabled three dots
-            // return '<button class="action-buttons disabled" title="No Actions Available" disabled><i class="bi bi-three-dots"></i></button>';
-        }
-        return `
-            <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}" data-bs-toggle="dropdown" aria-expanded="false">
-               <i class="bi bi-three-dots"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end options-menu" aria-labelledby="dropdownMenu${rowId}" id="dropdownMenuItems${rowId}">
-            </ul>
-           `;
-    }
-
+  threeDotsFormatter(cell: CellComponent) {
+    const rowData = cell.getRow().getData();
+    const rowId = rowData['id'];
+    return `
+    <div class="dropdown" style="position: relative;">
+      <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}">
+        <i class="bi bi-three-dots"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end options-menu" id="dropdownMenuItems${rowId}"></ul>
+    </div>
+  `;
+  }
   picFormatter(cell: CellComponent) {
     const rowData = cell.getRow().getData();
     let thumbnailPath = rowData["thumbnailPath"];
@@ -285,65 +278,67 @@ export class DayComponent implements OnInit {
     const nullDate = "";
     return `<span>${nullDate}</span>`;
   }
-
-    ngAfterViewInit() {
-        document.addEventListener('click', (event: Event) => {
-            const target = event.target as HTMLElement;
-            if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
-                const button = target.closest(
-                    '.OPTIONS_MENU_THREE_DOTS'
-                ) as HTMLElement;
-                const rowId = button.getAttribute('data-row-id');
-                if (rowId) {
-                    const rowData = this.tableData.find((row) => row['id'] === rowId);
-                    if (rowData) {
-                        this.populateOptionsMenu(rowData, rowId);
-                    }
-                }
-            }
-        });
-    }
-    populateOptionsMenu(rowData: any, rowId: string) {
-        const menuElement = document.getElementById(`dropdownMenuItems${rowId}`);
-        if (!menuElement) {
-            return;
+  ngAfterViewInit() {
+    document.addEventListener('click', (event: Event) => {
+      
+      const target = event.target as HTMLElement;
+      if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+        const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
+        const rowId = button.getAttribute('data-row-id');
+        
+        if (rowId) {
+          const rowData = this.tableData.find((row) => row['id'] == rowId);
+          if (rowData) {
+            
+            const menuOptions = this.generateOptionsMenu(rowData);
+            this.globalService.showGlobalDropdownMenu(button, menuOptions);
+          }
         }
+        event.stopPropagation();
+      } else {
+        // Hide global dropdown
+        const globalMenu = document.getElementById('globalDropdownMenu');
+        if (globalMenu) globalMenu.remove();
+      }
+    });
+  }
 
-        menuElement.innerHTML = '';
-        const menuOptions = this.generateOptionsMenu(rowData);
-
-        menuOptions.forEach((option: any) => {
-            const menuItem = document.createElement('li');
-            menuItem.innerHTML = `
-        <a class="dropdown-item" href="#">${option.label}</a>
-      `;
-            menuItem.addEventListener('click', (event) => {
-                event.preventDefault();
-                option.action();
-            });
-            menuElement.appendChild(menuItem);
-        });
-    }
-    generateOptionsMenu(rowData: Record<string, any>) {
-        const menu = [];
-        if (
-            this.globalService.isAccessible(ActionConstant.EDIT)
-        ) {
-            menu.push({
-                label: `<a class="dropdown-item btn-link"
+  generateOptionsMenu(rowData: Record<string, any>) {
+    
+    const menu = [];
+    if (
+      this.globalService.isAccessible(ActionConstant.EDIT)
+    ) {
+      menu.push({
+        label: `<a class="dropdown-item btn-link"
               data-bs-toggle="modal" data-bs-target="#dayDetailsPopup">
                   <i class="bi bi-pencil"></i>
                     &nbsp;Edit
                   </a>
                   `,
-                action: () => {
-                    this.openDetailsPopup(rowData['id']);
-                },
-            });
-        }
-
-        return menu;
+        action: () => {
+          this.openDetailsPopup(rowData['id']);
+        },
+      });
     }
+    if (
+      this.globalService.isAccessible(ActionConstant.DELETE)
+    ) {
+      menu.push({
+        label: `<a class="dropdown-item btn-link"
+              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
+                  <i class="bi bi-trash"></i>
+                    &nbsp;Delete
+                  </a>
+                  `,
+        action: () => {
+          this.deleteDay(rowData['id']);
+        },
+      });
+    }
+
+    return menu;
+  }
 
   deleteDay(birthdayId: string) {
     if (birthdayId) {
@@ -357,7 +352,7 @@ export class DayComponent implements OnInit {
 
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
-    debugger
+    
     if (isConfirmed) {
       this.loaderService.showLoader();
       this._dayService.deleteDay(this.id).subscribe({
@@ -398,13 +393,6 @@ export class DayComponent implements OnInit {
       this.selectedMonths = this.selectedMonths.filter((m) => m !== monthName);
       this.selectedMonthsIds = this.selectedMonthsIds.filter((m) => m !== seqNum);
     }
-    // if (checked) {
-    //   this.selectedMonths.push(monthName);
-    //   this.selectedMonthsIds.push(seqNum);
-    // } else {
-    //   this.selectedMonths = this.selectedMonths.filter((m) => m !== monthName);
-    //   this.selectedMonthsIds = this.selectedMonthsIds.filter((m) => m !== seqNum);
-    // }
     this.getMonthDropdownLabel();
     this.applyFilters();
   }
@@ -503,6 +491,7 @@ export class DayComponent implements OnInit {
       const includeDay = item.id != dayId;
       return includeDay;
     });
+    this.filteredTableData = this.tableData;
   }
 
   approveDay() { }

@@ -49,11 +49,13 @@ export class LocalStorageService {
   }
 
   setRoleModuleMapping(data: any[]) {
-    localStorage.setItem('userModulePermission', JSON.stringify(data));
+    
+    localStorage.setItem('userPermissions', JSON.stringify(data));
   }
 
   getRoleModuleMapping(): any[] {
-    return JSON.parse(localStorage.getItem('userModulePermission') || '[]');
+    
+    return JSON.parse(localStorage.getItem('userPermissions') || '[]');
   }
 
   getLoggedInUserRoleId(): string {
@@ -65,8 +67,8 @@ export class LocalStorageService {
   }
 
   isUserAuthorized(): boolean {
-    const userModulePermission = this.getRoleModuleMapping();
-    if (userModulePermission && Array.isArray(userModulePermission) && userModulePermission.length > 0) {
+    const userPermissions = this.getRoleModuleMapping();
+    if (userPermissions && Array.isArray(userPermissions) && userPermissions.length > 0) {
       return true;
     }
     return false;

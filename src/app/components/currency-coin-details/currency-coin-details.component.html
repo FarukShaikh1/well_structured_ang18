@@ -151,10 +151,13 @@
                   <button class="btn btn-danger rounded-button" type="reset">
                     Reset
                   </button>
+                  @if(globalService.isAccessible(ActionConstant.ADD) ||
+                  globalService.isAccessible(ActionConstant.EDIT)){
                   <button class="btn btn-primary rounded-button" type="submit"
                     [disabled]="currencyCoinDetailsForm.invalid">
                     Save
                   </button>
+                }
                 </div>
               </div>
             </div>

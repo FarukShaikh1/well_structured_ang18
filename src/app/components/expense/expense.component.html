@@ -1,6 +1,6 @@
 <div class="main-body">
   @if (
-  this.globalService.isAccessible(ApplicationModuleActions.ADD)
+  this.globalService.isAccessible(ActionConstant.ADD)
   ){
   <button (click)="expenseDetails('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
     data-bs-target="#expenseDetailsPopup">
