@@ -15,7 +15,7 @@ import { LogoutService } from "../../../services/logout/logout.service";
 import { formatDistanceToNow } from "date-fns";
 import {
   ApplicationConstants,
-  ApplicationModuleActions,
+  ActionConstant,
   ApplicationModules,
   ApplicationRoles,
   NavigationURLs,
@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild(ConfirmBoxComponent)
   confirmationPopupComponent!: ConfirmBoxComponent;
   Modules = ApplicationModules;
-  Module_Actions = ApplicationModuleActions;
+  Module_Actions = ActionConstant;
   NavigationURLs = NavigationURLs;
   roles = ApplicationRoles;
   loginDisplay = false;
@@ -62,7 +62,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private localStorageService: LocalStorageService,
+    public localStorageService: LocalStorageService,
     public globalService: GlobalService,
     // private signalRService: SignalRService,
     private logoutService: LogoutService,
@@ -88,15 +88,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getModuleList() {
-    this.roleService.getModuleList().subscribe({
-        next: (res: any) => {
-          this.moduleList = res;
-        },
-        error: (error: any) => {
-          //this.globalService.openSnackBar('some issue is in update the data');
-          return;
-        },
-      });
+    this.moduleList = this.globalService.AccessibleModuleList();
+    // this.roleService.getModuleList().subscribe({
+    //     next: (res: any) => {
+    //       this.moduleList = res;
+    //     },
+    //     error: (error: any) => {
+    //       //this.globalService.openSnackBar('some issue is in update the data');
+    //       return;
+    //     },
+    //   });
 
     // const userData = this.localStorageService.getLoggedInUserData();
     // if (userData) {
@@ -170,6 +171,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.localStorageService.getLoggedInUserData()?.userName;
   }
 
+    getLoggedInUser(): string {
+    return this.localStorageService.getLoggedInUserData();
+  }
+
   clientList() {
     this.router.navigate([NavigationURLs.CLIENT_LIST]);
   }
@@ -198,7 +203,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([NavigationURLs.CURRENCY_LIST]);
   }
 
-  roleModuleMapping() {
+  userModulePermission() {
     this.router.navigate([NavigationURLs.ROLE_MODULE_MAPPING]);
   }
 

@@ -2,13 +2,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{{ modalTitle }}</h4>
-        <button
-          #btnCloseUserPopup
-          class="btn-close"
-          (click)="closePopup()"
-          data-bs-dismiss="modal"
-        ></button>
+        <h4 class="modal-title">User Details</h4>
+        <button #btnCloseUserPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal"></button>
       </div>
 
       <div class="modal-body">
@@ -16,53 +11,79 @@
           <input type="hidden" formControlName="id" />
 
           <div class="mb-3">
-            <label for="userEmail" class="form-label">Email ID <span class="required"></span></label>
-            <input
-              type="email"
-              class="form-control"
-              id="userEmail"
-              formControlName="email"
-              [readonly]="isEditMode"
-              placeholder="Enter Email ID"
-              (input)="populateDetails($event);trimAllFields()"
-              [ngClass]="{
+            <label for="emailAddress" class="form-label">Email Address <span class="required"></span></label>
+            <input type="emailAddress" class="form-control" id="emailAddress" formControlName="emailAddress"
+              placeholder="Enter emailAddress ID" [ngClass]="{
                 'error-border':
-                  userForm.get('email')?.touched &&
-                  userForm.get('email')?.invalid,
-                'readonly-select': isEditMode
-              }"
-            />
+                  userForm.get('emailAddress')?.touched &&
+                  userForm.get('emailAddress')?.invalid
+              }" />
 
-            @if(((userForm.get('email')?.dirty ||
-            userForm.get('email')?.touched) &&
-            userForm.get('email')?.invalid)||emailAlreadyExists) {
+            @if(((userForm.get('emailAddress')?.dirty ||
+            userForm.get('emailAddress')?.touched) &&
+            userForm.get('emailAddress')?.invalid)) {
             <div class="text-danger">
-              @if(emailAlreadyExists && !userForm.get('email')?.errors){
-              <small>A user with this email already exists.<br /></small>
-              } @if(userForm.get('email')?.errors?.['required']) {
-              <small>Email ID is required.<br /></small>
-              } @if(userForm.get('email')?.errors?.['pattern']) {
+              @if(!userForm.get('emailAddress')?.errors){
+              <small>A user with this emailAddress already exists.<br /></small>
+              } @if(userForm.get('emailAddress')?.errors?.['required']) {
+              <small>emailAddress ID is required.<br /></small>
+              } @if(userForm.get('emailAddress')?.errors?.['pattern']) {
               <small>{{ Messages.EMAIL_VALIDATION_MSG }}<br /></small>
               }
             </div>
             }
           </div>
 
-          <div class="mb-3">
-            <label for="fullName" class="form-label">Name <span class="required"></span></label>
-            <input
-              type="text"
-              class="form-control"
-              id="userName"
-              formControlName="userName"
-              placeholder="Enter Name"
-              (change)="trimAllFields()"
-              [ngClass]="{
+          <div class="mb-3 d-flex">
+            <div>
+              <label for="firstName" class="form-label">First Name <span class="required"></span></label>
+              <input type="text" class="form-control" id="firstName" formControlName="firstName" placeholder="Enter Name"
+                (change)="trimAllFields()" [ngClass]="{
                 'error-border':
                   userForm.get('userName')?.touched &&
                   userForm.get('userName')?.invalid
-              }"
-            />
+              }" />
+              @if((userForm.get('firstName')?.dirty ||
+              userForm.get('firstName')?.touched) &&
+              userForm.get('firstName')?.invalid) {
+              <div class="text-danger">
+                @if(userForm.get('firstName')?.errors?.['required']) {
+                <small>Name is required.<br /></small>
+                } @else if(userForm.get('firstName')?.errors?.['pattern']) {
+                <small>Invalid firstName<br /></small>
+                }
+              </div>
+              }
+            </div>
+            <div>
+              <label for="lastName" class="form-label">Last Name <span class="required"></span></label>
+              <input type="text" class="form-control" id="lastName" formControlName="lastName" placeholder="Enter Name"
+                (change)="trimAllFields()" [ngClass]="{
+                'error-border':
+                  userForm.get('lastName')?.touched &&
+                  userForm.get('lastName')?.invalid
+              }" />
+              @if((userForm.get('lastName')?.dirty ||
+              userForm.get('lastName')?.touched) &&
+              userForm.get('lastName')?.invalid) {
+              <div class="text-danger">
+                @if(userForm.get('lastName')?.errors?.['required']) {
+                <small>Name is required.<br /></small>
+                } @else if(userForm.get('lastName')?.errors?.['pattern']) {
+                <small>Invalid lastName<br /></small>
+                }
+              </div>
+              }
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="userName" class="form-label">UserName <span class="required"></span></label>
+            <input type="text" class="form-control" id="userName" formControlName="userName"
+              placeholder="Enter userName" (change)="trimAllFields()" [ngClass]="{
+                'error-border':
+                  userForm.get('userName')?.touched &&
+                  userForm.get('userName')?.invalid
+              }" />
             @if((userForm.get('userName')?.dirty ||
             userForm.get('userName')?.touched) &&
             userForm.get('userName')?.invalid) {
@@ -77,99 +98,38 @@
           </div>
 
           <div class="mb-3">
-            <label for="userRole" class="form-label">Role <span class="required"></span></label>
-            @if(existingUserRole){
-            <input
-              type="text"
-              class="form-control"
-              id="role"
-              formControlName="role"
-              [readonly]="existingUserRole != '' || emailAlreadyExists"
-              [ngClass]="{
-                'readonly-select': existingUserRole
-              }"
-            />
-            } @else{
-
-            <select
-              id="role"
-              formControlName="role"
-              class="form-select form-control"
-              (change)="trimAllFields()"
-              [ngClass]="{
+            <label for="roleId" class="form-label">roleId <span class="required"></span></label>
+            <select id="roleId" formControlName="roleId" class="form-select form-control" [ngClass]="{
                 'error-border':
-                  userForm.get('role')?.touched &&
-                  userForm.get('role')?.invalid,
-                'readonly-select': existingUserRole || emailAlreadyExists
-              }"
-            >
-              <option value="" selected hidden>Select Role</option>
-              @for(role of roleList;track $index){
-              <!--@if(role.name!==ApplicationRoles.Platform_Admin) {-->
-              <option
-                value="{{ role.id }}"
-                [selected]="existingUserRole === role.roleName"
-              >
-                {{ role.roleName }}
+                  userForm.get('roleId')?.touched &&
+                  userForm.get('roleId')?.invalid
+              }">
+              <option value="" selected hidden>Select roleId</option>
+              @for(roleId of roleList;track $index){
+              <!--@if(roleId.name!==ApplicationRoles.Platform_Admin) {-->
+              <option value="{{ roleId.id }}" >
+                {{ roleId.roleName }}
               </option>
               } <!--}-->
             </select>
 
-            @if((userForm.get('role')?.dirty || userForm.get('role')?.touched)
-            && userForm.get('role')?.invalid) {
+            @if((userForm.get('roleId')?.dirty || userForm.get('roleId')?.touched)
+            && userForm.get('roleId')?.invalid) {
             <div class="text-danger">
-              @if(userForm.get('role')?.errors?.['required']) {
-              <small>Role is required.<br /></small>
-              }
-            </div>
-            } }
-          </div>
-          @if(isClientRepresentativeSelected) {
-          <div class="mb-3">
-            <label for="clientID" class="form-label">Client <span class="required"></span></label>
-            <select
-              id="clientID"
-              formControlName="clientID"
-              class="form-select form-control"
-              (change)="trimAllFields()"
-              [ngClass]="{
-                'error-border':
-                  userForm.get('clientID')?.touched &&
-                  userForm.get('clientID')?.invalid,
-                'readonly-select': isEditMode
-              }"
-            >
-              <option value="" [disabled]="isEditMode" selected hidden>
-                Select Client
-              </option>
-            </select>
-            @if((userForm.get('clientID')?.dirty ||
-            userForm.get('clientID')?.touched) &&
-            userForm.get('clientID')?.invalid) {
-            <div class="text-danger">
-              @if(userForm.get('clientID')?.errors?.['required']) {
-              <small>Client is required.<br /></small>
+              @if(userForm.get('roleId')?.errors?.['required']) {
+              <small>roleId is required.<br /></small>
               }
             </div>
             }
           </div>
-          }
 
           <div class="d-flex justify-content-end">
-            <button
-              type="button"
-              (click)="closePopup()"
-              class="btn rounded-button-small me-2"
-              data-bs-dismiss="modal"
-            >
+            <button type="button" (click)="closePopup()" class="btn rounded-button-small me-2" data-bs-dismiss="modal">
               Cancel
             </button>
 
-            <button
-              type="submit"
-              class="btn btn-danger rounded-button rounded-button-small"
-              [disabled]="userForm.invalid || emailAlreadyExists"
-            >
+            <button type="submit" class="btn btn-danger rounded-button rounded-button-small"
+              [disabled]="userForm.invalid">
               Submit
             </button>
           </div>

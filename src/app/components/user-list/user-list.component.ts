@@ -3,7 +3,7 @@ import * as forms from '@angular/forms';
 import { Router } from '@angular/router';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import {
-  ApplicationModuleActions,
+  ActionConstant,
   ApplicationModules,
   ApplicationTableConstants,
   Messages,
@@ -46,7 +46,7 @@ export class UserListComponent implements OnInit {
   @ViewChild(ConfirmationDialogComponent)
   confirmModalComponent!: ConfirmationDialogComponent;
   Modules = ApplicationModules;
-  Module_Actions = ApplicationModuleActions;
+  Module_Actions = ActionConstant;
   sourceOrReason: any;
   id: string = '';
 
@@ -81,19 +81,16 @@ export class UserListComponent implements OnInit {
         field: 'firstName',
         sorter: 'string',
         formatter: this.nameFormatter.bind(this),
-        titleFormatter(_cell, _formatterParams, onRendered) {
-          onRendered(() => { });
-          return `
-          <div class="user-name-header">
-          Name
-          </div>
-        `;
-        },
       },
-      { title: 'Email', field: 'emailAddress', sorter: 'string' },
+      { title: 'Email Id', field: 'emailAddress', sorter: 'string' },
+      {
+        title: "Mobile Number",
+        field: "mobileNumber",
+        sorter: "alphanum",
+      },
       { title: 'Role', field: 'roleName', sorter: 'string' },
       {
-        title: 'Status',
+        title: 'Statussss',
         field: 'isLocked',
         sorter: 'string',
         formatter: this.isLockedFormatter.bind(this),
@@ -113,9 +110,7 @@ export class UserListComponent implements OnInit {
         title: "",
         field: "options",
         maxWidth: 50,
-        formatter: (_cell) =>
-          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-        clickMenu: this.generateOptionsMenu(this),
+        formatter: this.threeDotsFormatter.bind(this),
         hozAlign: "left",
         headerSort: false,
       },
@@ -143,13 +138,14 @@ export class UserListComponent implements OnInit {
         </ul>
       `;
   }
-
   generateOptionsMenu(rowData: Record<string, any>) {
+    debugger;
     const menu = [];
-    // if (
-    //   rowData['id'] &&
-    //   this.globalService.isAccessible(ApplicationModules.DAY, ApplicationModuleActions.EDIT)
-    // )
+    if (
+      // rowData['id'] &&
+      // this.globalService.isAccessible(ApplicationModules.DAY, ApplicationModuleActions.EDIT)
+      this.globalService.isAccessible(ActionConstant.EDIT)
+    )
     {
       menu.push({
         label: `<a class="dropdown-item btn-link options-menu-item"
@@ -165,7 +161,7 @@ export class UserListComponent implements OnInit {
         },
 
       });
-
+    }
       menu.push({
         label: `<a class="dropdown-item btn-link"
               data-bs-toggle="modal" data-bs-target="#confirmationPopup">
@@ -179,14 +175,14 @@ export class UserListComponent implements OnInit {
           this.deactivateUser(id, id);
         },
       });
-    }
+    
     return menu;
   }
 
   nameFormatter(cell: CellComponent) {
-    const firstName = cell.getColumn().getField();
+    // const firstName = cell.getColumn().getField();
     const userData = cell.getRow().getData();
-    // const columnValue = userData[firstName] + ' ' + userData[lastName];
+    const columnValue = userData['firstName'] + ' ' + userData['lastName'];
     return `<span class="name-col-values">${cell.getValue()}</span>`;
   }
 

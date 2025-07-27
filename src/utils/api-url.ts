@@ -35,6 +35,7 @@ export const API_URL = {
   GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/GetCountryList`,
   GET_MODULE_LIST: `${serverUrl}${apiPrefix}/user/GetModuleList`,
   GET_COLLECTION_COIN_DETAILS: `${serverUrl}${apiPrefix}/coinNoteCollection/GetDetails`,
+  GET_MODULE_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetModulePermissionList?userId=`,
 
 
 
@@ -119,9 +120,9 @@ export const API_URL = {
   VERIFY_OTP: `${serverUrl}${apiPrefix}/auth/verifyotp?emailId={0}&otpCode={1}`,
 
   // Role-Module-Mapping URLs
-  UPDATE_ROLE_MODULE_MAPPING: `${serverUrl}${apiPrefix}/rolemodulemapping/updaterolemodulemapping`,
-  GET_MODULE_MAPPED_TO_LOGGEDIN_USER: `${serverUrl}${apiPrefix}/rolemodulemapping/getmodulemappedtologgedinuser`,
-  GET_ROLE_MODULE_MAPPING_BY_ROLE_ID: `${serverUrl}${apiPrefix}/rolemodulemapping/getmodulemappedbyroleid?roleId=`,
+  UPDATE_ROLE_MODULE_MAPPING: `${serverUrl}${apiPrefix}/userModulePermission/updaterolemodulemapping`,
+  GET_MODULE_MAPPED_TO_LOGGEDIN_USER: `${serverUrl}${apiPrefix}/userModulePermission/getmodulemappedtologgedinuser`,
+  GET_ROLE_MODULE_MAPPING_BY_ROLE_ID: `${serverUrl}${apiPrefix}/userModulePermission/getmodulemappedbyroleid?roleId=`,
 
   //chat API URLs
   GET_CHAT_USERS: `${serverUrl}${apiPrefix}/chats/getusersforchat`,

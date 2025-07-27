@@ -28,7 +28,7 @@ export const authGuard: CanActivateFn = async (
       if (isAuthorized) {
         return true;
       } else {
-        // isAuthorized = await lastValueFrom(globalService.getRoleModuleMappingData());
+        isAuthorized = await lastValueFrom(globalService.getRoleModuleMappingData());
         isAuthorized = true;
         if (isAuthorized) {
           return true;

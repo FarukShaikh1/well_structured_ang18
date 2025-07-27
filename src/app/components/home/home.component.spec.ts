@@ -74,9 +74,9 @@ describe('HomeComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.USER_LIST]);
   });
 
-  it('roleModuleMapping(): should call router.navigate with ROLE_MODULE_MAPPING URL on role-module-mapping list', () => {
+  it('userModulePermission(): should call router.navigate with ROLE_MODULE_MAPPING URL on role-module-mapping list', () => {
     // Act
-    component.roleModuleMapping();
+    component.userModulePermission();
 
     // Assert
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.ROLE_MODULE_MAPPING]);

@@ -223,10 +223,10 @@ export const ApplicationModules = {
     COIN_NOTE_COLLECTION: 'Coin Note Collection',
     USER: 'AUTH',
     DOCUMENT: 'Documents',
-    ROLE_MODULE_MAPPING: 'RoleModuleMapping',
+    ROLE_MODULE_MAPPING: 'userModulePermission',
 };
 
-export const ApplicationModuleActions = {
+export const ActionConstant = {
     ADD: 'ADD',
     EDIT: 'EDIT',
     DELETE: 'DELETE',

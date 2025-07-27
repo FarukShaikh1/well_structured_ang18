@@ -31,7 +31,7 @@ export class HttpInterceptorService implements HttpInterceptor {
         return event;
       }),
       catchError((error: HttpErrorResponse) => {
-        if (!request.url.includes('/login') && !request.url.includes('/resetpassword') && !request.url.includes('rolemodulemapping/getmodulemappedtologgedinuser')) {
+        if (!request.url.includes('/login') && !request.url.includes('/resetpassword') && !request.url.includes('userModulePermission/getmodulemappedtologgedinuser')) {
           if (error?.status === 401) {
             // Redirect to the /unauthorized route
             this.router.navigate([NavigationURLs.UNAUTHORIZED_PAGE]);

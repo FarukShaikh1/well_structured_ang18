@@ -2,7 +2,7 @@
   <div class="banner-text d-flex align-items-center flex-shrink-0">
     <!-- <img src="../../../../CurrencyCollector.png" alt="Project Logo"
       class="logo me-2 img-fluid d-none d-sm-block" /> -->
-    Hello {{ loggedInUserName }}!
+    Hello {{ localStorageService.getLoggedInUserData()?.firstName + ' ' + localStorageService.getLoggedInUserData()?.lastName }}!
   </div>
 
 
@@ -61,7 +61,7 @@
       <!-- @if(globalService.isAccessible(Modules.ROLE_MODULE_MAPPING,
       Module_Actions.VIEW)) {
       <button
-        (click)="roleModuleMapping()"
+        (click)="userModulePermission()"
         class="font-weight-bold text-link text-decoration-none btn p-2"
         [ngClass]="{
           'active-link': isActiveMenu(NavigationURLs.ROLE_MODULE_MAPPING)

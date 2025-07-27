@@ -66,7 +66,7 @@ describe('GlobalService', () => {
 
   it('should fetch role data and set role module mapping', () => {
     const mockRoleData = [{ moduleName: 'TestModule', testAction: true }];
-    roleService.getModulesMappedToLoggedinUser.and.returnValue(
+    roleService.getLoggedInUserPermissions.and.returnValue(
       of({ data: mockRoleData })
     );
     localStorageService.setRoleModuleMapping.and.stub();
@@ -84,7 +84,7 @@ describe('GlobalService', () => {
     const module = 'Client';
     const action = 'Add';
 
-    expect(service.isAccessible(module, action)).toBeFalse();
+    expect(service.isAccessible(action)).toBeFalse();
   });
 
   it('should return true for accessible module/action', () => {
@@ -111,11 +111,11 @@ describe('GlobalService', () => {
     const module = 'Auth';
     const action = 'View';
 
-    expect(service.isAccessible(module, action)).toBeTrue();
+    expect(service.isAccessible(action)).toBeTrue();
   });
 
   it('should handle error in getRolePageMappingData and return false', () => {
-    roleService.getModulesMappedToLoggedinUser.and.returnValue(
+    roleService.getLoggedInUserPermissions.and.returnValue(
       of({ data: null }).pipe(catchError(() => of(false)))
     );
 
@@ -150,7 +150,7 @@ describe('GlobalService', () => {
     const mockError = new Error('Test error');
   
     // Simulate an error being thrown from the roleService observable
-    roleService.getModulesMappedToLoggedinUser.and.returnValue(throwError(mockError));
+    roleService.getLoggedInUserPermissions.and.returnValue(throwError(mockError));
   
     spyOn(console, 'error'); // Spy on console.error
   

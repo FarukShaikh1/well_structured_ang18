@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
 import { API_URL } from "../../../utils/api-url";
 import {
-  ApplicationConstants,
+  ActionConstant,
   ApplicationModules,
   ApplicationTableConstants,
   DBConstants
@@ -48,7 +48,7 @@ export class DayComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-
+  ApplicationModuleActions = ActionConstant;
   monthList: any;
   dayTypeList: any = "";
   relationTypeList: any = "";
@@ -216,7 +216,7 @@ export class DayComponent implements OnInit {
       },
       {
         title: "",
-        field: "options",
+        field: "option1",
         maxWidth: 50,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
@@ -224,9 +224,35 @@ export class DayComponent implements OnInit {
         hozAlign: "left",
         headerSort: false,
       },
+      {
+        title: "",
+        field: "option2",
+        maxWidth: 50,
+        formatter: this.threeDotsFormatter.bind(this),
+        hozAlign: "left",
+        headerSort: false,
+      },
     ];
-
   }
+
+      threeDotsFormatter(cell: CellComponent) {
+        const rowData = cell.getRow().getData();
+        const rowId = rowData['id'];
+        const optionsMenu = this.generateOptionsMenu(rowData);
+        // If no menu items to show
+        if (optionsMenu.length === 0) {
+            return '';
+            // Use this if need to show disabled three dots
+            // return '<button class="action-buttons disabled" title="No Actions Available" disabled><i class="bi bi-three-dots"></i></button>';
+        }
+        return `
+            <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}" data-bs-toggle="dropdown" aria-expanded="false">
+               <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end options-menu" aria-labelledby="dropdownMenu${rowId}" id="dropdownMenuItems${rowId}">
+            </ul>
+           `;
+    }
 
   picFormatter(cell: CellComponent) {
     const rowData = cell.getRow().getData();
@@ -260,40 +286,64 @@ export class DayComponent implements OnInit {
     return `<span>${nullDate}</span>`;
   }
 
-  
-  generateOptionsMenu(rowData: Record<string, any>) {
-    const menu = [];
-    // if (
-    //   rowData['id'] &&
-    //   this.globalService.isAccessible(ApplicationModules.DAY, ApplicationModuleActions.EDIT)
-    // )
-    {
-      menu.push({
-        label: `<a class="dropdown-item btn-link options-menu-item"
-            data-bs-toggle="modal" data-bs-target="#userDetailsPopup">
-                <i class="bi bi-pencil"></i>
-                  &nbsp;Edit
-                </a>
-                `,
-        action: () => this.openDetailsPopup(rowData['id']),
-      });
+    ngAfterViewInit() {
+        document.addEventListener('click', (event: Event) => {
+            const target = event.target as HTMLElement;
+            if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+                const button = target.closest(
+                    '.OPTIONS_MENU_THREE_DOTS'
+                ) as HTMLElement;
+                const rowId = button.getAttribute('data-row-id');
+                if (rowId) {
+                    const rowData = this.tableData.find((row) => row['id'] === rowId);
+                    if (rowData) {
+                        this.populateOptionsMenu(rowData, rowId);
+                    }
+                }
+            }
+        });
+    }
+    populateOptionsMenu(rowData: any, rowId: string) {
+        const menuElement = document.getElementById(`dropdownMenuItems${rowId}`);
+        if (!menuElement) {
+            return;
+        }
 
-      menu.push({
-        label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
-                  <i class="bi bi-trash"></i>
-                    &nbsp;Delete
+        menuElement.innerHTML = '';
+        const menuOptions = this.generateOptionsMenu(rowData);
+
+        menuOptions.forEach((option: any) => {
+            const menuItem = document.createElement('li');
+            menuItem.innerHTML = `
+        <a class="dropdown-item" href="#">${option.label}</a>
+      `;
+            menuItem.addEventListener('click', (event) => {
+                event.preventDefault();
+                option.action();
+            });
+            menuElement.appendChild(menuItem);
+        });
+    }
+    generateOptionsMenu(rowData: Record<string, any>) {
+        const menu = [];
+        if (
+            this.globalService.isAccessible(ActionConstant.EDIT)
+        ) {
+            menu.push({
+                label: `<a class="dropdown-item btn-link"
+              data-bs-toggle="modal" data-bs-target="#dayDetailsPopup">
+                  <i class="bi bi-pencil"></i>
+                    &nbsp;Edit
                   </a>
                   `,
-        action: (_e: any, cell: CellComponent) => {
-          const expenseData = cell.getRow().getData();
-          const expenseId = expenseData["id"];
-          this.deleteDay(expenseId);
-        },
-      });
+                action: () => {
+                    this.openDetailsPopup(rowData['id']);
+                },
+            });
+        }
+
+        return menu;
     }
-    return menu;
-  }
 
   deleteDay(birthdayId: string) {
     if (birthdayId) {

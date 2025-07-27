@@ -7,19 +7,23 @@ import { HttpService } from '../rest/http.service';
   providedIn: 'root'
 })
 export class RoleService {
+  loggedInUserId: string;
 
 
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService) { 
+        this.loggedInUserId = String(localStorage.getItem("userId"));
+
+  }
   getAllRoles(): Observable<any> {
     return this.httpService.get(API_URL.GET_ALL_ROLES);
   }
 
-  getModulesMappedToLoggedinUser(): Observable<any> {
-    return this.httpService.get(API_URL.GET_MODULE_MAPPED_TO_LOGGEDIN_USER);
+  getLoggedInUserPermissions(): Observable<any> {
+    return this.httpService.get(API_URL.GET_MODULE_PERMISSIONS+this.loggedInUserId);
   }
 
-  getRoleModuleMappingByRoleId(roleId: string): Observable<any> {
-    return this.httpService.get(API_URL.GET_ROLE_MODULE_MAPPING_BY_ROLE_ID + roleId);
+  getPermission(userId: string): Observable<any> {
+    return this.httpService.get(API_URL.GET_MODULE_PERMISSIONS + userId);
   }
 
   updateRoleModuleMapping(data: any): Observable<any> {

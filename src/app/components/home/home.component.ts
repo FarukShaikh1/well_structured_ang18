@@ -6,7 +6,7 @@ import { LoaderService } from '../../services/loader/loader.service';
 // import { SignalRService } from '../../services/signal-r/signal-r.service';
 import { RouterModule } from '@angular/router';
 import {
-    ApplicationModuleActions,
+    ActionConstant,
     ApplicationModules,
     ApplicationRoles,
     NavigationURLs
@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     @ViewChild(ToasterComponent) toaster!: ToasterComponent;
 
     Modules = ApplicationModules;
-    Module_Actions = ApplicationModuleActions;
+    Module_Actions = ActionConstant;
     currentModuleName: string = '';
     NavigationURLs = NavigationURLs;
     userName: string = '';

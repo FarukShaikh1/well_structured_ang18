@@ -4,6 +4,7 @@ import flatpickr from "flatpickr";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
 import {
   ApplicationConstants,
+  ActionConstant,
   ApplicationModules,
   ApplicationTableConstants,
   NavigationURLs,
@@ -72,7 +73,7 @@ export class ExpenseComponent implements OnInit {
     maxAmount: this.maxAmount,
     sourceOrReason: ''
   };
-
+ApplicationModuleActions=ActionConstant;
   optionsMenu = [
     {
       label: `<a class="dropdown-item btn-link"
@@ -189,6 +190,16 @@ export class ExpenseComponent implements OnInit {
           hozAlign: "left",
           headerSort: false,
         },
+      {
+        title: "",
+        field: "options",
+        maxWidth: 50,
+        formatter: (_cell) =>
+          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+        clickMenu: this.generateOptionsMenu(this),
+        hozAlign: "left",
+        headerSort: false,
+      },
       ];
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
       this.tableColumnConfig = [
@@ -459,6 +470,43 @@ export class ExpenseComponent implements OnInit {
     }
   }
 
+    generateOptionsMenu(rowData: Record<string, any>) {
+      
+      const menu = [];
+      if (
+        this.globalService.isAccessible(ActionConstant.EDIT)
+      ) {
+        menu.push({
+          label: `<a class="dropdown-item btn-link options-menu-item"
+              data-bs-toggle="modal" data-bs-target="#expenseDetailsPopup">
+                  <i class="bi bi-pencil"></i>
+                    &nbsp;Edit
+                  </a>
+                  `,
+          action: () => this.expenseDetails(rowData['id']),
+        });
+      }
+      if (
+        this.globalService.isAccessible(ActionConstant.DELETE)
+      ) {
+        menu.push({
+          label: `<a class="dropdown-item btn-link"
+                data-bs-toggle="modal" data-bs-target="#confirmationPopup">
+                    <i class="bi bi-trash"></i>
+                      &nbsp;Delete
+                    </a>
+                    `,
+          action: (_e: any, cell: CellComponent) => {
+            const expenseData = cell.getRow().getData();
+            const expenseId = expenseData["id"];
+            this.deleteExpense(expenseId);
+          },
+        });
+      }
+      return menu;
+    }
+  
+  
   hideExpense(expenseId: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
       return item.id != expenseId;

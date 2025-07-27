@@ -1,4 +1,5 @@
 <div class="main-body">
+  @if(globalService.isAccessible(ApplicationModuleActions.EDIT)){
   <button (click)="openDetailsPopup('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
     data-bs-target="#dayDetailsPopup">
     <svg
@@ -29,7 +30,7 @@
     </svg>
     Add Day
   </button>
-
+  } 
   <div class="row pb-2">
     <div class="col-6 col-sm-4 col-lg-2 col-xl-2">
       <div appearance="outline" class="form-field">

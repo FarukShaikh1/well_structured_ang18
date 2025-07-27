@@ -51,12 +51,12 @@ describe('moduleAccessGuard', () => {
   }
 
   it('should allow access if the user has view permission for the module', () => {
-    const roleModuleMapping = [
-      { moduleName: 'RoleModuleMapping', view: true },
+    const userModulePermission = [
+      { moduleName: 'userModulePermission', view: true },
     ];
-    localStorageServiceSpy.getRoleModuleMapping.and.returnValue(roleModuleMapping);
+    localStorageServiceSpy.getRoleModuleMapping.and.returnValue(userModulePermission);
 
-    const route = createActivatedRouteSnapshot({ moduleName: 'RoleModuleMapping' });
+    const route = createActivatedRouteSnapshot({ moduleName: 'userModulePermission' });
 
     const canActivate = executeGuard(route);
 
@@ -65,12 +65,12 @@ describe('moduleAccessGuard', () => {
   });
 
   it('should deny access and navigate to error page if the user does not have view permission', () => {
-    const roleModuleMapping = [
-      { moduleName: 'RoleModuleMapping', view: false },
+    const userModulePermission = [
+      { moduleName: 'userModulePermission', view: false },
     ];
-    localStorageServiceSpy.getRoleModuleMapping.and.returnValue(roleModuleMapping);
+    localStorageServiceSpy.getRoleModuleMapping.and.returnValue(userModulePermission);
 
-    const route = createActivatedRouteSnapshot({ moduleName: 'RoleModuleMapping' });
+    const route = createActivatedRouteSnapshot({ moduleName: 'userModulePermission' });
 
     const canActivate = executeGuard(route);
 
@@ -78,11 +78,11 @@ describe('moduleAccessGuard', () => {
     expect(routerSpy.navigate).toHaveBeenCalledWith([NavigationURLs.ERROR_PAGE]);
   });
 
-  it('should deny access and navigate to error page if the module is not found in roleModuleMapping', () => {
-    const roleModuleMapping = [
+  it('should deny access and navigate to error page if the module is not found in userModulePermission', () => {
+    const userModulePermission = [
       { moduleName: 'Auth', view: true },
     ];
-    localStorageServiceSpy.getRoleModuleMapping.and.returnValue(roleModuleMapping);
+    localStorageServiceSpy.getRoleModuleMapping.and.returnValue(userModulePermission);
 
     const route = createActivatedRouteSnapshot({ moduleName: 'NonExistentModule' });
 
@@ -92,10 +92,10 @@ describe('moduleAccessGuard', () => {
     expect(routerSpy.navigate).toHaveBeenCalledWith([NavigationURLs.ERROR_PAGE]);
   });
 
-  it('should deny access and navigate to error page if roleModuleMapping is empty', () => {
+  it('should deny access and navigate to error page if userModulePermission is empty', () => {
     localStorageServiceSpy.getRoleModuleMapping.and.returnValue([]);
 
-    const route = createActivatedRouteSnapshot({ moduleName: 'RoleModuleMapping' });
+    const route = createActivatedRouteSnapshot({ moduleName: 'userModulePermission' });
 
     const canActivate = executeGuard(route);
 
@@ -106,7 +106,7 @@ describe('moduleAccessGuard', () => {
   it('should call GlobalErrorHandlerService if an error occurs', () => {
     localStorageServiceSpy.getRoleModuleMapping.and.throwError('Error getting role mappings');
 
-    const route = createActivatedRouteSnapshot({ moduleName: 'RoleModuleMapping' });
+    const route = createActivatedRouteSnapshot({ moduleName: 'userModulePermission' });
 
     const canActivate = executeGuard(route);
 

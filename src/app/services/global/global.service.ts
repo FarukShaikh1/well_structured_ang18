@@ -9,6 +9,7 @@ import { NavigationURLs } from "../../../utils/application-constants";
 import { LocalStorageService } from "../local-storage/local-storage.service";
 import { RoleService } from "../role/role.service";
 import { CellComponent } from "tabulator-tables";
+import { ModuleResponse } from "../../interfaces/module-response";
 
 @Injectable({
   providedIn: "root",
@@ -18,6 +19,7 @@ export class GlobalService {
     private http: HttpClient,
     private localStorageService: LocalStorageService,
     private roleService: RoleService,
+    private router: Router
 
   ) { }
 
@@ -63,13 +65,13 @@ export class GlobalService {
   }
 
   getRoleModuleMappingData(): Observable<boolean> {
-    return this.roleService.getModulesMappedToLoggedinUser().pipe(
-      map((result: { data: any }) => {
-        if (result?.data) {
-          this.localStorageService.setRoleModuleMapping(result.data);
+    return this.roleService.getLoggedInUserPermissions().pipe(
+      map((result) => {
+        if (result) {
+          this.localStorageService.setRoleModuleMapping(result);
           if (result.data.length > 0) {
             const user = this.localStorageService.getLoggedInUserData();
-            user.role = result.data[0].role;
+            user.role = result.role;
             localStorage.setItem("user", JSON.stringify(user));
             return true;
           }
@@ -83,20 +85,35 @@ export class GlobalService {
     );
   }
 
-  isAccessible(module: string, action: string): boolean {
-    const rolePageMapping = this.localStorageService.getRoleModuleMapping();
+  getCurrentRoute(): string {
+    const tree = this.router.parseUrl(this.router.url);
+    return tree.root.children['primary']?.segments.map(it => it.path)?.join('/')?.toLowerCase() || '';
+  }
+
+  isAccessible(action: string): boolean {
+    const permissions = this.localStorageService.getRoleModuleMapping();
     const lowerCaseAction = action.toLowerCase();
-
-    const mapping = rolePageMapping.find(
-      (m: any) => m.moduleName.toLowerCase() === module.toLowerCase()
+    const mapping = permissions.find(
+      (m: any) => m.route?.toLowerCase() === '/' + this.getCurrentRoute()
     );
-
     if (!mapping) {
       return false;
     }
-
     return mapping[lowerCaseAction] === true;
   }
+
+  AccessibleModuleList(): ModuleResponse[] {
+    const permissions = this.localStorageService.getRoleModuleMapping();
+    return permissions
+    .filter((m: any) => m.view === true)
+    .map((m: any) => ({
+      moduleName: m.moduleName,
+      route: m.route,
+      isVisible: true, // Since view = true, mark as visible
+      displayOrder: m.displayOrder ?? 0, // fallback to 0 if undefined
+      iconClass: m.iconClass || ''       // fallback to empty string if undefined
+    }));
+        }
 
   isPermitted(roles: string[]) {
     const user = this.localStorageService.getLoggedInUserData();

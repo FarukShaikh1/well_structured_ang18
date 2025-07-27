@@ -1,8 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { UserServiceService } from '../../services/user/user-service.service';
-import { GlobalService } from '../../services/global/global.service';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { GlobalService } from '../../services/global/global.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-manage-users',
@@ -35,7 +35,7 @@ export class ManageUsersComponent {
   itemsPerPage = 10;
 
 
-  constructor(private _userService: UserServiceService, public globalService: GlobalService,
+  constructor(private _userService: UserService, public globalService: GlobalService,
       private _httpClient: HttpClient
   ) {
   }

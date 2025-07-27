@@ -1,13 +1,11 @@
-export interface RoleModuleMapping {
-    rolePageMappingId: number;
-    roleID: string;
-    pageId: number;
+export interface UserPermission {
+    id: number;
+    moduleId: string;
+    moduleName: string;
     view: boolean;
     add: boolean;
     edit: boolean;
     delete: boolean;
     download: boolean;
     upload: boolean;
-    description: string;
-    moduleName: string;
 }

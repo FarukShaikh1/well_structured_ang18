@@ -41,7 +41,7 @@ describe('RoleService', () => {
   it('should get modules mapped to logged in user', () => {
     const mockModules = { data: [{ module: 'Module1' }] };
 
-    service.getModulesMappedToLoggedinUser().subscribe((modules) => {
+    service.getLoggedInUserPermissions().subscribe((modules) => {
       expect(modules).toEqual(mockModules);
     });
 
@@ -54,7 +54,7 @@ describe('RoleService', () => {
     const roleId = '123';
     const mockMapping = { modules: ['Module1'] };
 
-    service.getRoleModuleMappingByRoleId(roleId).subscribe((mapping) => {
+    service.getPermission(roleId).subscribe((mapping) => {
       expect(mapping).toEqual(mockMapping);
     });
 
