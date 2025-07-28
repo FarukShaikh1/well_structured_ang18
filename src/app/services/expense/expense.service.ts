@@ -69,19 +69,6 @@ export class ExpenseService {
     );
   }
 
-  getSourceOrReasonList(
-    fromDt: string = "",
-    toDt: string = "",
-    searchText: string = ""
-  ): Observable<any> {
-    const params = new HttpParams()
-      .set("userid", this.loggedInUserId)
-      .set("fromDate", fromDt)
-      .set("toDate", toDt)
-      .set("searchText", searchText);
-    return this.http.get(API_URL.GET_SOURCES_REASONS_LIST, { params: params }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem("userId")));
-  }
-
   getExpenseSuggestionList(): Observable<any> {
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.get(API_URL.GET_EXPENSE_SUGGESTION_LIST, {
@@ -100,28 +87,4 @@ export class ExpenseService {
     return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem("userId")));
   }
 
-  getDescriptionList(
-    sourceText: string = "",
-    descriptionText: string = ""
-  ): Observable<any> {
-    const params = new HttpParams()
-      .set("userid", this.loggedInUserId)
-      .set("sourceText", sourceText)
-      .set("descriptionText", descriptionText);
-    return this.http.get(API_URL.GET_DESCRIPTION_LIST, { params: params }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem("userId")));
-  }
-  getPurposeList(
-    sourceText: string = "",
-    purposeText: string = ""
-  ): Observable<any> {
-    const params = new HttpParams()
-      .set("userid", this.loggedInUserId)
-      .set("sourceText", sourceText)
-      .set("purposeText", purposeText);
-    return this.http.get(API_URL.GET_PURPOSE_LIST, { params: params }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem("userId")));
-  }
-
-  exportGridToExcel(dataSource: any) {
-    return this.http.get(API_URL.DOWNLOAD_EXPENSE_LIST, { params: dataSource }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem("userId")));
-  }
 }

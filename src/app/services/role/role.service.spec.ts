@@ -73,7 +73,7 @@ describe('RoleService', () => {
       expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne(API_URL.UPDATE_ROLE_MODULE_MAPPING);
+    const req = httpMock.expectOne(API_URL.UPDATE_USER_PERMISSION);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(updateData);
     req.flush(mockResponse);
