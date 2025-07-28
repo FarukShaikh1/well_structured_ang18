@@ -25,7 +25,7 @@ import { CoinNoteCollectionRequest } from "../../interfaces/coin-note-collection
 })
 export class CurrencyCoinDetailsComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
-  @ViewChild("btnCloseCoinDetailsPopup") btnCloseDayPopup!: ElementRef;
+  @ViewChild("btnCloseDetailsPopup") btnCloseDayPopup!: ElementRef;
   currencyCoinDetailsForm: FormGroup;
   user: any;
   countryList: any;
@@ -133,7 +133,7 @@ ActionConstant=ActionConstant;
     });
 
     this.currencyCoinDetailsForm?.reset();
-    const model = document.getElementById("currencyCoinDetailsPopup");
+    const model = document.getElementById("detailsPopup");
     if (model !== null) {
       model.style.display = "block";
     }
@@ -147,7 +147,7 @@ ActionConstant=ActionConstant;
   }
 
   closePopup() {
-    const model = document.getElementById("currencyCoinDetailsPopup");
+    const model = document.getElementById("detailsPopup");
     if (model !== null) {
       model.style.display = "none";
     }

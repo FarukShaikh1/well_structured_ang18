@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { UserServiceService } from '../../services/user/user-service.service';
+import { UserService } from '../../services/user/user.service
 import { GlobalService } from '../../services/global/global.service';
 import { HttpClient } from '@angular/common/http';
+import { RoleService } from '../../services/role/role.service';
 
 interface TreeNode {
   label: string;
@@ -31,7 +32,7 @@ export class ManageRolesComponent {
   itemsPerPage = 5;
   key: string = '';
 
-  constructor(private _userService: UserServiceService, public globalService: GlobalService,
+  constructor(private roleService: RoleService, public globalService: GlobalService,
       private _httpClient: HttpClient
   ) {
   }
@@ -41,7 +42,7 @@ export class ManageRolesComponent {
   }
 
   getRoleList() {
-    this._userService.getRoleList().subscribe((res) => {
+    this.roleService.getAllRoles().subscribe((res) => {
       this.rolesDataSource = res;
       console.log(res);
 

@@ -4,6 +4,7 @@ import { CellComponent, ColumnDefinition } from "tabulator-tables";
 import { API_URL } from "../../../utils/api-url";
 import {
   ActionConstant,
+  ApplicationConstantHtml,
   ApplicationModules,
   ApplicationTableConstants,
   DBConstants
@@ -44,7 +45,7 @@ export class DayComponent implements OnInit {
 
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
-  public tableColumnConfig: ColumnDefinition[] = [];
+  public columnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
@@ -152,7 +153,7 @@ export class DayComponent implements OnInit {
   }
 
   columnConfiguration() {
-    this.tableColumnConfig = [
+    this.columnConfig = [
       {
         title: "Date",
         field: "specialOccasionDate",
@@ -205,48 +206,34 @@ export class DayComponent implements OnInit {
         formatter: this.picFormatter.bind(this),
       },
       {
-        title: "-",
-        field: "-",
-        maxWidth: 50,
+        title: "",
+        field: "",
+        maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const birthdayId = cell.getRow().getData()["id"];
           this.hideDay(birthdayId);
         },
-      },
-      {
-        title: "",
-        field: "option1",
-        maxWidth: 50,
-        formatter: (_cell) =>
-          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-        clickMenu: this.generateOptionsMenu(this),
-        hozAlign: "left",
-        headerSort: false,
-      },
-      {
-        title: "",
-        field: "option2",
-        maxWidth: 50,
-        formatter: this.threeDotsFormatter.bind(this),//will used for row-wise condition
-        hozAlign: "left",
+        hozAlign: "center",
         headerSort: false,
       },
     ];
+    if (
+      this.globalService.isAccessible(ActionConstant.EDIT)||
+      this.globalService.isAccessible(ActionConstant.DELETE)
+    ) {
+      this.columnConfig.push({
+        title: "",
+        field: "option",
+        maxWidth: 70,
+        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        hozAlign: "center",
+        headerSort: false,
+      });
+    }
   }
 
-  threeDotsFormatter(cell: CellComponent) {
-    const rowData = cell.getRow().getData();
-    const rowId = rowData['id'];
-    return `
-    <div class="dropdown" style="position: relative;">
-      <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}">
-        <i class="bi bi-three-dots"></i>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-end options-menu" id="dropdownMenuItems${rowId}"></ul>
-    </div>
-  `;
-  }
+
   picFormatter(cell: CellComponent) {
     const rowData = cell.getRow().getData();
     let thumbnailPath = rowData["thumbnailPath"];
@@ -278,25 +265,24 @@ export class DayComponent implements OnInit {
     const nullDate = "";
     return `<span>${nullDate}</span>`;
   }
+
   ngAfterViewInit() {
     document.addEventListener('click', (event: Event) => {
-      
       const target = event.target as HTMLElement;
       if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+        debugger
         const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
         const rowId = button.getAttribute('data-row-id');
-        
         if (rowId) {
+          debugger
           const rowData = this.tableData.find((row) => row['id'] == rowId);
           if (rowData) {
-            
             const menuOptions = this.generateOptionsMenu(rowData);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           }
         }
         event.stopPropagation();
-      } else {
-        // Hide global dropdown
+      } else { // Hide global dropdown
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -304,39 +290,23 @@ export class DayComponent implements OnInit {
   }
 
   generateOptionsMenu(rowData: Record<string, any>) {
-    
     const menu = [];
-    if (
-      this.globalService.isAccessible(ActionConstant.EDIT)
-    ) {
+    if (this.globalService.isAccessible(ActionConstant.EDIT)) {
       menu.push({
-        label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#dayDetailsPopup">
-                  <i class="bi bi-pencil"></i>
-                    &nbsp;Edit
-                  </a>
-                  `,
+        label: ApplicationConstantHtml.EDIT_LABLE,
         action: () => {
           this.openDetailsPopup(rowData['id']);
         },
       });
     }
-    if (
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
+    if (this.globalService.isAccessible(ActionConstant.DELETE)) {
       menu.push({
-        label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
-                  <i class="bi bi-trash"></i>
-                    &nbsp;Delete
-                  </a>
-                  `,
+        label: ApplicationConstantHtml.DELETE_LABLE,
         action: () => {
           this.deleteDay(rowData['id']);
         },
       });
     }
-
     return menu;
   }
 
@@ -352,7 +322,7 @@ export class DayComponent implements OnInit {
 
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
-    
+
     if (isConfirmed) {
       this.loaderService.showLoader();
       this._dayService.deleteDay(this.id).subscribe({

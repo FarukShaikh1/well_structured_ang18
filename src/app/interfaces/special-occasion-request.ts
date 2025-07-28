@@ -9,5 +9,5 @@ export interface SpecialOccasionRequest {
     emailId: string,
     gender: string,
     address: string,
-    assetId: string,
+    assetId: string|null,
 }

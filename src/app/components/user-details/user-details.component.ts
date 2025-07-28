@@ -66,7 +66,7 @@ export class UserDetailsComponent {
     this.getRoleList();
     this.getUserDetailsById(id);
 
-    const model = document.getElementById('userDetailsPopup');
+    const model = document.getElementById('detailsPopup');
     if (model !== null) {
       model.style.display = 'block';
     }
@@ -74,7 +74,7 @@ export class UserDetailsComponent {
 
   closePopup() {
     this.resetForm();
-    const model = document.getElementById('userDetailsPopup');
+    const model = document.getElementById('detailsPopup');
     if (model !== null) {
       model.style.display = 'none';
     }

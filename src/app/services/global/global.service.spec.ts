@@ -15,8 +15,8 @@ describe('GlobalService', () => {
 
   beforeEach(() => {
     const localStorageSpy = jasmine.createSpyObj('LocalStorageService', [
-      'setRoleModuleMapping',
-      'getRoleModuleMapping',
+      'setUserPermission',
+      'getUserPermission',
     ]);
 
     const roleServiceSpy = jasmine.createSpyObj('RoleService', [
@@ -69,18 +69,18 @@ describe('GlobalService', () => {
     roleService.getLoggedInUserPermissions.and.returnValue(
       of({ data: mockRoleData })
     );
-    localStorageService.setRoleModuleMapping.and.stub();
+    localStorageService.setUserPermission.and.stub();
 
-    service.getRoleModuleMappingData().subscribe((result) => {
+    service.getUserPermissionData().subscribe((result) => {
       expect(result).toBeTrue();
-      expect(localStorageService.setRoleModuleMapping).toHaveBeenCalledWith(
+      expect(localStorageService.setUserPermission).toHaveBeenCalledWith(
         mockRoleData
       );
     });
   });
 
   it('should return false for inaccessible module/action', () => {
-    localStorageService.getRoleModuleMapping.and.returnValue([]);
+    localStorageService.getUserPermission.and.returnValue([]);
     const module = 'Client';
     const action = 'Add';
 
@@ -107,7 +107,7 @@ describe('GlobalService', () => {
       }
     ];
 
-    localStorageService.getRoleModuleMapping.and.returnValue(mockRoleData);
+    localStorageService.getUserPermission.and.returnValue(mockRoleData);
     const module = 'Auth';
     const action = 'View';
 
@@ -119,7 +119,7 @@ describe('GlobalService', () => {
       of({ data: null }).pipe(catchError(() => of(false)))
     );
 
-    service.getRoleModuleMappingData().subscribe((result) => {
+    service.getUserPermissionData().subscribe((result) => {
       expect(result).toBeFalse();
     });
   });
@@ -154,7 +154,7 @@ describe('GlobalService', () => {
   
     spyOn(console, 'error'); // Spy on console.error
   
-    service.getRoleModuleMappingData().subscribe((result) => {
+    service.getUserPermissionData().subscribe((result) => {
       expect(result).toBeFalse(); // Expect the result to be false due to the error
       expect(console.error).toHaveBeenCalledWith('Error fetching role data', mockError.message); // Expect the error to be logged
     });

@@ -27,7 +27,7 @@ export class RoleService {
     return this.httpService.get(API_URL.GET_USER_PERMISSIONS + userId);
   }
 
-  updateRoleModuleMapping(data: any): Observable<any> {
+  updateUserPermission(data: any): Observable<any> {
     return this.httpService.post(API_URL.UPDATE_ROLE_MODULE_MAPPING, data);
   }
 }

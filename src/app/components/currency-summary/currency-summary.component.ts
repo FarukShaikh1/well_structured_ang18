@@ -37,8 +37,9 @@ export class CurrencySummaryComponent implements OnInit {
   public filteredTableData: any[] = [];
   showGrid: boolean = false;
   showGallery: boolean = false;
+ActionConstant: any;
 ;
-  public tableColumnConfig: ColumnDefinition[] = [];
+  public columnConfig: ColumnDefinition[] = [];
   public summaryPaginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; 
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; 
   public allowCSVExport = false;
@@ -179,7 +180,7 @@ export class CurrencySummaryComponent implements OnInit {
       },
     ];
 
-        this.tableColumnConfig = [
+        this.columnConfig = [
       {
         title: "collectionCoinId",
         field: "collectionCoinId",

@@ -68,6 +68,6 @@ export class UserService {
 
 
   getUserList(): Observable<any> {
-    return this.httpService.get(API_URL.Get_USER_LIST );
+    return this.httpService.get(API_URL.GET_ALL_USERS);
   }
 }

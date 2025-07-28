@@ -1,7 +1,7 @@
 <div class="main-body">
   @if(globalService.isAccessible(ActionConstant.ADD)){
   <button (click)="openDetailsPopup('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
-    data-bs-target="#dayDetailsPopup">
+    data-bs-target="#detailsPopup">
     <svg
       width="24"
       height="24"
@@ -31,7 +31,7 @@
     Add Day
   </button>
   } 
-  <div class="row pb-2">
+  <div class="row pb-2 pt-2">
     <div class="col-6 col-sm-4 col-lg-2 col-xl-2">
       <div appearance="outline" class="form-field">
         <label>Select Month</label>
@@ -146,7 +146,7 @@
 </div>
 
 <div class="mb-2">
-  <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="tableColumnConfig" [height]="'320px'"
+  <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
     [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
   </app-tabulator-grid>
 </div>

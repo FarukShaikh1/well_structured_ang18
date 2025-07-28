@@ -48,12 +48,12 @@ export class LocalStorageService {
     return JSON.parse(localStorage.getItem('isSsoLogin') || 'false');
   }
 
-  setRoleModuleMapping(data: any[]) {
+  setUserPermission(data: any[]) {
     
     localStorage.setItem('userPermissions', JSON.stringify(data));
   }
 
-  getRoleModuleMapping(): any[] {
+  getUserPermission(): any[] {
     
     return JSON.parse(localStorage.getItem('userPermissions') || '[]');
   }
@@ -67,7 +67,7 @@ export class LocalStorageService {
   }
 
   isUserAuthorized(): boolean {
-    const userPermissions = this.getRoleModuleMapping();
+    const userPermissions = this.getUserPermission();
     if (userPermissions && Array.isArray(userPermissions) && userPermissions.length > 0) {
       return true;
     }

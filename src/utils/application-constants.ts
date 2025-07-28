@@ -32,7 +32,7 @@ export const ApplicationConstants = {
 
     REGEX_DASH_DOT_UNDERSCORE_WITH_SPACE: /(?<=[a-zA-Z0-9])[-_.](?=[a-zA-Z0-9])/g, // Replace dash, dot, underscore with space
     REGEX_CAPITALIZE_FIRST_LETTER: /\b\w/g, // Capitalize first letter of every word
-    APPLICATIONS_OWNER_EMAILID:'farukshaikh908@gmail.com'
+    APPLICATIONS_OWNER_EMAILID: 'farukshaikh908@gmail.com'
 };
 
 export const ButtonLabels = {
@@ -41,12 +41,6 @@ export const ButtonLabels = {
     BTN_CANCEL: 'Cancel',
     BTN_SUBMIT: 'Submit',
     BTN_PREVIOUS: 'Previous',
-};
-
-export const TestingResultNode = {
-    SAMPLE: 'Sample',
-    TEST: 'Test',
-    RESULT: 'Result',
 };
 
 export const ApplicationTableConstants = {
@@ -62,13 +56,22 @@ export const LoaderConfigs = {
     TIMEOUT: 10000, // MS
 };
 
+export const ApplicationConstantHtml = {
+    DELETE_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#confirmationPopup"><i class="bi bi-trash"></i>&nbsp;Delete</a>`,
+    EDIT_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#detailsPopup"><i class="bi bi-pencil"></i>&nbsp;Edit</a>`,
+    VIEW_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-eye"></i>&nbsp;View</a>`,
+    DOWNLOAD_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-download"></i>&nbsp;Download</a>`,  
+    UPLOAD_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-upload"></i>&nbsp;Upload</a>`,
+    APPROVE_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-check2"></i>&nbsp;Approve</a>`,
+    REJECT_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-x-circle"></i>&nbsp;Reject</a>`,
+}
 export const NavigationURLs = {
     LOGIN: '/login',
     ERROR_PAGE: '/home/unauthorised',
     UNAUTHORIZED_PAGE: '/unauthorised',
     LOGOUT: '/logout',
     CLIENT_LIST: '/home/client',
-    ROLE_MODULE_MAPPING: '/home/role-module-mapping',
+    ROLE_MODULE_MAPPING: '/home/user-permission',
     PROGRAMS: '/home/program',
     HOME: '/home',
     DAY_LIST: '/home/day',
@@ -104,7 +107,7 @@ export const Messages = {
     EXPENSE_ADDED_SUCCESS: 'Expense details added successfully.',
     EXPENSE_UPDATED_SUCCESS: 'Expense details updated successfully.',
     ERROR_IN_FETCH_EXPENSE: 'Unable to load expense data. Please try again later.',
-    ERROR_IN_FETCH_ROLE_MODULE_MAPPINGS: 'Error fetching role-module-mappings',
+    ERROR_IN_FETCH_ROLE_MODULE_MAPPINGS: 'Error fetching user-permissions',
 
     ERROR_IN_FETCH_PROGRAM: 'Error fetching programs',
 
@@ -113,7 +116,7 @@ export const Messages = {
 
     CHAT_DELETE_CONFIRMATION: 'Are you sure you want to delete chat between',
     ROLE_MODULE_MAPPING_UPDATED_SUCCESSFULLY:
-        'Role-Module-Mapping updated successfully',
+        'user-permission updated successfully',
 
     EMAIL_VALIDATION_MSG: 'Please enter a valid email address.',
 

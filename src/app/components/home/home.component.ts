@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     @ViewChild(ToasterComponent) toaster!: ToasterComponent;
 
     Modules = ApplicationModules;
-    Module_Actions = ActionConstant;
+    ActionConstant = ActionConstant;
     currentModuleName: string = '';
     NavigationURLs = NavigationURLs;
     userName: string = '';

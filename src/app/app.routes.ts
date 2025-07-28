@@ -79,12 +79,12 @@ export const routes: Routes = [
         data: { moduleName: ApplicationModules.USER },
       },
       {
-        path: "role-module-mapping",
+        path: "user-permission",
         title: "Role Access",
         loadComponent: () =>
           import(
-            "./components/role-module-mapping/role-module-mapping.component"
-          ).then((m) => m.RoleModuleMappingComponent),
+            "./components/user-permission/user-permission.component"
+          ).then((m) => m.UserPermissionComponent),
         // canActivate: [moduleAccessGuard],
         data: { moduleName: ApplicationModules.ROLE_MODULE_MAPPING },
       },

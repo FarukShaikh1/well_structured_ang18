@@ -8,6 +8,7 @@ import {
   ApplicationModules,
   ApplicationTableConstants,
   NavigationURLs,
+  ApplicationConstantHtml,
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
@@ -50,14 +51,14 @@ export class ExpenseComponent implements OnInit {
 
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
-  public tableColumnConfig: ColumnDefinition[] = [];
-  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; 
+  public columnConfig: ColumnDefinition[] = [];
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
 
   lastExpenseDate: Date = new Date();
 
-  fromDate =DateUtils.GetDateBeforeDays(30);
+  fromDate = DateUtils.GetDateBeforeDays(30);
   toDate = DateUtils.GetDateBeforeDays(0);
   sourceOrReason: string = "";
   minAmount: number = 0;
@@ -66,51 +67,41 @@ export class ExpenseComponent implements OnInit {
   activeComponent: string = NavigationURLs.EXPENSE_LIST;
   reportLastDate = "";
   reportFirstDate = "";
-  expensefilterRequest : ExpenseFilterRequest = {
+  expensefilterRequest: ExpenseFilterRequest = {
     fromDate: this.fromDate,
-    toDate: this.toDate,          
+    toDate: this.toDate,
     minAmount: this.minAmount,
     maxAmount: this.maxAmount,
     sourceOrReason: ''
   };
-ActionConstant=ActionConstant;
-  optionsMenu = [
-    {
-      label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#expenseDetailsPopup">
-                  <i class="bi bi-pencil"></i>
-                    &nbsp;Edit
-                  </a>
-                  `,
-      action: (_e: any, cell: CellComponent) => {
-        const expenseData = cell.getRow().getData();
-        const expenseId = expenseData["id"];
-        this.expenseDetails(expenseId);
-      },
-    },
-    {
-      separator: true,
-    },
-    {
-      label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
-                  <i class="bi bi-trash"></i>
-                    &nbsp;Delete
-                  </a>
-                  `,
-      action: (_e: any, cell: CellComponent) => {
-        const expenseData = cell.getRow().getData();
-        const expenseId = expenseData["id"];
-        this.deleteExpense(expenseId);
-      },
-    },
-  ];
+  ActionConstant = ActionConstant;
+  // optionsMenu = [
+  //   {
+  //     label: ApplicationConstantHtml.EDIT_LABLE,
+  //     action: (_e: any, cell: CellComponent) => {
+  //       const expenseData = cell.getRow().getData();
+  //       const expenseId = expenseData["id"];
+  //       this.expenseDetails(expenseId);
+  //     },
+  //   },
+  //   {
+  //     separator: true,
+  //   },
+  //   {
+  //     label: ApplicationConstantHtml.DELETE_LABLE,
+  //     action: (_e: any, cell: CellComponent) => {
+  //       const expenseData = cell.getRow().getData();
+  //       const expenseId = expenseData["id"];
+  //       this.deleteExpense(expenseId);
+  //     },
+  //   },
+  // ];
 
   constructor(
     private expenseService: ExpenseService,
     public datePipe: DatePipe,
     public globalService: GlobalService,
-    private loaderService: LoaderService  ) {}
+    private loaderService: LoaderService) { }
 
   ngOnInit() {
     this.ClearFilter();
@@ -128,7 +119,7 @@ ActionConstant=ActionConstant;
 
   columnConfiguration() {
     if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
-      this.tableColumnConfig = [
+      this.columnConfig = [
         {
           title: "Expense Date",
           field: "expenseDate",
@@ -157,52 +148,49 @@ ActionConstant=ActionConstant;
           field: "debit",
           sorter: "alphanum",
           formatter: this.amountColorFormatter.bind(this),
-          bottomCalc: "sum", 
-          bottomCalcFormatter: this.amountColorFormatter.bind(this), 
-          bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
+          bottomCalc: "sum",
+          bottomCalcFormatter: this.amountColorFormatter.bind(this),
+          bottomCalcFormatterParams: { symbol: "", precision: 2 },
         },
         {
           title: "Credit",
           field: "credit",
           sorter: "alphanum",
           formatter: this.amountColorFormatter.bind(this),
-          bottomCalc: "sum", 
-          bottomCalcFormatter: this.amountColorFormatter.bind(this), 
-          bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
-        },
-        {
-          title: "-",
-          field: "-",
-          maxWidth: 50,
-          formatter: this.globalService.hidebuttonFormatter.bind(this),
-          cellClick: (e, cell) => {
-            const expenseId = cell.getRow().getData()["id"];
-            this.hideExpense(expenseId);
-          },
+          bottomCalc: "sum",
+          bottomCalcFormatter: this.amountColorFormatter.bind(this),
+          bottomCalcFormatterParams: { symbol: "", precision: 2 },
         },
         {
           title: "",
           field: "",
-          maxWidth: 50,
-          formatter: (_cell) =>
-            '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-          clickMenu: this.optionsMenu,
-          hozAlign: "left",
+          maxWidth: 70,
+          formatter: this.globalService.hidebuttonFormatter.bind(this),
+          cellClick: (e, cell) => {
+            debugger
+            const expenseId = cell.getRow().getData()["id"];
+            this.hideExpense(expenseId);
+          },
+          hozAlign: "center",
           headerSort: false,
         },
-      {
-        title: "",
-        field: "options",
-        maxWidth: 50,
-        formatter: (_cell) =>
-          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-        clickMenu: this.generateOptionsMenu(this),
-        hozAlign: "left",
-        headerSort: false,
-      },
       ];
+          if (
+      this.globalService.isAccessible(ActionConstant.EDIT)||
+      this.globalService.isAccessible(ActionConstant.DELETE)
+    ) {
+      this.columnConfig.push({
+        title: "",
+        field: "option",
+        maxWidth: 70,
+        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        hozAlign: "center",
+        headerSort: false,
+      });
+    }
+
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
-      this.tableColumnConfig = [
+      this.columnConfig = [
         {
           title: "Expense Date",
           field: "expenseDate",
@@ -320,28 +308,33 @@ ActionConstant=ActionConstant;
           cssClass: "amount-column",
         },
         {
-          title: "-",
-          field: "-",
-          maxWidth: 50,
+          title: "",
+          field: "",
+          maxWidth: 70,
           formatter: this.globalService.hidebuttonFormatter.bind(this),
           cellClick: (e, cell) => {
             const expenseId = cell.getRow().getData()["id"];
             this.hideExpense(expenseId);
           },
-        },
-        {
-          title: "",
-          field: "",
-          maxWidth: 50,
-          formatter: (_cell) =>
-            '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-          clickMenu: this.optionsMenu,
-          hozAlign: "left",
           headerSort: false,
-        },
+        }
       ];
+          if (
+            this.globalService.isAccessible(ActionConstant.EDIT)||
+            this.globalService.isAccessible(ActionConstant.DELETE)
+          ) {
+            this.columnConfig.push({
+              title: "",
+              field: "option",
+              maxWidth: 70,
+              formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+              hozAlign: "center",
+              headerSort: false,
+            });
+          }
+      
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
-      this.tableColumnConfig = [
+      this.columnConfig = [
         {
           title: "FirstDate",
           field: "firstDate",
@@ -428,11 +421,7 @@ ActionConstant=ActionConstant;
             '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
           clickMenu: [
             {
-              label: `<a class="dropdown-item btn-link">
-                          <i class="bi bi-eye"></i>
-                            &nbsp;View
-                          </a>
-                          `,
+              label: ApplicationConstantHtml.VIEW_LABLE,
               action: (_e: any, cell: CellComponent) => {
                 const expenseData = cell.getRow().getData();
                 this.activeComponent = NavigationURLs.EXPENSE_LIST;
@@ -450,12 +439,7 @@ ActionConstant=ActionConstant;
               separator: true,
             },
             {
-              label: `<a class="dropdown-item btn-link"
-                      data-bs-toggle="modal" data-bs-target="#confirmationPopup">
-                          <i class="bi bi-trash"></i>
-                            &nbsp;Delete
-                          </a>
-                          `,
+              label: ApplicationConstantHtml.DELETE_LABLE,
               action: (_e: any, cell: CellComponent) => {
                 const expenseData = cell.getRow().getData();
                 const expenseId = expenseData["id"];
@@ -470,43 +454,28 @@ ActionConstant=ActionConstant;
     }
   }
 
-    generateOptionsMenu(rowData: Record<string, any>) {
-      
-      const menu = [];
-      if (
-        this.globalService.isAccessible(ActionConstant.EDIT)
-      ) {
-        menu.push({
-          label: `<a class="dropdown-item btn-link options-menu-item"
-              data-bs-toggle="modal" data-bs-target="#expenseDetailsPopup">
-                  <i class="bi bi-pencil"></i>
-                    &nbsp;Edit
-                  </a>
-                  `,
-          action: () => this.expenseDetails(rowData['id']),
-        });
-      }
-      if (
-        this.globalService.isAccessible(ActionConstant.DELETE)
-      ) {
-        menu.push({
-          label: `<a class="dropdown-item btn-link"
-                data-bs-toggle="modal" data-bs-target="#confirmationPopup">
-                    <i class="bi bi-trash"></i>
-                      &nbsp;Delete
-                    </a>
-                    `,
-          action: (_e: any, cell: CellComponent) => {
-            const expenseData = cell.getRow().getData();
-            const expenseId = expenseData["id"];
-            this.deleteExpense(expenseId);
-          },
-        });
-      }
-      return menu;
+  generateOptionsMenu(rowData: Record<string, any>) {
+    const menu = [];
+    if (this.globalService.isAccessible(ActionConstant.EDIT)) {
+      menu.push({
+        label: ApplicationConstantHtml.EDIT_LABLE,
+        action: () => {
+          this.expenseDetails(rowData['id']);
+        },
+      });
     }
-  
-  
+    if (this.globalService.isAccessible(ActionConstant.DELETE)) {
+      menu.push({
+        label: ApplicationConstantHtml.DELETE_LABLE,
+        action: () => {
+          this.deleteExpense(rowData['id']);
+        },
+      });
+    }
+    return menu;
+  }
+
+
   hideExpense(expenseId: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
       return item.id != expenseId;
@@ -569,10 +538,10 @@ ActionConstant=ActionConstant;
       return `<span style="color:#F29D0A; font-weight:bold">${sourceValue}</span>`;
     } else {
       return `<span style="color:#000000; font-weight:bold">${sourceValue}</span>`;
-    } 
+    }
   }
 
-  
+
   ngAfterViewInit() {
 
     flatpickr("#fromDate", {
@@ -591,7 +560,7 @@ ActionConstant=ActionConstant;
     });
 
     flatpickr("#toDate", {
-      dateFormat: "d/m/Y", 
+      dateFormat: "d/m/Y",
       defaultDate: DateUtils.strFormatToDDMMYYYY(this.toDate),
       onChange: (selectedDates, dateStr) => {
         if (!dateStr) {
@@ -601,6 +570,26 @@ ActionConstant=ActionConstant;
         this.filterGridByToDate(dateStr);
       },
     });
+
+    document.addEventListener('click', (event: Event) => {
+      const target = event.target as HTMLElement;
+      if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+        const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
+        const rowId = button.getAttribute('data-row-id');
+        if (rowId) {
+          const rowData = this.tableData.find((row) => row['id'] == rowId);
+          if (rowData) {
+            const menuOptions = this.generateOptionsMenu(rowData);
+            this.globalService.showGlobalDropdownMenu(button, menuOptions);
+          }
+        }
+        event.stopPropagation();
+      } else { // Hide global dropdown
+        const globalMenu = document.getElementById('globalDropdownMenu');
+        if (globalMenu) globalMenu.remove();
+      }
+    });
+
   }
 
   applyFilters() {
@@ -626,26 +615,26 @@ ActionConstant=ActionConstant;
           item.description?.toLowerCase().includes(this.sourceOrReason);
         const minAmountCondition =
           this.minAmount == 0 ||
-          (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) >= this.minAmount) || 
+          (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) >= this.minAmount) ||
           (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) >= this.minAmount) ||
           (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) >= this.minAmount) ||
           (item.other !== null && item.other !== 0 && Math.abs(item.other) >= this.minAmount);
-          // (item.sbiBalance !== null && item.sbiBalance !== 0 && Math.abs(item.sbiBalance) >= this.minAmount) || 
-          // (item.cbiBalance !== null && item.cbiBalance !== 0 && Math.abs(item.cbiBalance) >= this.minAmount) ||
-          // (item.cashBalance !== null && item.cashBalance !== 0 && Math.abs(item.cashBalance) >= this.minAmount) ||
-          // (item.otherBalance !== null && item.otherBalance !== 0 && Math.abs(item.otherBalance) >= this.minAmount) ||
-          // (item.totalAvailable !== null && item.totalAvailable !== 0 && Math.abs(item.totalAvailable) >= this.minAmount);
+        // (item.sbiBalance !== null && item.sbiBalance !== 0 && Math.abs(item.sbiBalance) >= this.minAmount) || 
+        // (item.cbiBalance !== null && item.cbiBalance !== 0 && Math.abs(item.cbiBalance) >= this.minAmount) ||
+        // (item.cashBalance !== null && item.cashBalance !== 0 && Math.abs(item.cashBalance) >= this.minAmount) ||
+        // (item.otherBalance !== null && item.otherBalance !== 0 && Math.abs(item.otherBalance) >= this.minAmount) ||
+        // (item.totalAvailable !== null && item.totalAvailable !== 0 && Math.abs(item.totalAvailable) >= this.minAmount);
         const maxAmountCondition =
           this.maxAmount == 0 ||
-          (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) <= this.maxAmount) || 
+          (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) <= this.maxAmount) ||
           (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) <= this.maxAmount) ||
           (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) <= this.maxAmount) ||
           (item.other !== null && item.other !== 0 && Math.abs(item.other) <= this.maxAmount);
-          // (item.sbiBalance !== null && item.sbiBalance !== 0 && Math.abs(item.sbiBalance) <= this.maxAmount) || 
-          // (item.cbiBalance !== null && item.cbiBalance !== 0 && Math.abs(item.cbiBalance) <= this.maxAmount) ||
-          // (item.cashBalance !== null && item.cashBalance !== 0 && Math.abs(item.cashBalance) <= this.maxAmount) ||
-          // (item.otherBalance !== null && item.otherBalance !== 0 && Math.abs(item.otherBalance) <= this.maxAmount)||
-          // (item.totalAvailable !== null && item.totalAvailable !== 0 && Math.abs(item.totalAvailable) <= this.minAmount);
+        // (item.sbiBalance !== null && item.sbiBalance !== 0 && Math.abs(item.sbiBalance) <= this.maxAmount) || 
+        // (item.cbiBalance !== null && item.cbiBalance !== 0 && Math.abs(item.cbiBalance) <= this.maxAmount) ||
+        // (item.cashBalance !== null && item.cashBalance !== 0 && Math.abs(item.cashBalance) <= this.maxAmount) ||
+        // (item.otherBalance !== null && item.otherBalance !== 0 && Math.abs(item.otherBalance) <= this.maxAmount)||
+        // (item.totalAvailable !== null && item.totalAvailable !== 0 && Math.abs(item.totalAvailable) <= this.minAmount);
 
         return searchText && minAmountCondition && maxAmountCondition;
       });
@@ -688,7 +677,7 @@ ActionConstant=ActionConstant;
   getLatestExpenseDate(): any {
     if (!this.filteredTableData || this.filteredTableData.length === 0) {
       this.loaderService.hideLoader();
-      return new Date(); 
+      return new Date();
     }
     this.loaderService.hideLoader();
     return this.filteredTableData[0]["expenseDate"];
@@ -710,13 +699,13 @@ ActionConstant=ActionConstant;
   }
 
   LoadGrid() {
-    
+
     this.loaderService.showLoader();
     this.columnConfiguration();
     this.expensefilterRequest = {
       fromDate: this.fromDate,
-      toDate:  this.toDate,     
-      minAmount: this.minAmount,                
+      toDate: this.toDate,
+      minAmount: this.minAmount,
       maxAmount: this.maxAmount,
       sourceOrReason: this.sourceOrReason,
     };
@@ -800,12 +789,12 @@ ActionConstant=ActionConstant;
   }
 
   filterGridByFromDate(date: any) {
-    this.fromDate = DateUtils.CorrectedDate(date); 
+    this.fromDate = DateUtils.CorrectedDate(date);
     this.LoadGrid();
   }
 
   filterGridByToDate(date: any) {
-    this.toDate = DateUtils.CorrectedDate(date); 
+    this.toDate = DateUtils.CorrectedDate(date);
     this.LoadGrid();
   }
 

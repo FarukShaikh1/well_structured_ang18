@@ -5,25 +5,25 @@
 // import { LoaderService } from '../../services/loader/loader.service';
 // import { RoleService } from '../../services/role/role.service';
 // import { RoleMockDataService } from '../../test-helpers/role-mock-data.service';
-// import { RoleModuleMappingMockDataService } from '../../test-helpers/role-module-mapping-mock-data.service';
+// import { UserPermissionMockDataService } from '../../test-helpers/user-permission-mock-data.service';
 // import { ActionConstant, ApplicationModules } from '../../utils/application-constants';
-// import { RoleModuleMappingComponent } from './role-module-mapping.component';
+// import { UserPermissionComponent } from './user-permission.component';
 
-// describe('RoleModuleMappingComponent', () => {
-//   let component: RoleModuleMappingComponent;
-//   let fixture: ComponentFixture<RoleModuleMappingComponent>;
+// describe('UserPermissionComponent', () => {
+//   let component: UserPermissionComponent;
+//   let fixture: ComponentFixture<UserPermissionComponent>;
 //   let mockRoleService: jasmine.SpyObj<RoleService>;
 //   let mockLoaderService: jasmine.SpyObj<LoaderService>;
 //   let mockGlobalService: jasmine.SpyObj<GlobalService>;
 
 //   beforeEach(async () => {
 //     // Mock services
-//     mockRoleService = jasmine.createSpyObj('RoleService', ['getAllRoles', 'getRoleModuleMappingByRoleId', 'updateRoleModuleMapping']);
+//     mockRoleService = jasmine.createSpyObj('RoleService', ['getAllRoles', 'getUserPermissionByRoleId', 'updateUserPermission']);
 //     mockLoaderService = jasmine.createSpyObj('LoaderService', ['showLoader', 'hideLoader']);
 //     mockGlobalService = jasmine.createSpyObj('GlobalService', ['isAccessible']);
 
 //     await TestBed.configureTestingModule({
-//     imports: [RoleModuleMappingComponent],
+//     imports: [UserPermissionComponent],
 //     providers: [
 //         { provide: RoleService, useValue: mockRoleService },
 //         { provide: LoaderService, useValue: mockLoaderService },
@@ -32,7 +32,7 @@
 //     ]
 // }).compileComponents();
 
-//     fixture = TestBed.createComponent(RoleModuleMappingComponent);
+//     fixture = TestBed.createComponent(UserPermissionComponent);
 //     component = fixture.componentInstance;
 
 //     // Add a mock ToasterComponent
@@ -54,13 +54,13 @@
 //     it('should fetch role list from by callin api with success response', () => {
 //       const mockRoles = RoleMockDataService.getAllRoles();
 //       mockRoleService.getAllRoles.and.returnValue(of({ data: mockRoles }));
-//       spyOn(component, 'getRoleModuleMappingByRoleId');
+//       spyOn(component, 'getUserPermissionByRoleId');
 
 //       component.getRoleList();
 
 //       expect(component.roleList.length).toBe(mockRoles.length);
 //       expect(component.selectedRoleId).toEqual(mockRoles[0].id);
-//       expect(component.getRoleModuleMappingByRoleId).toHaveBeenCalledWith(mockRoles[0].id);
+//       expect(component.getUserPermissionByRoleId).toHaveBeenCalledWith(mockRoles[0].id);
 //     });
 
 //     it('should handle error when fetching roles by calling api', () => {
@@ -80,13 +80,13 @@
 //     });
 //   });
 
-//   describe('getRoleModuleMappingByRoleId', () => {
+//   describe('getUserPermissionByRoleId', () => {
 //     it('should load role module mapping for selected role', () => {
 //       const roleId = '8d43d229-3baf-4649-b111-a6e6d42e16ab';
-//       const mockRoleMappings = RoleModuleMappingMockDataService.getRoleModuleMpappingByRoleId(roleId);
-//       mockRoleService.getRoleModuleMappingByRoleId.and.returnValue(of({ data: mockRoleMappings }));
+//       const mockRoleMappings = UserPermissionMockDataService.getRoleModuleMpappingByRoleId(roleId);
+//       mockRoleService.getUserPermissionByRoleId.and.returnValue(of({ data: mockRoleMappings }));
 
-//       component.getRoleModuleMappingByRoleId(roleId);
+//       component.getUserPermissionByRoleId(roleId);
 
 //       expect(mockLoaderService.showLoader).toHaveBeenCalled();
 //       expect(mockLoaderService.hideLoader).toHaveBeenCalled();
@@ -94,9 +94,9 @@
 
 //     it('should handle error when fetching role module mappings', () => {
 //       const errorResponse = { message: 'Error fetching role module mappings' };
-//       mockRoleService.getRoleModuleMappingByRoleId.and.returnValue(throwError(errorResponse));
+//       mockRoleService.getUserPermissionByRoleId.and.returnValue(throwError(errorResponse));
 
-//       component.getRoleModuleMappingByRoleId('8d43d229-3baf-4649-b111-a6e6d42e16ab');
+//       component.getUserPermissionByRoleId('8d43d229-3baf-4649-b111-a6e6d42e16ab');
 
 //       expect(mockLoaderService.showLoader).toHaveBeenCalled();
 //       expect(component.toaster.showMessage).toHaveBeenCalledWith(errorResponse.message, 'error');
@@ -108,7 +108,7 @@
 //   describe('changeRole', () => {
 //     const roleId = '8d43d229-3baf-4649-b111-a6e6d42e16ab';
 //     it('should update selectedRoleId when changeRole is called', () => {
-//       spyOn(component, 'getRoleModuleMappingByRoleId');
+//       spyOn(component, 'getUserPermissionByRoleId');
 //       const mockEvent = {
 //         target: {
 //           value: roleId
@@ -118,27 +118,27 @@
 //       component.changeRole(mockEvent);
 
 //       expect(component.selectedRoleId).toBe(roleId);
-//       expect(component.getRoleModuleMappingByRoleId).toHaveBeenCalledOnceWith(roleId);
+//       expect(component.getUserPermissionByRoleId).toHaveBeenCalledOnceWith(roleId);
 //     });
 //   });
 
 //   describe('updateRoleModulePermission', () => {
 //     it('should update role module permissions successfully', () => {
-//       mockRoleService.updateRoleModuleMapping.and.returnValue(of({}));
+//       mockRoleService.updateUserPermission.and.returnValue(of({}));
 
 //       component.updateRoleModulePermission();
 
-//       expect(mockRoleService.updateRoleModuleMapping).toHaveBeenCalled();
-//       expect(component.toaster.showMessage).toHaveBeenCalledWith('Role-Module-Mapping updated successfully', 'success');
+//       expect(mockRoleService.updateUserPermission).toHaveBeenCalled();
+//       expect(component.toaster.showMessage).toHaveBeenCalledWith('user-permission updated successfully', 'success');
 //     });
 
 //     it('should handle error during role module permission update', () => {
 //       const errorResponse = { message: 'Update failed' };
-//       mockRoleService.updateRoleModuleMapping.and.returnValue(throwError(errorResponse));
+//       mockRoleService.updateUserPermission.and.returnValue(throwError(errorResponse));
 
 //       component.updateRoleModulePermission();
 
-//       expect(mockRoleService.updateRoleModuleMapping).toHaveBeenCalled();
+//       expect(mockRoleService.updateUserPermission).toHaveBeenCalled();
 //       expect(component.toaster.showMessage).toHaveBeenCalledWith('Failed to update.', 'error');
 //     });
 

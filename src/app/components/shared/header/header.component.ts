@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild(ConfirmBoxComponent)
   confirmationPopupComponent!: ConfirmBoxComponent;
   Modules = ApplicationModules;
-  Module_Actions = ActionConstant;
+  ActionConstant = ActionConstant;
   NavigationURLs = NavigationURLs;
   roles = ApplicationRoles;
   loginDisplay = false;

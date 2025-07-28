@@ -3,7 +3,7 @@
   this.globalService.isAccessible(ActionConstant.ADD)
   ){
   <button (click)="expenseDetails('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
-    data-bs-target="#expenseDetailsPopup">
+    data-bs-target="#detailsPopup">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
       <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -61,7 +61,7 @@
     Clear Filter
   </button>
   }
-  <div class="row pb-2">
+  <div class="row pb-2 pt-2">
     <div class="col-6 col-sm-4 col-lg col-xl">
       From Date:
       <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate"
@@ -107,7 +107,7 @@
 
   <div class="row">
     <div class="mb-2">
-      <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="tableColumnConfig" [height]="'320px'"
+      <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
         [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
       </app-tabulator-grid>
     </div>

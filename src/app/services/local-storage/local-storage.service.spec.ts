@@ -47,8 +47,8 @@ describe('LocalStorageService', () => {
 
   it('should set and get role module mapping', () => {
     const mapping = [{ module: 'test' }];
-    service.setRoleModuleMapping(mapping);
-    expect(service.getRoleModuleMapping()).toEqual(mapping);
+    service.setUserPermission(mapping);
+    expect(service.getUserPermission()).toEqual(mapping);
   });
 
   it('should set and get logged in user role ID', () => {

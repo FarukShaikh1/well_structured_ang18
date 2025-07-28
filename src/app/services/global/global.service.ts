@@ -64,12 +64,12 @@ export class GlobalService {
     router.navigate([url]);
   }
 
-  getRoleModuleMappingData(): Observable<boolean> {
+  getUserPermissionData(): Observable<boolean> {
     
     return this.roleService.getLoggedInUserPermissions().pipe(
       map((result) => {
         if (result) {
-          this.localStorageService.setRoleModuleMapping(result);
+          this.localStorageService.setUserPermission(result);
           if (result.data.length > 0) {
             const user = this.localStorageService.getLoggedInUserData();
             user.role = result.role;
@@ -92,7 +92,7 @@ export class GlobalService {
   }
 
   isAccessible(action: string): boolean {
-    const permissions = this.localStorageService.getRoleModuleMapping();
+    const permissions = this.localStorageService.getUserPermission();
     const lowerCaseAction = action.toLowerCase();
     const mapping = permissions.find(
       (m: any) => m.route?.toLowerCase() === '/' + this.getCurrentRoute()
@@ -104,7 +104,7 @@ export class GlobalService {
   }
 
   AccessibleModuleList(): ModuleResponse[] {
-    const permissions = this.localStorageService.getRoleModuleMapping();
+    const permissions = this.localStorageService.getUserPermission();
     return permissions
     .filter((m: any) => m.view === true)
     .map((m: any) => ({
@@ -180,7 +180,7 @@ export class GlobalService {
   }
 
   hidebuttonFormatter(cell: CellComponent) {
-    return `<button class="action-buttons" title="Hide" style="padding-right:100px;"><i class="bi bi-dash-lg btn-link"></i></button>`;
+    return `<button class="action-buttons" title="Hide"><i class="bi bi-dash-lg btn-link"></i></button>`;
   }
 
 
@@ -212,10 +212,23 @@ export class GlobalService {
       // Position menu
       const rect = button.getBoundingClientRect();
       menu.style.top = `${rect.bottom + window.scrollY}px`;
-      menu.style.left = `${rect.left + window.scrollX}px`;
+      menu.style.left = `${rect.left + window.scrollX-70}px`;
   
       // Append to body
       document.body.appendChild(menu);
     }
   
+      threeDotsFormatter(cell: CellComponent) {
+        debugger
+        const rowData = cell.getRow().getData();
+        const rowId = rowData['id'];
+        return `
+        <div class="dropdown" style="position: relative;">
+          <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end options-menu" id="dropdownMenuItems${rowId}"></ul>
+        </div>`;
+      }
+    
 }

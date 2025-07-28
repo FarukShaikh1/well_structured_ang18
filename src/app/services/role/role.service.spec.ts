@@ -69,7 +69,7 @@ describe('RoleService', () => {
     const mockResponse = { success: true };
     const updateData = { roleId: '123', mapping: ['Module1'] };
 
-    service.updateRoleModuleMapping(updateData).subscribe((response) => {
+    service.updateUserPermission(updateData).subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 

@@ -51,7 +51,7 @@ describe('authGuard', () => {
 
   it('should allow access if the user is authenticated and authorized', async () => {
     localStorageServiceSpy.isAuthenticated.and.returnValue(true);
-    globalServiceSpy.getRoleModuleMappingData.and.returnValue(of(true));
+    globalServiceSpy.getUserPermissionData.and.returnValue(of(true));
 
     const canActivate = await executeGuard(
       {} as ActivatedRouteSnapshot,
@@ -66,7 +66,7 @@ describe('authGuard', () => {
 
   it('should deny access and navigate to unauthorized page if user is authenticated but not authorized', async () => {
     localStorageServiceSpy.isAuthenticated.and.returnValue(true);
-    globalServiceSpy.getRoleModuleMappingData.and.returnValue(of(false));
+    globalServiceSpy.getUserPermissionData.and.returnValue(of(false));
 
     const canActivate = await executeGuard(
       {} as ActivatedRouteSnapshot,
@@ -99,8 +99,8 @@ describe('authGuard', () => {
 
   it('should handle errors and navigate to unauthorized page', async () => {
     localStorageServiceSpy.isAuthenticated.and.returnValue(true);
-    globalServiceSpy.getRoleModuleMappingData.and.returnValue(of(false));
-    globalServiceSpy.getRoleModuleMappingData.and.throwError('Test Error');
+    globalServiceSpy.getUserPermissionData.and.returnValue(of(false));
+    globalServiceSpy.getUserPermissionData.and.throwError('Test Error');
 
     const canActivate = await executeGuard(
       {} as ActivatedRouteSnapshot,

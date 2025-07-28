@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import {
   ActionConstant,
+  ApplicationConstantHtml,
   ApplicationModules,
   ApplicationTableConstants,
   Messages,
@@ -46,7 +47,7 @@ export class UserListComponent implements OnInit {
   @ViewChild(ConfirmationDialogComponent)
   confirmModalComponent!: ConfirmationDialogComponent;
   Modules = ApplicationModules;
-  Module_Actions = ActionConstant;
+  ActionConstant = ActionConstant;
   sourceOrReason: any;
   id: string = '';
 
@@ -69,6 +70,28 @@ export class UserListComponent implements OnInit {
     this.globalService.refreshList$.subscribe((listName: string) => {
       if (listName === ApplicationModules.USER) {
         this.applySearch();
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    document.addEventListener('click', (event: Event) => {
+      const target = event.target as HTMLElement;
+      if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+        const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
+        const rowId = button.getAttribute('data-row-id');
+        debugger
+        if (rowId) {
+          const rowData = this.tableData.find((row) => row['id'] == rowId);
+          if (rowData) {
+            const menuOptions = this.generateOptionsMenu(rowData);
+            this.globalService.showGlobalDropdownMenu(button, menuOptions);
+          }
+        }
+        event.stopPropagation();
+      } else { // Hide global dropdown
+        const globalMenu = document.getElementById('globalDropdownMenu');
+        if (globalMenu) globalMenu.remove();
       }
     });
   }
@@ -96,85 +119,51 @@ export class UserListComponent implements OnInit {
         formatter: this.isLockedFormatter.bind(this),
       },
       {
-        title: "-",
-        field: "-",
-        maxWidth: 50,
+        title: "",
+        field: "",
+        maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const id = cell.getRow().getData()["id"];
-          // this.hideUser(id);
+          this.hideUser(id);
         },
+        hozAlign: "center",
         headerSort: false,
       },
-      {
-        title: "",
-        field: "options",
-        maxWidth: 50,
-        formatter: this.threeDotsFormatter.bind(this),
-        hozAlign: "left",
-        headerSort: false,
-      },
-
     ];
-  }
-  threeDotsFormatter(cell: CellComponent) {
-
-    const rowData = cell.getRow().getData();
-    const rowId = rowData['id'];
-    const optionsMenu = this.generateOptionsMenu(rowData); // Generate dynamic menu for row
-
-    // If no menu items to show
-    if (optionsMenu.length === 0) {
-      return '';
-      // Use this if need to show disabled three dots
-      // return '<button class="action-buttons disabled" title="No Actions Available" disabled><i class="bi bi-three-dots"></i></button>';
+    if (
+      this.globalService.isAccessible(ActionConstant.EDIT)||
+      this.globalService.isAccessible(ActionConstant.DELETE)
+    ) {
+      this.columnConfig.push({
+        title: "",
+        field: "option",
+        maxWidth: 70,
+        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        hozAlign: "center",
+        headerSort: false,
+      });
     }
-
-    return `
-        <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bi bi-three-dots"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end options-menu" aria-labelledby="dropdownMenu${rowId}" id="dropdownMenuItems${rowId}">
-        </ul>
-      `;
   }
+
   generateOptionsMenu(rowData: Record<string, any>) {
     const menu = [];
-    if (
-      // rowData['id'] &&
-      // this.globalService.isAccessible(ApplicationModules.DAY, ActionConstant.EDIT)
-      this.globalService.isAccessible(ActionConstant.EDIT)
-    )
-    {
+    if (this.globalService.isAccessible(ActionConstant.EDIT)) {
       menu.push({
-        label: `<a class="dropdown-item btn-link options-menu-item"
-            data-bs-toggle="modal" data-bs-target="#userDetailsPopup">
-                <i class="bi bi-pencil"></i>
-                  &nbsp;Edit
-                </a>
-                `,
-        action: (_e: any, cell: CellComponent) => {
-          const expenseData = cell.getRow().getData();
-          const expenseId = expenseData["id"];
-          this.openUserDetailsPopup(expenseId);
+        label: ApplicationConstantHtml.EDIT_LABLE,
+        action: () => {
+          this.openUserDetailsPopup(rowData['id']);
         },
-
       });
     }
+    if (this.globalService.isAccessible(ActionConstant.DELETE)) {
       menu.push({
-        label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
-                  <i class="bi bi-trash"></i>
-                    &nbsp;Delete
-                  </a>
-                  `,
-        action: (_e: any, cell: CellComponent) => {
-          const expenseData = cell.getRow().getData();
-          const id = expenseData["id"];
-          this.deactivateUser(id, id);
+        label: ApplicationConstantHtml.DELETE_LABLE,
+        action: () => {
+          this.deactivateUser(rowData['id'], true);
         },
       });
-    
+    }
     return menu;
   }
 
@@ -237,7 +226,9 @@ export class UserListComponent implements OnInit {
   }
 
   handleConfirmResult(result: boolean) {
-    if (result) { }
+    if (result) {
+      //add logic for activate / deactivate
+    }
   }
 
   loadGrid() {
@@ -257,6 +248,12 @@ export class UserListComponent implements OnInit {
         console.error(Messages.ERROR_IN_FETCH_USER, error);
         this.loaderService.hideLoader();
       },
+    });
+  }
+
+  hideUser(userId: any) {
+    this.filteredTableData = this.filteredTableData.filter((item: any) => {
+      return item.id != userId;
     });
   }
 

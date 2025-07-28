@@ -33,7 +33,7 @@ import { DateUtils } from "../../../utils/date-utils";
 })
 export class ExpenseDetailsComponent {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
-  @ViewChild("btnCloseExpenseDetailsPopup") btnCloseExpensePopup!: ElementRef;
+  @ViewChild("btnCloseDetailsPopup") btnCloseExpensePopup!: ElementRef;
   @Input() lastExpenseDate!: Date; // Receiving lastExpenseDate from parent
 
   expenseDetailsForm: FormGroup;
@@ -98,7 +98,7 @@ export class ExpenseDetailsComponent {
   openDetailsPopup(expenseId: string) {
     this.expenseDetailsForm?.reset();
     this.loaderService.showLoader();
-    const model = document.getElementById("expenseDetailsPopup");
+    const model = document.getElementById("detailsPopup");
     if (model !== null) {
       model.style.display = "block";
     }
@@ -117,7 +117,7 @@ export class ExpenseDetailsComponent {
   }
 
   closePopup() {
-    const model = document.getElementById("expenseDetailsPopup");
+    const model = document.getElementById("detailsPopup");
     if (model !== null) {
       model.style.display = "none";
     }

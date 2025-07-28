@@ -4,7 +4,7 @@ import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-
 import { CommonModule } from '@angular/common';
 import { API_URL } from '../../../utils/api-url';
 import { ColumnDefinition, CellComponent } from 'tabulator-tables';
-import { ActionConstant, ApplicationTableConstants, NavigationURLs } from '../../../utils/application-constants';
+import { ActionConstant, ApplicationConstantHtml, ApplicationTableConstants, NavigationURLs } from '../../../utils/application-constants';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
@@ -36,42 +36,10 @@ export class CurrencyCoinComponent implements OnInit {
   currencyCoinId: string = '';
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
-  public tableColumnConfig: ColumnDefinition[] = [];
+  public columnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-
-  optionsMenu = [
-    {
-      label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#currencyCoinDetailsPopup">
-                  <i class="bi bi-pencil"></i>
-                    &nbsp;Edit
-                  </a>
-                  `,
-      action: (_e: any, cell: CellComponent) => {
-        const collectionCoinData = cell.getRow().getData();
-        const collectionCoinId = collectionCoinData["id"];
-        this.currencyCoinDetails(collectionCoinId);
-      },
-    },
-    {
-      separator: true,
-    },
-    {
-      label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
-                  <i class="bi bi-trash"></i>
-                    &nbsp;Delete
-                  </a>
-                  `,
-      action: (_e: any, cell: CellComponent) => {
-        const collectionCoinData = cell.getRow().getData();
-        const collectionCoinId = collectionCoinData["id"];
-        this.deleteCurrencyCoin(collectionCoinId);
-      },
-    },
-  ];
 
   constructor(
     private router: Router,
@@ -82,7 +50,7 @@ export class CurrencyCoinComponent implements OnInit {
 
   ngOnInit() {
     this.loaderService.showLoader();
-    this.collectionCoinColumnConfiguration();
+    this.columnConfiguration();
     this.globalService.getCountryList().subscribe({
       next: (res: any) => {
         this.countryList = res;
@@ -108,8 +76,8 @@ export class CurrencyCoinComponent implements OnInit {
 
   }
 
-  collectionCoinColumnConfiguration() {
-    this.tableColumnConfig = [
+  columnConfiguration() {
+    this.columnConfig = [
       {
         title: "Coin/Note Name",
         field: "coinNoteName",
@@ -143,9 +111,9 @@ export class CurrencyCoinComponent implements OnInit {
         sorter: "alphanum",
       },
       {
-        title: "-",
-        field: "-",
-        maxWidth: 50,
+        title: "",
+        field: "",
+        maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
@@ -153,17 +121,21 @@ export class CurrencyCoinComponent implements OnInit {
         },
         headerSort: false,
       },
-      {
-        title: "",
-        field: "",
-        maxWidth: 50,
-        formatter: (_cell) =>
-          '<button class="action-buttons" title="More Actions" style="padding-right:0px;"><i class="bi bi-three-dots btn-link"></i></button>',
-        clickMenu: this.optionsMenu,
-        hozAlign: "left",
-        headerSort: false,
-      },
     ];
+    if (
+      this.globalService.isAccessible(ActionConstant.EDIT)||
+      this.globalService.isAccessible(ActionConstant.DELETE)
+    ) {
+      this.columnConfig.push({
+        title: "",
+        field: "option",
+        maxWidth: 70,
+        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        hozAlign: "center",
+        headerSort: false,
+      });
+    }
+
   }
 
     ngAfterViewInit() {
@@ -197,12 +169,7 @@ export class CurrencyCoinComponent implements OnInit {
       this.globalService.isAccessible(ActionConstant.EDIT)
     ) {
       menu.push({
-        label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#dayDetailsPopup">
-                  <i class="bi bi-pencil"></i>
-                    &nbsp;Edit
-                  </a>
-                  `,
+        label: ApplicationConstantHtml.EDIT_LABLE,
         action: () => {
           this.currencyCoinDetails(rowData['id']);
         },
@@ -212,12 +179,7 @@ export class CurrencyCoinComponent implements OnInit {
       this.globalService.isAccessible(ActionConstant.DELETE)
     ) {
       menu.push({
-        label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#confirmationPopup">
-                  <i class="bi bi-trash"></i>
-                    &nbsp;Delete
-                  </a>
-                  `,
+        label: ApplicationConstantHtml.DELETE_LABLE,
         action: () => {
           this.deleteCurrencyCoin(rowData['id']);
         },

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { API_URL } from '../../../utils/api-url';
-import { DBConstants, NavigationURLs } from '../../../utils/application-constants';
+import { ActionConstant, DBConstants, NavigationURLs } from '../../../utils/application-constants';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
@@ -36,6 +36,7 @@ export class CurrencyGalleryComponent implements OnInit {
   selectedCountries: string[] = []; // Array to store selected months
   lableForTypeDropDown = "";
   lableForCountryDropDown: string = '';
+ActionConstant= ActionConstant;
 
   constructor(
     private router: Router,

@@ -14,7 +14,7 @@ describe('moduleAccessGuard', () => {
     TestBed.runInInjectionContext(() => moduleAccessGuard(route, {} as any));
 
   beforeEach(() => {
-    const localStorageSpy = jasmine.createSpyObj('LocalStorageService', ['getRoleModuleMapping']);
+    const localStorageSpy = jasmine.createSpyObj('LocalStorageService', ['getUserPermission']);
     const routerMock = jasmine.createSpyObj('Router', ['navigate']);
     const globalErrorHandlerMock = jasmine.createSpyObj('GlobalErrorHandlerService', ['handleError']);
 
@@ -54,7 +54,7 @@ describe('moduleAccessGuard', () => {
     const userPermissions = [
       { moduleName: 'userPermissions', view: true },
     ];
-    localStorageServiceSpy.getRoleModuleMapping.and.returnValue(userPermissions);
+    localStorageServiceSpy.getUserPermission.and.returnValue(userPermissions);
 
     const route = createActivatedRouteSnapshot({ moduleName: 'userPermissions' });
 
@@ -68,7 +68,7 @@ describe('moduleAccessGuard', () => {
     const userPermissions = [
       { moduleName: 'userPermissions', view: false },
     ];
-    localStorageServiceSpy.getRoleModuleMapping.and.returnValue(userPermissions);
+    localStorageServiceSpy.getUserPermission.and.returnValue(userPermissions);
 
     const route = createActivatedRouteSnapshot({ moduleName: 'userPermissions' });
 
@@ -82,7 +82,7 @@ describe('moduleAccessGuard', () => {
     const userPermissions = [
       { moduleName: 'Auth', view: true },
     ];
-    localStorageServiceSpy.getRoleModuleMapping.and.returnValue(userPermissions);
+    localStorageServiceSpy.getUserPermission.and.returnValue(userPermissions);
 
     const route = createActivatedRouteSnapshot({ moduleName: 'NonExistentModule' });
 
@@ -93,7 +93,7 @@ describe('moduleAccessGuard', () => {
   });
 
   it('should deny access and navigate to error page if userPermissions is empty', () => {
-    localStorageServiceSpy.getRoleModuleMapping.and.returnValue([]);
+    localStorageServiceSpy.getUserPermission.and.returnValue([]);
 
     const route = createActivatedRouteSnapshot({ moduleName: 'userPermissions' });
 
@@ -104,7 +104,7 @@ describe('moduleAccessGuard', () => {
   });
 
   it('should call GlobalErrorHandlerService if an error occurs', () => {
-    localStorageServiceSpy.getRoleModuleMapping.and.throwError('Error getting role mappings');
+    localStorageServiceSpy.getUserPermission.and.throwError('Error getting role mappings');
 
     const route = createActivatedRouteSnapshot({ moduleName: 'userPermissions' });
 

@@ -38,7 +38,7 @@ import { DateUtils } from "../../../utils/date-utils";
 })
 export class DayDetailsComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
-  @ViewChild("btnCloseDayDetailsPopup") btnCloseDayPopup!: ElementRef;
+  @ViewChild("btnCloseDetailsPopup") btnCloseDayPopup!: ElementRef;
   startDate = new Date();
   dayDetailsForm: FormGroup;
   user: any;
@@ -265,7 +265,7 @@ export class DayDetailsComponent implements OnInit {
       },
     });
 
-    const model = document.getElementById("dayDetailsPopup");
+    const model = document.getElementById("detailsPopup");
     if (model !== null) {
       model.style.display = "block";
       this.loaderService.hideLoader();
@@ -275,7 +275,7 @@ export class DayDetailsComponent implements OnInit {
     }
   }
   closePopup() {
-    const model = document.getElementById("dayDetailsPopup");
+    const model = document.getElementById("detailsPopup");
     if (model !== null) {
       model.style.display = "none";
     }
@@ -326,7 +326,8 @@ export class DayDetailsComponent implements OnInit {
   }
 
   addOrUpdateDayDetails() {
-    
+    if(!this.specialOccasionRequest.assetId)
+      this.specialOccasionRequest.assetId = null
     if (this.specialOccasionRequest.id) {
       this.updateDayDetails();
       this.formData = new FormData();

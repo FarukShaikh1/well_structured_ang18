@@ -118,7 +118,7 @@ export const API_URL = {
   REACTIVATE_USER: `${serverUrl}${apiPrefix}/auth/reactivateuser?userid=`,
   VERIFY_OTP: `${serverUrl}${apiPrefix}/auth/verifyotp?emailId={0}&otpCode={1}`,
 
-  // Role-Module-Mapping URLs
+  // user-permission URLs
   UPDATE_ROLE_MODULE_MAPPING: `${serverUrl}${apiPrefix}/userPermissions/updaterolemodulemapping`,
   GET_MODULE_MAPPED_TO_LOGGEDIN_USER: `${serverUrl}${apiPrefix}/userPermissions/getmodulemappedtologgedinuser`,
   GET_ROLE_MODULE_MAPPING_BY_ROLE_ID: `${serverUrl}${apiPrefix}/userPermissions/getmodulemappedbyroleid?roleId=`,
