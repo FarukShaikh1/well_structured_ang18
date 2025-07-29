@@ -27,7 +27,6 @@ export class UserPermissionComponent implements OnInit {
   ngOnInit() {
     this.loaderService.showLoader();
     this.getUserList();
-    this.getPermission('c3d0a1d1-78f3-4128-8c22-c394ad7f55e5');
   }
 
   changeUser(event: Event) {

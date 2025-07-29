@@ -37,7 +37,7 @@ export const API_URL = {
   GET_EXPENSE_SUGGESTION_LIST: `${serverUrl}${apiPrefix}/expense/GetExpenseSuggestionList`,
   GET_AVAIL_AMOUNT: `${serverUrl}${apiPrefix}/expense/getAvailAmount`,
 
-  GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/commonList/getCommonListItems?commonListId=`,
+  GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/commonList/getCommonListItem`,
   GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/GetCountryList`,
   GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetUserPermission?userId=`,
   GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,

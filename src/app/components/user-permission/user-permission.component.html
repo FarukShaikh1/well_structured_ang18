@@ -7,6 +7,7 @@
         class="form-select form-control-lg text-dark bg-transparent"
         (change)="changeUser($event)"
       >
+        <option value="">Select User</option>
         @for(item of userList;track $index){
         <option value="{{ item.id }}">{{ item.firstName + ' ' +item.lastName }}</option>
         }
