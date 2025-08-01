@@ -8,6 +8,7 @@ import { CurrencyGalleryComponent } from "./components/currency-gallery/currency
 import { CurrencySummaryComponent } from "./components/currency-summary/currency-summary.component";
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
+import { SettingsComponent } from "./components/settings/settings.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -89,11 +90,10 @@ export const routes: Routes = [
         data: { moduleName: ApplicationModules.ROLE_MODULE_MAPPING },
       },
       {
-        path: "user-details",
-        loadComponent: () =>
-          import("./components/user-details/user-details.component").then(
-            (m) => m.UserDetailsComponent
-          ),
+        path: "settings",
+        title: "Settings",
+        component: SettingsComponent,
+        // canActivate: [moduleAccessGuard],
       },
       {
         path: "change-password",

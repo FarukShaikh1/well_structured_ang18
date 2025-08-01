@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as forms from '@angular/forms';
 import { Router } from '@angular/router';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
@@ -29,7 +29,7 @@ import { UserDetailsComponent } from '../user-details/user-details.component';
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
   providers: [],
-})
+})  
 export class UserListComponent implements OnInit {
   @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
   @ViewChild('searchInput') searchInput!: ElementRef;
@@ -97,13 +97,11 @@ export class UserListComponent implements OnInit {
   }
 
   columnConfiguration() {
-
     this.columnConfig = [
       {
         title: 'Name',
         field: 'firstName',
         sorter: 'string',
-        formatter: this.nameFormatter.bind(this),
       },
       { title: 'Email Id', field: 'emailAddress', sorter: 'string' },
       {
@@ -116,7 +114,7 @@ export class UserListComponent implements OnInit {
         title: 'Statussss',
         field: 'isLocked',
         sorter: 'string',
-        formatter: this.isLockedFormatter.bind(this),
+        formatter: this.globalService.statusFormatter.bind(this),
       },
       {
         title: "",
@@ -165,34 +163,6 @@ export class UserListComponent implements OnInit {
       });
     }
     return menu;
-  }
-
-  nameFormatter(cell: CellComponent) {
-    // const firstName = cell.getColumn().getField();
-    const userData = cell.getRow().getData();
-    const columnValue = userData['firstName'] + ' ' + userData['lastName'];
-    return `<span class="name-col-values">${cell.getValue()}</span>`;
-  }
-
-  statusFormatter(cell: CellComponent) {
-    const statusValue = cell.getValue();
-    if (statusValue) {
-      this.columnConfig[4].visible = false;
-      return '<span style="color:gray">Inactive</span>';
-    } else {
-      return '<span style="color:#ff7a00">Active</span>';
-    }
-  }
-
-  isLockedFormatter(cell: CellComponent) {
-    const columnName = cell.getColumn().getField();
-    const userData = cell.getRow().getData();
-    const columnValue = userData[columnName];
-    if (columnValue) {
-      return '<span style="color:gray">Locked</span>';
-    } else {
-      return '<span style="color:#ff7a00">Active</span>';
-    }
   }
 
   viewUserProfile(id: string | null | undefined) {

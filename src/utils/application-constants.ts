@@ -242,7 +242,8 @@ export const ApplicationRoles = {
     Platform_Admin: 'Platform Admin',
     Finance_User: 'Finance User',
     Sample_Management_User: 'Sample Management User',
-    External_Expense: 'External Expense'
+    External_Expense: 'External Expense',
+    SUPER_ADMIN: 'Super Admin'
 };
 export const DBConstants = {
     DAYTYPE: 'B37BB6EC-F172-4EEF-BB70-C0FD5C47FCEA',

@@ -23,7 +23,7 @@ export const authGuard: CanActivateFn = async (
   }
 
   try {
-    
+    debugger;
     if (localStorageService.isAuthenticated()) {
       
       let isAuthorized = localStorageService.isUserAuthorized();

@@ -65,7 +65,7 @@ export class GlobalService {
   }
 
   getUserPermissionData(): Observable<boolean> {
-    
+
     return this.roleService.getLoggedInUserPermissions().pipe(
       map((result) => {
         if (result) {
@@ -106,15 +106,15 @@ export class GlobalService {
   AccessibleModuleList(): ModuleResponse[] {
     const permissions = this.localStorageService.getUserPermission();
     return permissions
-    .filter((m: any) => m.view === true)
-    .map((m: any) => ({
-      moduleName: m.moduleName,
-      route: m.route,
-      isVisible: true, // Since view = true, mark as visible
-      displayOrder: m.displayOrder ?? 0, // fallback to 0 if undefined
-      iconClass: m.iconClass || ''       // fallback to empty string if undefined
-    }));
-        }
+      .filter((m: any) => m.view === true)
+      .map((m: any) => ({
+        moduleName: m.moduleName,
+        route: m.route,
+        isVisible: true, // Since view = true, mark as visible
+        displayOrder: m.displayOrder ?? 0, // fallback to 0 if undefined
+        iconClass: m.iconClass || ''       // fallback to empty string if undefined
+      }));
+  }
 
   isPermitted(roles: string[]) {
     const user = this.localStorageService.getLoggedInUserData();
@@ -183,52 +183,62 @@ export class GlobalService {
     return `<button class="action-buttons" title="Hide"><i class="bi bi-dash-lg btn-link"></i></button>`;
   }
 
-
-    showGlobalDropdownMenu(button: HTMLElement, menuOptions: any) {
-      
-      // Remove any existing menu
-      const oldMenu = document.getElementById('globalDropdownMenu');
-      if (oldMenu) oldMenu.remove();
-  
-      // Create menu
-      const menu = document.createElement('ul');
-      menu.className = 'dropdown-menu show options-menu';
-      menu.id = 'globalDropdownMenu';
-      menu.style.position = 'absolute';
-      menu.style.zIndex = '9999';
-  
-      // Populate menu
-      menuOptions.forEach((option: any) => {
-        const menuItem = document.createElement('li');
-        menuItem.innerHTML = `<a class="dropdown-item" href="#">${option.label}</a>`;
-        menuItem.addEventListener('click', (event) => {
-          event.preventDefault();
-          option.action();
-          menu.remove();
-        });
-        menu.appendChild(menuItem);
-      });
-  
-      // Position menu
-      const rect = button.getBoundingClientRect();
-      menu.style.top = `${rect.bottom + window.scrollY}px`;
-      menu.style.left = `${rect.left + window.scrollX-70}px`;
-  
-      // Append to body
-      document.body.appendChild(menu);
+  statusFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const userData = cell.getRow().getData();
+    const columnValue = userData[columnName];
+    if (columnValue) {
+      return '<span style="color:gray">Locked</span>';
+    } else {
+      return '<span style="color:#ff7a00">Active</span>';
     }
-  
-      threeDotsFormatter(cell: CellComponent) {
-        debugger
-        const rowData = cell.getRow().getData();
-        const rowId = rowData['id'];
-        return `
+  }
+
+  showGlobalDropdownMenu(button: HTMLElement, menuOptions: any) {
+
+    // Remove any existing menu
+    const oldMenu = document.getElementById('globalDropdownMenu');
+    if (oldMenu) oldMenu.remove();
+
+    // Create menu
+    const menu = document.createElement('ul');
+    menu.className = 'dropdown-menu show options-menu';
+    menu.id = 'globalDropdownMenu';
+    menu.style.position = 'absolute';
+    menu.style.zIndex = '9999';
+
+    // Populate menu
+    menuOptions.forEach((option: any) => {
+      const menuItem = document.createElement('li');
+      menuItem.innerHTML = `<a class="dropdown-item" href="#">${option.label}</a>`;
+      menuItem.addEventListener('click', (event) => {
+        event.preventDefault();
+        option.action();
+        menu.remove();
+      });
+      menu.appendChild(menuItem);
+    });
+
+    // Position menu
+    const rect = button.getBoundingClientRect();
+    menu.style.top = `${rect.bottom + window.scrollY}px`;
+    menu.style.left = `${rect.left + window.scrollX - 70}px`;
+
+    // Append to body
+    document.body.appendChild(menu);
+  }
+
+  threeDotsFormatter(cell: CellComponent) {
+    debugger
+    const rowData = cell.getRow().getData();
+    const rowId = rowData['id'];
+    return `
         <div class="dropdown" style="position: relative;">
           <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}">
             <i class="bi bi-three-dots"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end options-menu" id="dropdownMenuItems${rowId}"></ul>
         </div>`;
-      }
-    
+  }
+
 }

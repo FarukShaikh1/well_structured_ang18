@@ -48,6 +48,13 @@ export const API_URL = {
   GET_LOGGED_IN_USER_DETAILS: `${serverUrl}${apiPrefix}/auth/getloggedinuserdetails`,
   Get_USER_DETAILS: `${serverUrl}${apiPrefix}/user/GetDetails?userId=`,
 
+  GET_ACCOUNT_LIST: `${serverUrl}${apiPrefix}/settings/GetAccountList?userId=`,
+  GET_RELATION_LIST: `${serverUrl}${apiPrefix}/settings/GetRelationList?userId=`,
+  GET_OCCASION_TYPE_LIST: `${serverUrl}${apiPrefix}/settings/GetOccasionTypeList?userId=`,
+
+  GET_ACCOUNT_DETAILS: `${serverUrl}${apiPrefix}/settings/GetAccountDetails?id=`,
+  GET_RELATION_DETAILS: `${serverUrl}${apiPrefix}/settings/GetRelationDetails?id=`,
+  GET_OCCASION_TYPE_DETAILS: `${serverUrl}${apiPrefix}/settings/GetOccasionTypeDetails?id=`,
 
   // //Non verified 
   REGISTER_USER: `${serverUrl}${apiPrefix}/auth/register`,
@@ -57,4 +64,5 @@ export const API_URL = {
   FORGOT_PASSWORD: `${serverUrl}${apiPrefix}/auth/forgotpassword`,
   VERIFY_OTP: `${serverUrl}${apiPrefix}/auth/verifyotp?emailId={0}&otpCode={1}`,
   LOGIN: `${serverUrl}${apiPrefix}/user/Login`,
+
 };
