@@ -270,11 +270,9 @@ export class DayComponent implements OnInit {
     document.addEventListener('click', (event: Event) => {
       const target = event.target as HTMLElement;
       if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
-        debugger
         const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
         const rowId = button.getAttribute('data-row-id');
         if (rowId) {
-          debugger
           const rowData = this.tableData.find((row) => row['id'] == rowId);
           if (rowData) {
             const menuOptions = this.generateOptionsMenu(rowData);

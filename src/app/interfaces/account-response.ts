@@ -3,6 +3,6 @@ export interface AccountResponse {
   accountName?: string;
   description?: string;
   displayOrder?: number;
-  isActive?: boolean;
+  isActive?: boolean  ;
   userId?: string;
 }

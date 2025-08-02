@@ -56,6 +56,12 @@ export const LoaderConfigs = {
     TIMEOUT: 10000, // MS
 };
 
+    export const UserConfig = {
+        ACCOUNT:'Account',
+        RELATION: 'Relation',
+        OCCASION_TYPE: 'OccasionType',
+    };
+
 export const ApplicationConstantHtml = {
     DELETE_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#confirmationPopup"><i class="bi bi-trash"></i>&nbsp;Delete</a>`,
     EDIT_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#detailsPopup"><i class="bi bi-pencil"></i>&nbsp;Edit</a>`,
@@ -64,6 +70,7 @@ export const ApplicationConstantHtml = {
     UPLOAD_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-upload"></i>&nbsp;Upload</a>`,
     APPROVE_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-check2"></i>&nbsp;Approve</a>`,
     REJECT_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-x-circle"></i>&nbsp;Reject</a>`,
+    CONFIG_EDIT_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#configDetailsPopup"><i class="bi bi-pencil"></i>&nbsp;Edit</a>`,
 }
 export const NavigationURLs = {
     LOGIN: '/login',
@@ -227,6 +234,7 @@ export const ApplicationModules = {
     USER: 'AUTH',
     DOCUMENT: 'Documents',
     ROLE_MODULE_MAPPING: 'userPermissions',
+    SETTINGS: 'Settings',
 };
 
 export const ActionConstant = {

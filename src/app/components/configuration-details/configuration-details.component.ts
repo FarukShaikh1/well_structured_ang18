@@ -12,6 +12,7 @@ import {
   ApplicationModules,
   Messages
 } from '../../../utils/application-constants';
+import { ConfigurationRequest } from '../../interfaces/configuration-request';
 import { ConfigurationService } from '../../services/configuration/configuration.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
@@ -25,6 +26,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
   styleUrl: './configuration-details.component.css',
 })
 export class ConfigurationDetailsComponent {
+  @ViewChild("btnCloseDetailsPopup") btnCloseDayPopup!: ElementRef;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild('btnCloseAccountPopup') btnCloseAccountPopup!: ElementRef;
   @Input() tableData: Record<string, unknown>[] | undefined;
@@ -32,6 +34,13 @@ export class ConfigurationDetailsComponent {
   roleList: any;
   roleListoriginal: any;
   Messages = Messages;
+  configurationRequest: ConfigurationRequest = {
+    id: '',
+    configurationName: '',
+    description: '',
+    displayOrder: 0,
+  };
+  currentConfig: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -49,8 +58,10 @@ export class ConfigurationDetailsComponent {
   }
 
 
-  openDetailsPopup(config:string,id: string) {
-    this.getConfigDetailsById(config, id);
+  openDetailsPopup(id: string, config: string) {
+    debugger
+    this.currentConfig = config;
+    this.getConfigDetailsById(id, config);
     const model = document.getElementById('configDetailsPopup');
     if (model !== null) {
       model.style.display = 'block';
@@ -69,15 +80,66 @@ export class ConfigurationDetailsComponent {
     this.configForm?.reset();
   }
 
-  onSubmit() {
+  onSubmit(config:string) {
     this.globalService.trimAllFields(this.configForm);
     if (this.configForm.invalid) {
       return;
     }
+
+    this.configurationRequest = {
+      id: this.configForm.value.id,
+      configurationName: this.configForm.value.configurationName,
+      description: this.configForm.value.configurationDescription,
+      displayOrder: this.configForm.value.displaySequence,
+    };
     this.loaderService.showLoader();
-    const formValue = this.configForm.value;
-    const payload = { ...formValue };
-    this.configurationService.updateAccount(payload).subscribe(this.handleApiResponse());
+    if (this.configurationRequest.id) {
+      this.updateConfigDetails(this.configurationRequest,config);
+    }
+    else {
+      this.configurationRequest.id = null;
+    this.addConfigDetails(this.configurationRequest, config);
+    }
+  }
+
+  addConfigDetails(request: ConfigurationRequest, config: string) {
+    this.configurationService.addConfiguration(request, config).subscribe({
+      next: () => {
+        this.toaster.showMessage("Record Added Successfully.", "success");
+        this.loaderService.hideLoader();
+        this.renderer
+          .selectRootElement(this.btnCloseDayPopup?.nativeElement)
+          .click();
+        // this.globalService.triggerGridReload(ApplicationModules.DAY);
+      },
+      error: (error: any) => {
+        this.loaderService.hideLoader();
+        this.toaster.showMessage("Some issue is in Add the data.", "error");
+        return;
+      },
+    });
+    this.resetForm();
+    this.closePopup();
+    this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
+    
+  }
+
+  updateConfigDetails(request: ConfigurationRequest, config: string) {
+    this.configurationService.updateConfiguration(request, config).subscribe({
+      next: () => {
+        this.toaster.showMessage("Record Updated Successfully.", "success");
+        this.loaderService.hideLoader();
+        this.renderer
+          .selectRootElement(this.btnCloseDayPopup?.nativeElement)
+          .click();
+        // this.globalService.triggerGridReload(ApplicationModules.DAY);
+      },
+      error: (error: any) => {
+        this.loaderService.hideLoader();
+        this.toaster.showMessage("Some issue is in update the data.", "error");
+        return;
+      },
+    });
   }
 
   handleApiResponse() {
@@ -103,17 +165,15 @@ export class ConfigurationDetailsComponent {
     };
   }
 
-  getConfigDetailsById(config:string='', id: string='') {
-        debugger;
-    this.configurationService?.getConfigDetailsById(config, id).subscribe({
+  getConfigDetailsById(id: string = '',config: string = '') {
+    this.configurationService?.getConfigDetailsById(id, config).subscribe({
       next: (result: any) => {
-        debugger;
         this.loaderService.showLoader();
         this.configForm.patchValue({
           id: result.id,
           configurationName: result.configurationName,
-          description: result.description,
-          displaySequence: result.displaySequence,
+          configurationDescription: result.description,
+          displaySequence: result.displayOrder,
         });
         this.loaderService.hideLoader();
       },

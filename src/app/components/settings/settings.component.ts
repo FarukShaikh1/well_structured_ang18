@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { ActionConstant, ApplicationConstantHtml, ApplicationTableConstants, Messages } from "../../../utils/application-constants";
+import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, Messages, UserConfig } from "../../../utils/application-constants";
 import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { GlobalService } from '../../services/global/global.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
@@ -14,7 +14,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, TabulatorGridComponent,ConfigurationDetailsComponent],
+  imports: [CommonModule, TabulatorGridComponent, ConfigurationDetailsComponent],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
@@ -46,7 +46,7 @@ export class SettingsComponent {
   accountTableData: Record<string, unknown>[] = [];
   relationTableData: Record<string, unknown>[] = [];
   occasionTypeTableData: Record<string, unknown>[] = [];
-
+  UserConfig = UserConfig;
   isSuperAdmin = false;
   configOptionsMenu = [
     {
@@ -74,6 +74,7 @@ export class SettingsComponent {
       },
     },
   ];
+  currentConfig: string='';
 
   constructor(
     private configurationService: ConfigurationService,
@@ -83,7 +84,6 @@ export class SettingsComponent {
   ) { }
 
   ngOnInit() {
-    debugger;
     var data = this.localStorageService.getLoggedInUserData();
     var userId = data?.id;
     if (data.roleName !== 'Super Admin') {
@@ -92,10 +92,21 @@ export class SettingsComponent {
     }
     else {
       this.isSuperAdmin = false;
-      this.loadAccountGrid(userId);
-      this.loadRelationGrid(userId);
-      this.loadOccasionTypeGrid(userId);
+      this.loadConfigGrid(userId, UserConfig.ACCOUNT);
+      this.loadConfigGrid(userId, UserConfig.OCCASION_TYPE);
+      this.loadConfigGrid(userId, UserConfig.RELATION);
     }
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.SETTINGS) {
+        this.loadConfigGrid(userId, this.currentConfig);
+      }
+    });
+    // this.globalService.refreshList$.subscribe((listName: string) => {
+    //   if (listName === ApplicationModules.SETTINGS) {
+    //     this.applyFilters();
+    //   }
+    // });
+
   }
 
   ngAfterViewInit() {
@@ -104,21 +115,20 @@ export class SettingsComponent {
       if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
         const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
         const rowId = button.getAttribute('data-row-id');
-        debugger
         if (rowId) {
           const accountRowData = this.accountTableData.find((row) => row['id'] == rowId);
           const relationRowData = this.relationTableData.find((row) => row['id'] == rowId);
           const OccasionTypeRowData = this.occasionTypeTableData.find((row) => row['id'] == rowId);
           if (accountRowData) {
-            const menuOptions = this.generateOptionsMenu(accountRowData,'account');
+            const menuOptions = this.generateOptionsMenu(accountRowData, UserConfig.ACCOUNT);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           }
           else if (relationRowData) {
-            const menuOptions = this.generateOptionsMenu(relationRowData,'relation');
+            const menuOptions = this.generateOptionsMenu(relationRowData, UserConfig.RELATION);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           }
           else if (OccasionTypeRowData) {
-            const menuOptions = this.generateOptionsMenu(OccasionTypeRowData, 'occasiontype');
+            const menuOptions = this.generateOptionsMenu(OccasionTypeRowData, UserConfig.OCCASION_TYPE);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           }
         }
@@ -130,37 +140,49 @@ export class SettingsComponent {
     });
   }
 
-  generateOptionsMenu(rowData: Record<string, any>,config:string) {
+  generateOptionsMenu(rowData: Record<string, any>, config: string) {
     const menu = [];
     menu.push({
-      label: ApplicationConstantHtml.EDIT_LABLE,
+      label: ApplicationConstantHtml.CONFIG_EDIT_LABLE,
       action: () => {
-        this.openDetailPopup(config, rowData['id']);
+        this.openDetailPopup(rowData['id'], config);
       },
     });
     if (rowData['isUsed'] === false) {
       menu.push({
         label: ApplicationConstantHtml.DELETE_LABLE,
         action: () => {
-          this.deleteItem(config,rowData['id']);
+          this.deleteItem(rowData['id'], config);
         },
       });
     }
     return menu;
   }
 
-  openDetailPopup(config: string, id: string) {
-    debugger
-    this.configDetailsComponent.openDetailsPopup(config, id);
+  openDetailPopup(id: string, config: string) {
+    this.currentConfig = config; 
+    this.configDetailsComponent.openDetailsPopup(id, config);
   }
 
-  loadAccountGrid(userId: string) {
+  loadConfigGrid(userId: string, config: string) {
     this.accountColumnConfiguration();
-    this.configurationService.getAccounts(userId).subscribe({
+    this.relationColumnConfiguration();
+    this.occasionTypeColumnConfiguration();
+    this.configurationService.getConfigList(userId, config).subscribe({
       next: (result: any) => {
         debugger
-        this.filteredAccountTableData = result;
-        this.accountTableData = result;
+        if (config === UserConfig.ACCOUNT) {
+          this.filteredAccountTableData = result;
+          this.accountTableData = result;
+        }
+        else if (config === UserConfig.RELATION) {
+          this.filteredRelationTableData = result;
+          this.relationTableData = result;
+        }
+        else if (config === UserConfig.OCCASION_TYPE) {
+          this.filteredOccasionTypeTableData = result;
+          this.occasionTypeTableData = result;
+        }
       },
       error: (error: any) => {
         console.error('Error fetching user list', error);
@@ -184,41 +206,6 @@ export class SettingsComponent {
       },
     });
   }
-
-  loadRelationGrid(userId: string) {
-    this.relationColumnConfiguration();
-    this.configurationService.getRelationTypes(userId).subscribe({
-      next: (result: any) => {
-        if (result) {
-          this.filteredRelationTableData = result;
-          this.relationTableData = result;
-        } else {
-          console.error(Messages.ERROR_IN_FETCH_USER);
-        }
-      },
-      error: (error: any) => {
-        console.error(Messages.ERROR_IN_FETCH_USER, error);
-      },
-    });
-  }
-
-  loadOccasionTypeGrid(userId: string) {
-    this.occasionTypeColumnConfiguration();
-    this.configurationService.getOccasionTypes(userId).subscribe({
-      next: (result: any) => {
-        if (result) {
-          this.filteredOccasionTypeTableData = result;
-          this.occasionTypeTableData = result;
-        } else {
-          console.error(Messages.ERROR_IN_FETCH_USER);
-        }
-      },
-      error: (error: any) => {
-        console.error(Messages.ERROR_IN_FETCH_USER, error);
-      },
-    });
-  }
-
 
   userColumnConfiguration() {
     this.userColumnConfig = [
@@ -272,7 +259,7 @@ export class SettingsComponent {
     this.accountColumnConfig = [
       {
         title: 'Account Name',
-        field: 'accountName',
+        field: 'configurationName',
         sorter: 'string',
       },
       { title: 'Description', field: 'description', sorter: 'string' },
@@ -331,7 +318,7 @@ export class SettingsComponent {
     this.occasionTypeColumnConfig = [
       {
         title: 'OccasionType Name',
-        field: 'occasionTypeName',
+        field: 'configurationName',
         sorter: 'string',
       },
       { title: 'Description', field: 'description', sorter: 'string' },
@@ -379,7 +366,7 @@ export class SettingsComponent {
     this.relationColumnConfig = [
       {
         title: 'RelationType Name',
-        field: 'accountName',
+        field: 'configurationName',
         sorter: 'string',
       },
       { title: 'Description', field: 'description', sorter: 'string' },
@@ -463,7 +450,7 @@ export class SettingsComponent {
   deleteRole(roleId: number) {
   }
 
-  deleteItem(config:string,id:string){
+  deleteItem(id: string, config: string) {
 
   }
 

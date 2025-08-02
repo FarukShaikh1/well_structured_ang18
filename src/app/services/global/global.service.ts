@@ -229,7 +229,6 @@ export class GlobalService {
   }
 
   threeDotsFormatter(cell: CellComponent) {
-    debugger
     const rowData = cell.getRow().getData();
     const rowId = rowData['id'];
     return `

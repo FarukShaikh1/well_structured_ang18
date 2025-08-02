@@ -1,70 +1,53 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { AccountRequest as ConfigRequest } from '../../interfaces/account-request';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { API_URL } from '../../../utils/api-url';
-import { OccasionTypeResponse } from '../../interfaces/occasion-type-response';
-import { OccasionTypeRequest } from '../../interfaces/occasion-type-request';
+import { ConfigurationRequest } from '../../interfaces/configuration-request';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {
   private base = '/api/accounts';
 
-  constructor(private http: HttpClient) { }
-
-  getAccounts(userId: string) {
-    return this.http.get(API_URL.GET_ACCOUNT_LIST + userId);
+  loggedInUserId: string;
+  constructor(private http: HttpClient) {
+    this.loggedInUserId = String(localStorage.getItem("userId"));
   }
 
-  getConfigDetailsById(config: string='', id: string='') {
-    if (config == 'account')
-      return this.http.get(API_URL.GET_ACCOUNT_DETAILS + id);
-    if (config == 'relaton')
-      return this.http.get(API_URL.GET_RELATION_DETAILS + id);
-    if (config == 'occasiontype')
-      return this.http.get(API_URL.GET_OCCASION_TYPE_DETAILS + id);
-    return this.http.get(API_URL.GET_ACCOUNT_LIST + id);
+  getConfigList(userId: string = '', config: string = '') {
+    const params = new HttpParams()
+      .set('userId', userId)
+      .set('config', config);
+    return this.http.get(API_URL.GET_CONFIG_LIST, { params });
   }
 
-  addAccount(config: ConfigRequest) {
-    return this.http.post(this.base, config);
-  }
-  updateAccount(account: ConfigRequest) {
-    return this.http.post(this.base, account);
-  }
-  deleteAccount(id: string) {
-    return this.http.get(API_URL.GET_ACCOUNT_LIST + String(localStorage.getItem("userId")));
+  getConfigDetailsById( id: string = '',config: string = '') {
+    const params = new HttpParams()
+      .set('id', id)
+      .set('config', config);
+    return this.http.get(API_URL.GET_CONFIG_DETAIL, { params });
   }
 
-  getOccasionTypes(userId: string) {
-    return this.http.get(API_URL.GET_OCCASION_TYPE_LIST + userId);
+  addConfiguration(request: ConfigurationRequest, config: string) {
+    debugger;
+    const params = new HttpParams()
+      .set('userId', this.loggedInUserId)
+      .set('config', config);
+    return this.http.post(API_URL.GET_CONFIG_ADD, request, { params });
   }
 
-  addOccasionType(account: OccasionTypeRequest) {
-    return this.http.post(this.base, account);
-  }
-  updateOccasionType(account: OccasionTypeRequest) {
-    return this.http.post(this.base, account);
-  }
-  deleteOccasionType(id: string) {
-    return this.http.get(API_URL.GET_ACCOUNT_LIST + String(localStorage.getItem("userId")));
+  updateConfiguration(request: ConfigurationRequest, config: string) {
+    debugger;
+    const params = new HttpParams()
+      .set('userId', this.loggedInUserId)
+      .set('config', config);
+    return this.http.post(API_URL.GET_CONFIG_UPDATE, request, { params });
   }
 
-
-
-  getRelationTypes(userId: string) {
-    return this.http.get(API_URL.GET_RELATION_LIST + userId);
+  deleteConfiguration(id: string, config: string) {
+    const params = new HttpParams()
+      .set('id', id)
+      .set('userId', this.loggedInUserId)
+      .set('config', config);
+    return this.http.get(API_URL.GET_CONFIG_DELETE, { params });
   }
 
-
-  addRelationType(account: any) {
-    return this.http.post(this.base, account);
-  }
-  updateRelationType(account: any) {
-    return this.http.post(this.base, account);
-  }
-  deleteRelationType(id: string) {
-    return this.http.get(API_URL.GET_ACCOUNT_LIST + String(localStorage.getItem("userId")));
-  }
-  // Add edit/delete as needed
 }

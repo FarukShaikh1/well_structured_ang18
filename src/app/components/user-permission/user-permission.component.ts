@@ -43,7 +43,6 @@ export class UserPermissionComponent implements OnInit {
   getUserList() {
     this.userService.getUserList().subscribe({
       next: (result: any) => {
-        debugger
         this.userList = result;
         this.loaderService.hideLoader();
       },

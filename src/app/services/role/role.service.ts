@@ -19,7 +19,6 @@ export class RoleService {
   }
 
   getLoggedInUserPermissions(): Observable<any> {
-    debugger
     return this.httpService.get(API_URL.GET_USER_PERMISSIONS+this.loggedInUserId);
   }
 

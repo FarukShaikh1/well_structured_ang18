@@ -48,13 +48,12 @@ export const API_URL = {
   GET_LOGGED_IN_USER_DETAILS: `${serverUrl}${apiPrefix}/auth/getloggedinuserdetails`,
   Get_USER_DETAILS: `${serverUrl}${apiPrefix}/user/GetDetails?userId=`,
 
-  GET_ACCOUNT_LIST: `${serverUrl}${apiPrefix}/settings/GetAccountList?userId=`,
-  GET_RELATION_LIST: `${serverUrl}${apiPrefix}/settings/GetRelationList?userId=`,
-  GET_OCCASION_TYPE_LIST: `${serverUrl}${apiPrefix}/settings/GetOccasionTypeList?userId=`,
-
-  GET_ACCOUNT_DETAILS: `${serverUrl}${apiPrefix}/settings/GetAccountDetails?id=`,
-  GET_RELATION_DETAILS: `${serverUrl}${apiPrefix}/settings/GetRelationDetails?id=`,
-  GET_OCCASION_TYPE_DETAILS: `${serverUrl}${apiPrefix}/settings/GetOccasionTypeDetails?id=`,
+  GET_CONFIG_LIST: `${serverUrl}${apiPrefix}/settings/GetConfigList`,
+  GET_CONFIG_DETAIL: `${serverUrl}${apiPrefix}/settings/GetConfigDetails`,
+  GET_CONFIG_ADD: `${serverUrl}${apiPrefix}/settings/AddConfig`,
+  GET_CONFIG_UPDATE: `${serverUrl}${apiPrefix}/settings/UpdateConfig`,
+  GET_CONFIG_DELETE: `${serverUrl}${apiPrefix}/settings/DeleteConfig`,
+  GET_CONFIG_DEACTIVATE: `${serverUrl}${apiPrefix}/settings/DeactivateConfig`,
 
   // //Non verified 
   REGISTER_USER: `${serverUrl}${apiPrefix}/auth/register`,

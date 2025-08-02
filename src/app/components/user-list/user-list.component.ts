@@ -80,7 +80,6 @@ export class UserListComponent implements OnInit {
       if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
         const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
         const rowId = button.getAttribute('data-row-id');
-        debugger
         if (rowId) {
           const rowData = this.tableData.find((row) => row['id'] == rowId);
           if (rowData) {

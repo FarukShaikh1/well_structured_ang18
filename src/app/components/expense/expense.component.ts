@@ -167,7 +167,6 @@ export class ExpenseComponent implements OnInit {
           maxWidth: 70,
           formatter: this.globalService.hidebuttonFormatter.bind(this),
           cellClick: (e, cell) => {
-            debugger
             const expenseId = cell.getRow().getData()["id"];
             this.hideExpense(expenseId);
           },
