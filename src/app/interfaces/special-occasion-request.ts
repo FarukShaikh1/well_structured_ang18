@@ -2,7 +2,7 @@ export interface SpecialOccasionRequest {
     id:string|null,
     specialOccasionDate: string ,
     personName: string,
-    dayTypeId: string,
+    occasionTypeId: string,
     relationId: string,
     mobileNumber: string,
     contactNumber: string,

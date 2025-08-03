@@ -72,25 +72,25 @@
           class="form-select form-control form-control-lg text-dark bg-transparent styled-select dropdown-toggle scrollable-button"
           type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
           style="text-align: left">
-          {{ lableForDayTypeDropDown }}
+          {{ lableForOccasionTypeDropDown }}
         </button>
 
         <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
           <li>
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllDayTypeCheck($event)"
-                [checked]="selectedDayType.length === dayTypeList?.length" />
+              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllOccasionTypeCheck($event)"
+                [checked]="selectedOccasionType.length === occasionTypeList?.length" />
               <label class="form-check-label" for="selectAll">All</label>
             </div>
           </li>
-          @for(item of dayTypeList;track $index){
+          @for(item of occasionTypeList;track $index){
           <li>
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" [id]="item.listItemDescription"
-                [checked]="selectedDayType.includes(item.listItemDescription)"
-                (change)="toggleDayTypeCheck($event, item.listItemDescription, item.commonListItemId)" />
-              <label class="form-check-label" [for]="item.listItemDescription">
-                {{ item.listItemDescription }}
+              <input type="checkbox" class="form-check-input" [id]="item.description"
+                [checked]="selectedOccasionType.includes(item.description)"
+                (change)="toggleOccasionTypeCheck($event, item.configurationName, item.id)" />
+              <label class="form-check-label" [for]="item.description">
+                {{ item.description }}
               </label>
             </div>
           </li>
@@ -118,19 +118,19 @@
         <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
           <li>
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllRelationTypeCheck($event)"
-                [checked]="selectedRelationType.length === relationTypeList?.length" />
+              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllRelationCheck($event)"
+                [checked]="selectedRelationType.length === relationList?.length" />
               <label class="form-check-label" for="selectAll">All</label>
             </div>
           </li>
-          @for(item of relationTypeList;track $index){
+          @for(item of relationList;track $index){
           <li>
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" [id]="item.listItemDescription"
-                [checked]="selectedRelationType.includes(item.listItemDescription)"
-                (change)="toggleRelationTypeCheck($event, item.listItemDescription, item.commonListItemId)" />
-              <label class="form-check-label" [for]="item.listItemDescription">
-                {{ item.listItemDescription }}
+              <input type="checkbox" class="form-check-input" [id]="item.description"
+                [checked]="selectedRelationType.includes(item.description)"
+                (change)="toggleRelationCheck($event, item.description, item.id)" />
+              <label class="form-check-label" [for]="item.description">
+                {{ item.description }}
               </label>
             </div>
           </li>

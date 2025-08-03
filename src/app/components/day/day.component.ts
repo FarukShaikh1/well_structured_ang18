@@ -7,7 +7,8 @@ import {
   ApplicationConstantHtml,
   ApplicationModules,
   ApplicationTableConstants,
-  DBConstants
+  DBConstants,
+  UserConfig
 } from "../../../utils/application-constants";
 import { DayService } from "../../services/day/day.service";
 import { GlobalService } from "../../services/global/global.service";
@@ -17,6 +18,7 @@ import { DayDetailsComponent } from "../day-details/day-details.component";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { ConfigurationService } from "../../services/configuration/configuration.service";
 
 export interface Task {
   name: string;
@@ -51,8 +53,8 @@ export class DayComponent implements OnInit {
   public filterColumns: ColumnDefinition[] = [];
   ActionConstant = ActionConstant;
   monthList: any;
-  dayTypeList: any = "";
-  relationTypeList: any = "";
+  occasionTypeList: any = "";
+  relationList: any = "";
   isToday: boolean = false;
   isTomorrow: boolean = false;
   isYesterday: boolean = false;
@@ -62,23 +64,26 @@ export class DayComponent implements OnInit {
   lableForMonthDropDownIds = "";
   selectedMonths: string[] = []; // Array to store selected months
   selectedMonthsIds: number[] = []; // Array to store selected months
-  lableForDayTypeDropDown = "";
-  lableForDayTypeDropDownIds = "";
+  lableForOccasionTypeDropDown = "";
+  lableForOccasionTypeDropDownIds = "";
   lableForRelationTypeDropDown = "";
   lableForRelationTypeDropDownIds = "";
-  selectedDayType: string[] = []; // Array to store selected DayTypes
-  selectedRelationType: string[] = []; // Array to store selected DayTypes
+  selectedOccasionType: string[] = []; // Array to store selected OccasionTypes
+  selectedRelationType: string[] = []; // Array to store selected OccasionTypes
   id: string = '';
+  loggedInUserId: string='';
   constructor(
     private _dayService: DayService,
     // public tableUtils: TableUtils,
     public localStorageService: LocalStorageService,
     public globalService: GlobalService,
     private loaderService: LoaderService,
+    public configService: ConfigurationService,
     public datePipe: DatePipe
   ) { }
 
   ngOnInit() {
+    this.loggedInUserId = localStorage.getItem('userId') || '';
     this.globalService.getCommonListItems(DBConstants.MONTH).subscribe({
       next: (res: any) => {
         this.monthList = res;
@@ -91,9 +96,9 @@ export class DayComponent implements OnInit {
     });
 
     // this.loaderService.showLoader();
-    this.globalService.getCommonListItems(DBConstants.DAYTYPE).subscribe({
+    this.configService.getConfigList(this.loggedInUserId, UserConfig.OCCASION_TYPE).subscribe({
       next: (res: any) => {
-        this.dayTypeList = res;
+        this.occasionTypeList = res;
         // this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -101,9 +106,9 @@ export class DayComponent implements OnInit {
         this.loaderService.hideLoader();
       },
     });
-    this.globalService.getCommonListItems(DBConstants.RELATION).subscribe({
+    this.configService.getConfigList(this.loggedInUserId, UserConfig.RELATION).subscribe({
       next: (res: any) => {
-        this.relationTypeList = res;
+        this.relationList = res;
       },
       error: (error: any) => {
         console.log("error : ", error);
@@ -130,7 +135,7 @@ export class DayComponent implements OnInit {
     this._dayService
       .getDayList(
         this.lableForMonthDropDownIds,
-        this.lableForDayTypeDropDownIds,
+        this.lableForOccasionTypeDropDownIds,
         this.lableForRelationTypeDropDownIds,
         this.searchText,
         this.isToday,
@@ -197,7 +202,7 @@ export class DayComponent implements OnInit {
       },
       {
         title: "Day Type",
-        field: "dayType",
+        field: "occasionType",
         sorter: "alphanum",
       },
       {
@@ -219,7 +224,7 @@ export class DayComponent implements OnInit {
       },
     ];
     if (
-      this.globalService.isAccessible(ActionConstant.EDIT)||
+      this.globalService.isAccessible(ActionConstant.EDIT) ||
       this.globalService.isAccessible(ActionConstant.DELETE)
     ) {
       this.columnConfig.push({
@@ -376,52 +381,52 @@ export class DayComponent implements OnInit {
     }
   }
   // Handle "Select All" checkbox
-  toggleAllDayTypeCheck(event: Event) {
+  toggleAllOccasionTypeCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
 
-    this.selectedDayType = checked
-      ? this.dayTypeList.map((m: any) => m.listItemDescription)
+    this.selectedOccasionType = checked
+      ? this.occasionTypeList.map((m: any) => m.listItemDescription)
       : [];
 
-    this.getDayTypeDropdownLabel();
+    this.getOccasionTypeDropdownLabel();
     this.applyFilters();
   }
   // Handle individual daytype selection
-  toggleDayTypeCheck(event: Event, daytypeName: string, dayId: string) {
+  toggleOccasionTypeCheck(event: Event, daytypeName: string, dayId: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
-      this.selectedDayType.push(daytypeName);
+      this.selectedOccasionType.push(daytypeName);
     } else {
-      this.selectedDayType = this.selectedDayType.filter((m) => m !== daytypeName);
+      this.selectedOccasionType = this.selectedOccasionType.filter((m) => m !== daytypeName);
     }
-    this.getDayTypeDropdownLabel();
+    this.getOccasionTypeDropdownLabel();
     this.applyFilters();
   }
 
-  getDayTypeDropdownLabel() {
-    if (this.selectedDayType.length === 0) {
-      this.lableForDayTypeDropDown = "";
-    } else if (this.selectedDayType.length === this.dayTypeList.length) {
-      this.lableForDayTypeDropDown = "All";
-      this.lableForDayTypeDropDownIds = '';
+  getOccasionTypeDropdownLabel() {
+    if (this.selectedOccasionType.length === 0) {
+      this.lableForOccasionTypeDropDown = "";
+    } else if (this.selectedOccasionType.length === this.occasionTypeList.length) {
+      this.lableForOccasionTypeDropDown = "All";
+      this.lableForOccasionTypeDropDownIds = '';
     } else {
-      this.lableForDayTypeDropDown = this.selectedDayType.join(", ");
+      this.lableForOccasionTypeDropDown = this.selectedOccasionType.join(", ");
     }
   }
 
   // Handle "Select All" checkbox
-  toggleAllRelationTypeCheck(event: Event) {
+  toggleAllRelationCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
 
     this.selectedRelationType = checked
-      ? this.relationTypeList.map((m: any) => m.listItemDescription)
+      ? this.relationList.map((m: any) => m.listItemDescription)
       : [];
 
     this.getRelationTypeDropdownLabel();
     this.applyFilters();
   }
   // Handle individual relationtype selection
-  toggleRelationTypeCheck(event: Event, relationtypeName: string, relationId: string) {
+  toggleRelationCheck(event: Event, relationtypeName: string, relationId: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedRelationType.push(relationtypeName);
@@ -435,7 +440,7 @@ export class DayComponent implements OnInit {
   getRelationTypeDropdownLabel() {
     if (this.selectedRelationType.length === 0) {
       this.lableForRelationTypeDropDown = "";
-    } else if (this.selectedRelationType.length === this.relationTypeList.length) {
+    } else if (this.selectedRelationType.length === this.relationList.length) {
       this.lableForRelationTypeDropDown = "All";
       this.lableForRelationTypeDropDownIds = "";
     } else {
@@ -570,16 +575,16 @@ export class DayComponent implements OnInit {
       // const matchesMonth =
       //   this.selectedMonths.length === 0 ||
       //   this.selectedMonths.includes(item.month);
-      const matchesDayType =
-        this.selectedDayType.length === 0 ||
-        this.selectedDayType.includes(item.dayType);
+      const matchesOccasionType =
+        this.selectedOccasionType.length === 0 ||
+        this.selectedOccasionType.includes(item.daytype);
       const matchesRelationType =
         this.selectedRelationType.length === 0 ||
         this.selectedRelationType.includes(item.relationShipName);
       return (
         (matchesName || email || address || date || mobileNumber) &&
         matchesMonth &&
-        matchesDayType &&
+        matchesOccasionType &&
         matchesRelationType
       );
     });

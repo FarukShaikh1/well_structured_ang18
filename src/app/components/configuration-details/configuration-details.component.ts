@@ -26,9 +26,8 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
   styleUrl: './configuration-details.component.css',
 })
 export class ConfigurationDetailsComponent {
-  @ViewChild("btnCloseDetailsPopup") btnCloseDayPopup!: ElementRef;
+  @ViewChild("btnCloseConfigPopup") btnCloseConfigPopup!: ElementRef;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
-  @ViewChild('btnCloseAccountPopup') btnCloseAccountPopup!: ElementRef;
   @Input() tableData: Record<string, unknown>[] | undefined;
   configForm!: FormGroup;
   roleList: any;
@@ -108,9 +107,9 @@ export class ConfigurationDetailsComponent {
         this.toaster.showMessage("Record Added Successfully.", "success");
         this.loaderService.hideLoader();
         this.renderer
-          .selectRootElement(this.btnCloseDayPopup?.nativeElement)
+          .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
           .click();
-        // this.globalService.triggerGridReload(ApplicationModules.DAY);
+        this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
@@ -118,9 +117,8 @@ export class ConfigurationDetailsComponent {
         return;
       },
     });
-    this.resetForm();
-    this.closePopup();
-    this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
+    // this.closePopup();
+    // this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
     
   }
 
@@ -130,9 +128,9 @@ export class ConfigurationDetailsComponent {
         this.toaster.showMessage("Record Updated Successfully.", "success");
         this.loaderService.hideLoader();
         this.renderer
-          .selectRootElement(this.btnCloseDayPopup?.nativeElement)
+          .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
           .click();
-        // this.globalService.triggerGridReload(ApplicationModules.DAY);
+        this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
@@ -148,7 +146,7 @@ export class ConfigurationDetailsComponent {
         if (result.success) {
           this.toaster.showMessage(result?.message, 'success', 8000);
           this.renderer
-            .selectRootElement(this.btnCloseAccountPopup?.nativeElement)
+            .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
             .click();
           // this.closePopup();
           this.loaderService.hideLoader();

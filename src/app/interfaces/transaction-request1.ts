@@ -1,5 +1,4 @@
-export interface TransactionResponse {
-  id: number;
+export interface TransactionRequest1 {
   accountId: number;
   amount: number;
   date: string;

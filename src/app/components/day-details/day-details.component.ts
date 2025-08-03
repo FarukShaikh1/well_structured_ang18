@@ -18,15 +18,16 @@ import {
   ActionConstant,
   ApplicationConstants,
   ApplicationModules,
-  DBConstants,
+  UserConfig
 } from "../../../utils/application-constants";
+import { DateUtils } from "../../../utils/date-utils";
+import { SpecialOccasionRequest } from "../../interfaces/special-occasion-request";
 import { AssetService } from "../../services/asset/asset.service";
+import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { DayService } from "../../services/day/day.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { SpecialOccasionRequest } from "../../interfaces/special-occasion-request";
-import { DateUtils } from "../../../utils/date-utils";
 
 @Component({
   selector: "app-day-details",
@@ -42,9 +43,9 @@ export class DayDetailsComponent implements OnInit {
   startDate = new Date();
   dayDetailsForm: FormGroup;
   user: any;
-  dayTypeList: any;
+  occasionTypeList: any;
   relationList: any;
-  userId: string = "";
+  loggedInUserId: string = "";
   specialOccasionId: string = "";
   selectedImage!: string | ArrayBuffer | null;
   selectedImageFile: File | null = null;
@@ -58,7 +59,7 @@ export class DayDetailsComponent implements OnInit {
     id: '',
     specialOccasionDate: '',
     personName: '',
-    dayTypeId: '',
+    occasionTypeId: '',
     relationId: '',
     mobileNumber: '',
     contactNumber: '',
@@ -73,7 +74,9 @@ export class DayDetailsComponent implements OnInit {
     private _dayService: DayService,
     private loaderService: LoaderService,
     private _assetService: AssetService,
+    public configService: ConfigurationService,
     public globalService: GlobalService,
+    // public localStorageService: LocalStorageService,
     private renderer: Renderer2,
     private datepipe: DatePipe
   ) {
@@ -82,7 +85,7 @@ export class DayDetailsComponent implements OnInit {
       personName: ["",
         [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-&() ]{3,60}$/)],
       ],
-      dayTypeId: ["", Validators.required],
+      occasionTypeId: ["", Validators.required],
       relationId: [""],
       specialOccasionDate: ["", Validators.required],
       mobileNumber: ["", Validators.pattern(/^[0-9]{8,12}$/)],
@@ -187,7 +190,7 @@ export class DayDetailsComponent implements OnInit {
       this.isVerified = res["isVerified"];
       this.dayDetailsForm.controls["specialOccasionId"].patchValue(res["id"]);
       this.dayDetailsForm.controls["personName"].patchValue(res["personName"]);
-      this.dayDetailsForm.controls["dayTypeId"].patchValue(res["dayTypeId"]);
+      this.dayDetailsForm.controls["occasionTypeId"].patchValue(res["occasionTypeId"]);
       this.dayDetailsForm.controls["relationId"].patchValue(res["relationId"]);
       this.dayDetailsForm.controls["specialOccasionDate"].patchValue(
         this.datepipe.transform(res["specialOccasionDate"], ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT)
@@ -222,7 +225,7 @@ export class DayDetailsComponent implements OnInit {
       id: this.dayDetailsForm.value["specialOccasionId"] ?? null,
       specialOccasionDate: this.dayDetailsForm.value["specialOccasionDate"],
       personName: this.dayDetailsForm.value["personName"],
-      dayTypeId: this.dayDetailsForm.value["dayTypeId"],
+      occasionTypeId: this.dayDetailsForm.value["occasionTypeId"],
       relationId: this.dayDetailsForm.value["relationId"],
       mobileNumber: this.dayDetailsForm.value["mobileNumber"],
       contactNumber: this.dayDetailsForm.value["contactNumber"],
@@ -243,10 +246,10 @@ export class DayDetailsComponent implements OnInit {
 
   openDetailsPopup(specialOccasionId: any) {
     this.loaderService.showLoader();
-
-    this.globalService.getCommonListItems(DBConstants.DAYTYPE).subscribe({
+    this.loggedInUserId = localStorage.getItem('userId') || '';
+    this.configService.getConfigList(this.loggedInUserId,UserConfig.OCCASION_TYPE).subscribe({
       next: (res: any) => {
-        this.dayTypeList = res;
+        this.occasionTypeList = res;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -254,7 +257,7 @@ export class DayDetailsComponent implements OnInit {
         this.loaderService.hideLoader();
       },
     });
-    this.globalService.getCommonListItems(DBConstants.RELATION).subscribe({
+    this.configService.getConfigList(this.loggedInUserId,UserConfig.RELATION).subscribe({
       next: (res: any) => {
         this.relationList = res;
         this.loaderService.hideLoader();

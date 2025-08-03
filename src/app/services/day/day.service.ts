@@ -21,7 +21,7 @@ export class DayService {
 
   getDayList(
     month: string,
-    dayType: string,
+    occasionType: string,
     relation: string,
     searchText: string,
     isToday: boolean = false,
@@ -32,12 +32,12 @@ export class DayService {
       .set("userid", String(localStorage.getItem("userId")))
       .set("searchText", searchText)
       .set("month", month)
-      .set("dayType", dayType)
+      .set("occasionType", occasionType)
       .set("relation", relation)
       .set("isToday", isToday)
       .set("isTomorrow", isTomorrow)
       .set("isYesterday", isYesterday);
-    return this.http.get(API_URL.GET_SPECIAL_OCCASION_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+    return this.http.get(API_URL.GET_SPECIAL_OCCASION_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&occasionType='+occasionType);
   }
 
   addDay(specialOccasionRequest: SpecialOccasionRequest): Observable<any> {

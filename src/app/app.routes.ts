@@ -3,7 +3,7 @@ import { ApplicationModules } from "../utils/application-constants";
 import { CurrencyCoinComponent } from "./components/currency-coin/currency-coin.component";
 import { DayDetailsComponent } from "./components/day-details/day-details.component";
 import { DayComponent } from "./components/day/day.component";
-import { ExpenseComponent } from "./components/expense/expense.component";
+import { TransactionComponent } from "./components/transaction/transaction.component";
 import { CurrencyGalleryComponent } from "./components/currency-gallery/currency-gallery.component";
 import { CurrencySummaryComponent } from "./components/currency-summary/currency-summary.component";
 import { authGuard } from "./guards/auth.guard";
@@ -45,8 +45,8 @@ export const routes: Routes = [
       },
       {
         path: "expenses",
-        title: "Expenses",
-        component: ExpenseComponent,
+        title: "Transactions",
+        component: TransactionComponent,
       },
       // {
       //   path: "business",

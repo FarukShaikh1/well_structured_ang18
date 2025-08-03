@@ -37,7 +37,7 @@ export class BusinessService {
       .set("maxAmount", maxAmount)
       .set("modeOfTransaction", modeOfTransaction);
 
-    return this.http.get(API_URL.GET_BUSINESS_SUMMARY_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+    return this.http.get(API_URL.GET_BUSINESS_SUMMARY_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&occasionType='+occasionType);
   }
 
   getBusinessReportList(
@@ -57,13 +57,13 @@ export class BusinessService {
       .set("maxAmount", maxAmount)
       .set("modeOfTransaction", modeOfTransaction);
 
-    return this.http.get(API_URL.GET_BUSINESS_SUMMARY_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+    return this.http.get(API_URL.GET_BUSINESS_SUMMARY_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&occasionType='+occasionType);
   }
 
   getBusinessList(): Observable<any> {
     const params = new HttpParams()
       .set("userid", this.loggedInUserId)
-    return this.http.get(API_URL.GET_BUSINESS_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&dayType='+dayType);
+    return this.http.get(API_URL.GET_BUSINESS_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&occasionType='+occasionType);
   }
 
   addBusiness(businessDetailsForm: any): Observable<any> {

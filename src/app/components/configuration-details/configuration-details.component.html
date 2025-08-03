@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Account Details</h4>
-        <button #btnCloseAccountPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal"></button>
+        <button #btnCloseConfigPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal"></button>
       </div>
 
       <div class="modal-body">
@@ -26,7 +26,7 @@
 
           <!-- Configuration Description -->
           <div class="form-group">
-            <label for="configurationDescription">Configuration Description</label>
+            <label for="configurationDescription">{{currentConfig}} Description</label>
             <textarea id="configurationDescription" class="form-control" formControlName="configurationDescription"
               placeholder="Enter configuration description"></textarea>
             <div

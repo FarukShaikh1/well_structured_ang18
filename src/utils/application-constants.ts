@@ -64,6 +64,7 @@ export const LoaderConfigs = {
 
 export const ApplicationConstantHtml = {
     DELETE_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#confirmationPopup"><i class="bi bi-trash"></i>&nbsp;Delete</a>`,
+    DEACTIVATE_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#confirmationPopup"><i class="bi bi-trash"></i>&nbsp;Delete</a>`,
     EDIT_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#detailsPopup"><i class="bi bi-pencil"></i>&nbsp;Edit</a>`,
     VIEW_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-eye"></i>&nbsp;View</a>`,
     DOWNLOAD_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-download"></i>&nbsp;Download</a>`,  

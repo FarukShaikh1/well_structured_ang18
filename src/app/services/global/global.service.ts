@@ -188,9 +188,9 @@ export class GlobalService {
     const userData = cell.getRow().getData();
     const columnValue = userData[columnName];
     if (columnValue) {
-      return '<span style="color:gray">Locked</span>';
-    } else {
       return '<span style="color:#ff7a00">Active</span>';
+    } else {
+      return '<span style="color:gray">Disabled</span>';
     }
   }
 

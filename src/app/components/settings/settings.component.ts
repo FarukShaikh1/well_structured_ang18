@@ -50,12 +50,7 @@ export class SettingsComponent {
   isSuperAdmin = false;
   configOptionsMenu = [
     {
-      label: `<a class="dropdown-item btn-link"
-              data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
-                  <i class="bi bi-pencil"></i>
-                    &nbsp;Edit
-                  </a>
-                  `,
+      label: ApplicationConstantHtml.EDIT_LABLE,
       action: (_e: any, cell: CellComponent) => {
         const reportData = cell.getRow().getData();
         const reportId = reportData['id'];
@@ -74,7 +69,7 @@ export class SettingsComponent {
       },
     },
   ];
-  currentConfig: string='';
+  currentConfig: string = '';
 
   constructor(
     private configurationService: ConfigurationService,
@@ -148,7 +143,7 @@ export class SettingsComponent {
         this.openDetailPopup(rowData['id'], config);
       },
     });
-    if (rowData['isUsed'] === false) {
+    if (!rowData['isUsed']) {
       menu.push({
         label: ApplicationConstantHtml.DELETE_LABLE,
         action: () => {
@@ -160,7 +155,7 @@ export class SettingsComponent {
   }
 
   openDetailPopup(id: string, config: string) {
-    this.currentConfig = config; 
+    this.currentConfig = config;
     this.configDetailsComponent.openDetailsPopup(id, config);
   }
 
@@ -239,20 +234,15 @@ export class SettingsComponent {
         hozAlign: "center",
         headerSort: false,
       },
-    ];
-    if (
-      this.globalService.isAccessible(ActionConstant.EDIT) ||
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
-      this.userColumnConfig.push({
+      {
         title: "",
         field: "option",
         maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
         hozAlign: "center",
         headerSort: false,
-      });
-    }
+      }
+    ];
   }
 
   accountColumnConfiguration() {
@@ -268,12 +258,11 @@ export class SettingsComponent {
         field: "displayOrder",
         sorter: "alphanum",
       },
-      { title: 'Is Active?', field: 'isActive', sorter: 'string' },
       {
-        title: 'Statussss',
-        field: 'isLocked',
+        title: 'Status',
+        field: 'isActive',
         sorter: 'string',
-        formatter: this.globalService.statusFormatter.bind(this),
+      formatter: this.globalService.statusFormatter.bind(this),
       },
       {
         title: "",
@@ -288,30 +277,14 @@ export class SettingsComponent {
         headerSort: false,
       },
       {
-        title: '',
-        field: 'options',
-        maxWidth: 50,
-        formatter: (_cell) =>
-          '<button class="action-buttons" title="More Actions" style="padding-right:100px"><i class="bi bi-three-dots btn-link"></i></button>',
-        clickMenu: this.configOptionsMenu,
-        hozAlign: 'left',
-        headerSort: false,
-      },
-
-    ];
-    if (
-      this.globalService.isAccessible(ActionConstant.EDIT) ||
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
-      this.accountColumnConfig.push({
         title: "",
         field: "option",
         maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
         hozAlign: "center",
         headerSort: false,
-      });
-    }
+      }
+    ];
   }
 
   occasionTypeColumnConfiguration() {
@@ -327,10 +300,9 @@ export class SettingsComponent {
         field: "displayOrder",
         sorter: "alphanum",
       },
-      { title: 'Is Active?', field: 'isActive', sorter: 'string' },
       {
         title: 'Statussss',
-        field: 'isLocked',
+        field: 'isActive',
         sorter: 'string',
         formatter: this.globalService.statusFormatter.bind(this),
       },
@@ -346,20 +318,16 @@ export class SettingsComponent {
         hozAlign: "center",
         headerSort: false,
       },
-    ];
-    if (
-      this.globalService.isAccessible(ActionConstant.EDIT) ||
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
-      this.occasionTypeColumnConfig.push({
+      {
         title: "",
         field: "option",
         maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
         hozAlign: "center",
         headerSort: false,
-      });
-    }
+      }
+
+    ];
   }
 
   relationColumnConfiguration() {
@@ -375,10 +343,9 @@ export class SettingsComponent {
         field: "displayOrder",
         sorter: "alphanum",
       },
-      { title: 'Is Active?', field: 'isActive', sorter: 'string' },
       {
-        title: 'Statussss',
-        field: 'isLocked',
+        title: 'Status',
+        field: 'isActive',
         sorter: 'string',
         formatter: this.globalService.statusFormatter.bind(this),
       },
@@ -394,20 +361,15 @@ export class SettingsComponent {
         hozAlign: "center",
         headerSort: false,
       },
-    ];
-    if (
-      this.globalService.isAccessible(ActionConstant.EDIT) ||
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
-      this.relationColumnConfig.push({
+      {
         title: "",
         field: "option",
         maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
         hozAlign: "center",
         headerSort: false,
-      });
-    }
+      }
+    ];
   }
 
   hideUser(userId: any) {

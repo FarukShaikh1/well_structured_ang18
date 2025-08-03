@@ -1,8 +1,11 @@
 export interface TransactionRequest {
-  accountId: number;
-  amount: number;
-  date: string;
-  type: 'Income' | 'Expense';
-  category: string;
-  description?: string;
+    id:string,
+    transactionDate: string ,
+    sourceOrReason: string,
+    cash:number,
+    sbiAccount:number,
+    cbiAccount:number,
+    other:number,
+    purpose: string,
+    description: string,
 }
