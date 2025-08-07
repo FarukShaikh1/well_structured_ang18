@@ -1518,3 +1518,36 @@ input.ng-invalid.ng-touched {
   height: 400px;
   object-fit: cover;
 }
+
+.category-toggle {
+  display: inline-flex;
+  border: 2px solid #ccc;
+  border-radius: 999px;
+  overflow: hidden;
+  font-weight: bold;
+  font-size: 14px;
+  user-select: none;
+  margin-top: 4px;
+}
+
+.category-option {
+  padding: 5px 8px;
+  cursor: pointer;
+  background: #f8f8f8;
+  color: #333;
+  transition: background 0.3s, color 0.3s;
+}
+
+.category-option.income.active {
+  background-color: #48f070;
+  color: #08b327;
+}
+
+.category-option.expense.active {
+  background-color: #f3a6ac;
+  color: #ff0606;
+}
+
+.category-option:not(.active):hover {
+  background-color: #e2e6ea;
+}
