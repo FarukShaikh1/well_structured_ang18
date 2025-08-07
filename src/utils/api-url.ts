@@ -35,7 +35,19 @@ export const API_URL = {
   UPDATE_EXPENSE: `${serverUrl}${apiPrefix}/expense/update?userId=`,
   DELETE_EXPENSE: `${serverUrl}${apiPrefix}/expense/delete?expenseId=`,
   GET_EXPENSE_SUGGESTION_LIST: `${serverUrl}${apiPrefix}/expense/GetExpenseSuggestionList`,
-  GET_AVAIL_AMOUNT: `${serverUrl}${apiPrefix}/expense/getAvailAmount`,
+  // GET_AVAIL_AMOUNT: `${serverUrl}${apiPrefix}/expense/getAvailAmount`,
+
+  GET_TRANSACTION_DETAILS: `${serverUrl}${apiPrefix}/transaction/GetDetails`,
+  GET_TRANSACTION_SUMMARY_LIST: `${serverUrl}${apiPrefix}/transaction/GetSummary`,
+  GET_TRANSACTION_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/GetReport`,
+  GET_TRANSACTION_LIST: `${serverUrl}${apiPrefix}/transaction/GetList`,
+  ADD_TRANSACTION: `${serverUrl}${apiPrefix}/transaction/add?userId=`,
+  TRANSACTION_ADJUSTMENT: `${serverUrl}${apiPrefix}/transaction/transactionAdjustment?userId=`,
+  UPDATE_TRANSACTION: `${serverUrl}${apiPrefix}/transaction/update?userId=`,
+  DELETE_TRANSACTION: `${serverUrl}${apiPrefix}/transaction/delete?transactionId=`,
+  GET_TRANSACTION_SUGGESTION_LIST: `${serverUrl}${apiPrefix}/transaction/GetTransactionSuggestionList`,
+  GET_AVAIL_AMOUNT: `${serverUrl}${apiPrefix}/transaction/getAvailAmount`,
+
 
   GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/commonList/getCommonListItem`,
   GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/GetCountryList`,

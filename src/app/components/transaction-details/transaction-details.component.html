@@ -3,8 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Transaction</h4>
-                <button #btnCloseDetailsPopup class="btn-close" (click)="closePopup()"
-                    data-bs-dismiss="modal"></button>
+                <button #btnCloseDetailsPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
@@ -18,9 +17,10 @@
                         <div class="row">
                             <div class="col-6">
                                 <label> Choose a date</label>
-                                <input id="transactionDate" class="form-control form-control-lg text-dark bg-transparent"
-                                    type="date" placeholder="DD/MM/YYYY" appearance="outline"
-                                    formControlName="transactionDate" [ngClass]="{
+                                <input id="transactionDate"
+                                    class="form-control form-control-lg text-dark bg-transparent" type="date"
+                                    placeholder="DD/MM/YYYY" appearance="outline" formControlName="transactionDate"
+                                    [ngClass]="{
                                         'error-border':
                                         transactionDetailsForm.get('transactionDate')?.touched &&
                                         transactionDetailsForm.get('transactionDate')?.invalid
@@ -73,33 +73,24 @@
                                 }
                             </div>
                         </div>
-                        <div class="row mt-4">
-                            <div class="col-6">
-                                <label>SBI Account</label>
-                                <input formControlName="sbiAccount"
+                        <div class="row">
+                            @for(account of accountList; track $index){
+                            <div class="col-6 mt-4">
+                                <label>{{account.configurationName}} </label> &nbsp; 
+                                <label>
+                                    <input type="radio" [value]="'income'" [formControlName]="'category_' + account.id" />
+                                    Income
+                                </label> &nbsp; 
+                                <label>
+                                    <input type="radio" [value]="'expense'" [formControlName]="'category_' + account.id" />
+                                    Expense
+                                </label>
+                                <input [formControlName]="account.id"
                                     class="form-control form-control-lg text-dark bg-transparent"
                                     (keydown)="globalService.validateAmount($event)" (keyup)="validateAmountFields()">
+
                             </div>
-                            <div class="col-6">
-                                <label>Cash</label>
-                                <input formControlName="cash" (keydown)="globalService.validateAmount($event)"
-                                    (keyup)="validateAmountFields()"
-                                    class="form-control form-control-lg text-dark bg-transparent">
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col-6">
-                                <label>CBI Account</label>
-                                <input formControlName="cbiAccount" (keydown)="globalService.validateAmount($event)"
-                                    (keyup)="validateAmountFields()"
-                                    class="form-control form-control-lg text-dark bg-transparent">
-                            </div>
-                            <div class="col-6">
-                                <label>Other Amount</label>
-                                <input formControlName="other" (keydown)="globalService.validateAmount($event)"
-                                    (keyup)="validateAmountFields()"
-                                    class="form-control form-control-lg text-dark bg-transparent">
-                            </div>
+                            }
                         </div>
                         <div class="row mt-4">
                             <div class="col-6">
@@ -140,7 +131,7 @@
                                     }
                                 </ul>
                                 }
-
+transactionDetailsForm.invalid -- {{transactionDetailsForm.invalid}} --
                             </div>
                         </div>
                         <div class="row mt-4">
@@ -150,7 +141,7 @@
                                         (click)="closePopup()" data-bs-dismiss="modal"> Cancel</button>
                                     <button class="btn btn-danger rounded-button" type="reset"> Reset</button>
                                     <button class="btn btn-primary rounded-button" type="submit"
-                                        [disabled]="transactionDetailsForm.invalid || !isValidAmount">Save</button>
+                                        [disabled]="transactionDetailsForm.invalid">Save</button>
                                 </div>
                             </div>
                         </div>

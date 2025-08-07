@@ -75,6 +75,7 @@ export class TransactionComponent implements OnInit {
     sourceOrReason: ''
   };
   ActionConstant = ActionConstant;
+  accountColumns: any;
   // optionsMenu = [
   //   {
   //     label: ApplicationConstantHtml.EDIT_LABLE,
@@ -122,7 +123,7 @@ export class TransactionComponent implements OnInit {
       this.columnConfig = [
         {
           title: "Transaction Date",
-          field: "expenseDate",
+          field: "transactionDate",
           sorter: "alphanum",
           formatter: this.dateFormatter.bind(this),
         },
@@ -140,12 +141,12 @@ export class TransactionComponent implements OnInit {
         },
         {
           title: "ModeOfTransaction",
-          field: "modeOfTransaction",
+          field: "accountName",
           sorter: "alphanum",
         },
         {
           title: "Debit",
-          field: "debit",
+          field: "expense",
           sorter: "alphanum",
           formatter: this.amountColorFormatter.bind(this),
           bottomCalc: "sum",
@@ -154,7 +155,7 @@ export class TransactionComponent implements OnInit {
         },
         {
           title: "Credit",
-          field: "credit",
+          field: "income",
           sorter: "alphanum",
           formatter: this.amountColorFormatter.bind(this),
           bottomCalc: "sum",
@@ -174,19 +175,19 @@ export class TransactionComponent implements OnInit {
           headerSort: false,
         },
       ];
-          if (
-      this.globalService.isAccessible(ActionConstant.EDIT)||
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
-      this.columnConfig.push({
-        title: "",
-        field: "option",
-        maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
-        hozAlign: "center",
-        headerSort: false,
-      });
-    }
+      if (
+        this.globalService.isAccessible(ActionConstant.EDIT) ||
+        this.globalService.isAccessible(ActionConstant.DELETE)
+      ) {
+        this.columnConfig.push({
+          title: "",
+          field: "option",
+          maxWidth: 70,
+          formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+          hozAlign: "center",
+          headerSort: false,
+        });
+      }
 
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
       this.columnConfig = [
@@ -194,144 +195,70 @@ export class TransactionComponent implements OnInit {
           title: "Transaction Date",
           field: "transactionDate",
           sorter: "alphanum",
+          width: 100,
           formatter: this.dateFormatter.bind(this),
         },
         {
           title: "Source/Reason",
           field: "sourceOrReason",
+          width: 150,
           sorter: "alphanum",
         },
         {
           title: "Description",
           field: "description",
+          width: 200,
           sorter: "alphanum",
         },
-        {
-          title: "SBI Account",
-          field: "sbiAccount",
-          sorter: "alphanum",
-          formatter: this.amountColorFormatter.bind(this),
-          headerHozAlign: "right",
-          hozAlign: "right",
-          bottomCalc: "sum",
-          bottomCalcFormatter: this.amountColorFormatter.bind(this),
-          bottomCalcFormatterParams: { symbol: "", precision: 2 },
-          cssClass: "amount-column",
-        },
-        {
-          title: "Cash Account",
-          field: "cash",
-          sorter: "alphanum",
-          formatter: this.amountColorFormatter.bind(this),
-          headerHozAlign: "right",
-          hozAlign: "right",
-          bottomCalc: "sum",
-          bottomCalcFormatter: this.amountColorFormatter.bind(this),
-          bottomCalcFormatterParams: { symbol: "", precision: 2 },
-          cssClass: "amount-column",
-        },
-        {
-          title: "CBI Account",
-          field: "cbiAccount",
-          sorter: "alphanum",
-          formatter: this.amountColorFormatter.bind(this),
-          headerHozAlign: "right",
-          hozAlign: "right",
-          bottomCalc: "sum",
-          bottomCalcFormatter: this.amountColorFormatter.bind(this),
-          bottomCalcFormatterParams: { symbol: "", precision: 2 },
-          cssClass: "amount-column",
-        },
-        {
-          title: "Other Account",
-          field: "other",
-          sorter: "alphanum",
-          formatter: this.amountColorFormatter.bind(this),
-          headerHozAlign: "right",
-          hozAlign: "right",
-          bottomCalc: "sum",
-          bottomCalcFormatter: this.amountColorFormatter.bind(this),
-          bottomCalcFormatterParams: { symbol: "", precision: 2 },
-          cssClass: "amount-column",
-        },
-        {
-          title: "Total",
-          field: "total",
-          sorter: "alphanum",
-          formatter: this.amountColorFormatter.bind(this),
-          headerHozAlign: "right",
-          hozAlign: "right",
-          bottomCalc: "sum",
-          bottomCalcFormatter: this.amountColorFormatter.bind(this),
-          bottomCalcFormatterParams: { symbol: "", precision: 2 },
-          cssClass: "amount-column",
-        },
-        {
-          title: "SbiBalance",
-          field: "sbiBalance",
-          formatter: "money",
-          headerHozAlign: "right",
-          hozAlign: "right",
-          cssClass: "amount-column",
-        },
-        {
-          title: "CashBalance",
-          field: "cashBalance",
-          formatter: "money",
-          headerHozAlign: "right",
-          hozAlign: "right",
-          cssClass: "amount-column",
-        },
-        {
-          title: "CbiBalance",
-          field: "cbiBalance",
-          formatter: "money",
-          headerHozAlign: "right",
-          hozAlign: "right",
-          cssClass: "amount-column",
-        },
-        {
-          title: "OtherBalance",
-          field: "otherBalance",
-          formatter: "money",
-          headerHozAlign: "right",
-          hozAlign: "right",
-          cssClass: "amount-column",
-        },
-        {
-          title: "TotalAvailable",
-          field: "totalAvailable",
-          formatter: "money",
-          headerHozAlign: "right",
-          hozAlign: "right",
-          cssClass: "amount-column",
-        },
-        {
-          title: "",
-          field: "",
-          maxWidth: 70,
-          formatter: this.globalService.hidebuttonFormatter.bind(this),
-          cellClick: (e, cell) => {
-            const transactionId = cell.getRow().getData()["id"];
-            this.hideTransaction(transactionId);
-          },
-          headerSort: false,
-        }
       ];
-          if (
-            this.globalService.isAccessible(ActionConstant.EDIT)||
-            this.globalService.isAccessible(ActionConstant.DELETE)
-          ) {
+      if (this.filteredTableData.length > 0 && this.accountColumns) {
+        for (const key of Object.keys(this.accountColumns)) {
+          const isAmount = key.toLowerCase().includes("amount");
+          const isBalance = key.toLowerCase().includes("balance");
+          const isCategory = key.toLowerCase().includes("category");
+          if (!key.toLowerCase().includes("category")) {
             this.columnConfig.push({
-              title: "",
-              field: "option",
-              maxWidth: 70,
-              formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+              title: key,
+              field: `accountData.${key}`,
+              // field:this.globalService.lowercaseFirstLetterOfEachWord(key),
+              formatter: this.summaryAmountColorFormatter.bind(this),
               hozAlign: "center",
-              headerSort: false,
+              headerHozAlign: "center",
+              cssClass: "amount-column",
+              bottomCalc: "sum",
+              bottomCalcFormatter: this.amountColorFormatter.bind(this),
+              bottomCalcFormatterParams: { symbol: "", precision: 2 },
+              width: 150,
             });
           }
-      
+        }
+      }
+      this.columnConfig.push({
+        title: "",
+        field: "",
+        maxWidth: 70,
+        formatter: this.globalService.hidebuttonFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const transactionId = cell.getRow().getData()["id"];
+          this.hideTransaction(transactionId);
+        },
+        headerSort: false,
+      });
+      if (
+        this.globalService.isAccessible(ActionConstant.EDIT) ||
+        this.globalService.isAccessible(ActionConstant.DELETE)
+      ) {
+        this.columnConfig.push({
+          title: "",
+          field: "option",
+          maxWidth: 70,
+          formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+          hozAlign: "center",
+          headerSort: false,
+        });
+      }
+
+
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
       this.columnConfig = [
         {
@@ -459,7 +386,7 @@ export class TransactionComponent implements OnInit {
       menu.push({
         label: ApplicationConstantHtml.EDIT_LABLE,
         action: () => {
-          this.transactionDetails(rowData['id']);
+          this.transactionDetails(rowData['transactionGroupId']);
         },
       });
     }
@@ -520,6 +447,44 @@ export class TransactionComponent implements OnInit {
     }
     if (columnValue < 0) {
       return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
+    }
+    return `<span></span>`;
+  }
+
+  summaryAmountColorFormatter(cell: CellComponent) {
+    const cellValue = cell.getValue();
+    const transactionData = cell.getRow().getData();
+    const field = cell.getColumn().getField(); // e.g., "accountData.SBI_Amount"
+
+    if (!transactionData || !transactionData['accountData'] || (typeof cellValue !== 'number' && cellValue !== null && cellValue !== undefined)) {
+      return `<span>${cellValue}</span>`;
+    }
+
+    // Extract base account name from the amount field
+    const amountKeyMatch = field.match(/accountData\.([^.]+)_Amount/i);
+    const balanceKeyMatch = field.match(/accountData\.([^.]+)_Balance/i);
+    if (amountKeyMatch) {
+      const accountBase = amountKeyMatch[1]; // e.g., "SBI"
+      const categoryField = `${accountBase}_Category`;
+      const category = transactionData['accountData'][categoryField];
+
+      // Format currency
+      const formattedValue = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+      }).format(cellValue);
+
+      if (category === 'Income') {
+        return `<span style="color:#129D0A; font-weight:bold">${cellValue}</span>`;
+      } else if (category === 'Expense') {
+        return `<span style="color:#FF0000; font-weight:bold">${cellValue}</span>`;
+      }
+    }
+    if (balanceKeyMatch) {
+      if (cellValue >= 0) {
+        return `<span style="color:#129D0A; font-weight:bold">${cellValue}</span>`;
+      }
+      return `<span style="color:#FF0000; font-weight:bold">${cellValue}</span>`;
     }
     return `<span></span>`;
   }
@@ -730,6 +695,9 @@ export class TransactionComponent implements OnInit {
           next: (res: any) => {
             this.tableData = res;
             this.filteredTableData = res;
+            this.accountColumns = res[0]?.accountData;
+            this.columnConfiguration();
+
             this.lastTransactionDate = this.getLatestTransactionDate();
             this.loaderService.hideLoader();
           },

@@ -1,11 +1,10 @@
+import { TransactionAccountSplit } from "./transaction-account-split";
+
 export interface TransactionRequest {
-    id:string,
-    transactionDate: string ,
+    transactionGroupId: string,
+    transactionDate: string,
     sourceOrReason: string,
-    cash:number,
-    sbiAccount:number,
-    cbiAccount:number,
-    other:number,
     purpose: string,
     description: string,
+    accountSplits: TransactionAccountSplit[]; // This replaces fixed cash/sbiAccount/etc. add more fields as needed
 }

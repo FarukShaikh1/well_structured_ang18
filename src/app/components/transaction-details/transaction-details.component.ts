@@ -7,15 +7,20 @@ import {
   ViewChild,
 } from "@angular/core";
 import {
+  AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from "@angular/forms";
 import flatpickr from "flatpickr";
 import {
   ApplicationConstants,
   ApplicationModules,
+  UserConfig,
 } from "../../../utils/application-constants";
 import { TransactionService } from "../../services/transaction/transaction.service";
 import { GlobalService } from "../../services/global/global.service";
@@ -23,6 +28,8 @@ import { LoaderService } from "../../services/loader/loader.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { TransactionRequest } from "../../interfaces/transaction-request";
 import { DateUtils } from "../../../utils/date-utils";
+import { ConfigurationService } from "../../services/configuration/configuration.service";
+import { TransactionAccountSplit } from "../../interfaces/transaction-account-split";
 
 @Component({
   selector: "app-transaction-details",
@@ -56,17 +63,15 @@ export class TransactionDetailsComponent {
   focusInDescription: boolean = false;
   isValidAmount: boolean = false;
   transactionRequest: TransactionRequest = {
-    id: '',
-    transactionDate:DateUtils.GetDateBeforeDays(30),
+    transactionGroupId: '',
+    transactionDate: DateUtils.GetDateBeforeDays(30),
     sourceOrReason: '',
-    cash: 0,
-    sbiAccount: 0,
-    cbiAccount: 0,
-    other: 0,
     purpose: '',
     description: '',
-
+    accountSplits: []
   }
+  loggedInUserId: string = '';
+  accountList: any;
 
   constructor(
     private _details: FormBuilder,
@@ -74,37 +79,56 @@ export class TransactionDetailsComponent {
     public globalService: GlobalService,
     private loaderService: LoaderService,
     private renderer: Renderer2,
+    private configurationService: ConfigurationService,
     private datepipe: DatePipe
   ) {
     this.transactionDetailsForm = this._details.group({
       transactionId: '',
       transactionDate: ["", Validators.required],
       sourceOrReason: ["", Validators.required],
-      cash: "",
-      sbiAccount: "",
-      cbiAccount: "",
-      other: "",
-      totalAmount: "",
-      isInvoiceAvailable: false,
-      referenceNumber: "",
       description: "",
-      purpose: "",
-      assetType: "",
-      transactionReceiptAssetId: 0,
-      assetId: 0,
+      purpose: ""
     });
   }
 
+  // createAccountSplitFormGroup(): FormGroup {
+  //   return this.accountList?.forEach((account: TransactionAccountSplit) => {
+  //     this.transactionDetailsForm.addControl(account.accountId, this._details.control(''));
+  //     this.transactionDetailsForm.addControl('amount_' + account.accountId, this._details.control(''));
+  //     this.transactionDetailsForm.addControl('category_' + account.accountId, this._details.control(''));
+  //   });
+
+  //   // return this._details.group({
+  //   //   accountId: ['', Validators.required],
+  //   //   amount: [0, [Validators.required, Validators.min(0.01)]],
+  //   //   category: ['Income', Validators.required]  // or use a dropdown
+  //   // });
+  // }
+
   openDetailsPopup(transactionId: string) {
-    this.transactionDetailsForm?.reset();
     this.loaderService.showLoader();
+    this.loggedInUserId = localStorage.getItem('userId') || '';
+
+    this.configurationService.getConfigList(this.loggedInUserId, UserConfig.ACCOUNT).subscribe({
+      next: (result: any) => {
+        console.log('result : ', result);
+        this.accountList = result;
+        this.loadAccountFields();
+        if (this.accountList && transactionId) {
+          this.getTransactionDetails(transactionId);
+        }
+      },
+      error: (error: any) => {
+        console.error('Error fetching user list', error);
+      },
+    });
+
+    // this.transactionDetailsForm?.reset();
     const model = document.getElementById("detailsPopup");
     if (model !== null) {
       model.style.display = "block";
     }
-    if (transactionId) {
-      this.getTransactionDetails(transactionId);
-    } else {
+    if (!transactionId) {
       this.transactionDetailsForm.controls["transactionDate"].patchValue(
         this.datepipe.transform(
           this.lastTransactionDate,
@@ -116,6 +140,35 @@ export class TransactionDetailsComponent {
     this.getTransactionSuggestionList();
   }
 
+  loadAccountFields() {
+    for (const acc of this.accountList) {
+      this.transactionDetailsForm.addControl(acc.id, new FormControl(0));
+      this.transactionDetailsForm.addControl('amount_' + acc.id, new FormControl(0));
+      this.transactionDetailsForm.addControl('category_' + acc.id, new FormControl(0));
+    }
+    // const accountIds = this.accountList.map((acc: { id: any; }) => acc.id);
+    // this.transactionDetailsForm.setValidators(this.atLeastOneValidAccountEntryValidator(accountIds));
+    // this.transactionDetailsForm.updateValueAndValidity();
+  }
+
+  atLeastOneValidAccountEntryValidator(accountIds: string[]): ValidatorFn {
+    debugger;
+    return (form: AbstractControl): ValidationErrors | null => {
+      for (const id of accountIds) {
+        debugger;
+        const amountControl = form.get('amount_' + id);
+        const categoryControl = form.get('category_' + id);
+
+        const amount = Number(amountControl?.value ?? 0);
+        const category = categoryControl?.value;
+
+        if (amount > 0 && category != null && category !== '' && category !== 0) {
+          return null; // ✅ Valid pair found
+        }
+      }
+      return { atLeastOneAccountEntryRequired: true }; // ❌ No valid pair
+    };
+  }
   closePopup() {
     const model = document.getElementById("detailsPopup");
     if (model !== null) {
@@ -132,24 +185,15 @@ export class TransactionDetailsComponent {
   }
 
   validateAmountFields() {
-    this.sbiValid =
-      this.transactionDetailsForm.controls["sbiAccount"].value &&
-      this.transactionDetailsForm.controls["sbiAccount"].value != 0;
-    this.cbiValid =
-      this.transactionDetailsForm.controls["cbiAccount"].value &&
-      this.transactionDetailsForm.controls["cbiAccount"].value != 0;
-    this.cashValid =
-      this.transactionDetailsForm.controls["cash"].value &&
-      this.transactionDetailsForm.controls["cash"].value != 0;
-    this.otherValid =
-      this.transactionDetailsForm.controls["other"].value &&
-      this.transactionDetailsForm.controls["other"].value != 0;
+    // this.sbiValid =
+    //   this.transactionDetailsForm.controls["sbiAccount"].value &&
+    //   this.transactionDetailsForm.controls["sbiAccount"].value != 0;
 
-    this.isValidAmount =
-      this.sbiValid || this.cbiValid || this.cashValid || this.otherValid;
+    // this.isValidAmount = this.sbiValid;
   }
 
   getTransactionSuggestionList() {
+    this.loaderService.showLoader();
     this.transactionService.getTransactionSuggestionList().subscribe({
       next: (res: any) => {
         this.commonSuggestionList = res;
@@ -188,8 +232,11 @@ export class TransactionDetailsComponent {
       this.filteredDescriptionList = [];
       return;
     }
-
-    const filteredList = this.commonSuggestionList.filter(
+    if (this.commonSuggestionList === undefined || this.commonSuggestionList.length === 0) {
+      this.toaster.showMessage("No suggestions available.", "info");
+      return;
+    }
+    const filteredList = this.commonSuggestionList?.filter(
       (option: any) =>
         option?.sourceOrReason &&
         option.sourceOrReason.trim() !== "" &&
@@ -280,7 +327,7 @@ export class TransactionDetailsComponent {
         console.log("res : ", res);
         this.patchValues(res);
         this.loaderService.hideLoader();
-        this.validateAmountFields();
+        // this.validateAmountFields();
       },
       error: (error: any) => {
         console.log("error : ", error);
@@ -308,7 +355,7 @@ export class TransactionDetailsComponent {
   }
 
   patchValues(res: any) {
-    this.transactionDetailsForm.controls["transactionId"].patchValue(res["id"]);
+    this.transactionDetailsForm.controls["transactionId"].patchValue(res["transactionGroupId"]);
     this.transactionDetailsForm.controls["transactionDate"].patchValue(
       this.datepipe.transform(
         res["transactionDate"],
@@ -318,19 +365,33 @@ export class TransactionDetailsComponent {
     this.transactionDetailsForm.controls["sourceOrReason"].patchValue(res["sourceOrReason"]);
     this.transactionDetailsForm.controls["purpose"].patchValue(res["purpose"]);
     this.transactionDetailsForm.controls["description"].patchValue(res["description"]);
-    this.transactionDetailsForm.controls["sbiAccount"].patchValue(res["sbiAccount"]);
-    this.transactionDetailsForm.controls["cash"].patchValue(res["cash"]);
-    this.transactionDetailsForm.controls["other"].patchValue(res["other"]);
-    this.transactionDetailsForm.controls["cbiAccount"].patchValue(res["cbiAccount"]);
-    this.transactionDetailsForm.controls["assetId"].patchValue(res["assetId"]);
+    // Patch dynamic account splits
+    if (res.accountSplits && Array.isArray(res.accountSplits)) {
+      for (const split of res.accountSplits) {
+        const accountId = split.accountId;
+        const amount = split.amount ?? 0;
+        let category = '';
+        if (split.category === 0 || split.category === 'income') category = 'income';
+        else if (split.category === 1 || split.category === 'expense') category = 'expense';
+
+        if (this.transactionDetailsForm.contains(accountId)) {
+          this.transactionDetailsForm.controls[accountId].patchValue(amount);
+        }
+        if (this.transactionDetailsForm.contains('amount_' + accountId)) {
+          this.transactionDetailsForm.controls['amount_' + accountId].patchValue(amount);
+        }
+        if (this.transactionDetailsForm.contains('category_' + accountId)) {
+          this.transactionDetailsForm.controls['category_' + accountId].patchValue(category);
+        }
+      }
+    }
   }
 
   submitTransactionDetails() {
-    
-    this.globalService.trimAllFields(this.transactionDetailsForm);
     this.loaderService.showLoader();
-    this.validateAmountFields();
-    if (this.isValidAmount) {
+    this.globalService.trimAllFields(this.transactionDetailsForm);
+    // this.validateAmountFields();
+    if (!this.isValidAmount) {
       if (!this.transactionDetailsForm.valid) {
         this.toaster.showMessage("Please fill valid details.", "error");
         this.loaderService.hideLoader();
@@ -342,51 +403,54 @@ export class TransactionDetailsComponent {
             this.transactionDetailsForm.value["purpose"];
         }
         this.transactionDetailsForm.value["transactionDate"] = DateUtils.CorrectedDate(this.transactionDetailsForm.value["transactionDate"]);
-        
+
+        // Build splits array from accountList
+        const splits = this.accountList.map((acc: any) => ({
+          accountId: acc.id,
+          category: this.transactionDetailsForm.value['category_' + acc.id],
+          amount: this.transactionDetailsForm.value[acc.id] || 0
+        }));
         this.transactionRequest = {
-          id: this.transactionDetailsForm.value["transactionId"],
+          transactionGroupId: this.transactionDetailsForm.value["transactionGroupId"],
           transactionDate: DateUtils.IstDate(this.transactionDetailsForm.value["transactionDate"]),
           sourceOrReason: this.transactionDetailsForm.value["sourceOrReason"],
-          cash: this.transactionDetailsForm.value["cash"],
-          sbiAccount: this.transactionDetailsForm.value["sbiAccount"],
-          cbiAccount: this.transactionDetailsForm.value["cbiAccount"],
-          other: this.transactionDetailsForm.value["other"],
           purpose: this.transactionDetailsForm.value["purpose"],
           description: this.transactionDetailsForm.value["description"],
+          accountSplits: splits
         }
-        if (this.transactionRequest.id) {
+        if (this.transactionRequest.transactionGroupId) {
           this.transactionService
-          .updateTransaction(this.transactionRequest)
-          .subscribe({
-            next: (result: any) => {
-              if (result) {
-                //this.globalService.openSnackBar('Record Updated Successfully');
-                this.toaster.showMessage(
-                  "Record Updated Successfully.",
-                  "success"
-                );
+            .updateTransaction(this.transactionRequest)
+            .subscribe({
+              next: (result: any) => {
+                if (result) {
+                  //this.globalService.openSnackBar('Record Updated Successfully');
+                  this.toaster.showMessage(
+                    "Record Updated Successfully.",
+                    "success"
+                  );
+                  this.loaderService.hideLoader();
+                  this.renderer
+                    .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
+                    .click();
+                  this.globalService.triggerGridReload(
+                    ApplicationModules.EXPENSE
+                  );
+                } else {
+                  this.loaderService.hideLoader();
+                  this.toaster.showMessage(
+                    "Some issue is in update the data.",
+                    "error"
+                  );
+                  //this.globalService.openSnackBar('some issue is in update the data');
+                  return;
+                }
+              },
+              error: (error: any) => {
                 this.loaderService.hideLoader();
-                this.renderer
-                  .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
-                  .click();
-                this.globalService.triggerGridReload(
-                  ApplicationModules.EXPENSE
-                );
-              } else {
-                this.loaderService.hideLoader();
-                this.toaster.showMessage(
-                  "Some issue is in update the data.",
-                  "error"
-                );
-                //this.globalService.openSnackBar('some issue is in update the data');
-                return;
-              }
-            },
-            error: (error: any) => {
-              this.loaderService.hideLoader();
-              this.toaster.showMessage(error?.message, "error");
-            },
-          });
+                this.toaster.showMessage(error?.message, "error");
+              },
+            });
         } else {
           this.loaderService.showLoader();
           this.transactionService

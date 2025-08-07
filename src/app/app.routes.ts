@@ -9,6 +9,7 @@ import { CurrencySummaryComponent } from "./components/currency-summary/currency
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
 import { SettingsComponent } from "./components/settings/settings.component";
+import { ExpenseComponent } from "./components/expense/expense.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -47,6 +48,7 @@ export const routes: Routes = [
         path: "expenses",
         title: "Transactions",
         component: TransactionComponent,
+        // component: ExpenseComponent,
       },
       // {
       //   path: "business",
