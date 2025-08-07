@@ -11,12 +11,12 @@
                     <div>
 
                         <div style="display: none;">
-                            <p>transactionId</p>
-                            <input formControlName="transactionId">
+                            <p>transactionGroupId</p>
+                            <input formControlName="transactionGroupId">
                         </div>
                         <div class="row">
                             <div class="col-6">
-                                <label> Choose a date</label>
+                                <label class="required"> Choose a date</label>
                                 <input id="transactionDate"
                                     class="form-control form-control-lg text-dark bg-transparent" type="date"
                                     placeholder="DD/MM/YYYY" appearance="outline" formControlName="transactionDate"
@@ -40,7 +40,7 @@
                             </div>
 
                             <div class="col-6">
-                                <label>Source or reason</label>
+                                <label class="required">Source or reason</label>
                                 <input type="text" placeholder="Type something" aria-label="Source and reasons" matInput
                                     class="form-control form-control-lg text-dark bg-transparent"
                                     formControlName="sourceOrReason" (input)="onSourceReasonChange($event)"
@@ -78,11 +78,11 @@
                             <div class="col-6 mt-4">
                                 <label>{{account.configurationName}} </label> &nbsp; 
                                 <label>
-                                    <input type="radio" [value]="'income'" [formControlName]="'category_' + account.id" />
+                                    <input type="radio" [value]="'income'" [formControlName]="'category_' + account.id" (click)="toggleCategory(account.id, 'income')"/>
                                     Income
                                 </label> &nbsp; 
                                 <label>
-                                    <input type="radio" [value]="'expense'" [formControlName]="'category_' + account.id" />
+                                    <input type="radio" [value]="'expense'" [formControlName]="'category_' + account.id" (click)="toggleCategory(account.id, 'expense')" />
                                     Expense
                                 </label>
                                 <input [formControlName]="account.id"
@@ -131,7 +131,6 @@
                                     }
                                 </ul>
                                 }
-transactionDetailsForm.invalid -- {{transactionDetailsForm.invalid}} --
                             </div>
                         </div>
                         <div class="row mt-4">

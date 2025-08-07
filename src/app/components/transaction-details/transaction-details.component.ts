@@ -83,7 +83,7 @@ export class TransactionDetailsComponent {
     private datepipe: DatePipe
   ) {
     this.transactionDetailsForm = this._details.group({
-      transactionId: '',
+      transactionGroupId: '',
       transactionDate: ["", Validators.required],
       sourceOrReason: ["", Validators.required],
       description: "",
@@ -105,7 +105,7 @@ export class TransactionDetailsComponent {
   //   // });
   // }
 
-  openDetailsPopup(transactionId: string) {
+  openDetailsPopup(transactionGroupId: string) {
     this.loaderService.showLoader();
     this.loggedInUserId = localStorage.getItem('userId') || '';
 
@@ -114,8 +114,8 @@ export class TransactionDetailsComponent {
         console.log('result : ', result);
         this.accountList = result;
         this.loadAccountFields();
-        if (this.accountList && transactionId) {
-          this.getTransactionDetails(transactionId);
+        if (this.accountList && transactionGroupId) {
+          this.getTransactionDetails(transactionGroupId);
         }
       },
       error: (error: any) => {
@@ -128,7 +128,7 @@ export class TransactionDetailsComponent {
     if (model !== null) {
       model.style.display = "block";
     }
-    if (!transactionId) {
+    if (!transactionGroupId) {
       this.transactionDetailsForm.controls["transactionDate"].patchValue(
         this.datepipe.transform(
           this.lastTransactionDate,
@@ -320,9 +320,9 @@ export class TransactionDetailsComponent {
     this.filteredPurposeList = [];
   }
 
-  getTransactionDetails(transactionId: string) {
+  getTransactionDetails(transactionGroupId: string) {
     this.loaderService.showLoader();
-    this.transactionService.getTransactionDetails(transactionId).subscribe({
+    this.transactionService.getTransactionDetails(transactionGroupId).subscribe({
       next: (res: any) => {
         console.log("res : ", res);
         this.patchValues(res);
@@ -355,7 +355,7 @@ export class TransactionDetailsComponent {
   }
 
   patchValues(res: any) {
-    this.transactionDetailsForm.controls["transactionId"].patchValue(res["transactionGroupId"]);
+    this.transactionDetailsForm.controls["transactionGroupId"].patchValue(res["transactionGroupId"]);
     this.transactionDetailsForm.controls["transactionDate"].patchValue(
       this.datepipe.transform(
         res["transactionDate"],
@@ -389,6 +389,7 @@ export class TransactionDetailsComponent {
 
   submitTransactionDetails() {
     this.loaderService.showLoader();
+    debugger
     this.globalService.trimAllFields(this.transactionDetailsForm);
     // this.validateAmountFields();
     if (!this.isValidAmount) {
@@ -404,12 +405,39 @@ export class TransactionDetailsComponent {
         }
         this.transactionDetailsForm.value["transactionDate"] = DateUtils.CorrectedDate(this.transactionDetailsForm.value["transactionDate"]);
 
+        let invalidEntry = null;
+
+        for (const acc of this.accountList) {
+          debugger
+          const category = this.transactionDetailsForm.value['category_' + acc.id];
+          const amount = this.transactionDetailsForm.value[acc.id];
+
+          const hasAmount = amount !== null && amount !== undefined && amount !== '' && amount !== 0;
+          const hasCategory = category !== null && category !== undefined && category !== 0;
+
+          if ((hasAmount && !hasCategory) || (!hasAmount && hasCategory)) {
+            invalidEntry = acc;
+            break;
+          }
+        }
+
+        if (invalidEntry) {
+          const accName = invalidEntry.configurationName || 'Unknown Account';
+          alert(`Please provide both Amount and Category for ${accName}`);
+          this.loaderService.hideLoader();
+          return;
+        }
         // Build splits array from accountList
         const splits = this.accountList.map((acc: any) => ({
           accountId: acc.id,
           category: this.transactionDetailsForm.value['category_' + acc.id],
-          amount: this.transactionDetailsForm.value[acc.id] || 0
-        }));
+          amount: this.transactionDetailsForm.value[acc.id]
+        })).filter((split: any) =>
+          split.category !== 0 &&
+          split.category !== null &&
+          split.category !== undefined &&
+          split.amount !== 0
+        );
         this.transactionRequest = {
           transactionGroupId: this.transactionDetailsForm.value["transactionGroupId"],
           transactionDate: DateUtils.IstDate(this.transactionDetailsForm.value["transactionDate"]),
@@ -452,6 +480,7 @@ export class TransactionDetailsComponent {
               },
             });
         } else {
+          this.transactionRequest.transactionGroupId = null;
           this.loaderService.showLoader();
           this.transactionService
             .addTransaction(this.transactionRequest)
@@ -498,5 +527,21 @@ export class TransactionDetailsComponent {
       return;
     }
   }
+  previousSelections: { [key: string]: string | null } = {};
+
+toggleCategory(accountId: string, value: string) {
+  const key = 'category_' + accountId;
+  const currentValue = this.transactionDetailsForm.get(key)?.value;
+
+  if (this.previousSelections[key] === value) {
+    // Unselect if clicked again
+    this.transactionDetailsForm.get(key)?.setValue(null);
+    this.previousSelections[key] = null;
+  } else {
+    this.transactionDetailsForm.get(key)?.setValue(value);
+    this.previousSelections[key] = value;
+  }
+}
+
 }
 

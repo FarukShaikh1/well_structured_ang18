@@ -481,6 +481,10 @@ export class TransactionComponent implements OnInit {
       }
     }
     if (balanceKeyMatch) {
+      debugger;
+      if (cellValue == null) {
+        return `<span></span>`;
+      }
       if (cellValue >= 0) {
         return `<span style="color:#129D0A; font-weight:bold">${cellValue}</span>`;
       }
