@@ -527,21 +527,17 @@ export class TransactionDetailsComponent {
       return;
     }
   }
-  previousSelections: { [key: string]: string | null } = {};
 
-toggleCategory(accountId: string, value: string) {
-  const key = 'category_' + accountId;
-  const currentValue = this.transactionDetailsForm.get(key)?.value;
+  toggleCategory(accountId: string, value: string) {
+    const key = 'category_' + accountId;
+    const current = this.transactionDetailsForm.get(key)?.value;
 
-  if (this.previousSelections[key] === value) {
-    // Unselect if clicked again
-    this.transactionDetailsForm.get(key)?.setValue(null);
-    this.previousSelections[key] = null;
-  } else {
-    this.transactionDetailsForm.get(key)?.setValue(value);
-    this.previousSelections[key] = value;
+    if (current === value) {
+      this.transactionDetailsForm.get(key)?.setValue(null); // Unselect if same clicked
+    } else {
+      this.transactionDetailsForm.get(key)?.setValue(value);
+    }
   }
-}
 
 }
 

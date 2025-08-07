@@ -76,19 +76,27 @@
                         <div class="row">
                             @for(account of accountList; track $index){
                             <div class="col-6 mt-4">
-                                <label>{{account.configurationName}} </label> &nbsp; 
-                                <label>
-                                    <input type="radio" [value]="'income'" [formControlName]="'category_' + account.id" (click)="toggleCategory(account.id, 'income')"/>
-                                    Income
-                                </label> &nbsp; 
-                                <label>
-                                    <input type="radio" [value]="'expense'" [formControlName]="'category_' + account.id" (click)="toggleCategory(account.id, 'expense')" />
-                                    Expense
-                                </label>
+                                <div class="d-flex  justify-content-between align-items-center">
+                                    <label>{{ account.configurationName }}</label> &nbsp;
+
+                                    <div class="category-toggle">
+                                        <label class="category-option income"
+                                            [class.active]="transactionDetailsForm.get('category_' + account.id)?.value === 'income'"
+                                            (click)="toggleCategory(account.id, 'income')">
+                                            Income
+                                        </label>
+                                        <label class="category-option expense"
+                                            [class.active]="transactionDetailsForm.get('category_' + account.id)?.value === 'expense'"
+                                            (click)="toggleCategory(account.id, 'expense')">
+                                            Expense
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="hidden" [formControlName]="'category_' + account.id" />
+
                                 <input [formControlName]="account.id"
                                     class="form-control form-control-lg text-dark bg-transparent"
-                                    (keydown)="globalService.validateAmount($event)" (keyup)="validateAmountFields()">
-
+                                    (keydown)="globalService.validateAmount($event)" (keyup)="validateAmountFields()" />
                             </div>
                             }
                         </div>
