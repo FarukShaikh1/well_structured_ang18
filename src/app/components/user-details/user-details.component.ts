@@ -56,11 +56,6 @@ export class UserDetailsComponent {
   }
 
 
-  isGuid(value: string) {
-    const guidPattern =
-      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-    return guidPattern.test(value);
-  }
 
   openUserDetailsPopup(id: string) {
     this.getRoleList();

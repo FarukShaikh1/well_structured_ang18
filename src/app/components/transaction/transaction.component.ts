@@ -195,23 +195,23 @@ export class TransactionComponent implements OnInit {
           title: "Transaction Date",
           field: "transactionDate",
           sorter: "alphanum",
-          width: 100,
+          // width: 100,
           formatter: this.dateFormatter.bind(this),
         },
         {
           title: "Source/Reason",
           field: "sourceOrReason",
-          width: 150,
+          // width: 150,
           sorter: "alphanum",
         },
         {
           title: "Description",
           field: "description",
-          width: 200,
+          // width: 200,
           sorter: "alphanum",
         },
       ];
-      if (this.filteredTableData.length > 0 && this.accountColumns) {
+      if (this.tableData.length > 0 && this.accountColumns) {
         for (const key of Object.keys(this.accountColumns)) {
           const isAmount = key.toLowerCase().includes("amount");
           const isBalance = key.toLowerCase().includes("balance");
@@ -228,7 +228,7 @@ export class TransactionComponent implements OnInit {
               bottomCalc: "sum",
               bottomCalcFormatter: this.amountColorFormatter.bind(this),
               bottomCalcFormatterParams: { symbol: "", precision: 2 },
-              width: 150,
+              // width: 150,
             });
           }
         }

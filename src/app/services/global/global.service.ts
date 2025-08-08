@@ -240,4 +240,17 @@ export class GlobalService {
         </div>`;
   }
 
+  isValidGuid(value: string) {
+    const guidPattern =
+      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+    return guidPattern.test(value);
+  }
+
+  isEmptyGuid(value: string) {
+    const guidPattern =
+      /^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/;
+    return guidPattern.test(value);
+  }
+
+
 }

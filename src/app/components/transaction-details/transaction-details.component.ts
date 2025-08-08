@@ -406,7 +406,7 @@ export class TransactionDetailsComponent {
         this.transactionDetailsForm.value["transactionDate"] = DateUtils.CorrectedDate(this.transactionDetailsForm.value["transactionDate"]);
 
         let invalidEntry = null;
-
+        let validAmount = null
         for (const acc of this.accountList) {
           debugger
           const category = this.transactionDetailsForm.value['category_' + acc.id];
@@ -415,29 +415,40 @@ export class TransactionDetailsComponent {
           const hasAmount = amount !== null && amount !== undefined && amount !== '' && amount !== 0;
           const hasCategory = category !== null && category !== undefined && category !== 0;
 
-          if ((hasAmount && !hasCategory) || (!hasAmount && hasCategory)) {
+          // if ((hasAmount && !hasCategory) || (!hasAmount && hasCategory)) {
+          if (hasAmount && !hasCategory) {
             invalidEntry = acc;
             break;
+          }
+          if (hasAmount && hasCategory) {
+            validAmount = acc;
           }
         }
 
         if (invalidEntry) {
           const accName = invalidEntry.configurationName || 'Unknown Account';
-          alert(`Please provide both Amount and Category for ${accName}`);
+          this.toaster.showMessage(`Please select expense or income for ${accName}`, 'error');
           this.loaderService.hideLoader();
           return;
         }
+        if (!validAmount) {
+          this.toaster.showMessage("Please enter valid amount for at least one account.", 'error');
+          this.loaderService.hideLoader();
+          return;
+        }
+
         // Build splits array from accountList
-        const splits = this.accountList.map((acc: any) => ({
+        const splits = this.accountList.map((acc: any) => ({// passing all values to maintains balance entry
           accountId: acc.id,
-          category: this.transactionDetailsForm.value['category_' + acc.id],
-          amount: this.transactionDetailsForm.value[acc.id]
-        })).filter((split: any) =>
-          split.category !== 0 &&
-          split.category !== null &&
-          split.category !== undefined &&
-          split.amount !== 0
-        );
+          category: this.transactionDetailsForm.value['category_' + acc.id] || 'expense',
+          amount: this.transactionDetailsForm.value[acc.id] || 0
+        }))
+        // .filter((split: any) =>
+        //   split.category !== 0 &&
+        //   split.category !== null &&
+        //   split.category !== undefined &&
+        //   split.amount !== 0
+        // );
         this.transactionRequest = {
           transactionGroupId: this.transactionDetailsForm.value["transactionGroupId"],
           transactionDate: DateUtils.IstDate(this.transactionDetailsForm.value["transactionDate"]),
@@ -452,25 +463,13 @@ export class TransactionDetailsComponent {
             .subscribe({
               next: (result: any) => {
                 if (result) {
-                  //this.globalService.openSnackBar('Record Updated Successfully');
-                  this.toaster.showMessage(
-                    "Record Updated Successfully.",
-                    "success"
-                  );
+                  this.toaster.showMessage("Record Updated Successfully.", "success");
                   this.loaderService.hideLoader();
-                  this.renderer
-                    .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
-                    .click();
-                  this.globalService.triggerGridReload(
-                    ApplicationModules.EXPENSE
-                  );
+                  this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
+                  this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
                 } else {
                   this.loaderService.hideLoader();
-                  this.toaster.showMessage(
-                    "Some issue is in update the data.",
-                    "error"
-                  );
-                  //this.globalService.openSnackBar('some issue is in update the data');
+                  this.toaster.showMessage("Some issue is in update the data.", "error");
                   return;
                 }
               },
@@ -487,23 +486,19 @@ export class TransactionDetailsComponent {
             .subscribe({
               next: (result: any) => {
                 if (result) {
-                  this.loaderService.hideLoader();
-                  this.toaster.showMessage(
-                    "Record Added Successfully.",
-                    "success"
-                  );
-                  this.renderer
-                    .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
-                    .click();
-                  this.globalService.triggerGridReload(
-                    ApplicationModules.EXPENSE
-                  );
+                  if (this.globalService.isEmptyGuid(result)) {
+                    this.toaster.showMessage("Data is not added in the database.", "error");
+                    this.loaderService.hideLoader();
+                  }
+                  else {
+                    this.toaster.showMessage("Record added Successfully.", "success");
+                    this.loaderService.hideLoader();
+                    this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
+                    this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
+                  }
                 } else {
                   this.loaderService.hideLoader();
-                  this.toaster.showMessage(
-                    "Some issue is in adding the data.",
-                    "error"
-                  );
+                  this.toaster.showMessage("Some issue is in adding the data.", "error");
                 }
               },
               error: (error: any) => {
@@ -513,16 +508,11 @@ export class TransactionDetailsComponent {
             });
         }
       } catch (error) {
-        alert("Inside catch block transaction details line 263");
-        //this.globalService.openSnackBar("Error in adding data : " + error);
         this.loaderService.hideLoader();
-        this.toaster.showMessage(
-          "Erroooorrrr issue is in adding the data.",
-          "error"
-        );
+        this.toaster.showMessage("Erroooorrrr issue is in adding the data.", "error");
       }
     } else {
-      //this.globalService.openSnackBar('Amount can not be blank or 0');
+      this.toaster.showMessage("Amount can not be blank or 0.", "error");
       this.loaderService.hideLoader();
       return;
     }
