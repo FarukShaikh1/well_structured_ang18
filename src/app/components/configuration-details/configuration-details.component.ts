@@ -58,7 +58,6 @@ export class ConfigurationDetailsComponent {
 
 
   openDetailsPopup(id: string, config: string) {
-    debugger
     this.currentConfig = config;
     this.getConfigDetailsById(id, config);
     const model = document.getElementById('configDetailsPopup');

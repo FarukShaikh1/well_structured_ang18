@@ -106,11 +106,19 @@
   </div>
 
   <div class="row">
+    <!-- transaction-report.component.html -->
+    @if(activeComponent === NavigationURLs.EXPENSE_REPORT){
+    <div class="col-6">
+      <app-transaction-report-chart [reportData]="transactionReports"></app-transaction-report-chart>
+    </div>
+    }
+    @else{
     <div class="mb-2">
       <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
         [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
       </app-tabulator-grid>
     </div>
+    }
   </div>
 </div>
 <app-transaction-details [lastTransactionDate]="lastTransactionDate"></app-transaction-details>

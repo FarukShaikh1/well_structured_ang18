@@ -19,6 +19,8 @@ import { TransactionDetailsComponent } from "../transaction-details/transaction-
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
+import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
 export interface Task {
   name: string;
   completed: boolean;
@@ -33,6 +35,7 @@ export interface Task {
     TabulatorGridComponent,
     TransactionDetailsComponent,
     ConfirmationDialogComponent,
+    TransactionReportChartComponent
   ],
   templateUrl: "./transaction.component.html",
   providers: [DatePipe, DateUtils],
@@ -57,7 +60,7 @@ export class TransactionComponent implements OnInit {
   public filterColumns: ColumnDefinition[] = [];
 
   lastTransactionDate: Date = new Date();
-
+  NavigationURLs = NavigationURLs;
   fromDate = DateUtils.GetDateBeforeDays(30);
   toDate = DateUtils.GetDateBeforeDays(0);
   sourceOrReason: string = "";
@@ -76,6 +79,7 @@ export class TransactionComponent implements OnInit {
   };
   ActionConstant = ActionConstant;
   accountColumns: any;
+  transactionReports: TransactionReportResponse[] = [];
   // optionsMenu = [
   //   {
   //     label: ApplicationConstantHtml.EDIT_LABLE,
@@ -483,7 +487,6 @@ export class TransactionComponent implements OnInit {
       }
     }
     if (balanceKeyMatch) {
-      debugger;
       if (cellValue == null) {
         return `<span></span>`;
       }
@@ -717,6 +720,7 @@ export class TransactionComponent implements OnInit {
         .getTransactionReportList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
+            this.transactionReports = res;
             this.tableData = res;
             this.filteredTableData = res;
             this.lastTransactionDate = this.getLatestTransactionDate();
@@ -806,4 +810,5 @@ export class TransactionComponent implements OnInit {
       this.LoadGrid();
     }
   }
+
 }

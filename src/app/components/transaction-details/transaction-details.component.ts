@@ -152,10 +152,8 @@ export class TransactionDetailsComponent {
   }
 
   atLeastOneValidAccountEntryValidator(accountIds: string[]): ValidatorFn {
-    debugger;
     return (form: AbstractControl): ValidationErrors | null => {
       for (const id of accountIds) {
-        debugger;
         const amountControl = form.get('amount_' + id);
         const categoryControl = form.get('category_' + id);
 

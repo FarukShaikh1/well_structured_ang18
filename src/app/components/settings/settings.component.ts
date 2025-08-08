@@ -165,7 +165,6 @@ export class SettingsComponent {
     this.occasionTypeColumnConfiguration();
     this.configurationService.getConfigList(userId, config).subscribe({
       next: (result: any) => {
-        debugger
         if (config === UserConfig.ACCOUNT) {
           this.filteredAccountTableData = result;
           this.accountTableData = result;

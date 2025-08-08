@@ -27,7 +27,6 @@ export class ConfigurationService {
   }
 
   addConfiguration(request: ConfigurationRequest, config: string) {
-    debugger;
     const params = new HttpParams()
       .set('userId', this.loggedInUserId)
       .set('config', config);
@@ -35,7 +34,6 @@ export class ConfigurationService {
   }
 
   updateConfiguration(request: ConfigurationRequest, config: string) {
-    debugger;
     const params = new HttpParams()
       .set('userId', this.loggedInUserId)
       .set('config', config);
