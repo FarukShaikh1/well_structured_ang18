@@ -459,7 +459,9 @@ export class TransactionComponent implements OnInit {
     if (!transactionData || !transactionData['accountData'] || (typeof cellValue !== 'number' && cellValue !== null && cellValue !== undefined)) {
       return `<span>${cellValue}</span>`;
     }
-
+    if (cellValue === 0) {
+      return `<span></span>`;
+    }
     // Extract base account name from the amount field
     const amountKeyMatch = field.match(/accountData\.([^.]+)_Amount/i);
     const balanceKeyMatch = field.match(/accountData\.([^.]+)_Balance/i);

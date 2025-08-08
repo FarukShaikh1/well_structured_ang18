@@ -389,134 +389,113 @@ export class TransactionDetailsComponent {
 
   submitTransactionDetails() {
     this.loaderService.showLoader();
-    debugger
     this.globalService.trimAllFields(this.transactionDetailsForm);
-    // this.validateAmountFields();
-    if (!this.isValidAmount) {
-      if (!this.transactionDetailsForm.valid) {
-        this.toaster.showMessage("Please fill valid details.", "error");
-        this.loaderService.hideLoader();
-        return;
+
+    if (!this.transactionDetailsForm.valid) {
+      return this.showError("Please fill valid details.");
+    }
+
+    try {
+      this.ensureDescription();
+      this.correctTransactionDate();
+
+      const validationError = this.validateAccountEntries();
+      if (validationError) {
+        return this.showError(validationError);
       }
-      try {
-        if (!this.transactionDetailsForm.value["description"]) {
-          this.transactionDetailsForm.value["description"] =
-            this.transactionDetailsForm.value["purpose"];
-        }
-        this.transactionDetailsForm.value["transactionDate"] = DateUtils.CorrectedDate(this.transactionDetailsForm.value["transactionDate"]);
 
-        let invalidEntry = null;
-        let validAmount = null
-        for (const acc of this.accountList) {
-          debugger
-          const category = this.transactionDetailsForm.value['category_' + acc.id];
-          const amount = this.transactionDetailsForm.value[acc.id];
-
-          const hasAmount = amount !== null && amount !== undefined && amount !== '' && amount !== 0;
-          const hasCategory = category !== null && category !== undefined && category !== 0;
-
-          // if ((hasAmount && !hasCategory) || (!hasAmount && hasCategory)) {
-          if (hasAmount && !hasCategory) {
-            invalidEntry = acc;
-            break;
-          }
-          if (hasAmount && hasCategory) {
-            validAmount = acc;
-          }
-        }
-
-        if (invalidEntry) {
-          const accName = invalidEntry.configurationName || 'Unknown Account';
-          this.toaster.showMessage(`Please select expense or income for ${accName}`, 'error');
-          this.loaderService.hideLoader();
-          return;
-        }
-        if (!validAmount) {
-          this.toaster.showMessage("Please enter valid amount for at least one account.", 'error');
-          this.loaderService.hideLoader();
-          return;
-        }
-
-        // Build splits array from accountList
-        const splits = this.accountList.map((acc: any) => ({// passing all values to maintains balance entry
-          accountId: acc.id,
-          category: this.transactionDetailsForm.value['category_' + acc.id] || 'expense',
-          amount: this.transactionDetailsForm.value[acc.id] || 0
-        }))
-        // .filter((split: any) =>
-        //   split.category !== 0 &&
-        //   split.category !== null &&
-        //   split.category !== undefined &&
-        //   split.amount !== 0
-        // );
-        this.transactionRequest = {
-          transactionGroupId: this.transactionDetailsForm.value["transactionGroupId"],
-          transactionDate: DateUtils.IstDate(this.transactionDetailsForm.value["transactionDate"]),
-          sourceOrReason: this.transactionDetailsForm.value["sourceOrReason"],
-          purpose: this.transactionDetailsForm.value["purpose"],
-          description: this.transactionDetailsForm.value["description"],
-          accountSplits: splits
-        }
-        if (this.transactionRequest.transactionGroupId) {
-          this.transactionService
-            .updateTransaction(this.transactionRequest)
-            .subscribe({
-              next: (result: any) => {
-                if (result) {
-                  this.toaster.showMessage("Record Updated Successfully.", "success");
-                  this.loaderService.hideLoader();
-                  this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
-                  this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
-                } else {
-                  this.loaderService.hideLoader();
-                  this.toaster.showMessage("Some issue is in update the data.", "error");
-                  return;
-                }
-              },
-              error: (error: any) => {
-                this.loaderService.hideLoader();
-                this.toaster.showMessage(error?.message, "error");
-              },
-            });
-        } else {
-          this.transactionRequest.transactionGroupId = null;
-          this.loaderService.showLoader();
-          this.transactionService
-            .addTransaction(this.transactionRequest)
-            .subscribe({
-              next: (result: any) => {
-                if (result) {
-                  if (this.globalService.isEmptyGuid(result)) {
-                    this.toaster.showMessage("Data is not added in the database.", "error");
-                    this.loaderService.hideLoader();
-                  }
-                  else {
-                    this.toaster.showMessage("Record added Successfully.", "success");
-                    this.loaderService.hideLoader();
-                    this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
-                    this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
-                  }
-                } else {
-                  this.loaderService.hideLoader();
-                  this.toaster.showMessage("Some issue is in adding the data.", "error");
-                }
-              },
-              error: (error: any) => {
-                this.toaster.showMessage(error?.message, "error");
-                this.loaderService.hideLoader();
-              },
-            });
-        }
-      } catch (error) {
-        this.loaderService.hideLoader();
-        this.toaster.showMessage("Erroooorrrr issue is in adding the data.", "error");
+      const splits = this.buildSplits();
+      if (splits.length === 0) {
+        return this.showError("Please enter valid amount for at least one account.");
       }
-    } else {
-      this.toaster.showMessage("Amount can not be blank or 0.", "error");
-      this.loaderService.hideLoader();
-      return;
+
+      this.transactionRequest = {
+        transactionGroupId: this.transactionDetailsForm.value["transactionGroupId"] || null,
+        transactionDate: DateUtils.IstDate(this.transactionDetailsForm.value["transactionDate"]),
+        sourceOrReason: this.transactionDetailsForm.value["sourceOrReason"],
+        purpose: this.transactionDetailsForm.value["purpose"],
+        description: this.transactionDetailsForm.value["description"],
+        accountSplits: splits
+      };
+
+      this.saveTransaction();
+    } catch (error) {
+      this.showError("Error occurred while adding the data.");
     }
   }
+
+  /** Ensures description is filled */
+  private ensureDescription() {
+    if (!this.transactionDetailsForm.value["description"]) {
+      this.transactionDetailsForm.value["description"] = this.transactionDetailsForm.value["purpose"];
+    }
+  }
+
+  /** Corrects date */
+  private correctTransactionDate() {
+    this.transactionDetailsForm.value["transactionDate"] = DateUtils.CorrectedDate(
+      this.transactionDetailsForm.value["transactionDate"]
+    );
+  }
+
+  /** Validate account entries */
+  private validateAccountEntries(): string | null {
+    for (const acc of this.accountList) {
+      const category = this.transactionDetailsForm.value['category_' + acc.id];
+      const amount = this.transactionDetailsForm.value[acc.id];
+      const hasAmount = !!amount && amount !== 0;
+      const hasCategory = category !== null && category !== undefined && category !== 0;
+
+      if (hasAmount && !hasCategory) {
+        return `Please select transaction category for ${acc.configurationName || 'Unknown Account'}`;
+      }
+    }
+    return null;
+  }
+
+  /** Build splits */
+  private buildSplits() {
+    return this.accountList
+      .map((acc: any) => ({
+        accountId: acc.id,
+        category: this.transactionDetailsForm.value['category_' + acc.id] || 'expense',
+        amount: this.transactionDetailsForm.value[acc.id] || 0
+      }))
+      .filter((split: { category: any; amount: number; }) => split.category && split.amount !== 0);
+  }
+
+  /** Save transaction (update or add) */
+  private saveTransaction() {
+    const isUpdate = !!this.transactionRequest.transactionGroupId;
+    const request$ = isUpdate
+      ? this.transactionService.updateTransaction(this.transactionRequest)
+      : this.transactionService.addTransaction(this.transactionRequest);
+
+    request$.subscribe({
+      next: (result: any) => {
+        if (!result || (!isUpdate && this.globalService.isEmptyGuid(result))) {
+          return this.showError(isUpdate ? "Some issue occurred while updating." : "Data is not added in the database.");
+        }
+
+        this.showSuccess(isUpdate ? "Record updated successfully." : "Record added successfully.");
+        this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
+        this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
+      },
+      error: (error: any) => this.showError(error?.message || "An error occurred."),
+    });
+  }
+
+  /** Helpers for messages */
+  private showError(message: string) {
+    this.loaderService.hideLoader();
+    this.toaster.showMessage(message, "error");
+  }
+
+  private showSuccess(message: string) {
+    this.loaderService.hideLoader();
+    this.toaster.showMessage(message, "success");
+  }
+
 
   toggleCategory(accountId: string, value: string) {
     const key = 'category_' + accountId;
