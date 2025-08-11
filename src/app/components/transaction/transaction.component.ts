@@ -67,7 +67,7 @@ export class TransactionComponent implements OnInit {
   minAmount: number = 0;
   maxAmount: number = 0;
   transactionId: string = "";
-  activeComponent: string = NavigationURLs.EXPENSE_LIST;
+  activeComponent: string = NavigationURLs.EXPENSE_REPORT;
   reportLastDate = "";
   reportFirstDate = "";
   transactionfilterRequest: ExpenseFilterRequest = {
@@ -124,264 +124,275 @@ export class TransactionComponent implements OnInit {
 
   columnConfiguration() {
     if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
-      this.columnConfig = [
-        {
-          title: "Transaction Date",
-          field: "transactionDate",
-          sorter: "alphanum",
-          formatter: this.dateFormatter.bind(this),
-        },
-        {
-          title: "Source/Reason",
-          field: "sourceOrReason",
-          sorter: "alphanum",
-          formatter: this.getColorForText.bind(this),
-        },
-        {
-          title: "Description",
-          field: "description",
-          sorter: "alphanum",
-          width: 400,
-        },
-        {
-          title: "ModeOfTransaction",
-          field: "accountName",
-          sorter: "alphanum",
-        },
-        {
-          title: "Debit",
-          field: "expense",
-          sorter: "alphanum",
-          formatter: this.amountColorFormatter.bind(this),
-          bottomCalc: "sum",
-          bottomCalcFormatter: this.amountColorFormatter.bind(this),
-          bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        },
-        {
-          title: "Credit",
-          field: "income",
-          sorter: "alphanum",
-          formatter: this.amountColorFormatter.bind(this),
-          bottomCalc: "sum",
-          bottomCalcFormatter: this.amountColorFormatter.bind(this),
-          bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        },
-        {
-          title: "",
-          field: "",
-          maxWidth: 70,
-          formatter: this.globalService.hidebuttonFormatter.bind(this),
-          cellClick: (e, cell) => {
-            const transactionId = cell.getRow().getData()["id"];
-            this.hideTransaction(transactionId);
-          },
-          hozAlign: "center",
-          headerSort: false,
-        },
-      ];
-      if (
-        this.globalService.isAccessible(ActionConstant.EDIT) ||
-        this.globalService.isAccessible(ActionConstant.DELETE)
-      ) {
-        this.columnConfig.push({
-          title: "",
-          field: "option",
-          maxWidth: 70,
-          formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
-          hozAlign: "center",
-          headerSort: false,
-        });
-      }
-
+      this.loadConfigForExpenseList();
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
-      this.columnConfig = [
-        {
-          title: "Transaction Date",
-          field: "transactionDate",
-          sorter: "alphanum",
-          // width: 100,
-          formatter: this.dateFormatter.bind(this),
-        },
-        {
-          title: "Source/Reason",
-          field: "sourceOrReason",
-          // width: 150,
-          sorter: "alphanum",
-        },
-        {
-          title: "Description",
-          field: "description",
-          // width: 200,
-          sorter: "alphanum",
-        },
-      ];
-      if (this.tableData.length > 0 && this.accountColumns) {
-        for (const key of Object.keys(this.accountColumns)) {
-          const isAmount = key.toLowerCase().includes("amount");
-          const isBalance = key.toLowerCase().includes("balance");
-          const isCategory = key.toLowerCase().includes("category");
-          if (!key.toLowerCase().includes("category")) {
-            this.columnConfig.push({
-              title: key,
-              field: `accountData.${key}`,
-              // field:this.globalService.lowercaseFirstLetterOfEachWord(key),
-              formatter: this.summaryAmountColorFormatter.bind(this),
-              hozAlign: "center",
-              headerHozAlign: "center",
-              cssClass: "amount-column",
-              bottomCalc: "sum",
-              bottomCalcFormatter: this.amountColorFormatter.bind(this),
-              bottomCalcFormatterParams: { symbol: "", precision: 2 },
-              // width: 150,
-            });
-          }
-        }
-      }
-      this.columnConfig.push({
+      this.loadConfigForExpenseSummaryList();
+    } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
+      this.loadConfigForExpenseReportList();
+    }
+  }
+
+  loadConfigForExpenseList() {
+    this.columnConfig = [
+      {
+        title: "Transaction Date",
+        field: "transactionDate",
+        sorter: "alphanum",
+        formatter: this.dateFormatter.bind(this),
+      },
+      {
+        title: "Source/Reason",
+        field: "sourceOrReason",
+        sorter: "alphanum",
+        formatter: this.getColorForText.bind(this),
+      },
+      {
+        title: "Description",
+        field: "description",
+        sorter: "alphanum",
+        width: 400,
+      },
+      {
+        title: "ModeOfTransaction",
+        field: "accountName",
+        sorter: "alphanum",
+      },
+      {
+        title: "Debit",
+        field: "expense",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+      },
+      {
+        title: "Credit",
+        field: "income",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+      },
+      {
         title: "",
         field: "",
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const transactionId = cell.getRow().getData()["id"];
+          const transactionId = cell.getRow().getData()["transactionGroupId"];
           this.hideTransaction(transactionId);
         },
+        hozAlign: "center",
+        headerSort: false,
+      },
+    ];
+    if (
+      this.globalService.isAccessible(ActionConstant.EDIT) ||
+      this.globalService.isAccessible(ActionConstant.DELETE)
+    ) {
+      this.columnConfig.push({
+        title: "",
+        field: "option",
+        maxWidth: 70,
+        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        hozAlign: "center",
         headerSort: false,
       });
-      if (
-        this.globalService.isAccessible(ActionConstant.EDIT) ||
-        this.globalService.isAccessible(ActionConstant.DELETE)
-      ) {
-        this.columnConfig.push({
-          title: "",
-          field: "option",
-          maxWidth: 70,
-          formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
-          hozAlign: "center",
-          headerSort: false,
-        });
-      }
-
-
-    } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
-      this.columnConfig = [
-        {
-          title: "FirstDate",
-          field: "firstDate",
-          sorter: "alphanum",
-          width: 100,
-          formatter: this.dateFormatter.bind(this),
-        },
-        {
-          title: "LastDate",
-          field: "lastDate",
-          sorter: "alphanum",
-          width: 100,
-          formatter: this.dateFormatter.bind(this),
-        },
-        {
-          title: "Source/Reason",
-          field: "sourceOrReason",
-          sorter: "alphanum",
-          width: 150,
-        },
-        {
-          title: "Description",
-          field: "description",
-          sorter: "alphanum",
-          width: 600,
-          formatter: (cell) => {
-            const value = cell.getValue() || "";
-            return `<div class="text-wrap">${value}</div>`;
-          },
-          cssClass: "description-column",
-        },
-        {
-          title: "TakenAmount",
-          field: "takenAmount",
-          sorter: "alphanum",
-          formatter: this.amountColorFormatter.bind(this),
-          headerHozAlign: "right",
-          hozAlign: "right",
-          bottomCalc: "sum",
-          bottomCalcFormatter: this.amountColorFormatter.bind(this),
-          bottomCalcFormatterParams: { symbol: "", precision: 2 },
-          cssClass: "amount-column",
-        },
-        {
-          title: "GivenAmount",
-          field: "givenAmount",
-          sorter: "alphanum",
-          formatter: this.amountColorFormatter.bind(this),
-          headerHozAlign: "right",
-          hozAlign: "right",
-          bottomCalc: "sum",
-          bottomCalcFormatter: this.amountColorFormatter.bind(this),
-          bottomCalcFormatterParams: { symbol: "", precision: 2 },
-          cssClass: "amount-column",
-        },
-        {
-          title: "TotalAmount",
-          field: "totalAmount",
-          sorter: "alphanum",
-          formatter: this.amountColorFormatter.bind(this),
-          headerHozAlign: "right",
-          hozAlign: "right",
-          bottomCalc: "sum",
-          bottomCalcFormatter: this.amountColorFormatter.bind(this),
-          bottomCalcFormatterParams: { symbol: "", precision: 2 },
-          cssClass: "amount-column",
-        },
-        {
-          title: "",
-          field: "",
-          maxWidth: 70,
-          formatter: this.globalService.hidebuttonFormatter.bind(this),
-          cellClick: (e, cell) => {
-            const sourceOrReason = cell.getRow().getData()["sourceOrReason"];
-            this.hideTransactionBySource(sourceOrReason);
-          },
-          headerSort: false,
-        },
-        {
-          title: "",
-          field: "",
-          maxWidth: 70,
-          formatter: (_cell) =>
-            '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-          clickMenu: [
-            {
-              label: ApplicationConstantHtml.VIEW_LABLE,
-              action: (_e: any, cell: CellComponent) => {
-                const transactionData = cell.getRow().getData();
-                this.activeComponent = NavigationURLs.EXPENSE_LIST;
-                this.sourceOrReason = transactionData["sourceOrReason"];
-                this.reportFirstDate = DateUtils.formatStringDate(
-                  transactionData["firstDate"]
-                );
-                this.reportLastDate = DateUtils.formatStringDate(
-                  transactionData["lastDate"]
-                );
-                this.LoadGrid();
-              },
-            },
-            {
-              separator: true,
-            },
-            {
-              label: ApplicationConstantHtml.DELETE_LABLE,
-              action: (_e: any, cell: CellComponent) => {
-                const transactionData = cell.getRow().getData();
-                const transactionId = transactionData["id"];
-                this.deleteTransaction(transactionId);
-              },
-            },
-          ],
-          hozAlign: "left",
-          headerSort: false,
-        },
-      ];
     }
+  }
+
+  loadConfigForExpenseSummaryList() {
+    this.columnConfig = [
+      {
+        title: "Transaction Date",
+        field: "transactionDate",
+        sorter: "alphanum",
+        // width: 100,
+        formatter: this.dateFormatter.bind(this),
+      },
+      {
+        title: "Source/Reason",
+        field: "sourceOrReason",
+        // width: 150,
+        sorter: "alphanum",
+      },
+      {
+        title: "Description",
+        field: "description",
+        // width: 200,
+        sorter: "alphanum",
+      },
+    ];
+    
+    if (this.tableData.length > 0 && this.accountColumns) {
+      for (const key of Object.keys(this.accountColumns)) {
+        const isAmount = key.toLowerCase().includes("amount");
+        const isBalance = key.toLowerCase().includes("balance");
+        const isCategory = key.toLowerCase().includes("category");
+        if (!key.toLowerCase().includes("category")) {
+          this.columnConfig.push({
+            title: key,
+            field: `accountData.${key}`,
+            // field:this.globalService.lowercaseFirstLetterOfEachWord(key),
+            formatter: this.summaryAmountColorFormatter.bind(this),
+            hozAlign: "center",
+            headerHozAlign: "center",
+            cssClass: "amount-column",
+            bottomCalc: "sum",
+            bottomCalcFormatter: this.amountColorFormatter.bind(this),
+            bottomCalcFormatterParams: { symbol: "", precision: 2 },
+            // width: 150,
+          });
+        }
+      }
+    }
+    this.columnConfig.push({
+      title: "",
+      field: "",
+      maxWidth: 70,
+      formatter: this.globalService.hidebuttonFormatter.bind(this),
+      cellClick: (e, cell) => {
+        const transactionId = cell.getRow().getData()["transactionGroupId"];
+        this.hideTransaction(transactionId);
+      },
+      headerSort: false,
+    });
+    if (
+      this.globalService.isAccessible(ActionConstant.EDIT) ||
+      this.globalService.isAccessible(ActionConstant.DELETE)
+    ) {
+      this.columnConfig.push({
+        title: "",
+        field: "option",
+        maxWidth: 70,
+        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        hozAlign: "center",
+        headerSort: false,
+      });
+    }
+
+  }
+
+  loadConfigForExpenseReportList() {
+    this.columnConfig = [
+      {
+        title: "FirstDate",
+        field: "firstDate",
+        sorter: "alphanum",
+        width: 100,
+        formatter: this.dateFormatter.bind(this),
+      },
+      {
+        title: "LastDate",
+        field: "lastDate",
+        sorter: "alphanum",
+        width: 100,
+        formatter: this.dateFormatter.bind(this),
+      },
+      {
+        title: "Source/Reason",
+        field: "sourceOrReason",
+        sorter: "alphanum",
+        width: 150,
+      },
+      {
+        title: "Description",
+        field: "description",
+        sorter: "alphanum",
+        width: 600,
+        formatter: (cell) => {
+          const value = cell.getValue() || "";
+          return `<div class="text-wrap">${value}</div>`;
+        },
+        cssClass: "description-column",
+      },
+      {
+        title: "TakenAmount",
+        field: "takenAmount",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
+      },
+      {
+        title: "GivenAmount",
+        field: "givenAmount",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
+      },
+      {
+        title: "TotalAmount",
+        field: "totalAmount",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
+      },
+      {
+        title: "",
+        field: "",
+        maxWidth: 70,
+        formatter: this.globalService.hidebuttonFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const sourceOrReason = cell.getRow().getData()["sourceOrReason"];
+          this.hideTransactionBySource(sourceOrReason);
+        },
+        headerSort: false,
+      },
+      {
+        title: "",
+        field: "",
+        maxWidth: 70,
+        formatter: (_cell) =>
+          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+        clickMenu: [
+          {
+            label: ApplicationConstantHtml.VIEW_LABLE,
+            action: (_e: any, cell: CellComponent) => {
+              const transactionData = cell.getRow().getData();
+              this.activeComponent = NavigationURLs.EXPENSE_LIST;
+              this.sourceOrReason = transactionData["sourceOrReason"];
+              this.reportFirstDate = DateUtils.formatStringDate(
+                transactionData["firstDate"]
+              );
+              this.reportLastDate = DateUtils.formatStringDate(
+                transactionData["lastDate"]
+              );
+              this.LoadGrid();
+            },
+          },
+          {
+            separator: true,
+          },
+          {
+            label: ApplicationConstantHtml.DELETE_LABLE,
+            action: (_e: any, cell: CellComponent) => {
+              const transactionData = cell.getRow().getData();
+              const transactionId = transactionData["id"];
+              this.deleteTransaction(transactionId);
+            },
+          },
+        ],
+        hozAlign: "left",
+        headerSort: false,
+      },
+    ];
   }
 
   generateOptionsMenu(rowData: Record<string, any>) {
@@ -408,13 +419,13 @@ export class TransactionComponent implements OnInit {
 
   hideTransaction(transactionId: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.id != transactionId;
+      return item.transactionGroupId != transactionId;
     });
   }
 
   removeTransaction(transactionId: any) {
     this.tableData = this.tableData.filter((item: any) => {
-      return item.id != transactionId;
+      return item.transactionGroupId != transactionId;
     });
   }
 

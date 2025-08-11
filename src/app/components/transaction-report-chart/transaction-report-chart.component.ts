@@ -8,7 +8,7 @@ import { TransactionReportResponse } from '../../interfaces/transaction-report-r
 @Component({
   selector: 'app-transaction-report-chart',
   standalone: true,
-  imports: [CommonModule,NgChartsModule],
+  imports: [CommonModule, NgChartsModule],
   templateUrl: "./transaction-report-chart.component.html"
 })
 export class TransactionReportChartComponent implements OnChanges {
@@ -18,7 +18,7 @@ export class TransactionReportChartComponent implements OnChanges {
     labels: [],
     datasets: []
   };
-
+  barChartWidth = 1800; // default width
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
@@ -27,6 +27,21 @@ export class TransactionReportChartComponent implements OnChanges {
         callbacks: {
           label: (context) => `${context.dataset.label}: ₹${context.parsed.y}`
         }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { autoSkip: false },
+        grid: { display: false }
+      },
+      y: {
+        beginAtZero: true
+      }
+    },
+    datasets: {
+      bar: {
+        barThickness: 5, // Fixed width for each bar
+        maxBarThickness: 5
       }
     }
   };
@@ -38,6 +53,9 @@ export class TransactionReportChartComponent implements OnChanges {
     const takenAmounts = this.reportData.map(x => x.takenAmount || 0);
     const givenAmounts = this.reportData.map(x => x.givenAmount || 0);
 
+    // Calculate width: 60px per bar + padding
+    this.barChartWidth = Math.max(1800, labels.length * 20);
+    
     this.barChartData = {
       labels,
       datasets: [
