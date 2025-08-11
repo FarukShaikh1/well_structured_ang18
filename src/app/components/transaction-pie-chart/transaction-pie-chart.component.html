@@ -1,0 +1,36 @@
+<div>
+  <!-- Radio Buttons -->
+  <label>
+    <input type="radio" name="chartType" value="income" [(ngModel)]="selectedType" (change)="updateChart()"> Income
+  </label>  &nbsp; 
+  <label>
+    <input type="radio" name="chartType" value="expense" [(ngModel)]="selectedType" (change)="updateChart()"> Expense
+  </label>
+</div>
+
+<div style="display: flex; align-items: start;">
+  <!-- Chart -->
+  <div style="width: 400px; height: 400px;">
+    <canvas baseChart
+      [type]="'pie'"
+      [data]="pieChartData"
+      [options]="pieChartOptions">
+    </canvas>
+  </div>
+
+  <!-- Legend (right side) -->
+  <div style="margin-left: 20px;">
+    <h4>{{ selectedType | titlecase }} Sources</h4>
+    <ul style="list-style: none; padding: 0;">
+      @for(label of pieChartData?.labels; track $index) {
+      <li>
+        @if(pieChartData != null && pieChartData != undefined && pieChartData.datasets != null && pieChartData.datasets[0].backgroundColor != null) {
+        <span [style.background-color]="pieChartData?.datasets[0].backgroundColor[$index]"
+              style="display:inline-block;width:15px;height:15px;margin-right:8px;"></span>
+        {{ label }}
+        }
+      </li>
+      }
+    </ul>
+  </div>
+</div>

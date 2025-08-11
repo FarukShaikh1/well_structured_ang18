@@ -18,7 +18,7 @@ export class TransactionReportChartComponent implements OnChanges {
     labels: [],
     datasets: []
   };
-  barChartWidth = 800; // default width
+  barChartWidth = 600; // default width
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
@@ -55,7 +55,7 @@ export class TransactionReportChartComponent implements OnChanges {
 
     // Each label gets 37.8px (~1 cm) space
     const widthPerLabel = 37.8;
-    this.barChartWidth = Math.max(800, labels.length * widthPerLabel);
+    this.barChartWidth = Math.max(600, labels.length * widthPerLabel);
 
     this.barChartData = {
       labels,

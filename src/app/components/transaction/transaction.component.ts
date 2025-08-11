@@ -21,6 +21,7 @@ import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.
 import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
 import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
+import { TransactionPieChartComponent } from "../transaction-pie-chart/transaction-pie-chart.component";
 export interface Task {
   name: string;
   completed: boolean;
@@ -35,7 +36,8 @@ export interface Task {
     TabulatorGridComponent,
     TransactionDetailsComponent,
     ConfirmationDialogComponent,
-    TransactionReportChartComponent
+    TransactionReportChartComponent,
+    TransactionPieChartComponent
   ],
   templateUrl: "./transaction.component.html",
   providers: [DatePipe, DateUtils],
