@@ -47,49 +47,49 @@ export class TransactionReportChartComponent implements OnChanges {
   };
 
   ngOnChanges(): void {
-  if (!this.reportData?.length) return;
+    if (!this.reportData?.length) return;
 
-  const labels = this.reportData.map(x => x.sourceOrReason || 'Unknown');
-  const takenAmounts = this.reportData.map(x => x.takenAmount || 0);
-  const givenAmounts = this.reportData.map(x => x.givenAmount || 0);
+    const labels = this.reportData.map(x => x.sourceOrReason || 'Unknown');
+    const takenAmounts = this.reportData.map(x => x.takenAmount || 0);
+    const givenAmounts = this.reportData.map(x => x.givenAmount || 0);
 
-  // 1 cm ≈ 37.8 px per label
-  const widthPerLabel = 37.8;
-  this.barChartWidth = Math.max(800, labels.length * widthPerLabel);
+    // Each label gets 37.8px (~1 cm) space
+    const widthPerLabel = 37.8;
+    this.barChartWidth = Math.max(800, labels.length * widthPerLabel);
 
-  this.barChartData = {
-    labels,
-    datasets: [
-      { label: 'Income', data: takenAmounts, backgroundColor: '#4CAF50' },
-      { label: 'Expense', data: givenAmounts, backgroundColor: '#F44336' }
-    ]
-  };
+    this.barChartData = {
+      labels,
+      datasets: [
+        { label: 'Income', data: takenAmounts, backgroundColor: '#4CAF50' },
+        { label: 'Expense', data: givenAmounts, backgroundColor: '#F44336' }
+      ]
+    };
 
-  // Update chart options
-  this.barChartOptions = {
-    responsive: false, // IMPORTANT - disable responsive mode
-    plugins: {
-      legend: { position: 'top' },
-      tooltip: {
-        callbacks: {
-          label: (context) => `${context.dataset.label}: ₹${context.parsed.y}`
+    this.barChartOptions = {
+      responsive: false, // disable auto-resizing
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: (context) => `${context.dataset.label}: ₹${context.parsed.y}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { autoSkip: false },
+          grid: { display: true }
+        },
+        y: { beginAtZero: true }
+      },
+      datasets: {
+        bar: {
+          barThickness: Math.min(widthPerLabel / 2, 30),
+          maxBarThickness: 30
         }
       }
-    },
-    scales: {
-      x: {
-        ticks: { autoSkip: false },
-        grid: { display: true }
-      },
-      y: { beginAtZero: true }
-    },
-    datasets: {
-      bar: {
-        barThickness: Math.min(widthPerLabel / 2, 30),
-        maxBarThickness: 30
-      }
-    }
-  };
-}
+    };
+  }
 
 }
