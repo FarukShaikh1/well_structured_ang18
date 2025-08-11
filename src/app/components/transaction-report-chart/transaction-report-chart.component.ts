@@ -18,7 +18,7 @@ export class TransactionReportChartComponent implements OnChanges {
     labels: [],
     datasets: []
   };
-  barChartWidth = 1800; // default width
+  barChartWidth = 800; // default width
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
@@ -32,7 +32,7 @@ export class TransactionReportChartComponent implements OnChanges {
     scales: {
       x: {
         ticks: { autoSkip: false },
-        grid: { display: false }
+        grid: { display: true }
       },
       y: {
         beginAtZero: true
@@ -40,28 +40,56 @@ export class TransactionReportChartComponent implements OnChanges {
     },
     datasets: {
       bar: {
-        barThickness: 5, // Fixed width for each bar
-        maxBarThickness: 5
+        barThickness: 15, // Fixed width for each bar
+        maxBarThickness: 30
       }
     }
   };
 
   ngOnChanges(): void {
-    if (!this.reportData?.length) return;
+  if (!this.reportData?.length) return;
 
-    const labels = this.reportData.map(x => x.sourceOrReason || 'Unknown');
-    const takenAmounts = this.reportData.map(x => x.takenAmount || 0);
-    const givenAmounts = this.reportData.map(x => x.givenAmount || 0);
+  const labels = this.reportData.map(x => x.sourceOrReason || 'Unknown');
+  const takenAmounts = this.reportData.map(x => x.takenAmount || 0);
+  const givenAmounts = this.reportData.map(x => x.givenAmount || 0);
 
-    // Calculate width: 60px per bar + padding
-    this.barChartWidth = Math.max(1800, labels.length * 20);
-    
-    this.barChartData = {
-      labels,
-      datasets: [
-        { label: 'Income', data: takenAmounts, backgroundColor: '#4CAF50' },
-        { label: 'Expense', data: givenAmounts, backgroundColor: '#F44336' }
-      ]
-    };
-  }
+  // 1 cm ≈ 37.8 px per label
+  const widthPerLabel = 37.8;
+  this.barChartWidth = Math.max(800, labels.length * widthPerLabel);
+
+  this.barChartData = {
+    labels,
+    datasets: [
+      { label: 'Income', data: takenAmounts, backgroundColor: '#4CAF50' },
+      { label: 'Expense', data: givenAmounts, backgroundColor: '#F44336' }
+    ]
+  };
+
+  // Update chart options
+  this.barChartOptions = {
+    responsive: false, // IMPORTANT - disable responsive mode
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.dataset.label}: ₹${context.parsed.y}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { autoSkip: false },
+        grid: { display: true }
+      },
+      y: { beginAtZero: true }
+    },
+    datasets: {
+      bar: {
+        barThickness: Math.min(widthPerLabel / 2, 30),
+        maxBarThickness: 30
+      }
+    }
+  };
+}
+
 }

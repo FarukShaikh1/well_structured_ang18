@@ -1,10 +1,11 @@
 <div style="overflow-x: auto;">
-  <div [style.width.px]="barChartWidth" style="height: 400px;">
+  <div style="height: 500px;">
     <canvas
       baseChart
       [data]="barChartData"
       [options]="barChartOptions"
-      [type]="'bar'">
+      [type]="'bar'"
+      [style.width.px]="barChartWidth">
     </canvas>
   </div>
 </div>
