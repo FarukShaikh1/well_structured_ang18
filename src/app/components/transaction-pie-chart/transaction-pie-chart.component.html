@@ -23,10 +23,18 @@
         <li style="margin-bottom: 4px;">
           @if(pieChartData != null && pieChartData != undefined && pieChartData.datasets != null &&
           pieChartData.datasets[0].backgroundColor != null) {
-          <span [style.background-color]="pieChartData?.datasets[0].backgroundColor[$index]"
-            style="display:inline-block;width:15px;height:15px;margin-right:8px;"></span>
-          {{ label }}
-          <button class="action-buttons" title="Hide" (click)="mergeAsOther(label)"><i class="bi bi-dash-lg btn-link"></i></button>
+          <div class="d-flex align-items-center justify-content-between">
+            <span>
+              <span [style.background-color]="pieChartData?.datasets[0].backgroundColor[$index]"
+                style="display:inline-block;width:15px;height:15px;margin-right:8px;">
+              </span>
+              <span class="label-text">
+                {{ label }}
+              </span>
+            </span>
+            <button class="action-buttons" title="Hide" (click)="mergeAsOther(label)"><i
+                class="bi bi-dash-lg btn-link"></i></button>
+          </div>
           }
         </li>
         }

@@ -105,27 +105,25 @@
     </div>
   </div>
 
-  <div class="row  g-3">
+  <div class="row  g-3 mb-4">
     <!-- transaction-report.component.html -->
     @if(activeComponent === NavigationURLs.EXPENSE_REPORT){
-    <div class="col-6">
+    <div class="col-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
         <app-transaction-pie-chart [reportData]="transactionReports"></app-transaction-pie-chart>
       </div>
     </div>
-    <div class="col-6">
+    <div class="col-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
         <app-transaction-report-chart [reportData]="transactionReports"></app-transaction-report-chart>
       </div>
     </div>
     }
-    @else{
     <div class="mb-2">
       <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
         [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
       </app-tabulator-grid>
     </div>
-    }
   </div>
 </div>
 <app-transaction-details [lastTransactionDate]="lastTransactionDate"></app-transaction-details>

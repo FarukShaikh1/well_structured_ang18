@@ -18,7 +18,7 @@ export class TransactionReportChartComponent implements OnChanges {
     labels: [],
     datasets: []
   };
-  barChartWidth = 600; // default width
+  barChartWidth = 800; // default width
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
@@ -40,8 +40,8 @@ export class TransactionReportChartComponent implements OnChanges {
     },
     datasets: {
       bar: {
-        barThickness: 15, // Fixed width for each bar
-        maxBarThickness: 30
+        barThickness: 20, // Fixed width for each bar
+        maxBarThickness: 40
       }
     }
   };
@@ -54,8 +54,8 @@ export class TransactionReportChartComponent implements OnChanges {
     const givenAmounts = this.reportData.map(x => x.givenAmount || 0);
 
     // Each label gets 37.8px (~1 cm) space
-    const widthPerLabel = 37.8;
-    this.barChartWidth = Math.max(600, labels.length * widthPerLabel);
+    const widthPerLabel = 20;
+    this.barChartWidth = Math.max(800, labels.length * widthPerLabel);
 
     this.barChartData = {
       labels,
@@ -85,8 +85,8 @@ export class TransactionReportChartComponent implements OnChanges {
       },
       datasets: {
         bar: {
-          barThickness: Math.min(widthPerLabel / 2, 30),
-          maxBarThickness: 30
+          barThickness: Math.min(widthPerLabel / 2, 40),
+          maxBarThickness: 40
         }
       }
     };

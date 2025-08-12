@@ -641,6 +641,7 @@ export class TransactionComponent implements OnInit {
           (item.takenAmount !== null && item.takenAmount !== 0 && Math.abs(item.takenAmount) <= this.maxAmount);
         return searchText && minAmountCondition && maxAmountCondition;
       });
+      this.transactionReports = this.filteredTableData;
     }
   }
 
