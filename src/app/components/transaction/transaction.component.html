@@ -105,14 +105,18 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row  g-3">
     <!-- transaction-report.component.html -->
     @if(activeComponent === NavigationURLs.EXPENSE_REPORT){
     <div class="col-6">
-      <app-transaction-pie-chart [reportData]="transactionReports"></app-transaction-pie-chart>
+      <div class="card pb-2 ps-2 pe-2">
+        <app-transaction-pie-chart [reportData]="transactionReports"></app-transaction-pie-chart>
+      </div>
     </div>
     <div class="col-6">
-      <app-transaction-report-chart [reportData]="transactionReports"></app-transaction-report-chart>
+      <div class="card pb-2 ps-2 pe-2">
+        <app-transaction-report-chart [reportData]="transactionReports"></app-transaction-report-chart>
+      </div>
     </div>
     }
     @else{
