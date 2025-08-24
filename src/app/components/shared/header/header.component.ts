@@ -188,10 +188,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([NavigationURLs.EXPENSE_SUMMARY_LIST]);
   }
 
-  navigateToBusinessList() {
-    this.router.navigate([NavigationURLs.BUSINESS_LIST]);
-  }
-
   navigateToDayList() {
     this.router.navigate([NavigationURLs.DAY_LIST]);
   }

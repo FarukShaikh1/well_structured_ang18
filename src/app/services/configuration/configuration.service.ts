@@ -19,6 +19,13 @@ export class ConfigurationService {
     return this.http.get(API_URL.GET_CONFIG_LIST, { params });
   }
 
+    getActiveConfigList(userId: string = '', config: string = '') {
+    const params = new HttpParams()
+      .set('userId', userId)
+      .set('config', config);
+    return this.http.get(API_URL.GET_ACTIVE_CONFIG_LIST, { params });
+  }
+
   getConfigDetailsById( id: string = '',config: string = '') {
     const params = new HttpParams()
       .set('id', id)
@@ -46,6 +53,14 @@ export class ConfigurationService {
       .set('userId', this.loggedInUserId)
       .set('config', config);
     return this.http.get(API_URL.GET_CONFIG_DELETE, { params });
+  }
+
+  deactivateConfiguration(id: string, config: string) {
+    const params = new HttpParams()
+      .set('id', id)
+      .set('userId', this.loggedInUserId)
+      .set('config', config);
+    return this.http.get(API_URL.GET_CONFIG_DEACTIVATE, { params });
   }
 
 }

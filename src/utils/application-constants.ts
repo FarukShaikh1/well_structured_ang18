@@ -64,7 +64,7 @@ export const LoaderConfigs = {
 
 export const ApplicationConstantHtml = {
     DELETE_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#confirmationPopup"><i class="bi bi-trash"></i>&nbsp;Delete</a>`,
-    DEACTIVATE_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#confirmationPopup"><i class="bi bi-trash"></i>&nbsp;Delete</a>`,
+    DEACTIVATE_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#confirmationPopup"><i class="bi bi-trash"></i>&nbsp;Deactivate</a>`,
     EDIT_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#detailsPopup"><i class="bi bi-pencil"></i>&nbsp;Edit</a>`,
     VIEW_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-eye"></i>&nbsp;View</a>`,
     DOWNLOAD_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-download"></i>&nbsp;Download</a>`,  
@@ -90,8 +90,8 @@ export const NavigationURLs = {
     NAV_CHAT_PANEL: '/home/nav-chat-panel',
     EXPENSE_LIST: '/home/expenses',
     EXPENSE_SUMMARY_LIST: '/home/expense-summary',
+    EXPENSE_BALANCE_LIST: '/home/expense-balance',
     EXPENSE_REPORT: '/home/expense-report',
-    BUSINESS_LIST: '/home/business',
     REPORT_LIST: '/home/expenses/reports',
     CURRENCY_LIST: '/home/currency-coin',
     CURRENCY_GALLERY: '/home/currency-gallery',
@@ -229,7 +229,6 @@ export const Messages = {
 
 export const ApplicationModules = {
     EXPENSE: 'Expense',
-    BUSINESS: 'Business',
     DAY: 'Day',
     COIN_NOTE_COLLECTION: 'Coin Note Collection',
     USER: 'AUTH',

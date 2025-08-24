@@ -69,7 +69,7 @@ export class TransactionComponent implements OnInit {
   minAmount: number = 0;
   maxAmount: number = 0;
   transactionId: string = "";
-  activeComponent: string = NavigationURLs.EXPENSE_REPORT;
+  activeComponent: string = NavigationURLs.EXPENSE_LIST;
   reportLastDate = "";
   reportFirstDate = "";
   transactionfilterRequest: ExpenseFilterRequest = {
@@ -129,6 +129,8 @@ export class TransactionComponent implements OnInit {
       this.loadConfigForExpenseList();
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
       this.loadConfigForExpenseSummaryList();
+    } else if (this.activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST) {
+      this.loadConfigForBalanceList();
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
       this.loadConfigForExpenseReportList();
     }
@@ -155,7 +157,7 @@ export class TransactionComponent implements OnInit {
         width: 400,
       },
       {
-        title: "ModeOfTransaction",
+        title: "Transaction Mode",
         field: "accountName",
         sorter: "alphanum",
       },
@@ -227,7 +229,7 @@ export class TransactionComponent implements OnInit {
         sorter: "alphanum",
       },
     ];
-    
+
     if (this.tableData.length > 0 && this.accountColumns) {
       for (const key of Object.keys(this.accountColumns)) {
         const isAmount = key.toLowerCase().includes("amount");
@@ -275,6 +277,52 @@ export class TransactionComponent implements OnInit {
       });
     }
 
+  }
+
+  loadConfigForBalanceList() {
+    this.columnConfig = [
+      {
+        title: "Transaction Date",
+        field: "transactionDate",
+        sorter: "alphanum",
+        // width: 100,
+        formatter: this.dateFormatter.bind(this),
+      },
+    ];
+
+    if (this.tableData.length > 0 && this.accountColumns) {
+      for (const key of Object.keys(this.accountColumns)) {
+        const isAmount = key.toLowerCase().includes("amount");
+        const isBalance = key.toLowerCase().includes("balance");
+        const isCategory = key.toLowerCase().includes("category");
+        if (!key.toLowerCase().includes("category")) {
+          this.columnConfig.push({
+            title: key,
+            field: `accountData.${key}`,
+            // field:this.globalService.lowercaseFirstLetterOfEachWord(key),
+            formatter: this.summaryAmountColorFormatter.bind(this),
+            hozAlign: "center",
+            headerHozAlign: "center",
+            cssClass: "amount-column",
+            bottomCalc: "sum",
+            bottomCalcFormatter: this.amountColorFormatter.bind(this),
+            bottomCalcFormatterParams: { symbol: "", precision: 2 },
+            // width: 150,
+          });
+        }
+      }
+    }
+    this.columnConfig.push({
+      title: "",
+      field: "",
+      maxWidth: 70,
+      formatter: this.globalService.hidebuttonFormatter.bind(this),
+      cellClick: (e, cell) => {
+        const date = cell.getRow().getData()["transactionDate"];
+        this.hideTransactionByDate(date);
+      },
+      headerSort: false,
+    });
   }
 
   loadConfigForExpenseReportList() {
@@ -425,6 +473,12 @@ export class TransactionComponent implements OnInit {
     });
   }
 
+  hideTransactionByDate(date: any) {
+    this.filteredTableData = this.filteredTableData.filter((item: any) => {
+      return item.transactionDate != date;
+    });
+  }
+
   removeTransaction(transactionId: any) {
     this.tableData = this.tableData.filter((item: any) => {
       return item.transactionGroupId != transactionId;
@@ -435,6 +489,7 @@ export class TransactionComponent implements OnInit {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
       return item.sourceOrReason != sourceOrReason;
     });
+    this.transactionReports = this.filteredTableData;
   }
 
   dateFormatter(cell: CellComponent) {
@@ -473,40 +528,42 @@ export class TransactionComponent implements OnInit {
     const transactionData = cell.getRow().getData();
     const field = cell.getColumn().getField(); // e.g., "accountData.SBI_Amount"
 
+    // Format currency
+    const formattedValue = new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(cellValue);
+
+
     if (!transactionData || !transactionData['accountData'] || (typeof cellValue !== 'number' && cellValue !== null && cellValue !== undefined)) {
-      return `<span>${cellValue}</span>`;
-    }
-    if (cellValue === 0) {
-      return `<span></span>`;
+      return `<span>${formattedValue}</span>`;
     }
     // Extract base account name from the amount field
     const amountKeyMatch = field.match(/accountData\.([^.]+)_Amount/i);
     const balanceKeyMatch = field.match(/accountData\.([^.]+)_Balance/i);
     if (amountKeyMatch) {
+      if (cellValue === 0) {
+        return `<span></span>`;
+      }
       const accountBase = amountKeyMatch[1]; // e.g., "SBI"
       const categoryField = `${accountBase}_Category`;
       const category = transactionData['accountData'][categoryField];
 
-      // Format currency
-      const formattedValue = new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-      }).format(cellValue);
 
       if (category === 'Income') {
-        return `<span style="color:#129D0A; font-weight:bold">${cellValue}</span>`;
+        return `<span style="color:#129D0A; font-weight:bold">${formattedValue}</span>`;
       } else if (category === 'Expense') {
-        return `<span style="color:#FF0000; font-weight:bold">${cellValue}</span>`;
+        return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
       }
     }
     if (balanceKeyMatch) {
       if (cellValue == null) {
         return `<span></span>`;
       }
-      if (cellValue >= 0) {
-        return `<span style="color:#129D0A; font-weight:bold">${cellValue}</span>`;
+      if (cellValue > 0) {
+        return `<span style="color:#129D0A; font-weight:bold">${formattedValue}</span>`;
       }
-      return `<span style="color:#FF0000; font-weight:bold">${cellValue}</span>`;
+      return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
     }
     return `<span></span>`;
   }
@@ -679,6 +736,10 @@ export class TransactionComponent implements OnInit {
     this.activeComponent = NavigationURLs.EXPENSE_SUMMARY_LIST;
     this.LoadGrid();
   }
+  goToBalanceSummary() {
+    this.activeComponent = NavigationURLs.EXPENSE_BALANCE_LIST;
+    this.LoadGrid();
+  }
 
   goToTransactionReport() {
     this.activeComponent = NavigationURLs.EXPENSE_REPORT;
@@ -729,6 +790,24 @@ export class TransactionComponent implements OnInit {
             this.loaderService.hideLoader();
           },
         });
+    } else if (this.activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST) {
+      this.transactionService
+        .getBalanceList(this.transactionfilterRequest)
+        .subscribe({
+          next: (res: any) => {
+            this.tableData = res;
+            this.filteredTableData = res;
+            this.accountColumns = res[0]?.accountData;
+            this.columnConfiguration();
+
+            this.lastTransactionDate = this.getLatestTransactionDate();
+            this.loaderService.hideLoader();
+          },
+          error: (error: any) => {
+            console.log("error : ", error);
+            this.loaderService.hideLoader();
+          },
+        });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
       this.transactionService
         .getTransactionReportList(this.transactionfilterRequest)
@@ -745,6 +824,9 @@ export class TransactionComponent implements OnInit {
             this.loaderService.hideLoader();
           },
         });
+    }
+    else {
+      this.loaderService.hideLoader();
     }
   }
 

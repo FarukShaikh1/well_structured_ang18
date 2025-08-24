@@ -23,9 +23,13 @@ export class TransactionService {
   }
 
   getTransactionSummaryList(filter: ExpenseFilterRequest): Observable<any> {
-    
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.post(API_URL.GET_TRANSACTION_SUMMARY_LIST, filter, { params });
+  }
+
+  getBalanceList(filter: ExpenseFilterRequest): Observable<any> {
+    const params = new HttpParams().set("userid", this.loggedInUserId);
+    return this.http.post(API_URL.GET_BALANCE_LIST, filter, { params });
   }
 
   getTransactionReportList(filter: ExpenseFilterRequest): Observable<any> {
@@ -34,7 +38,7 @@ export class TransactionService {
   }
 
   getTransactionList(filter: ExpenseFilterRequest): Observable<any> {
-    
+
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.post(API_URL.GET_TRANSACTION_LIST, filter, { params });
   }

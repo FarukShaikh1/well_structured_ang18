@@ -50,11 +50,6 @@ export const routes: Routes = [
         component: TransactionComponent,
         // component: ExpenseComponent,
       },
-      // {
-      //   path: "business",
-      //   title: "Business",
-      //   component: BusinessComponent,
-      // },
       // { path: "expense-summary", component: ExpenseSummaryComponent },
       // { path: "expense-report", component: ExpenseReportComponent },
       {

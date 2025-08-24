@@ -109,7 +109,7 @@ export class TransactionDetailsComponent {
     this.loaderService.showLoader();
     this.loggedInUserId = localStorage.getItem('userId') || '';
 
-    this.configurationService.getConfigList(this.loggedInUserId, UserConfig.ACCOUNT).subscribe({
+    this.configurationService.getActiveConfigList(this.loggedInUserId, UserConfig.ACCOUNT).subscribe({
       next: (result: any) => {
         console.log('result : ', result);
         this.accountList = result;
@@ -459,7 +459,7 @@ export class TransactionDetailsComponent {
         category: this.transactionDetailsForm.value['category_' + acc.id] || 'expense',
         amount: this.transactionDetailsForm.value[acc.id] || 0
       }))
-      .filter((split: { category: any; amount: number; }) => split.category && split.amount !== 0);
+      // .filter((split: { category: any; amount: number; }) => split.category && split.amount !== 0);
   }
 
   /** Save transaction (update or add) */

@@ -39,6 +39,7 @@ export const API_URL = {
 
   GET_TRANSACTION_DETAILS: `${serverUrl}${apiPrefix}/transaction/GetDetails`,
   GET_TRANSACTION_SUMMARY_LIST: `${serverUrl}${apiPrefix}/transaction/GetSummary`,
+  GET_BALANCE_LIST: `${serverUrl}${apiPrefix}/transaction/GetBalanceSummary`,
   GET_TRANSACTION_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/GetReport`,
   GET_TRANSACTION_LIST: `${serverUrl}${apiPrefix}/transaction/GetList`,
   ADD_TRANSACTION: `${serverUrl}${apiPrefix}/transaction/add?userId=`,
@@ -61,11 +62,12 @@ export const API_URL = {
   Get_USER_DETAILS: `${serverUrl}${apiPrefix}/user/GetDetails?userId=`,
 
   GET_CONFIG_LIST: `${serverUrl}${apiPrefix}/settings/GetConfigList`,
+  GET_ACTIVE_CONFIG_LIST: `${serverUrl}${apiPrefix}/settings/GetActiveConfigList`,
   GET_CONFIG_DETAIL: `${serverUrl}${apiPrefix}/settings/GetConfigDetails`,
   GET_CONFIG_ADD: `${serverUrl}${apiPrefix}/settings/AddConfig`,
   GET_CONFIG_UPDATE: `${serverUrl}${apiPrefix}/settings/UpdateConfig`,
   GET_CONFIG_DELETE: `${serverUrl}${apiPrefix}/settings/DeleteConfig`,
-  GET_CONFIG_DEACTIVATE: `${serverUrl}${apiPrefix}/settings/DeactivateConfig`,
+  GET_CONFIG_DEACTIVATE: `${serverUrl}${apiPrefix}/settings/DeactiveConfig`,
 
   // //Non verified 
   REGISTER_USER: `${serverUrl}${apiPrefix}/auth/register`,

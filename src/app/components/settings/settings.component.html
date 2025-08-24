@@ -9,9 +9,10 @@
             <!-- <app-user-list></app-user-list> -->
         </div>
         }
-        <div class="col-6 pt-2">
+        <div class="col-12 pt-2">
             <button class="btn btn-danger rounded-button rounded-button-small" type="button"
-                (click)="openDetailPopup('',UserConfig.ACCOUNT)" data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
+                (click)="openDetailPopup('',UserConfig.ACCOUNT)" data-bs-toggle="modal"
+                data-bs-target="#configDetailsPopup">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" />
@@ -21,7 +22,8 @@
                 Add Account
             </button>
             <button class="btn btn-danger rounded-button rounded-button-small" type="button"
-                (click)="openDetailPopup('',UserConfig.RELATION)" data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
+                (click)="openDetailPopup('',UserConfig.RELATION)" data-bs-toggle="modal"
+                data-bs-target="#configDetailsPopup">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" />
@@ -31,7 +33,8 @@
                 Add Relation
             </button>
             <button class="btn btn-danger rounded-button rounded-button-small" type="button"
-                (click)="openDetailPopup('',UserConfig.OCCASION_TYPE)" data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
+                (click)="openDetailPopup('',UserConfig.OCCASION_TYPE)" data-bs-toggle="modal"
+                data-bs-target="#configDetailsPopup">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" />
@@ -40,7 +43,8 @@
                 </svg>
                 Add Occasion Type
             </button>
-
+        </div>
+        <div class="col-6 pt-2">
             <app-tabulator-grid [tableData]="filteredAccountTableData" [columnConfig]="accountColumnConfig"
                 [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
                 [allowCSVExport]="allowCSVExport">

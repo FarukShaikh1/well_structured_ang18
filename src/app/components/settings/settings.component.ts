@@ -143,6 +143,13 @@ export class SettingsComponent {
         this.openDetailPopup(rowData['id'], config);
       },
     });
+    menu.push({
+      label: ApplicationConstantHtml.DEACTIVATE_LABLE,
+      action: () => {
+        this.deactivateItem(rowData['id'], config);
+      },
+    });
+
     if (!rowData['isUsed']) {
       menu.push({
         label: ApplicationConstantHtml.DELETE_LABLE,
@@ -261,7 +268,7 @@ export class SettingsComponent {
         title: 'Status',
         field: 'isActive',
         sorter: 'string',
-      formatter: this.globalService.statusFormatter.bind(this),
+        formatter: this.globalService.statusFormatter.bind(this),
       },
       {
         title: "",
@@ -412,6 +419,30 @@ export class SettingsComponent {
   }
 
   deleteItem(id: string, config: string) {
+
+  }
+
+  deactivateItem(id: string, config: string) {
+    this.configurationService.deactivateConfiguration(id, config).subscribe({
+      next: (result: any) => {
+        if (config === UserConfig.ACCOUNT) {
+          this.filteredAccountTableData = result;
+          this.accountTableData = result;
+        }
+        else if (config === UserConfig.RELATION) {
+          this.filteredRelationTableData = result;
+          this.relationTableData = result;
+        }
+        else if (config === UserConfig.OCCASION_TYPE) {
+          this.filteredOccasionTypeTableData = result;
+          this.occasionTypeTableData = result;
+        }
+        this.toaster.showMessage("Record deativated successfully.", "success");
+      },
+      error: (error: any) => {
+        console.error('Error fetching user list', error);
+      },
+    });
 
   }
 

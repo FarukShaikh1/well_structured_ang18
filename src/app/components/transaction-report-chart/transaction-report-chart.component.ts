@@ -67,7 +67,7 @@ export class TransactionReportChartComponent implements OnChanges {
 
     this.barChartOptions = {
       responsive: false, // disable auto-resizing
-      maintainAspectRatio: false,
+      maintainAspectRatio: true,
       plugins: {
         legend: { position: 'top' },
         tooltip: {
