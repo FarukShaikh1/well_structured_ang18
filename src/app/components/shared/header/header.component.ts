@@ -14,8 +14,8 @@ import { LogoutService } from "../../../services/logout/logout.service";
 // import { SignalRService } from '../../../services/signal-r/signal-r.service';
 import { formatDistanceToNow } from "date-fns";
 import {
-  ApplicationConstants,
   ActionConstant,
+  ApplicationConstants,
   ApplicationModules,
   ApplicationRoles,
   NavigationURLs,
@@ -23,7 +23,6 @@ import {
 import { ModuleResponse } from "../../../interfaces/module-response";
 import { SystemNotifications } from "../../../interfaces/system-notifications";
 import { NotificationService } from "../../../services/notification/notification.service";
-import { RoleService } from "../../../services/role/role.service";
 import { ConfirmBoxComponent } from "../confirm-box/confirm-box.component";
 
 @Component({
@@ -66,7 +65,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public globalService: GlobalService,
     // private signalRService: SignalRService,
     private logoutService: LogoutService,
-    private roleService: RoleService,
     private notificationService: NotificationService
   ) {
     this.globalService.getReloadObservable().subscribe(() => {
@@ -91,7 +89,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.moduleList = this.globalService.AccessibleModuleList();
     // this.roleService.getModuleList().subscribe({
     //     next: (res: any) => {
-    //       this.moduleList = res;
+    //       this.moduleList = res.data;
     //     },
     //     error: (error: any) => {
     //       //this.globalService.openSnackBar('some issue is in update the data');

@@ -127,13 +127,13 @@ export class ExpenseAdjustmentComponent implements OnInit {
       .getAvailAmount(availOnDate, accountType)
       .subscribe((res: any) => {
         if (accountType == "sbi") {
-          this.availableBalanceSbi = res;
+          this.availableBalanceSbi = res.data;
         } else if (accountType == "cbi") {
-          this.availableBalanceCbi = res;
+          this.availableBalanceCbi = res.data;
         } else if (accountType == "cash") {
-          this.availableBalanceCash = res;
+          this.availableBalanceCash = res.data;
         } else if (accountType == "other") {
-          this.availableBalanceOther = res;
+          this.availableBalanceOther = res.data;
         }
       });
   }
@@ -143,13 +143,13 @@ export class ExpenseAdjustmentComponent implements OnInit {
       .getSourceOrReasonList("", "", searchText)
       .subscribe((res) => {
         if (accountType == "sbi") {
-          this.sourceOrReasonListSbi = res;
+          this.sourceOrReasonListSbi = res.data;
         } else if (accountType == "cbi") {
-          this.sourceOrReasonListCbi = res;
+          this.sourceOrReasonListCbi = res.data;
         } else if (accountType == "cash") {
-          this.sourceOrReasonListCash = res;
+          this.sourceOrReasonListCash = res.data;
         } else if (accountType == "other") {
-          this.sourceOrReasonListOther = res;
+          this.sourceOrReasonListOther = res.data;
         }
       });
   }

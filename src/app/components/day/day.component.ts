@@ -86,7 +86,7 @@ export class DayComponent implements OnInit {
     this.loggedInUserId = localStorage.getItem('userId') || '';
     this.globalService.getCommonListItems(DBConstants.MONTH).subscribe({
       next: (res: any) => {
-        this.monthList = res;
+        this.monthList = res.data;
         // this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -98,7 +98,7 @@ export class DayComponent implements OnInit {
     // this.loaderService.showLoader();
     this.configService.getConfigList(this.loggedInUserId, UserConfig.OCCASION_TYPE).subscribe({
       next: (res: any) => {
-        this.occasionTypeList = res;
+        this.occasionTypeList = res.data;
         // this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -108,7 +108,7 @@ export class DayComponent implements OnInit {
     });
     this.configService.getConfigList(this.loggedInUserId, UserConfig.RELATION).subscribe({
       next: (res: any) => {
-        this.relationList = res;
+        this.relationList = res.data;
       },
       error: (error: any) => {
         console.log("error : ", error);
@@ -144,8 +144,8 @@ export class DayComponent implements OnInit {
       )
       .subscribe({
         next: (res: any) => {
-          this.tableData = res;
-          this.filteredTableData = res;
+          this.tableData = res.data;
+          this.filteredTableData = res.data;
           console.log("res : ", res);
 
           this.loaderService.hideLoader();

@@ -5,7 +5,6 @@ import { NavigationURLs } from "../../../utils/application-constants";
 import { GlobalService } from "../../services/global/global.service";
 import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 import { UserService } from "../../services/user/user.service";
-import { ModuleResponse } from "../../interfaces/module-response";
 
 @Component({
   selector: "app-login",
@@ -60,7 +59,7 @@ export class LoginComponent {
     }
     this.userService.getUser(this.loginForm.value).subscribe((res:any) => {
       if (res) {
-        this.data = res;
+        this.data = res.data;
         if (this.data.length <= 0) {
           //this.globalService.openSnackBar("Invalid credentials, Please check the details correctly.");
           // localStorage.setItem("currentUser", "false");
@@ -82,6 +81,9 @@ export class LoginComponent {
           localStorage.setItem("userName", this.data.userName);
           localStorage.setItem("userId", this.data.id);
           localStorage.setItem("accessibleModuleIds", this.data.accessibleModuleIds);
+          localStorage.setItem("activeAccountList", this.data.accessibleModuleIds);
+          localStorage.setItem("activeRelationList", this.data.accessibleModuleIds);
+          localStorage.setItem("activeOccasionTypeList", this.data.accessibleModuleIds);
           //this.globalService.openSnackBar("Log in successfully")
           this.reload();
           if (this.data.roleName?.toLowerCase() === "super admin")

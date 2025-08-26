@@ -173,16 +173,16 @@ export class SettingsComponent {
     this.configurationService.getConfigList(userId, config).subscribe({
       next: (result: any) => {
         if (config === UserConfig.ACCOUNT) {
-          this.filteredAccountTableData = result;
-          this.accountTableData = result;
+          this.filteredAccountTableData = result.data;
+          this.accountTableData = result.data;
         }
         else if (config === UserConfig.RELATION) {
-          this.filteredRelationTableData = result;
-          this.relationTableData = result;
+          this.filteredRelationTableData = result.data;
+          this.relationTableData = result.data;
         }
         else if (config === UserConfig.OCCASION_TYPE) {
-          this.filteredOccasionTypeTableData = result;
-          this.occasionTypeTableData = result;
+          this.filteredOccasionTypeTableData = result.data;
+          this.occasionTypeTableData = result.data;
         }
       },
       error: (error: any) => {
@@ -196,8 +196,8 @@ export class SettingsComponent {
     this.userService.getAllUsers().subscribe({
       next: (result: any) => {
         if (result) {
-          this.filteredUserTableData = result;
-          this.userTableData = result;
+          this.filteredUserTableData = result.data;
+          this.userTableData = result.data;
         } else {
           console.error(Messages.ERROR_IN_FETCH_USER);
         }
@@ -426,16 +426,16 @@ export class SettingsComponent {
     this.configurationService.deactivateConfiguration(id, config).subscribe({
       next: (result: any) => {
         if (config === UserConfig.ACCOUNT) {
-          this.filteredAccountTableData = result;
-          this.accountTableData = result;
+          this.filteredAccountTableData = result.data;
+          this.accountTableData = result.data;
         }
         else if (config === UserConfig.RELATION) {
-          this.filteredRelationTableData = result;
-          this.relationTableData = result;
+          this.filteredRelationTableData = result.data;
+          this.relationTableData = result.data;
         }
         else if (config === UserConfig.OCCASION_TYPE) {
-          this.filteredOccasionTypeTableData = result;
-          this.occasionTypeTableData = result;
+          this.filteredOccasionTypeTableData = result.data;
+          this.occasionTypeTableData = result.data;
         }
         this.toaster.showMessage("Record deativated successfully.", "success");
       },

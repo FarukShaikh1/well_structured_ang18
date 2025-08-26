@@ -48,10 +48,10 @@ ActionConstant= ActionConstant;
   ngOnInit() {
     this.currencyCoinService.getCurrencyCoinRecords().subscribe({
       next: (res: any) => {
-        this.coinList = res;
-        this.filteredCoinList = res;
+        this.coinList = res.data;
+        this.filteredCoinList = res.data;
         console.log('this.coinList : ', this.coinList);
-            //     this.countryList = res;
+            //     this.countryList = res.data;
 // Assuming you have CurrencyList as an array of objects
 this.countryList = Array.from(
   new Map(
@@ -73,7 +73,7 @@ this.countryList = Array.from(
 
     this.globalService.getCommonListItems(DBConstants.COINTYPE).subscribe({
       next: (res: any) => {
-        this.currencyTypeList = res;
+        this.currencyTypeList = res.data;
         console.log('currencyTypeList : ', this.currencyTypeList);
 
         this.selectedTypes.push('Indian Rare Coin');
@@ -88,7 +88,7 @@ this.countryList = Array.from(
 
     // this.globalService.getCountryList().subscribe({
     //   next: (res: any) => {
-    //     this.countryList = res;
+    //     this.countryList = res.data;
     //     this.loaderService.hideLoader();
     //   },
     //   error: (error: any) => {

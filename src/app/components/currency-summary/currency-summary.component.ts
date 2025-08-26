@@ -251,8 +251,8 @@ ActionConstant: any;
   LoadSummaryGrid() {
     this.currencyCoinService.getCurrencyCoinSummary().subscribe({
       next: (res: any) => {
-        this.summaryTableData = res;
-        this.filteredSummaryTableData = res;
+        this.summaryTableData = res.data;
+        this.filteredSummaryTableData = res.data;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -265,8 +265,8 @@ ActionConstant: any;
   LoadGrid(countryId:number) {
     this.currencyCoinService.getCurrencyCoinRecords(countryId).subscribe({
       next: (res: any) => {
-        this.tableData = res;
-        this.filteredTableData = res;
+        this.tableData = res.data;
+        this.filteredTableData = res.data;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {

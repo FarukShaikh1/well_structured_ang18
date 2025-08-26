@@ -205,8 +205,8 @@ export class UserListComponent implements OnInit {
     this.userService.getAllUsers().subscribe({
       next: (result: any) => {
         if (result) {
-          this.tableData = result;
-          this.filteredTableData = result;
+          this.tableData = result.data;
+          this.filteredTableData = result.data;
         } else {
           console.error(Messages.ERROR_IN_FETCH_USER);
           this.toaster.showMessage(Messages.ERROR_IN_FETCH_USER, 'error');

@@ -44,7 +44,7 @@ export class ProfileComponent {
   ngOnInit(){
     this.userService.getLoggedInUserDetails().subscribe(
       (res) => {
-        this.userDetails = res;
+        this.userDetails = res.data;
         this.patchValues(this.userDetails[0]);
   
      })

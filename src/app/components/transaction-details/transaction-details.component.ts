@@ -112,13 +112,14 @@ export class TransactionDetailsComponent {
     this.configurationService.getActiveConfigList(this.loggedInUserId, UserConfig.ACCOUNT).subscribe({
       next: (result: any) => {
         console.log('result : ', result);
-        this.accountList = result;
+        this.accountList = result.data;
         this.loadAccountFields();
         if (this.accountList && transactionGroupId) {
           this.getTransactionDetails(transactionGroupId);
         }
       },
       error: (error: any) => {
+    this.loaderService.hideLoader();
         console.error('Error fetching user list', error);
       },
     });
@@ -194,7 +195,7 @@ export class TransactionDetailsComponent {
     this.loaderService.showLoader();
     this.transactionService.getTransactionSuggestionList().subscribe({
       next: (res: any) => {
-        this.commonSuggestionList = res;
+        this.commonSuggestionList = res.data;
         console.log("data: ", res);
         this.loaderService.hideLoader();
       },

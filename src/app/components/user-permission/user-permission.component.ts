@@ -43,7 +43,7 @@ export class UserPermissionComponent implements OnInit {
   getUserList() {
     this.userService.getUserList().subscribe({
       next: (result: any) => {
-        this.userList = result;
+        this.userList = result.data;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -59,7 +59,7 @@ export class UserPermissionComponent implements OnInit {
       next: (result: any) => {
 
         // Sort the data by pageId
-        this.rolePageMappingData = result;
+        this.rolePageMappingData = result.data;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {

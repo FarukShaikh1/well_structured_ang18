@@ -110,7 +110,7 @@ ActionConstant=ActionConstant;
     this.loaderService.showLoader();
     this.globalService.getCommonListItems(DBConstants.COINTYPE).subscribe({
       next: (res: any) => {
-        this.currencyTypeList = res;
+        this.currencyTypeList = res.data;
         console.log('currencyTypeList : ', this.currencyTypeList);
 
         this.loaderService.hideLoader();
@@ -123,7 +123,7 @@ ActionConstant=ActionConstant;
 
     this.globalService.getCountryList().subscribe({
       next: (res: any) => {
-        this.countryList = res;
+        this.countryList = res.data;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -169,7 +169,7 @@ ActionConstant=ActionConstant;
         next: (res: any) => {
           console.log("res : ", res);
           this.patchValues(res);
-          this.currencyCoinDetails = res;
+          this.currencyCoinDetails = res.data;
           console.log("this.currencyCoinDetails?.assetId : ", this.currencyCoinDetails?.assetId);
 
           if (this.currencyCoinDetails?.assetId) {
@@ -346,8 +346,8 @@ ActionConstant=ActionConstant;
       this._assetService.uploadImage(this.currencyCoinDetailsForm.value["assetId"], API_URL.COLLECTIONCOINS, this.formData)
         .subscribe({
           next: (res: any) => {
-            this.currencyCoinDetailsForm.value["assetId"] = res;
-            this.coinNoteCollectionRequest.assetId = res;
+            this.currencyCoinDetailsForm.value["assetId"] = res.data;
+            this.coinNoteCollectionRequest.assetId = res.data;
             this.addOrUpdateCurrencyCoinDetails();
             this.loaderService.hideLoader();
           },

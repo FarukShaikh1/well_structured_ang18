@@ -762,8 +762,8 @@ export class TransactionComponent implements OnInit {
         .getTransactionList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
-            this.tableData = res;
-            this.filteredTableData = res;
+            this.tableData = res.data;
+            this.filteredTableData = res.data;
             this.lastTransactionDate = this.getLatestTransactionDate();
             this.loaderService.hideLoader();
           },
@@ -777,9 +777,9 @@ export class TransactionComponent implements OnInit {
         .getTransactionSummaryList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
-            this.tableData = res;
-            this.filteredTableData = res;
-            this.accountColumns = res[0]?.accountData;
+            this.tableData = res.data;
+            this.filteredTableData = res.data;
+            this.accountColumns = res.data[0]?.accountData;
             this.columnConfiguration();
 
             this.lastTransactionDate = this.getLatestTransactionDate();
@@ -795,9 +795,9 @@ export class TransactionComponent implements OnInit {
         .getBalanceList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
-            this.tableData = res;
-            this.filteredTableData = res;
-            this.accountColumns = res[0]?.accountData;
+            this.tableData = res.data;
+            this.filteredTableData = res.data;
+            this.accountColumns = res.data[0]?.accountData;
             this.columnConfiguration();
 
             this.lastTransactionDate = this.getLatestTransactionDate();
@@ -813,9 +813,9 @@ export class TransactionComponent implements OnInit {
         .getTransactionReportList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
-            this.transactionReports = res;
-            this.tableData = res;
-            this.filteredTableData = res;
+            this.transactionReports = res.data;
+            this.tableData = res.data;
+            this.filteredTableData = res.data;
             this.lastTransactionDate = this.getLatestTransactionDate();
             this.loaderService.hideLoader();
           },

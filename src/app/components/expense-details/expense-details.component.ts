@@ -152,7 +152,7 @@ export class ExpenseDetailsComponent {
   getExpenseSuggestionList() {
     this.expenseService.getExpenseSuggestionList().subscribe({
       next: (res: any) => {
-        this.commonSuggestionList = res;
+        this.commonSuggestionList = res.data;
         console.log("data: ", res);
         this.loaderService.hideLoader();
       },

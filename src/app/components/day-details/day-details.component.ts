@@ -153,7 +153,7 @@ export class DayDetailsComponent implements OnInit {
         console.log("res : ", res);
 
         this.patchValues(res);
-        this.dayDetails = res;
+        this.dayDetails = res.data;
         console.log("this.dayDetails?.assetId : ", this.dayDetails?.assetId);
 
         if (this.dayDetails?.assetId) {
@@ -249,7 +249,7 @@ export class DayDetailsComponent implements OnInit {
     this.loggedInUserId = localStorage.getItem('userId') || '';
     this.configService.getConfigList(this.loggedInUserId,UserConfig.OCCASION_TYPE).subscribe({
       next: (res: any) => {
-        this.occasionTypeList = res;
+        this.occasionTypeList = res.data;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -259,7 +259,7 @@ export class DayDetailsComponent implements OnInit {
     });
     this.configService.getConfigList(this.loggedInUserId,UserConfig.RELATION).subscribe({
       next: (res: any) => {
-        this.relationList = res;
+        this.relationList = res.data;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -345,8 +345,8 @@ export class DayDetailsComponent implements OnInit {
       this._assetService.uploadImage(this.dayDetailsForm.value["assetId"], API_URL.BIRTHDAYPERSONPIC, this.formData)
         .subscribe({
           next: (res: any) => {
-            this.dayDetailsForm.value["assetId"] = res;
-            this.specialOccasionRequest.assetId = res;
+            this.dayDetailsForm.value["assetId"] = res.data;
+            this.specialOccasionRequest.assetId = res.data;
             this.addOrUpdateDayDetails();
             this.loaderService.hideLoader();
           },

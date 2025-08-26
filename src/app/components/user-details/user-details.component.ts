@@ -153,8 +153,8 @@ export class UserDetailsComponent {
   getRoleList() {
     this.roleService.getAllRoles().subscribe({
       next: (result: any) => {
-        this.roleListoriginal = result;
-        this.roleList = result;
+        this.roleListoriginal = result.data;
+        this.roleList = result.data;
       },
       error: (error: any) => {
         console.error(Messages.ERROR_IN_FETCHING_ROLES, error);

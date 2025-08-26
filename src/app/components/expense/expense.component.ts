@@ -713,8 +713,8 @@ export class ExpenseComponent implements OnInit {
         .getExpenseList(this.expensefilterRequest)
         .subscribe({
           next: (res: any) => {
-            this.tableData = res;
-            this.filteredTableData = res;
+            this.tableData = res.data;
+            this.filteredTableData = res.data;
             this.lastExpenseDate = this.getLatestExpenseDate();
             this.loaderService.hideLoader();
           },
@@ -728,8 +728,8 @@ export class ExpenseComponent implements OnInit {
         .getExpenseSummaryList(this.expensefilterRequest)
         .subscribe({
           next: (res: any) => {
-            this.tableData = res;
-            this.filteredTableData = res;
+            this.tableData = res.data;
+            this.filteredTableData = res.data;
             this.lastExpenseDate = this.getLatestExpenseDate();
             this.loaderService.hideLoader();
           },
@@ -743,8 +743,8 @@ export class ExpenseComponent implements OnInit {
         .getExpenseReportList(this.expensefilterRequest)
         .subscribe({
           next: (res: any) => {
-            this.tableData = res;
-            this.filteredTableData = res;
+            this.tableData = res.data;
+            this.filteredTableData = res.data;
             this.lastExpenseDate = this.getLatestExpenseDate();
             this.loaderService.hideLoader();
           },

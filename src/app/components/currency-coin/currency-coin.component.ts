@@ -53,7 +53,7 @@ export class CurrencyCoinComponent implements OnInit {
     this.columnConfiguration();
     this.globalService.getCountryList().subscribe({
       next: (res: any) => {
-        this.countryList = res;
+        this.countryList = res.data;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -198,8 +198,8 @@ export class CurrencyCoinComponent implements OnInit {
   LoadGrid() {
     this.currencyCoinService.getCurrencyCoinRecords().subscribe({
       next: (res: any) => {
-        this.tableData = res;
-        this.filteredTableData = res;
+        this.tableData = res.data;
+        this.filteredTableData = res.data;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
