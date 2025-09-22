@@ -22,6 +22,7 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
 import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
 import { TransactionPieChartComponent } from "../transaction-pie-chart/transaction-pie-chart.component";
+import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 export interface Task {
   name: string;
   completed: boolean;
@@ -68,7 +69,7 @@ export class TransactionComponent implements OnInit {
   sourceOrReason: string = "";
   minAmount: number = 0;
   maxAmount: number = 0;
-  transactionId: string = "";
+  transactionGroupId: string = "";
   activeComponent: string = NavigationURLs.EXPENSE_LIST;
   reportLastDate = "";
   reportFirstDate = "";
@@ -108,7 +109,9 @@ export class TransactionComponent implements OnInit {
     private transactionService: TransactionService,
     public datePipe: DatePipe,
     public globalService: GlobalService,
-    private loaderService: LoaderService) { }
+    private loaderService: LoaderService,
+    private localStorageService: LocalStorageService,
+  ) { }
 
   ngOnInit() {
     this.ClearFilter();
@@ -165,9 +168,9 @@ export class TransactionComponent implements OnInit {
         title: "Debit",
         field: "expense",
         sorter: "alphanum",
-        formatter: this.amountColorFormatter.bind(this),
+        formatter: this.debitAmountColorFormatter.bind(this),
         bottomCalc: "sum",
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatter: this.debitAmountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
       },
       {
@@ -185,8 +188,8 @@ export class TransactionComponent implements OnInit {
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const transactionId = cell.getRow().getData()["transactionGroupId"];
-          this.hideTransaction(transactionId);
+          const transactionGroupId = cell.getRow().getData()["transactionGroupId"];
+          this.hideTransaction(transactionGroupId);
         },
         hozAlign: "center",
         headerSort: false,
@@ -200,7 +203,7 @@ export class TransactionComponent implements OnInit {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.optionDotsFormatter.bind(this),//will used for row-wise condition
         hozAlign: "center",
         headerSort: false,
       });
@@ -235,7 +238,7 @@ export class TransactionComponent implements OnInit {
         const isAmount = key.toLowerCase().includes("amount");
         const isBalance = key.toLowerCase().includes("balance");
         const isCategory = key.toLowerCase().includes("category");
-        if (!key.toLowerCase().includes("category")) {
+        if (!isCategory) {
           this.columnConfig.push({
             title: key,
             field: `accountData.${key}`,
@@ -258,8 +261,8 @@ export class TransactionComponent implements OnInit {
       maxWidth: 70,
       formatter: this.globalService.hidebuttonFormatter.bind(this),
       cellClick: (e, cell) => {
-        const transactionId = cell.getRow().getData()["transactionGroupId"];
-        this.hideTransaction(transactionId);
+        const transactionGroupId = cell.getRow().getData()["transactionGroupId"];
+        this.hideTransaction(transactionGroupId);
       },
       headerSort: false,
     });
@@ -271,7 +274,7 @@ export class TransactionComponent implements OnInit {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.optionDotsFormatter.bind(this),//will used for row-wise condition
         hozAlign: "center",
         headerSort: false,
       });
@@ -434,8 +437,8 @@ export class TransactionComponent implements OnInit {
             label: ApplicationConstantHtml.DELETE_LABLE,
             action: (_e: any, cell: CellComponent) => {
               const transactionData = cell.getRow().getData();
-              const transactionId = transactionData["id"];
-              this.deleteTransaction(transactionId);
+              const transactionGroupId = transactionData["transactionGroupId"];
+              this.deleteTransaction(transactionGroupId);
             },
           },
         ],
@@ -459,7 +462,7 @@ export class TransactionComponent implements OnInit {
       menu.push({
         label: ApplicationConstantHtml.DELETE_LABLE,
         action: () => {
-          this.deleteTransaction(rowData['id']);
+          this.deleteTransaction(rowData['transactionGroupId']);
         },
       });
     }
@@ -467,9 +470,9 @@ export class TransactionComponent implements OnInit {
   }
 
 
-  hideTransaction(transactionId: any) {
+  hideTransaction(transactionGroupId: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.transactionGroupId != transactionId;
+      return item.transactionGroupId != transactionGroupId;
     });
   }
 
@@ -479,10 +482,11 @@ export class TransactionComponent implements OnInit {
     });
   }
 
-  removeTransaction(transactionId: any) {
+  removeTransaction(transactionGroupId: any) {
     this.tableData = this.tableData.filter((item: any) => {
-      return item.transactionGroupId != transactionId;
+      return item.transactionGroupId != transactionGroupId;
     });
+    this.filteredTableData = this.tableData;
   }
 
   hideTransactionBySource(sourceOrReason: any) {
@@ -518,6 +522,20 @@ export class TransactionComponent implements OnInit {
       return `<span style="color:#129D0A; font-weight:bold">${formattedValue}</span>`;
     }
     if (columnValue < 0) {
+      return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
+    }
+    return `<span></span>`;
+  }
+
+  debitAmountColorFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const transactionData = cell.getRow().getData();
+    const columnValue = transactionData[columnName];
+    const formattedValue = new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(columnValue);
+    if (columnValue !== 0) {
       return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
     }
     return `<span></span>`;
@@ -620,7 +638,7 @@ export class TransactionComponent implements OnInit {
         const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
         const rowId = button.getAttribute('data-row-id');
         if (rowId) {
-          const rowData = this.tableData.find((row) => row['id'] == rowId);
+          const rowData = this.tableData.find((row) => row['transactionGroupId'] == rowId);
           if (rowData) {
             const menuOptions = this.generateOptionsMenu(rowData);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
@@ -632,7 +650,7 @@ export class TransactionComponent implements OnInit {
         if (globalMenu) globalMenu.remove();
       }
     });
-
+    this.setTransactionSuggestions();
   }
 
   applyFilters() {
@@ -777,13 +795,22 @@ export class TransactionComponent implements OnInit {
         .getTransactionSummaryList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
+            try   {
             this.tableData = res.data;
             this.filteredTableData = res.data;
+            console.log("res: ", res);
+            console.log("res.data : ", res.data);
+            console.log("res.data[0]?.accountData  ", res.data[0]?.accountData);
             this.accountColumns = res.data[0]?.accountData;
             this.columnConfiguration();
 
             this.lastTransactionDate = this.getLatestTransactionDate();
             this.loaderService.hideLoader();
+            } catch (error) {
+              this.loaderService.hideLoader();
+              console.error("Error in processing summary list:", error);
+            }
+
           },
           error: (error: any) => {
             console.log("error : ", error);
@@ -834,9 +861,9 @@ export class TransactionComponent implements OnInit {
     this.transactionDetailsComponent.openDetailsPopup(data);
   }
 
-  deleteTransaction(transactionId: string) {
-    if (transactionId) {
-      this.transactionId = transactionId;
+  deleteTransaction(transactionGroupId: string) {
+    if (transactionGroupId) {
+      this.transactionGroupId = transactionGroupId;
       this.confirmationDialog.openConfirmationPopup(
         "Confirmation",
         "Are you sure you want to delete this transaction? This action cannot be undone."
@@ -848,9 +875,9 @@ export class TransactionComponent implements OnInit {
     console.log(isConfirmed);
     if (isConfirmed) {
       this.loaderService.showLoader();
-      this.transactionService.deleteTransaction(this.transactionId).subscribe({
+      this.transactionService.deleteTransaction(this.transactionGroupId).subscribe({
         next: (res: any) => {
-          this.removeTransaction(this.transactionId);
+          this.removeTransaction(this.transactionGroupId);
           this.loaderService.hideLoader();
         },
         error: (error: any) => {
@@ -905,6 +932,18 @@ export class TransactionComponent implements OnInit {
     } else {
       this.LoadGrid();
     }
+  }
+
+  setTransactionSuggestions() {
+    this.transactionService.getTransactionSuggestionList().subscribe({
+      next: (res: any) => {
+        this.localStorageService.setTransactionSuggestions(res.data); // Convert object to string
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+      },
+    });
+
   }
 
 }

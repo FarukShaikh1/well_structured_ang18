@@ -168,7 +168,7 @@ ActionConstant=ActionConstant;
       .subscribe({
         next: (res: any) => {
           console.log("res : ", res);
-          this.patchValues(res);
+          this.patchValues(res.data);
           this.currencyCoinDetails = res.data;
           console.log("this.currencyCoinDetails?.assetId : ", this.currencyCoinDetails?.assetId);
 

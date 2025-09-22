@@ -65,11 +65,10 @@ export class GlobalService {
   }
 
   getUserPermissionData(): Observable<boolean> {
-
     return this.roleService.getLoggedInUserPermissions().pipe(
       map((result) => {
-        if (result) {
-          this.localStorageService.setUserPermission(result);
+        if (result.success) {
+          this.localStorageService.setUserPermission(result.data);
           if (result.data.length > 0) {
             const user = this.localStorageService.getLoggedInUserData();
             user.role = result.role;
@@ -101,6 +100,10 @@ export class GlobalService {
       return false;
     }
     return mapping[lowerCaseAction] === true;
+  }
+
+  getConfigList(config : string){
+   return this.localStorageService.getConfigList(config);
   }
 
   AccessibleModuleList(): ModuleResponse[] {
@@ -174,7 +177,7 @@ export class GlobalService {
 
   validateAmount(event: any) {
     // if (event.target.value.match(/^[0-9]{0,20}$/)) {
-    if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.\-]$/)) {
+    if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.]$/)) {
       event.preventDefault();
     }
   }
@@ -240,6 +243,18 @@ export class GlobalService {
         </div>`;
   }
 
+    optionDotsFormatter(cell: CellComponent) {
+    const rowData = cell.getRow().getData();
+    const rowId = rowData['transactionGroupId'];
+    return `
+        <div class="dropdown" style="position: relative;">
+          <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end options-menu" id="dropdownMenuItems${rowId}"></ul>
+        </div>`;
+  }
+
   isValidGuid(value: string) {
     const guidPattern =
       /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -251,6 +266,4 @@ export class GlobalService {
       /^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/;
     return guidPattern.test(value);
   }
-
-
 }

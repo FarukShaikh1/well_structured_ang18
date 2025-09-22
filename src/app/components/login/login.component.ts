@@ -1,10 +1,11 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { NavigationURLs } from "../../../utils/application-constants";
+import { NavigationURLs, UserConfig } from "../../../utils/application-constants";
 import { GlobalService } from "../../services/global/global.service";
 import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 import { UserService } from "../../services/user/user.service";
+import { ConfigurationService } from "../../services/configuration/configuration.service";
 
 @Component({
   selector: "app-login",
@@ -17,6 +18,9 @@ import { UserService } from "../../services/user/user.service";
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent {
+  accountList: any;
+  occationTypeList: any;
+  relationList: any;
   ngOninit() {
     if (this.localStorageService.isAuthenticated()) {
       this.router.navigate([NavigationURLs.HOME]);
@@ -34,6 +38,7 @@ export class LoginComponent {
     private router: Router,
     private userService: UserService,
     public globalService: GlobalService,
+    private configurationService: ConfigurationService,
     private localStorageService: LocalStorageService
   ) {
     localStorage.setItem("currentUser", "false");
@@ -57,7 +62,7 @@ export class LoginComponent {
       //this.globalService.openSnackBar("Password should not be blank")
       return;
     }
-    this.userService.getUser(this.loginForm.value).subscribe((res:any) => {
+    this.userService.getUser(this.loginForm.value).subscribe((res: any) => {
       if (res) {
         this.data = res.data;
         if (this.data.length <= 0) {
@@ -75,15 +80,15 @@ export class LoginComponent {
           this.data?.userName?.length > 0
         ) {
           console.log('this.data : ', this.data);
-          
+
           localStorage.setItem("user", JSON.stringify(this.data)); // Convert object to string
           localStorage.setItem("currentUser", "true");
           localStorage.setItem("userName", this.data.userName);
           localStorage.setItem("userId", this.data.id);
           localStorage.setItem("accessibleModuleIds", this.data.accessibleModuleIds);
-          localStorage.setItem("activeAccountList", this.data.accessibleModuleIds);
-          localStorage.setItem("activeRelationList", this.data.accessibleModuleIds);
-          localStorage.setItem("activeOccasionTypeList", this.data.accessibleModuleIds);
+          this.setConfigToLocalStorage(UserConfig.ACCOUNT);
+          this.setConfigToLocalStorage(UserConfig.RELATION);
+          this.setConfigToLocalStorage(UserConfig.OCCASION_TYPE);
           //this.globalService.openSnackBar("Log in successfully")
           this.reload();
           if (this.data.roleName?.toLowerCase() === "super admin")
@@ -99,5 +104,20 @@ export class LoginComponent {
   }
   reload() {
     this.globalService.reloadComponent();
+  }
+
+  setConfigToLocalStorage(config: string) {
+    this.configurationService.getActiveConfigList(localStorage.getItem('userId')?.toString(), config).subscribe({
+      next: (result: any) => {
+        console.log('result : ', result);
+        config == UserConfig.ACCOUNT ? this.accountList = result.data :
+          config == UserConfig.OCCASION_TYPE ? this.occationTypeList = result.data :
+            this.relationList = result.data;
+        localStorage.setItem(config, result.data ? JSON.stringify(result.data) : '[]');
+      },
+      error: (error: any) => {
+        console.error('Error fetching user list', error);
+      },
+    });
   }
 }

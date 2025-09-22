@@ -152,7 +152,7 @@ export class DayDetailsComponent implements OnInit {
       next: (res: any) => {
         console.log("res : ", res);
 
-        this.patchValues(res);
+        this.patchValues(res.data);
         this.dayDetails = res.data;
         console.log("this.dayDetails?.assetId : ", this.dayDetails?.assetId);
 
@@ -216,7 +216,7 @@ export class DayDetailsComponent implements OnInit {
   }
 
   submitDayDetails() {
-    
+
     this.globalService.trimAllFields(this.dayDetailsForm);
     this.dayDetailsForm.value["specialOccasionDate"] = DateUtils.CorrectedDate(this.dayDetailsForm.value["specialOccasionDate"]);
     console.log('this.dayDetailsForm.value["specialOccasionDate"] : ', this.dayDetailsForm.value["specialOccasionDate"]);
@@ -244,30 +244,18 @@ export class DayDetailsComponent implements OnInit {
 
   }
 
+  loadOccasionTypeList() {
+    this.occasionTypeList = this.globalService.getConfigList(UserConfig.OCCASION_TYPE);
+  }
+  loadRelationList() {
+    this.occasionTypeList = this.globalService.getConfigList(UserConfig.RELATION);
+  }
+
   openDetailsPopup(specialOccasionId: any) {
     this.loaderService.showLoader();
     this.loggedInUserId = localStorage.getItem('userId') || '';
-    this.configService.getConfigList(this.loggedInUserId,UserConfig.OCCASION_TYPE).subscribe({
-      next: (res: any) => {
-        this.occasionTypeList = res.data;
-        this.loaderService.hideLoader();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
-    this.configService.getConfigList(this.loggedInUserId,UserConfig.RELATION).subscribe({
-      next: (res: any) => {
-        this.relationList = res.data;
-        this.loaderService.hideLoader();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
-
+    this.loadOccasionTypeList();
+    this.loadRelationList();
     const model = document.getElementById("detailsPopup");
     if (model !== null) {
       model.style.display = "block";
@@ -291,7 +279,7 @@ export class DayDetailsComponent implements OnInit {
   }
 
   addDayDetails() {
-    
+
     this._dayService.addDay(this.specialOccasionRequest).subscribe({
       next: () => {
         this.toaster.showMessage("Record Added Successfully.", "success");
@@ -309,7 +297,7 @@ export class DayDetailsComponent implements OnInit {
     });
   }
   updateDayDetails() {
-    
+
     this._dayService.updateDay(this.specialOccasionRequest).subscribe({
       next: (res: any) => {
         this.toaster.showMessage("Record Updated Successfully.", "success");
@@ -329,7 +317,7 @@ export class DayDetailsComponent implements OnInit {
   }
 
   addOrUpdateDayDetails() {
-    if(!this.specialOccasionRequest.assetId)
+    if (!this.specialOccasionRequest.assetId)
       this.specialOccasionRequest.assetId = null
     if (this.specialOccasionRequest.id) {
       this.updateDayDetails();
@@ -341,7 +329,7 @@ export class DayDetailsComponent implements OnInit {
   }
   uploadImageAndSaveData() {
     if (this.selectedImageFile) {
-      
+
       this._assetService.uploadImage(this.dayDetailsForm.value["assetId"], API_URL.BIRTHDAYPERSONPIC, this.formData)
         .subscribe({
           next: (res: any) => {

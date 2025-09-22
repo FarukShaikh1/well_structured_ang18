@@ -56,7 +56,6 @@ export const API_URL = {
   GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,
   UPDATE_USER_PERMISSION: `${serverUrl}${apiPrefix}/user/updaterolemodulemapping`,
 
-  AUTHENTICATE_USER: `${serverUrl}${apiPrefix}/auth/login`,
   GET_ALL_USERS: `${serverUrl}${apiPrefix}/user/GetList`,
   GET_LOGGED_IN_USER_DETAILS: `${serverUrl}${apiPrefix}/auth/getloggedinuserdetails`,
   Get_USER_DETAILS: `${serverUrl}${apiPrefix}/user/GetDetails?userId=`,

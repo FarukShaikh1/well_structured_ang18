@@ -11,10 +11,6 @@ import { HttpService } from '../rest/http.service';
 export class UserService {
   constructor(private httpService: HttpService) { }
 
-  authenticateUser(userLoginRequest: UserLoginRequest): Observable<any> {
-    return this.httpService.post(API_URL.AUTHENTICATE_USER, userLoginRequest);
-  }
-
   getAllUsers(): Observable<any> {
     return this.httpService.get(API_URL.GET_ALL_USERS);
   }
