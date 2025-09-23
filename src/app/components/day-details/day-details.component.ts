@@ -172,7 +172,7 @@ export class DayDetailsComponent implements OnInit {
       next: (res: any) => {
         console.log();
 
-        this.selectedImage = API_URL.ATTACHMENT + res.originalPath;
+        this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
         console.log("this.selectedImage : ", this.selectedImage);
 
         this.loaderService.hideLoader();
@@ -190,7 +190,7 @@ export class DayDetailsComponent implements OnInit {
       this.isVerified = res["isVerified"];
       this.dayDetailsForm.controls["specialOccasionId"].patchValue(res["id"]);
       this.dayDetailsForm.controls["personName"].patchValue(res["personName"]);
-      this.dayDetailsForm.controls["occasionTypeId"].patchValue(res["occasionTypeId"]);
+      this.dayDetailsForm.controls["occasionTypeId"].patchValue(res["dayTypeId"]);
       this.dayDetailsForm.controls["relationId"].patchValue(res["relationId"]);
       this.dayDetailsForm.controls["specialOccasionDate"].patchValue(
         this.datepipe.transform(res["specialOccasionDate"], ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT)
@@ -248,7 +248,7 @@ export class DayDetailsComponent implements OnInit {
     this.occasionTypeList = this.globalService.getConfigList(UserConfig.OCCASION_TYPE);
   }
   loadRelationList() {
-    this.occasionTypeList = this.globalService.getConfigList(UserConfig.RELATION);
+    this.relationList = this.globalService.getConfigList(UserConfig.RELATION);
   }
 
   openDetailsPopup(specialOccasionId: any) {
