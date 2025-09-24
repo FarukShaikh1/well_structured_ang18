@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { LocalStorageService } from '../services/local-storage/local-storage.service';
-import { NavigationURLs, ApplicationRoles } from '../../utils/application-constants';
+import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
+import { ApplicationRoles, NavigationURLs } from '../../utils/application-constants';
 import { GlobalService } from '../services/global/global.service';
+import { LocalStorageService } from '../services/local-storage/local-storage.service';
 
 export const routeAccessGuard: CanActivateFn = async (_route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const localStorageService = inject(LocalStorageService);

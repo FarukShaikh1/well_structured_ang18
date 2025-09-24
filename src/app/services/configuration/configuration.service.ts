@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { API_URL } from '../../../utils/api-url';
 import { ConfigurationRequest } from '../../interfaces/configuration-request';
 

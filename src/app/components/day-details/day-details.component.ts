@@ -2,6 +2,7 @@ import { CommonModule, DatePipe } from "@angular/common";
 import {
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   Renderer2,
   ViewChild,
@@ -13,6 +14,8 @@ import {
   Validators,
 } from "@angular/forms";
 import flatpickr from "flatpickr";
+import { of, Subscription } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { API_URL } from "../../../utils/api-url";
 import {
   ActionConstant,
@@ -37,7 +40,7 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
   styleUrls: ["./day-details.component.scss"],
   providers: [DatePipe],
 })
-export class DayDetailsComponent implements OnInit {
+export class DayDetailsComponent implements OnInit, OnDestroy {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild("btnCloseDetailsPopup") btnCloseDayPopup!: ElementRef;
   startDate = new Date();
@@ -69,6 +72,7 @@ export class DayDetailsComponent implements OnInit {
     assetId: ''
   }
   ActionConstant = ActionConstant;
+  private subscriptions = new Subscription();
   constructor(
     private _details: FormBuilder,
     private _dayService: DayService,
@@ -76,7 +80,6 @@ export class DayDetailsComponent implements OnInit {
     private _assetService: AssetService,
     public configService: ConfigurationService,
     public globalService: GlobalService,
-    // public localStorageService: LocalStorageService,
     private renderer: Renderer2,
     private datepipe: DatePipe
   ) {
@@ -124,7 +127,7 @@ export class DayDetailsComponent implements OnInit {
       const file = files[0];
       this.selectedImageFile = files[0];
       if (file.type.startsWith("image/")) {
-        this.formData.append("file", file);
+        this.formData.set("file", file); // Use set to replace existing file
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -138,7 +141,10 @@ export class DayDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dayDetailsForm.controls["specialOccasionDate"].patchValue(this.startDate);
+    this.dayDetailsForm.controls["specialOccasionDate"].patchValue(this.datepipe.transform(this.startDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT));
+  }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
   ngAfterViewInit() {
     flatpickr("#specialOccasionDate", {
@@ -148,82 +154,72 @@ export class DayDetailsComponent implements OnInit {
   }
 
   getDayDetails(specialOccasionId: string) {
-    this._dayService.getDayDetails(specialOccasionId).subscribe({
-      next: (res: any) => {
-        console.log("res : ", res);
-
-        this.patchValues(res.data);
+    this.loaderService.showLoader();
+    this.subscriptions.add(this._dayService.getDayDetails(specialOccasionId).pipe(
+      tap((res: any) => {
         this.dayDetails = res.data;
-        console.log("this.dayDetails?.assetId : ", this.dayDetails?.assetId);
-
+        this.patchValues(res.data);
         if (this.dayDetails?.assetId) {
           this.getAssetDetails(this.dayDetails.assetId);
+        } else {
           this.loaderService.hideLoader();
         }
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
+      }),
+      catchError((error: any) => {
+        this.showError("Error fetching day details.");
+        return of(null);
+      })
+    ).subscribe());
   }
   getAssetDetails(assetId: string) {
-    this._assetService.getAssetDetails(assetId).subscribe({
-      next: (res: any) => {
-        console.log();
-
+    this.subscriptions.add(this._assetService.getAssetDetails(assetId).pipe(
+      tap((res: any) => {
         this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
-        console.log("this.selectedImage : ", this.selectedImage);
-
         this.loaderService.hideLoader();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
+      }),
+      catchError((error: any) => {
+        this.showError("Error fetching asset details.");
+        return of(null);
+      })
+    ).subscribe());
   }
 
   patchValues(res: any) {
-    if (res != undefined) {
+    if (res) {
       this.isApprovable = res["isApprovable"];
       this.isVerified = res["isVerified"];
-      this.dayDetailsForm.controls["specialOccasionId"].patchValue(res["id"]);
-      this.dayDetailsForm.controls["personName"].patchValue(res["personName"]);
-      this.dayDetailsForm.controls["occasionTypeId"].patchValue(res["dayTypeId"]);
-      this.dayDetailsForm.controls["relationId"].patchValue(res["relationId"]);
-      this.dayDetailsForm.controls["specialOccasionDate"].patchValue(
-        this.datepipe.transform(res["specialOccasionDate"], ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT)
-      );
-      this.dayDetailsForm.controls["mobileNumber"].patchValue(
-        res["mobileNumber"]
-      );
-      this.dayDetailsForm.controls["contactNumber"].patchValue(
-        res["contactNumber"]
-      );
-      this.dayDetailsForm.controls["emailId"].patchValue(res["emailId"]);
-      this.dayDetailsForm.controls["address"].patchValue(res["address"]);
-      this.dayDetailsForm.controls["gender"].patchValue(res["gender"] ?? 'M');
-      this.dayDetailsForm.controls["picture"].patchValue(res["image"]);
-      this.dayDetailsForm.controls["assetId"].patchValue(res["assetId"]);
-      // if(res['isApprovable'] && !res['isVerified']){
-      this.dayDetailsForm.controls["createdOn"].patchValue(res["createdOn"]);
-      this.dayDetailsForm.controls["createdBy"].patchValue(res["createdBy"]);
-      this.dayDetailsForm.controls["modifiedOn"].patchValue(res["modifiedOn"]);
-      this.dayDetailsForm.controls["modifiedBy"].patchValue(res["modifiedBy"]);
-      // }
+      this.dayDetailsForm.patchValue({
+        specialOccasionId: res["id"],
+        personName: res["personName"],
+        occasionTypeId: res["dayTypeId"],
+        relationId: res["relationId"],
+        specialOccasionDate: this.datepipe.transform(res["specialOccasionDate"], ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
+        mobileNumber: res["mobileNumber"],
+        contactNumber: res["contactNumber"],
+        emailId: res["emailId"],
+        address: res["address"],
+        gender: res["gender"] ?? 'M',
+        assetId: res["assetId"],
+        createdBy: res["createdBy"],
+        createdOn: res["createdOn"],
+        modifiedBy: res["modifiedBy"],
+        modifiedOn: res["modifiedOn"],
+      });
     }
   }
 
   submitDayDetails() {
-
+    this.loaderService.showLoader();
     this.globalService.trimAllFields(this.dayDetailsForm);
-    this.dayDetailsForm.value["specialOccasionDate"] = DateUtils.CorrectedDate(this.dayDetailsForm.value["specialOccasionDate"]);
-    console.log('this.dayDetailsForm.value["specialOccasionDate"] : ', this.dayDetailsForm.value["specialOccasionDate"]);
+
+    if (this.dayDetailsForm.invalid) {
+      this.showError("Please fill valid details.");
+      return;
+    }
 
     this.specialOccasionRequest = {
       id: this.dayDetailsForm.value["specialOccasionId"] ?? null,
-      specialOccasionDate: this.dayDetailsForm.value["specialOccasionDate"],
+      specialOccasionDate: DateUtils.CorrectedDate(this.dayDetailsForm.value["specialOccasionDate"]),
       personName: this.dayDetailsForm.value["personName"],
       occasionTypeId: this.dayDetailsForm.value["occasionTypeId"],
       relationId: this.dayDetailsForm.value["relationId"],
@@ -233,15 +229,13 @@ export class DayDetailsComponent implements OnInit {
       gender: this.dayDetailsForm.value["gender"],
       address: this.dayDetailsForm.value["address"],
       assetId: this.dayDetailsForm.value["assetId"],
-    }
-    if (!this.dayDetailsForm.valid) {
-      this.toaster.showMessage("Please fill valid details.", "error");
-      return;
-    }
-    if (this.formData) {
-      this.uploadImageAndSaveData();
-    }
+    };
 
+    if (this.selectedImageFile) {
+      this.uploadImageAndSaveData();
+    } else {
+      this.addOrUpdateDayDetails();
+    }
   }
 
   loadOccasionTypeList() {
@@ -257,8 +251,8 @@ export class DayDetailsComponent implements OnInit {
     this.loadOccasionTypeList();
     this.loadRelationList();
     const model = document.getElementById("detailsPopup");
-    if (model !== null) {
-      model.style.display = "block";
+    if (model) {
+      this.renderer.setStyle(model, "display", "block");
       this.loaderService.hideLoader();
     }
     if (specialOccasionId) {
@@ -267,84 +261,73 @@ export class DayDetailsComponent implements OnInit {
   }
   closePopup() {
     const model = document.getElementById("detailsPopup");
-    if (model !== null) {
-      model.style.display = "none";
+    if (model) {
+      this.renderer.setStyle(model, "display", "none");
     }
     this.dayDetailsForm.reset();
-    this.selectedImage = "";
+    this.selectedImage = null;
     this.selectedImageFile = null;
-    this.renderer
-      .selectRootElement(this.btnCloseDayPopup?.nativeElement)
-      .click();
+    this.formData = new FormData();
   }
 
   addDayDetails() {
-
-    this._dayService.addDay(this.specialOccasionRequest).subscribe({
-      next: () => {
-        this.toaster.showMessage("Record Added Successfully.", "success");
-        this.loaderService.hideLoader();
-        this.renderer
-          .selectRootElement(this.btnCloseDayPopup?.nativeElement)
-          .click();
+    this.subscriptions.add(this._dayService.addDay(this.specialOccasionRequest).pipe(
+      tap(() => {
+        this.showSuccess("Record Added Successfully.");
+        this.renderer.selectRootElement(this.btnCloseDayPopup?.nativeElement).click();
         this.globalService.triggerGridReload(ApplicationModules.DAY);
-      },
-      error: (error: any) => {
-        this.loaderService.hideLoader();
-        this.toaster.showMessage("Some issue is in Add the data.", "error");
-        return;
-      },
-    });
+      }),
+      catchError((error) => {
+        this.showError("Some issue is in Add the data.");
+        return of(null);
+      })
+    ).subscribe());
   }
   updateDayDetails() {
-
-    this._dayService.updateDay(this.specialOccasionRequest).subscribe({
-      next: (res: any) => {
-        this.toaster.showMessage("Record Updated Successfully.", "success");
-        this.loaderService.hideLoader();
-        this.renderer
-          .selectRootElement(this.btnCloseDayPopup?.nativeElement)
-          .click();
+    this.subscriptions.add(this._dayService.updateDay(this.specialOccasionRequest).pipe(
+      tap(() => {
+        this.showSuccess("Record Updated Successfully.");
+        this.renderer.selectRootElement(this.btnCloseDayPopup?.nativeElement).click();
         this.globalService.triggerGridReload(ApplicationModules.DAY);
-      },
-      error: (error: any) => {
-        this.loaderService.hideLoader();
-        this.toaster.showMessage("Some issue is in Update the data.", "error");
-        //this.globalService.openSnackBar('some issue is in update the data');
-        return;
-      },
-    });
+      }),
+      catchError((error) => {
+        this.showError("Some issue is in Update the data.");
+        return of(null);
+      })
+    ).subscribe());
   }
 
   addOrUpdateDayDetails() {
     if (!this.specialOccasionRequest.assetId)
-      this.specialOccasionRequest.assetId = null
+      this.specialOccasionRequest.assetId = null;
+
     if (this.specialOccasionRequest.id) {
       this.updateDayDetails();
-      this.formData = new FormData();
     } else {
       this.addDayDetails();
-      this.formData = new FormData();
     }
+    this.formData = new FormData();
   }
   uploadImageAndSaveData() {
-    if (this.selectedImageFile) {
+    const assetId = this.dayDetailsForm.value["assetId"];
+    this.subscriptions.add(this._assetService.uploadImage(assetId, API_URL.BIRTHDAYPERSONPIC, this.formData).pipe(
+      tap((res: any) => {
+        this.specialOccasionRequest.assetId = res.data;
+        this.addOrUpdateDayDetails();
+      }),
+      catchError((error) => {
+        this.showError("Error uploading image.");
+        return of(null);
+      })
+    ).subscribe());
+  }
+  private showError(message: string): void {
+    this.loaderService.hideLoader();
+    this.toaster.showMessage(message, "error");
+  }
 
-      this._assetService.uploadImage(this.dayDetailsForm.value["assetId"], API_URL.BIRTHDAYPERSONPIC, this.formData)
-        .subscribe({
-          next: (res: any) => {
-            this.dayDetailsForm.value["assetId"] = res.data;
-            this.specialOccasionRequest.assetId = res.data;
-            this.addOrUpdateDayDetails();
-            this.loaderService.hideLoader();
-          },
-          error: (error: any) => {
-            console.log("error : ", error);
-            this.loaderService.hideLoader();
-          },
-        });
-    } else {
-      this.addOrUpdateDayDetails();
-    }
+  private showSuccess(message: string): void {
+    this.loaderService.hideLoader();
+    this.toaster.showMessage(message, "success");
   }
 }

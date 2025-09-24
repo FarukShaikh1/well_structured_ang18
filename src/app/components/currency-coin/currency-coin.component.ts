@@ -1,15 +1,16 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
-import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component'
 import { CommonModule } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
-import { ColumnDefinition, CellComponent } from 'tabulator-tables';
 import { ActionConstant, ApplicationConstantHtml, ApplicationTableConstants, NavigationURLs } from '../../../utils/application-constants';
-import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
+import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
+import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import { Router } from '@angular/router';
+import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 
 @Component({
   selector: 'app-currency-coin',
@@ -44,6 +45,7 @@ export class CurrencyCoinComponent implements OnInit {
   constructor(
     private router: Router,
     private currencyCoinService: CurrencyCoinService,
+    private localStorageService: LocalStorageService,
     public globalService: GlobalService,
     private loaderService: LoaderService) {
   }
@@ -51,17 +53,7 @@ export class CurrencyCoinComponent implements OnInit {
   ngOnInit() {
     this.loaderService.showLoader();
     this.columnConfiguration();
-    this.globalService.getCountryList().subscribe({
-      next: (res: any) => {
-        this.countryList = res.data;
-        this.loaderService.hideLoader();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
-
+    this.countryList = this.localStorageService.getCountryList();
     this.LoadGrid();
     this.globalService.reloadGrid$.subscribe(() => {
       // if (listName === ApplicationModules.COLLECTIONCOIN) {
@@ -123,7 +115,7 @@ export class CurrencyCoinComponent implements OnInit {
       },
     ];
     if (
-      this.globalService.isAccessible(ActionConstant.EDIT)||
+      this.globalService.isAccessible(ActionConstant.EDIT) ||
       this.globalService.isAccessible(ActionConstant.DELETE)
     ) {
       this.columnConfig.push({
@@ -138,18 +130,18 @@ export class CurrencyCoinComponent implements OnInit {
 
   }
 
-    ngAfterViewInit() {
+  ngAfterViewInit() {
     document.addEventListener('click', (event: Event) => {
-      
+
       const target = event.target as HTMLElement;
       if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
         const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
         const rowId = button.getAttribute('data-row-id');
-        
+
         if (rowId) {
           const rowData = this.tableData.find((row) => row['id'] == rowId);
           if (rowData) {
-            
+
             const menuOptions = this.generateOptionsMenu(rowData);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           }
@@ -163,7 +155,7 @@ export class CurrencyCoinComponent implements OnInit {
     });
   }
   generateOptionsMenu(rowData: Record<string, any>) {
-    
+
     const menu = [];
     if (
       this.globalService.isAccessible(ActionConstant.EDIT)

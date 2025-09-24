@@ -4,12 +4,12 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable, of, Subject } from "rxjs";
 import { catchError, map } from "rxjs/operators";
+import { CellComponent } from "tabulator-tables";
 import { API_URL } from "../../../utils/api-url";
 import { NavigationURLs } from "../../../utils/application-constants";
+import { ModuleResponse } from "../../interfaces/module-response";
 import { LocalStorageService } from "../local-storage/local-storage.service";
 import { RoleService } from "../role/role.service";
-import { CellComponent } from "tabulator-tables";
-import { ModuleResponse } from "../../interfaces/module-response";
 
 @Injectable({
   providedIn: "root",
@@ -67,6 +67,7 @@ export class GlobalService {
   getUserPermissionData(): Observable<boolean> {
     return this.roleService.getLoggedInUserPermissions().pipe(
       map((result) => {
+        debugger;
         if (result.success) {
           this.localStorageService.setUserPermission(result.data);
           if (result.data.length > 0) {
@@ -102,8 +103,8 @@ export class GlobalService {
     return mapping[lowerCaseAction] === true;
   }
 
-  getConfigList(config : string){
-   return this.localStorageService.getConfigList(config);
+  getConfigList(config: string) {
+    return this.localStorageService.getConfigList(config);
   }
 
   AccessibleModuleList(): ModuleResponse[] {
@@ -243,7 +244,7 @@ export class GlobalService {
         </div>`;
   }
 
-    optionDotsFormatter(cell: CellComponent) {
+  optionDotsFormatter(cell: CellComponent) {
     const rowData = cell.getRow().getData();
     const rowId = rowData['transactionGroupId'];
     return `

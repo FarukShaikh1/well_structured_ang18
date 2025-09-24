@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
+import { LocalStorageConstants } from "../../../utils/application-constants";
 import { ServiceResponse } from "../../interfaces/service-response";
 
 @Injectable({
@@ -8,22 +9,19 @@ import { ServiceResponse } from "../../interfaces/service-response";
 export class LocalStorageService {
   private currentUserSource = new BehaviorSubject<ServiceResponse | null>(null);
 
-  constructor() {}
+  constructor() { }
 
   clear(): void {
     localStorage.clear();
   }
 
-  setCurrentUser(user: any, isUserLoggedIn: boolean, isSsoLogin: boolean) {
-    // localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem("isUserLoggedIn", JSON.stringify(isUserLoggedIn));
-    localStorage.setItem("isSsoLogin", JSON.stringify(isSsoLogin));
+  setLoggedInUserData(user: any) {
     this.currentUserSource.next(user);
   }
 
   getLoggedInUserData(): any {
-    return localStorage.getItem("user")
-      ? JSON.parse(localStorage.getItem("user") || "{}")
+    return localStorage.getItem(LocalStorageConstants.USER)
+      ? JSON.parse(localStorage.getItem(LocalStorageConstants.USER) || "{}")
       : null;
   }
 
@@ -34,42 +32,64 @@ export class LocalStorageService {
     }
     const loginToken = user?.token;
     const userName = user?.userName;
-    const isUserLoggedIn = localStorage.getItem("currentUser");
+    const isUserLoggedIn = localStorage.getItem(LocalStorageConstants.USER) || null;
 
     return !!(
       // loginToken &&
       (
-        isUserLoggedIn === "true" && // Ensure the value is exactly 'true'
+        isUserLoggedIn !== null && // Ensure the value is exactly 'true'
         userName
       )
     );
   }
 
-  isSsoLogin(): boolean {
-    return JSON.parse(localStorage.getItem("isSsoLogin") || "false");
-  }
-
   setUserPermission(data: any[]) {
-    localStorage.setItem("userPermissions", JSON.stringify(data));
+    localStorage.setItem(LocalStorageConstants.USER_PERMISSIONS, JSON.stringify(data));
   }
 
   getUserPermission(): any[] {
-    return JSON.parse(localStorage.getItem("userPermissions") || "[]");
+    return JSON.parse(localStorage.getItem(LocalStorageConstants.USER_PERMISSIONS) || "[]");
   }
 
   getConfigList(config: string): any[] {
     return JSON.parse(localStorage.getItem(config) || "[]");
   }
 
+  setCountryList(data: any[]) {
+    localStorage.setItem(LocalStorageConstants.COUNTRY_LIST, JSON.stringify(data));
+  }
+
+  getCountryList(): any[] {
+    return JSON.parse(localStorage.getItem(LocalStorageConstants.COUNTRY_LIST) || "[]");
+  }
+
+  setCommonListItems(key: string, data: any[]) {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  getCommonListItems(key: string): any[] {
+    return JSON.parse(localStorage.getItem(key) || "[]");
+  }
+
   getLoggedInUserRoleId(): string {
-    return localStorage.getItem("loggedInUserRoleId") || "";
+    return localStorage.getItem(LocalStorageConstants.USER_ROLE_ID) || "";
   }
 
   setLoggedInUserRoleId(loggedInUserRoleId: string) {
-    localStorage.setItem("loggedInUserRoleId", loggedInUserRoleId);
+    localStorage.setItem(LocalStorageConstants.USER_ROLE_ID, loggedInUserRoleId);
   }
+
+  getLoggedInUserPermissions(): any {
+    debugger;
+    return JSON.parse(localStorage.getItem(LocalStorageConstants.USER_PERMISSIONS) || "[]");
+  }
+
+  setLoggedInUserPermissions(permissions: any) {
+    localStorage.setItem(LocalStorageConstants.USER_PERMISSIONS, permissions);
+  }
+
   setTransactionSuggestions(data: any[]) {
-    localStorage.setItem("commonSuggestionList", JSON.stringify(data));
+    localStorage.setItem(LocalStorageConstants.COMMON_SUGGESTION_LIST, JSON.stringify(data));
   }
   isUserAuthorized(): boolean {
     const userPermissions = this.getUserPermission();

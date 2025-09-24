@@ -3,12 +3,12 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import flatpickr from "flatpickr";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
 import {
-  ApplicationConstants,
   ActionConstant,
+  ApplicationConstantHtml,
+  ApplicationConstants,
   ApplicationModules,
   ApplicationTableConstants,
   NavigationURLs,
-  ApplicationConstantHtml,
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
@@ -174,19 +174,19 @@ export class ExpenseComponent implements OnInit {
           headerSort: false,
         },
       ];
-          if (
-      this.globalService.isAccessible(ActionConstant.EDIT)||
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
-      this.columnConfig.push({
-        title: "",
-        field: "option",
-        maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
-        hozAlign: "center",
-        headerSort: false,
-      });
-    }
+      if (
+        this.globalService.isAccessible(ActionConstant.EDIT) ||
+        this.globalService.isAccessible(ActionConstant.DELETE)
+      ) {
+        this.columnConfig.push({
+          title: "",
+          field: "option",
+          maxWidth: 70,
+          formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+          hozAlign: "center",
+          headerSort: false,
+        });
+      }
 
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
       this.columnConfig = [
@@ -318,20 +318,20 @@ export class ExpenseComponent implements OnInit {
           headerSort: false,
         }
       ];
-          if (
-            this.globalService.isAccessible(ActionConstant.EDIT)||
-            this.globalService.isAccessible(ActionConstant.DELETE)
-          ) {
-            this.columnConfig.push({
-              title: "",
-              field: "option",
-              maxWidth: 70,
-              formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
-              hozAlign: "center",
-              headerSort: false,
-            });
-          }
-      
+      if (
+        this.globalService.isAccessible(ActionConstant.EDIT) ||
+        this.globalService.isAccessible(ActionConstant.DELETE)
+      ) {
+        this.columnConfig.push({
+          title: "",
+          field: "option",
+          maxWidth: 70,
+          formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+          hozAlign: "center",
+          headerSort: false,
+        });
+      }
+
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
       this.columnConfig = [
         {

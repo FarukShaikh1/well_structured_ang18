@@ -28,7 +28,7 @@ describe('LocalStorageService', () => {
 
   it('should set and get current user', () => {
     const user = { token: '123', userName: 'testuser' };
-    service.setCurrentUser(user, true, true);
+    service.setLoggedInUserData(user, true, true);
     expect(localStorage.getItem('user')).toEqual(JSON.stringify(user));
     expect(localStorage.getItem('isUserLoggedIn')).toEqual('true');
     expect(localStorage.getItem('isSsoLogin')).toEqual('true');
@@ -37,7 +37,7 @@ describe('LocalStorageService', () => {
 
   it('should return true if user is authenticated', () => {
     const user = { token: '123', userName: 'testuser' };
-    service.setCurrentUser(user, true, true);
+    service.setLoggedInUserData(user, true, true);
     expect(service.isAuthenticated()).toBeTrue();
   });
 
@@ -71,7 +71,7 @@ describe('LocalStorageService', () => {
   });
 
   it('should return true if it is an SSO login', () => {
-    service.setCurrentUser({ token: '123', userName: 'testuser' }, true, true);
+    service.setLoggedInUserData({ token: '123', userName: 'testuser' }, true, true);
     expect(service.isSsoLogin()).toBeTrue();
   });
 });

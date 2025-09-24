@@ -17,12 +17,12 @@ import {
   ApplicationConstants,
   ApplicationModules,
 } from "../../../utils/application-constants";
+import { DateUtils } from "../../../utils/date-utils";
+import { ExpenseRequest } from "../../interfaces/expense-request";
 import { ExpenseService } from "../../services/expense/expense.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { ExpenseRequest } from "../../interfaces/expense-request";
-import { DateUtils } from "../../../utils/date-utils";
 
 @Component({
   selector: "app-expense-details",
@@ -57,7 +57,7 @@ export class ExpenseDetailsComponent {
   isValidAmount: boolean = false;
   expenseRequest: ExpenseRequest = {
     id: '',
-    expenseDate:DateUtils.GetDateBeforeDays(30),
+    expenseDate: DateUtils.GetDateBeforeDays(30),
     sourceOrReason: '',
     cash: 0,
     sbiAccount: 0,
@@ -326,7 +326,7 @@ export class ExpenseDetailsComponent {
   }
 
   submitExpenseDetails() {
-    
+
     this.globalService.trimAllFields(this.expenseDetailsForm);
     this.loaderService.showLoader();
     this.validateAmountFields();
@@ -342,7 +342,7 @@ export class ExpenseDetailsComponent {
             this.expenseDetailsForm.value["purpose"];
         }
         this.expenseDetailsForm.value["expenseDate"] = DateUtils.CorrectedDate(this.expenseDetailsForm.value["expenseDate"]);
-        
+
         this.expenseRequest = {
           id: this.expenseDetailsForm.value["expenseId"],
           expenseDate: DateUtils.IstDate(this.expenseDetailsForm.value["expenseDate"]),
@@ -356,37 +356,37 @@ export class ExpenseDetailsComponent {
         }
         if (this.expenseRequest.id) {
           this.expenseService
-          .updateExpense(this.expenseRequest)
-          .subscribe({
-            next: (result: any) => {
-              if (result) {
-                //this.globalService.openSnackBar('Record Updated Successfully');
-                this.toaster.showMessage(
-                  "Record Updated Successfully.",
-                  "success"
-                );
+            .updateExpense(this.expenseRequest)
+            .subscribe({
+              next: (result: any) => {
+                if (result) {
+                  //this.globalService.openSnackBar('Record Updated Successfully');
+                  this.toaster.showMessage(
+                    "Record Updated Successfully.",
+                    "success"
+                  );
+                  this.loaderService.hideLoader();
+                  this.renderer
+                    .selectRootElement(this.btnCloseExpensePopup?.nativeElement)
+                    .click();
+                  this.globalService.triggerGridReload(
+                    ApplicationModules.EXPENSE
+                  );
+                } else {
+                  this.loaderService.hideLoader();
+                  this.toaster.showMessage(
+                    "Some issue is in update the data.",
+                    "error"
+                  );
+                  //this.globalService.openSnackBar('some issue is in update the data');
+                  return;
+                }
+              },
+              error: (error: any) => {
                 this.loaderService.hideLoader();
-                this.renderer
-                  .selectRootElement(this.btnCloseExpensePopup?.nativeElement)
-                  .click();
-                this.globalService.triggerGridReload(
-                  ApplicationModules.EXPENSE
-                );
-              } else {
-                this.loaderService.hideLoader();
-                this.toaster.showMessage(
-                  "Some issue is in update the data.",
-                  "error"
-                );
-                //this.globalService.openSnackBar('some issue is in update the data');
-                return;
-              }
-            },
-            error: (error: any) => {
-              this.loaderService.hideLoader();
-              this.toaster.showMessage(error?.message, "error");
-            },
-          });
+                this.toaster.showMessage(error?.message, "error");
+              },
+            });
         } else {
           this.loaderService.showLoader();
           this.expenseService

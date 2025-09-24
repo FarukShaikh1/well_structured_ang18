@@ -3,10 +3,10 @@ import {
   Component,
   ElementRef,
   Input,
+  OnDestroy,
+  OnInit,
   Renderer2,
   ViewChild,
-  OnInit,
-  OnDestroy,
 } from "@angular/core";
 import {
   AbstractControl,
@@ -19,26 +19,26 @@ import {
   Validators,
 } from "@angular/forms";
 import flatpickr from "flatpickr";
+import { of, Subscription } from "rxjs";
 import {
-  ApplicationConstants,
-  ApplicationModules,
-  UserConfig,
-} from "../../../utils/application-constants";
-import { TransactionService } from "../../services/transaction/transaction.service";
-import { GlobalService } from "../../services/global/global.service";
-import { LoaderService } from "../../services/loader/loader.service";
-import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { TransactionRequest } from "../../interfaces/transaction-request";
-import { DateUtils } from "../../../utils/date-utils";
-import { ConfigurationService } from "../../services/configuration/configuration.service";
-import { TransactionAccountSplit } from "../../interfaces/transaction-account-split";
-import {
+  catchError,
   debounceTime,
   distinctUntilChanged,
   tap,
-  catchError,
 } from "rxjs/operators";
-import { of, Subscription } from "rxjs";
+import {
+  ApplicationConstants,
+  ApplicationModules,
+  LocalStorageConstants,
+  UserConfig,
+} from "../../../utils/application-constants";
+import { DateUtils } from "../../../utils/date-utils";
+import { TransactionRequest } from "../../interfaces/transaction-request";
+import { ConfigurationService } from "../../services/configuration/configuration.service";
+import { GlobalService } from "../../services/global/global.service";
+import { LoaderService } from "../../services/loader/loader.service";
+import { TransactionService } from "../../services/transaction/transaction.service";
+import { ToasterComponent } from "../shared/toaster/toaster.component";
 
 @Component({
   selector: "app-transaction-details",
@@ -255,9 +255,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         purpose: transactionRequest.purpose,
         description: transactionRequest.description,
       });
-      localStorage.setItem(
-        "commonSuggestionList",
-        JSON.stringify(this.commonSuggestionList)
+      localStorage.setItem(LocalStorageConstants.COMMON_SUGGESTION_LIST,        JSON.stringify(this.commonSuggestionList)
       );
     }
   }

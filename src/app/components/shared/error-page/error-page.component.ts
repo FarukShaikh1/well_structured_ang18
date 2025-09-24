@@ -13,19 +13,6 @@ export class ErrorPageComponent {
     private logoutService: LogoutService
   ) { }
 
-  // backToLogin() {
-  //   if (this.localStorageService.isSsoLogin()) {
-  //     this.oktaAuth.signOut().then(() => {
-  //       this.localStorageService.clear();
-  //       localStorage.setItem('initiatedLogout', 'true');
-  //     });
-  //   } else {
-  //     this.localStorageService.clear();
-  //     localStorage.setItem('initiatedLogout', 'true');
-  //     this.router.navigate([NavigationURLs.LOGIN]);
-  //   }
-  // }
-
   backToLogin() {
     this.logoutService.logout();
   }

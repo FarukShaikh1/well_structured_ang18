@@ -1,5 +1,4 @@
-import { CommonModule, DatePipe } from "@angular/common";
-import { GlobalService } from "../../services/global/global.service";
+import { CommonModule } from "@angular/common";
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from "@angular/core";
 import {
   FormBuilder,
@@ -8,12 +7,14 @@ import {
   Validators,
 } from "@angular/forms";
 import { API_URL } from "../../../utils/api-url";
+import { ActionConstant, ApplicationModules, LocalStorageConstants } from "../../../utils/application-constants";
+import { CoinNoteCollectionRequest } from "../../interfaces/coin-note-collection-request";
 import { AssetService } from "../../services/asset/asset.service";
 import { CurrencyCoinService } from "../../services/currency-coin/currency-coin.service";
-import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
-import { ActionConstant, ApplicationModules, DBConstants } from "../../../utils/application-constants";
-import { CoinNoteCollectionRequest } from "../../interfaces/coin-note-collection-request";
+import { LocalStorageService } from "../../services/local-storage/local-storage.service";
+import { ToasterComponent } from "../shared/toaster/toaster.component";
 
 
 @Component({
@@ -39,11 +40,12 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   assetDetails: any;
   coinNoteCollectionRequest: CoinNoteCollectionRequest = {
   }
-ActionConstant=ActionConstant;
+  ActionConstant = ActionConstant;
 
   constructor(
     private _details: FormBuilder,
     private _currencyCoinService: CurrencyCoinService,
+    private localStorageService: LocalStorageService,
     private loaderService: LoaderService,
     public globalService: GlobalService,
     private renderer: Renderer2,
@@ -108,29 +110,9 @@ ActionConstant=ActionConstant;
 
   openDetailsPopup(currencyCoinId: string) {
     this.loaderService.showLoader();
-    this.globalService.getCommonListItems(DBConstants.COINTYPE).subscribe({
-      next: (res: any) => {
-        this.currencyTypeList = res.data;
-        console.log('currencyTypeList : ', this.currencyTypeList);
+    this.currencyTypeList = this.localStorageService.getCommonListItems(LocalStorageConstants.COIN_TYPE);
 
-        this.loaderService.hideLoader();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
-
-    this.globalService.getCountryList().subscribe({
-      next: (res: any) => {
-        this.countryList = res.data;
-        this.loaderService.hideLoader();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
+    this.countryList = this.localStorageService.getCountryList();
 
     this.currencyCoinDetailsForm?.reset();
     const model = document.getElementById("detailsPopup");
@@ -188,7 +170,7 @@ ActionConstant=ActionConstant;
       next: (res: any) => {
         console.log();
 
-        this.selectedImage = API_URL.ATTACHMENT + res.originalPath;
+        this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
         console.log("this.selectedImage : ", this.selectedImage);
 
         this.loaderService.hideLoader();
@@ -258,7 +240,7 @@ ActionConstant=ActionConstant;
   }
 
   submitCurrencyCoinDetails() {
-    
+
     this.globalService.trimAllFields(this.currencyCoinDetailsForm);
     this.coinNoteCollectionRequest = {
       id: this.currencyCoinDetailsForm.value["collectionCoinId"],

@@ -56,18 +56,36 @@ export const LoaderConfigs = {
     TIMEOUT: 10000, // MS
 };
 
-    export const UserConfig = {
-        ACCOUNT:'Account',
-        RELATION: 'Relation',
-        OCCASION_TYPE: 'OccasionType',
-    };
+export const UserConfig = {
+    OCCASION_TYPE: 'OccasionType',
+    RELATION: 'Relation',
+    ACCOUNT: 'Account',
+};
 
+
+export const LocalStorageConstants = {
+    USER: 'user',
+    COUNTRY_LIST: 'countryList',
+    COMMON_SUGGESTION_LIST: 'commonSuggestionList',
+    MONTH_LIST: 'monthList',
+    COIN_TYPE: 'CoinType',
+    USER_ROLE_ID: 'loggedInUserRoleId',
+    USER_PERMISSIONS: 'UserPermissions',
+};
+
+export const DBConstants = {
+    OCCASION_TYPE: 'B37BB6EC-F172-4EEF-BB70-C0FD5C47FCEA',
+    RELATION: '4A920596-928E-40CD-AC1A-549E9A3B7427',
+    COINTYPE: '899773F6-EC60-4B0B-95F6-5DB190C23F99',
+    MONTH: '7E0F0170-7206-48C9-8679-82A111CA45B1',
+    MODEOFTRANSACTION: 'E1A5F08E-8FAD-4341-B4E6-A17C68FB4E47',
+}
 export const ApplicationConstantHtml = {
     DELETE_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#confirmationPopup"><i class="bi bi-trash"></i>&nbsp;Delete</a>`,
     DEACTIVATE_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#confirmationPopup"><i class="bi bi-trash"></i>&nbsp;Deactivate</a>`,
     EDIT_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#detailsPopup"><i class="bi bi-pencil"></i>&nbsp;Edit</a>`,
     VIEW_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-eye"></i>&nbsp;View</a>`,
-    DOWNLOAD_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-download"></i>&nbsp;Download</a>`,  
+    DOWNLOAD_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-download"></i>&nbsp;Download</a>`,
     UPLOAD_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-upload"></i>&nbsp;Upload</a>`,
     APPROVE_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-check2"></i>&nbsp;Approve</a>`,
     REJECT_LABLE: `<a class="dropdown-item btn-link"><i class="bi bi-x-circle"></i>&nbsp;Reject</a>`,
@@ -233,7 +251,7 @@ export const ApplicationModules = {
     COIN_NOTE_COLLECTION: 'Coin Note Collection',
     USER: 'AUTH',
     DOCUMENT: 'Documents',
-    ROLE_MODULE_MAPPING: 'userPermissions',
+    USER_PERMISSIONS: 'userPermissions',
     SETTINGS: 'Settings',
 };
 
@@ -253,10 +271,3 @@ export const ApplicationRoles = {
     External_Expense: 'External Expense',
     SUPER_ADMIN: 'Super Admin'
 };
-export const DBConstants = {
-    DAYTYPE: 'B37BB6EC-F172-4EEF-BB70-C0FD5C47FCEA',
-    COINTYPE: '899773F6-EC60-4B0B-95F6-5DB190C23F99',
-    RELATION: '4A920596-928E-40CD-AC1A-549E9A3B7427',
-    MONTH: '7E0F0170-7206-48C9-8679-82A111CA45B1',
-    MODEOFTRANSACTION: 'E1A5F08E-8FAD-4341-B4E6-A17C68FB4E47',
-}

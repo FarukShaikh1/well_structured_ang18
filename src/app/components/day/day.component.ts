@@ -7,9 +7,10 @@ import {
   ApplicationConstantHtml,
   ApplicationModules,
   ApplicationTableConstants,
-  DBConstants,
+  LocalStorageConstants,
   UserConfig
 } from "../../../utils/application-constants";
+import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { DayService } from "../../services/day/day.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
@@ -18,7 +19,6 @@ import { DayDetailsComponent } from "../day-details/day-details.component";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { ConfigurationService } from "../../services/configuration/configuration.service";
 
 export interface Task {
   name: string;
@@ -71,7 +71,7 @@ export class DayComponent implements OnInit {
   selectedOccasionType: string[] = []; // Array to store selected OccasionTypes
   selectedRelationType: string[] = []; // Array to store selected OccasionTypes
   id: string = '';
-  loggedInUserId: string='';
+  loggedInUserId: string = '';
   constructor(
     private _dayService: DayService,
     // public tableUtils: TableUtils,
@@ -84,16 +84,7 @@ export class DayComponent implements OnInit {
 
   ngOnInit() {
     this.loggedInUserId = localStorage.getItem('userId') || '';
-    this.globalService.getCommonListItems(DBConstants.MONTH).subscribe({
-      next: (res: any) => {
-        this.monthList = res.data;
-        // this.loaderService.hideLoader();
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
+    this.monthList = this.localStorageService.getCommonListItems(LocalStorageConstants.MONTH_LIST);
 
     // this.loaderService.showLoader();
     this.configService.getConfigList(this.loggedInUserId, UserConfig.OCCASION_TYPE).subscribe({
@@ -202,7 +193,7 @@ export class DayComponent implements OnInit {
       },
       {
         title: "Day Type",
-        field: "occasionType",
+        field: "dayType",
         sorter: "alphanum",
       },
       {
@@ -577,7 +568,7 @@ export class DayComponent implements OnInit {
       //   this.selectedMonths.includes(item.month);
       const matchesOccasionType =
         this.selectedOccasionType.length === 0 ||
-        this.selectedOccasionType.includes(item.daytype);
+        this.selectedOccasionType.includes(item.dayType);
       const matchesRelationType =
         this.selectedRelationType.length === 0 ||
         this.selectedRelationType.includes(item.relationShipName);

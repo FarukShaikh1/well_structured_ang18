@@ -5,9 +5,9 @@ import {
   Router,
   RouterStateSnapshot,
 } from "@angular/router";
-import { GlobalService } from "../services/global/global.service";
-import { NavigationURLs } from "../../utils/application-constants";
 import { lastValueFrom } from "rxjs";
+import { NavigationURLs } from "../../utils/application-constants";
+import { GlobalService } from "../services/global/global.service";
 import { LocalStorageService } from "../services/local-storage/local-storage.service";
 
 export const authGuard: CanActivateFn = async (
@@ -24,7 +24,7 @@ export const authGuard: CanActivateFn = async (
 
   try {
     if (localStorageService.isAuthenticated()) {
-      
+
       let isAuthorized = localStorageService.isUserAuthorized();
       if (isAuthorized) {
         return true;

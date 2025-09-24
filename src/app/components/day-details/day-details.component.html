@@ -210,7 +210,7 @@
               </div>
               }
             </div>
-            <div class="col-6 image-container">
+            <div class="col-12 col-lg-6 image-container">
               <input type="file" (change)="onFileSelected($event)" accept="image/*" formControlName="picture" />
               <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
                 <div id="image">
@@ -218,6 +218,7 @@
                 </div>
               </div>
             </div>
+
             <div class="row mt-4">
               <div class="col-12 col-sm-12">
                 <div class="action d-flex justify-content-end">
@@ -225,9 +226,7 @@
                     data-bs-dismiss="modal">
                     Cancel
                   </button>
-                  <button class="btn btn-danger rounded-button" type="reset">
-                    Reset
-                  </button>
+
                   @if(globalService.isAccessible(ActionConstant.ADD) ||
                   globalService.isAccessible(ActionConstant.EDIT)){
                   <button class="btn btn-primary rounded-button" type="submit" [disabled]="dayDetailsForm.invalid">

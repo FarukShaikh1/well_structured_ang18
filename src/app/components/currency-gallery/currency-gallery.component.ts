@@ -36,7 +36,7 @@ export class CurrencyGalleryComponent implements OnInit {
   selectedCountries: string[] = []; // Array to store selected months
   lableForTypeDropDown = "";
   lableForCountryDropDown: string = '';
-ActionConstant= ActionConstant;
+  ActionConstant = ActionConstant;
 
   constructor(
     private router: Router,
@@ -51,13 +51,11 @@ ActionConstant= ActionConstant;
         this.coinList = res.data;
         this.filteredCoinList = res.data;
         console.log('this.coinList : ', this.coinList);
-            //     this.countryList = res.data;
-// Assuming you have CurrencyList as an array of objects
-this.countryList = Array.from(
-  new Map(
-    res.map((item:any) => [item.countryName, { countryName: item.countryName, countryId: item.countryName }])
-  ).values()
-).sort((a:any, b:any) => a.countryName.localeCompare(b.countryName));;
+        this.countryList = Array.from(
+          new Map(
+            res.map((item: any) => [item.countryName, { countryName: item.countryName, countryId: item.countryName }])
+          ).values()
+        ).sort((a: any, b: any) => a.countryName.localeCompare(b.countryName));;
 
         this.getTypeDropdownLabel();
         this.applyFilters();
@@ -85,18 +83,6 @@ this.countryList = Array.from(
         this.loaderService.hideLoader();
       },
     });
-
-    // this.globalService.getCountryList().subscribe({
-    //   next: (res: any) => {
-    //     this.countryList = res.data;
-    //     this.loaderService.hideLoader();
-    //   },
-    //   error: (error: any) => {
-    //     console.log("error : ", error);
-    //     this.loaderService.hideLoader();
-    //   },
-    // });
-
 
   }
 
@@ -188,7 +174,7 @@ this.countryList = Array.from(
     this.getTypeDropdownLabel();
     this.applyFilters();
   }
-  getTypeDropdownLabel() {    
+  getTypeDropdownLabel() {
     if (this.selectedTypes?.length === 0) {
       this.lableForTypeDropDown = "";
     } else if (this.selectedTypes?.length === this.currencyTypeList?.length) {

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_URL } from '../../../utils/api-url';
 import { ChangePassword } from '../../interfaces/change-password';
 import { UserLoginRequest } from '../../interfaces/user-login-request';
-import { API_URL } from '../../../utils/api-url';
 import { HttpService } from '../rest/http.service';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class UserService {
   }
 
   getUserDetailsById(id: any): Observable<any> {
-    
+
     return this.httpService.get(API_URL.Get_USER_DETAILS + id);
   }
 
@@ -49,7 +49,7 @@ export class UserService {
     return this.httpService.get<any>(url);
   }
 
-  
+
   getUser(userLoginRequest: UserLoginRequest) {
     return this.httpService.post(API_URL.LOGIN, userLoginRequest);
   }

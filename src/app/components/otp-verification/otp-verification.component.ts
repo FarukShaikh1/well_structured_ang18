@@ -19,13 +19,13 @@ import {
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { NavigationURLs } from '../../../utils/application-constants';
+import { DateUtils } from '../../../utils/date-utils';
 import { UserLoginRequest } from '../../interfaces/user-login-request';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 import { UserService } from '../../services/user/user.service';
-import { NavigationURLs } from '../../../utils/application-constants';
-import { DateUtils } from '../../../utils/date-utils';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 
@@ -42,13 +42,12 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
   styleUrl: './otp-verification.component.css',
 })
 export class OTPVerificationComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @Input() numberOfOtpDigits: number | null = 0;
   @Input() otpExpiryTimeInMinutes: number | null = 0;
   @Input() otpMaxTrial!: number;//= 0;
-  
+
   @Input() loginRequest!: UserLoginRequest;
 
   @ViewChild('firstOtpInput') firstInput!: ElementRef<HTMLInputElement>;
@@ -72,7 +71,7 @@ export class OTPVerificationComponent
     private localStorageService: LocalStorageService,
     private loaderService: LoaderService,
     public globalService: GlobalService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.otpMaxTrial = 3;
@@ -315,13 +314,7 @@ export class OTPVerificationComponent
       next: (result: any) => {
         this.localStorageService.clear();
         if (result.success) {
-          const isSsoLogin = false;
-          const isUserLoggedIn = true;
-          this.localStorageService.setCurrentUser(
-            result?.data,
-            isUserLoggedIn,
-            isSsoLogin
-          );
+          this.localStorageService.setLoggedInUserData(result?.data);
 
           this.router.navigate([NavigationURLs.HOME]);
           // this.loaderService.hideLoader();

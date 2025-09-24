@@ -86,7 +86,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getModuleList() {
-    this.moduleList = this.globalService.AccessibleModuleList();
+    console.log('getting modulelist');
+
+    this.moduleList = this.localStorageService.getLoggedInUserPermissions();
+
     // this.roleService.getModuleList().subscribe({
     //     next: (res: any) => {
     //       this.moduleList = res.data;
@@ -104,11 +107,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   isActiveMenu(route: string): boolean {
-    
+
     return this.router.url.includes(route);
   }
   navigate(route: string) {
-    
+
     this.router.navigate([route]);
   }
   setLoginDisplay() {
@@ -170,7 +173,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.localStorageService.getLoggedInUserData()?.userName;
   }
 
-    getLoggedInUser(): string {
+  getLoggedInUser(): string {
     return this.localStorageService.getLoggedInUserData();
   }
 
@@ -198,7 +201,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([NavigationURLs.CURRENCY_LIST]);
   }
 
-  userPermissions() {
+  navigateToUserPermissions() {
     this.router.navigate([NavigationURLs.ROLE_MODULE_MAPPING]);
   }
 
@@ -206,7 +209,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([NavigationURLs.PROGRAMS]);
   }
 
-  chatSystem() {
+  navigateToChatSystem() {
     // this.router.navigate([NavigationURLs.NAV_CHAT_PANEL]);
   }
 

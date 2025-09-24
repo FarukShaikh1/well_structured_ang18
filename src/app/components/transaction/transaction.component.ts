@@ -3,26 +3,26 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import flatpickr from "flatpickr";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
 import {
-  ApplicationConstants,
   ActionConstant,
+  ApplicationConstantHtml,
+  ApplicationConstants,
   ApplicationModules,
   ApplicationTableConstants,
   NavigationURLs,
-  ApplicationConstantHtml,
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
-import { TransactionService } from "../../services/transaction/transaction.service";
+import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
-import { TransactionDetailsComponent } from "../transaction-details/transaction-details.component";
+import { LocalStorageService } from "../../services/local-storage/local-storage.service";
+import { TransactionService } from "../../services/transaction/transaction.service";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
-import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
+import { TransactionDetailsComponent } from "../transaction-details/transaction-details.component";
 import { TransactionPieChartComponent } from "../transaction-pie-chart/transaction-pie-chart.component";
-import { LocalStorageService } from "../../services/local-storage/local-storage.service";
+import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
 export interface Task {
   name: string;
   completed: boolean;
@@ -795,17 +795,17 @@ export class TransactionComponent implements OnInit {
         .getTransactionSummaryList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
-            try   {
-            this.tableData = res.data;
-            this.filteredTableData = res.data;
-            console.log("res: ", res);
-            console.log("res.data : ", res.data);
-            console.log("res.data[0]?.accountData  ", res.data[0]?.accountData);
-            this.accountColumns = res.data[0]?.accountData;
-            this.columnConfiguration();
+            try {
+              this.tableData = res.data;
+              this.filteredTableData = res.data;
+              console.log("res: ", res);
+              console.log("res.data : ", res.data);
+              console.log("res.data[0]?.accountData  ", res.data[0]?.accountData);
+              this.accountColumns = res.data[0]?.accountData;
+              this.columnConfiguration();
 
-            this.lastTransactionDate = this.getLatestTransactionDate();
-            this.loaderService.hideLoader();
+              this.lastTransactionDate = this.getLatestTransactionDate();
+              this.loaderService.hideLoader();
             } catch (error) {
               this.loaderService.hideLoader();
               console.error("Error in processing summary list:", error);

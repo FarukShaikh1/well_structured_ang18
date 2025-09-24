@@ -1,15 +1,14 @@
 import { Routes } from "@angular/router";
 import { ApplicationModules } from "../utils/application-constants";
 import { CurrencyCoinComponent } from "./components/currency-coin/currency-coin.component";
-import { DayDetailsComponent } from "./components/day-details/day-details.component";
-import { DayComponent } from "./components/day/day.component";
-import { TransactionComponent } from "./components/transaction/transaction.component";
 import { CurrencyGalleryComponent } from "./components/currency-gallery/currency-gallery.component";
 import { CurrencySummaryComponent } from "./components/currency-summary/currency-summary.component";
+import { DayDetailsComponent } from "./components/day-details/day-details.component";
+import { DayComponent } from "./components/day/day.component";
+import { SettingsComponent } from "./components/settings/settings.component";
+import { TransactionComponent } from "./components/transaction/transaction.component";
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
-import { SettingsComponent } from "./components/settings/settings.component";
-import { ExpenseComponent } from "./components/expense/expense.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -84,7 +83,7 @@ export const routes: Routes = [
             "./components/user-permission/user-permission.component"
           ).then((m) => m.UserPermissionComponent),
         // canActivate: [moduleAccessGuard],
-        data: { moduleName: ApplicationModules.ROLE_MODULE_MAPPING },
+        data: { moduleName: ApplicationModules.USER_PERMISSIONS },
       },
       {
         path: "settings",

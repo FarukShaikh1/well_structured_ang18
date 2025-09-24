@@ -19,31 +19,8 @@ export class LogoutService {
   ) { }
 
   async logout() {
-    // this.signalRService.closeConnection();
-
-    // For Okta logout
-    // if (this.localStorageService.isSsoLogin()) {
-    //   try {
-    //     // Clear tokens manually before logging out
-    //     this.oktaAuth.tokenManager.clear();
-  
-    //     await this.oktaAuth.signOut({
-    //       postLogoutRedirectUri: window.location.origin + '/login', // Redirect back to login after logout
-    //     });
-  
-    //     this.localStorageService.clear();
-    //     localStorage.setItem('initiatedLogout', 'true');
-    //   } catch (error) {
-    //     console.error('Error during logout:', error);
-    //   }
-    // } else {
-    //   this.localStorageService.clear();
-    //   this.router.navigate([NavigationURLs.LOGIN]);
-    // }
-
-    // **** Currently using same logout approach for both okta and form based logout **** 
     this.localStorageService.clear();
-    sessionStorage.clear(); 
+    sessionStorage.clear();
     this.router.navigate([NavigationURLs.LOGIN]);
   }
 }

@@ -20,8 +20,8 @@
               <div class="row">
                 <div class="col-6">
                   <label>Coin Name</label>
-                  <input formControlName="coinNoteName"
-                    class="form-control form-control-lg text-dark bg-transparent" [ngClass]="{
+                  <input formControlName="coinNoteName" class="form-control form-control-lg text-dark bg-transparent"
+                    [ngClass]="{
                       'error-border':
                         currencyCoinDetailsForm.get('coinNoteName')
                           ?.touched &&
@@ -148,20 +148,17 @@
                     data-bs-dismiss="modal">
                     Cancel
                   </button>
-                  <button class="btn btn-danger rounded-button" type="reset">
-                    Reset
-                  </button>
                   @if(globalService.isAccessible(ActionConstant.ADD) ||
                   globalService.isAccessible(ActionConstant.EDIT)){
                   <button class="btn btn-primary rounded-button" type="submit"
                     [disabled]="currencyCoinDetailsForm.invalid">
                     Save
                   </button>
-                }
+                  }
                 </div>
               </div>
             </div>
-            </div>
+          </div>
         </form>
       </div>
     </div>
