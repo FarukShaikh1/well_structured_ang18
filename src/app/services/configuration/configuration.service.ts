@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../../utils/api-url';
 import { ConfigurationRequest } from '../../interfaces/configuration-request';
+import { LocalStorageConstants } from '../../../utils/application-constants';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {
@@ -9,7 +10,7 @@ export class ConfigurationService {
 
   loggedInUserId: string;
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem("userId"));
+    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
 
   getConfigList(userId: string = '', config: string = '') {

@@ -53,6 +53,7 @@ export const API_URL = {
   GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/commonList/getCommonListItem`,
   GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/GetCountryList`,
   GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetUserPermission?userId=`,
+  GET_DEFAULT_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetDefaultPermission`,
   GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,
   UPDATE_USER_PERMISSION: `${serverUrl}${apiPrefix}/user/updaterolemodulemapping`,
 

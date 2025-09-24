@@ -83,7 +83,7 @@ export class DayComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loggedInUserId = localStorage.getItem('userId') || '';
+    this.loggedInUserId = localStorage.getItem(LocalStorageConstants.USERID) || '';
     this.monthList = this.localStorageService.getCommonListItems(LocalStorageConstants.MONTH_LIST);
 
     // this.loaderService.showLoader();

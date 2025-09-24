@@ -1,0 +1,14 @@
+.srno{
+    width: 5%;
+    text-align: center;
+}
+.moduleName{
+    width: 15%;
+}
+.description{
+    width: 32%;
+}
+.permission{
+    width: 8%;
+    text-align: center;
+}

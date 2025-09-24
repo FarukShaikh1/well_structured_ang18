@@ -21,23 +21,36 @@ export class UserPermissionComponent implements OnInit {
 
   rolePageMappingData: UserPermission[] = [];
   userList: any;
+  disableUpdate: boolean = false;
+  editable: boolean = false;
 
   constructor(private userService: UserService, private roleService: RoleService, private loaderService: LoaderService, public globalService: GlobalService) { }
 
   ngOnInit() {
     this.loaderService.showLoader();
     this.getUserList();
+    this.editable = this.globalService.isAccessible(ActionConstant.EDIT)
+    this.disableUpdate = true;
+    this.getPermission("c3d0a1d1-78f3-4128-8c22-c394ad7f55e5");
   }
 
   changeUser(event: Event) {
     const select = event.target as HTMLSelectElement;
     const selectedId = select.value;
+    if (!selectedId) {
+      this.disableUpdate = true;
+      this.getPermission("c3d0a1d1-78f3-4128-8c22-c394ad7f55e5");
+    }
+    else {
+      this.disableUpdate = false;
+      this.getPermission(selectedId);
+    }
+
     const selectedRole = this.userList.find((role: any) => role.id == selectedId);
     if (selectedRole) {
       console.log('Selected Username:', selectedRole.name);
       console.log('Selected User ID:', selectedRole.id);
     }
-    this.getPermission(selectedId);
   }
 
   getUserList() {
@@ -101,6 +114,8 @@ export class UserPermissionComponent implements OnInit {
   }
 
   isMappingEditable(): boolean {
+    console.log('Checking if mapping is editable:',);
+
     return this.globalService.isAccessible(ActionConstant.EDIT);
   }
 }

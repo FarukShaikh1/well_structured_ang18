@@ -21,6 +21,7 @@ import {
   ActionConstant,
   ApplicationConstants,
   ApplicationModules,
+  LocalStorageConstants,
   UserConfig
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
@@ -247,7 +248,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
 
   openDetailsPopup(specialOccasionId: any) {
     this.loaderService.showLoader();
-    this.loggedInUserId = localStorage.getItem('userId') || '';
+    this.loggedInUserId = localStorage.getItem(LocalStorageConstants.USERID) || '';
     this.loadOccasionTypeList();
     this.loadRelationList();
     const model = document.getElementById("detailsPopup");

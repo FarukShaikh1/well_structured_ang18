@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/internal/Observable";
 import { API_URL } from "../../../utils/api-url";
+import { LocalStorageConstants } from "../../../utils/application-constants";
 import { SpecialOccasionRequest } from "../../interfaces/special-occasion-request";
 @Injectable({
   providedIn: "root",
@@ -9,12 +10,12 @@ import { SpecialOccasionRequest } from "../../interfaces/special-occasion-reques
 export class DayService {
   loggedInUserId: string;
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem("userId"));
+    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
 
   getDayDetails(dayId: string) {
     const params = new HttpParams()
-      .set("userid", String(localStorage.getItem("userId")))
+      .set("userid", String(localStorage.getItem(LocalStorageConstants.USERID)))
       .set("dayId", dayId);
     return this.http.get(API_URL.GET_SPECIAL_OCCASION_DETAILS, { params: params });
   }
@@ -29,7 +30,7 @@ export class DayService {
     isYesterday: boolean = false
   ) {
     const params = new HttpParams()
-      .set("userid", String(localStorage.getItem("userId")))
+      .set("userid", String(localStorage.getItem(LocalStorageConstants.USERID)))
       .set("searchText", searchText)
       .set("month", month)
       .set("occasionType", occasionType)
@@ -50,15 +51,15 @@ export class DayService {
   }
 
   updateDay(specialOccasionRequest: SpecialOccasionRequest): Observable<any> {
-    return this.http.post(API_URL.UPDATE_SPECIAL_OCCASION + String(localStorage.getItem("userId")), specialOccasionRequest);
+    return this.http.post(API_URL.UPDATE_SPECIAL_OCCASION + String(localStorage.getItem(LocalStorageConstants.USERID)), specialOccasionRequest);
   }
 
   // uploadImage(assetId: string, documentType: string, file: any): Observable<any> {
   //   if (assetId) {
-  //     return this.http.post(API_URL.UPLOAD_IMAGE + String(localStorage.getItem("userId")) + "&assetId=" + assetId + "&documentType=" + documentType, file);
+  //     return this.http.post(API_URL.UPLOAD_IMAGE + String(localStorage.getItem(LocalStorageConstants.USERID)) + "&assetId=" + assetId + "&documentType=" + documentType, file);
   //   }
   //   else {
-  //     return this.http.post(API_URL.UPLOAD_IMAGE + String(localStorage.getItem("userId")) + "&documentType=" + documentType,file);
+  //     return this.http.post(API_URL.UPLOAD_IMAGE + String(localStorage.getItem(LocalStorageConstants.USERID)) + "&documentType=" + documentType,file);
   //   }
   // }
 
@@ -68,7 +69,7 @@ export class DayService {
       API_URL.DELETE_SPECIAL_OCCASION +
       dayId +
       "&userId=" +
-      String(localStorage.getItem("userId"))
+      String(localStorage.getItem(LocalStorageConstants.USERID))
     );
   }
 
@@ -77,7 +78,7 @@ export class DayService {
       API_URL.APPROVE_SPECIAL_OCCASION +
       dayId +
       "&userId=" +
-      String(localStorage.getItem("userId"))
+      String(localStorage.getItem(LocalStorageConstants.USERID))
     );
   }
 }

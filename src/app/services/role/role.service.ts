@@ -28,6 +28,10 @@ export class RoleService {
     return this.httpService.get(API_URL.GET_USER_PERMISSIONS + userId);
   }
 
+  getDefaultPermission(): Observable<any> {
+    return this.httpService.get(API_URL.GET_DEFAULT_PERMISSIONS );
+  }
+
   updateUserPermission(data: any): Observable<any> {
     return this.httpService.post(API_URL.UPDATE_USER_PERMISSION, data);
   }

@@ -4,6 +4,7 @@ import { Observable } from "rxjs/internal/Observable";
 import { API_URL } from "../../../utils/api-url";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
 import { TransactionRequest } from "../../interfaces/transaction-request";
+import { LocalStorageConstants } from "../../../utils/application-constants";
 // import { DataSource } from '@angular/cdk/collections';
 
 @Injectable({
@@ -12,7 +13,7 @@ import { TransactionRequest } from "../../interfaces/transaction-request";
 export class TransactionService {
   loggedInUserId: string;
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem("userId"));
+    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
 
   getTransactionDetails(transactionId: string) {
@@ -69,7 +70,7 @@ export class TransactionService {
       API_URL.DELETE_TRANSACTION +
       transactionId +
       "&userId=" +
-      String(localStorage.getItem("userId"))
+      String(localStorage.getItem(LocalStorageConstants.USERID))
     );
   }
 
@@ -77,7 +78,7 @@ export class TransactionService {
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.get(API_URL.GET_TRANSACTION_SUGGESTION_LIST, {
       params: params,
-    }); //?transactionId=' + transactionId + '&userId=' + String(localStorage.getItem("userId")));
+    }); //?transactionId=' + transactionId + '&userId=' + String(localStorage.getItem(LocalStorageConstants.USERID)));
   }
 
   getAvailAmount(
@@ -88,7 +89,7 @@ export class TransactionService {
       .set("userid", this.loggedInUserId)
       .set("onDate", onDate)
       .set("accountType", accountType);
-    return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params }); //?transactionId=' + transactionId + '&userId=' + String(localStorage.getItem("userId")));
+    return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params }); //?transactionId=' + transactionId + '&userId=' + String(localStorage.getItem(LocalStorageConstants.USERID)));
   }
 
 }

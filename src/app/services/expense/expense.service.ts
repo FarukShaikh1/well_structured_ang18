@@ -12,7 +12,7 @@ import { ExpenseRequest } from "../../interfaces/expense-request";
 export class ExpenseService {
   loggedInUserId: string;
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem("userId"));
+    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
 
   getExpenseDetails(expenseId: string) {
@@ -65,7 +65,7 @@ export class ExpenseService {
       API_URL.DELETE_EXPENSE +
       expenseId +
       "&userId=" +
-      String(localStorage.getItem("userId"))
+      String(localStorage.getItem(LocalStorageConstants.USERID))
     );
   }
 
@@ -73,7 +73,7 @@ export class ExpenseService {
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.get(API_URL.GET_EXPENSE_SUGGESTION_LIST, {
       params: params,
-    }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem("userId")));
+    }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem(LocalStorageConstants.USERID)));
   }
 
   getAvailAmount(
@@ -84,7 +84,7 @@ export class ExpenseService {
       .set("userid", this.loggedInUserId)
       .set("onDate", onDate)
       .set("accountType", accountType);
-    return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem("userId")));
+    return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem(LocalStorageConstants.USERID)));
   }
 
 }

@@ -77,6 +77,7 @@ export class LoginComponent {
           this.data?.userName?.length > 0
         ) {
           localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data)); // Convert object to string
+          localStorage.setItem(LocalStorageConstants.USERID, this.data.id); // Convert object to string
 
 
           //this.globalService.openSnackBar("Log in successfully")
@@ -108,19 +109,17 @@ export class LoginComponent {
   }
 
   setConfigToLocalStorage(config: string) {
-    const userString = localStorage.getItem('user');
-    if (userString) {
-      const user = JSON.parse(userString);
-      this.configurationService.getActiveConfigList(user.id, config).subscribe({
-        next: (result: any) => {
-          console.log('result : ', result);
-          localStorage.setItem(config, result.data ? JSON.stringify(result.data) : '[]');
-        },
-        error: (error: any) => {
-          console.error('Error fetching user list', error);
-        },
-      });
-    }
+    const id = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
+    this.configurationService.getActiveConfigList(id, config).subscribe({
+      next: (result: any) => {
+        console.log('result : ', result);
+        localStorage.setItem(config, result.data ? JSON.stringify(result.data) : '[]');
+      },
+      error: (error: any) => {
+        console.error('Error fetching user list', error);
+      },
+    });
+
   }
 
   setCountryListToLocalStorage() {
@@ -158,3 +157,4 @@ export class LoginComponent {
     });
   }
 }
+

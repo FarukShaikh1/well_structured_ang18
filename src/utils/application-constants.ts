@@ -65,6 +65,7 @@ export const UserConfig = {
 
 export const LocalStorageConstants = {
     USER: 'user',
+    USERID: 'userId',
     COUNTRY_LIST: 'countryList',
     COMMON_SUGGESTION_LIST: 'commonSuggestionList',
     MONTH_LIST: 'monthList',

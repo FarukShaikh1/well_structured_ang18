@@ -111,7 +111,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.router.url.includes(route);
   }
   navigate(route: string) {
-
+    debugger
     this.router.navigate([route]);
   }
   setLoginDisplay() {

@@ -83,28 +83,7 @@ export class TransactionComponent implements OnInit {
   ActionConstant = ActionConstant;
   accountColumns: any;
   transactionReports: TransactionReportResponse[] = [];
-  // optionsMenu = [
-  //   {
-  //     label: ApplicationConstantHtml.EDIT_LABLE,
-  //     action: (_e: any, cell: CellComponent) => {
-  //       const transactionData = cell.getRow().getData();
-  //       const transactionId = transactionData["id"];
-  //       this.transactionDetails(transactionId);
-  //     },
-  //   },
-  //   {
-  //     separator: true,
-  //   },
-  //   {
-  //     label: ApplicationConstantHtml.DELETE_LABLE,
-  //     action: (_e: any, cell: CellComponent) => {
-  //       const transactionData = cell.getRow().getData();
-  //       const transactionId = transactionData["id"];
-  //       this.deleteTransaction(transactionId);
-  //     },
-  //   },
-  // ];
-
+ 
   constructor(
     private transactionService: TransactionService,
     public datePipe: DatePipe,
