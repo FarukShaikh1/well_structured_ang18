@@ -8,6 +8,7 @@ import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
+import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-currency-gallery',
@@ -42,10 +43,13 @@ export class CurrencyGalleryComponent implements OnInit {
     private router: Router,
     private currencyCoinService: CurrencyCoinService,
     public globalService: GlobalService,
+    public localStorageService: LocalStorageService,
     private loaderService: LoaderService) {
   }
 
   ngOnInit() {
+    this.loaderService.showLoader();
+    this.countryList = this.localStorageService.getCountryList();
     this.currencyCoinService.getCurrencyCoinRecords().subscribe({
       next: (res: any) => {
         this.coinList = res.data;
@@ -53,7 +57,7 @@ export class CurrencyGalleryComponent implements OnInit {
         console.log('this.coinList : ', this.coinList);
         this.countryList = Array.from(
           new Map(
-            res.map((item: any) => [item.countryName, { countryName: item.countryName, countryId: item.countryName }])
+            res.data.map((item: any) => [item.countryName, { countryName: item.countryName, countryId: item.countryName }])
           ).values()
         ).sort((a: any, b: any) => a.countryName.localeCompare(b.countryName));;
 

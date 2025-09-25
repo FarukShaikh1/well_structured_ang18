@@ -1584,3 +1584,47 @@ img{
         flex: 1;
     }
 }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.gallery-item {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.gallery-item:hover {
+  transform: scale(1.03);
+}
+
+.gallery-item img {
+  margin: auto; 
+  display: block;           /* remove inline gap */
+  max-width: 100%;          /* never overflow container */
+  height: 450px;             /* keep aspect ratio */
+  padding: 10px;       /* add horizontal padding */
+  box-sizing: border-box;   /* include padding in width */
+  object-fit: contain;      /* keep full image visible */
+}
+
+
+.gallery-caption {
+  padding: 8px 12px;
+}
+
+/* 🔹 Conditional widths */
+.gallery-item.note {
+  grid-column: span 2; /* Note takes full width (double) */
+}
+
+.gallery-item.coin {
+  grid-column: span 1; /* Coin takes half width */
+}

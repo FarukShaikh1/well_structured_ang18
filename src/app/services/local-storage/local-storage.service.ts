@@ -80,7 +80,6 @@ export class LocalStorageService {
   }
 
   getLoggedInUserPermissions(): any {
-    debugger;
     return JSON.parse(localStorage.getItem(LocalStorageConstants.USER_PERMISSIONS) || "[]");
   }
 
