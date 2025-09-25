@@ -102,6 +102,11 @@ export class CurrencyCoinComponent implements OnInit {
         field: "description",
         sorter: "alphanum",
       },
+       {
+        title: "Pic",
+        field: "thumbnailPath",
+        formatter: this.globalService.thumbnailFormatter.bind(this),
+      },
       {
         title: "",
         field: "",

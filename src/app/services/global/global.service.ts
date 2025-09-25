@@ -256,6 +256,26 @@ export class GlobalService {
         </div>`;
   }
 
+    thumbnailFormatter(cell: CellComponent) {
+      const rowData = cell.getRow().getData();
+      let thumbnailPath = rowData["thumbnailPath"];
+      if (thumbnailPath) {
+        thumbnailPath = API_URL.ATTACHMENT + thumbnailPath;
+  
+        // const html = `<i class="bi bi-person-circle fs-3" style="color: blue;"></i>`;
+        const html = `<img src="${thumbnailPath}" style="width: 40px; height: 40px; object-fit: cover;" />`;
+        console.log('html : ', html);
+  
+        return html;
+      }
+      const imagePath = rowData["imagePath"];
+      if (imagePath) {
+        const html = `<i class="bi bi-person-circle fs-3" style="color: blue;"></i>`;
+        return html;
+      }
+      const html = "";
+      return html;
+    }
   isValidGuid(value: string) {
     const guidPattern =
       /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;

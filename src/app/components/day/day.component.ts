@@ -199,7 +199,7 @@ export class DayComponent implements OnInit {
       {
         title: "Pic",
         field: "thumbnailPath",
-        formatter: this.picFormatter.bind(this),
+        formatter: this.globalService.thumbnailFormatter.bind(this),
       },
       {
         title: "",
@@ -230,26 +230,7 @@ export class DayComponent implements OnInit {
   }
 
 
-  picFormatter(cell: CellComponent) {
-    const rowData = cell.getRow().getData();
-    let thumbnailPath = rowData["thumbnailPath"];
-    if (thumbnailPath) {
-      thumbnailPath = API_URL.ATTACHMENT + thumbnailPath;
 
-      // const html = `<i class="bi bi-person-circle fs-3" style="color: blue;"></i>`;
-      const html = `<img src="${thumbnailPath}" style="width: 40px; height: 40px; object-fit: cover;" />`;
-      console.log('html : ', html);
-
-      return html;
-    }
-    const imagePath = rowData["imagePath"];
-    if (imagePath) {
-      const html = `<i class="bi bi-person-circle fs-3" style="color: blue;"></i>`;
-      return html;
-    }
-    const html = "";
-    return html;
-  }
 
   dateFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
