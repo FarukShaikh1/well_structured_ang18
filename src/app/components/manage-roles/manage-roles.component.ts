@@ -61,7 +61,7 @@ export class ManageRolesComponent {
   itemcount(): string {
     const recordsPerPage = this.itemsPerPage;
     const totalRecords = this.rolesDataSource?.length;
-    const currentPage = this.page; // Assuming this.page represents the current page number
+    const currentPage = this.page; 
 
     let startRecord = (currentPage - 1) * recordsPerPage + 1;
     startRecord = this.rolesDataSource?.length > 0 ? startRecord : 0;
@@ -79,46 +79,46 @@ export class ManageRolesComponent {
       !classList.contains('bi-arrow-up') &&
       !classList.contains('bi-arrow-down')
     ) {
-      // First click, set to ascending order
+      
       classList.add('bi-arrow-up');
       this.sortDir = 1;
     } else if (classList.contains('bi-arrow-up')) {
-      // Second click, set to descending order
+      
       classList.remove('bi-arrow-up');
       classList.add('bi-arrow-down');
       this.sortDir = -1;
     } else {
-      classList.remove('bi-arrow-up', 'bi-arrow-down'); // Remove both classes
-      this.sortDir = 0; // Reset sorting direction
+      classList.remove('bi-arrow-up', 'bi-arrow-down'); 
+      this.sortDir = 0; 
     }
 
-    this.sortarr(column); // Use the provided column parameter here
+    this.sortarr(column); 
   }
   sortarr(key: string) {
     if (this.key === key) {
       if (this.reverse) {
-        // Second click, set to ascending order
+        
         this.reverse = false;
       } else {
-        // First click, set to descending order
+        
         this.reverse = true;
       }
     } else {
-      // Clicking a different column, reset sorting and sorting direction
+      
       this.key = key;
       this.reverse = false;
     }
 
-    // Sort the data based on the column and sorting direction
+    
     if (!this.reverse) {
-      // Sort in ascending order
+      
       this.rolesDataSource.sort((a: any, b: any) => {
         const valueA = a[key]?.toLowerCase();
         const valueB = b[key]?.toLowerCase();
         return valueA.localeCompare(valueB);
       });
     } else {
-      // Sort in descending order
+      
       this.rolesDataSource.sort((a: any, b: any) => {
         const valueA = a[key]?.toLowerCase();
         const valueB = b[key]?.toLowerCase();
@@ -129,8 +129,8 @@ export class ManageRolesComponent {
     this.sortClickCount++;
 
     if (this.sortClickCount === 3) {
-      // Third click, reset data to its original order
-      this.sortClickCount = 0; // Reset the click count
+      
+      this.sortClickCount = 0; 
     }
   }
 

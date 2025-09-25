@@ -12,14 +12,14 @@ export class LogoutComponent {
   constructor(private router: Router, public globalService: GlobalService) { }
 
   ngOnInit() {
-    //this.globalService.openSnackBar("Log out successfully");
-    // localStorage.setItem("currentUser", "false");
-    // localStorage.setItem("userName",'')
-    // localStorage.setItem("userId",'')
+    
+    
+    
+    
     localStorage.clear();
     this.reload();
 
-    this.router.navigate(["login"]);//, this.data[0].UserId]);
+    this.router.navigate(["login"]);
   }
   reload() {
     this.globalService.reloadComponent();

@@ -116,8 +116,8 @@ export class ConfigurationDetailsComponent {
         return;
       },
     });
-    // this.closePopup();
-    // this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
+    
+    
     
   }
 
@@ -147,7 +147,7 @@ export class ConfigurationDetailsComponent {
           this.renderer
             .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
             .click();
-          // this.closePopup();
+          
           this.loaderService.hideLoader();
           this.globalService.triggerGridReload(ApplicationModules.USER);
         } else {

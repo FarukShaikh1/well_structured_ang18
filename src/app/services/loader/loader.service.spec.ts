@@ -19,7 +19,7 @@ describe('LoaderService', () => {
     service.isLoading$.subscribe((isLoading) => {
       if (isLoading) {
         expect(isLoading).toBeTrue();
-        done(); // Ensure the test finishes only after the expected value is emitted
+        done(); 
       }
     });
 
@@ -27,14 +27,14 @@ describe('LoaderService', () => {
   });
 
   it('should emit false when hideLoader is called', (done) => {
-    // First, show the loader
+    
     service.showLoader();
 
-    // Then, hide it and check
+    
     service.isLoading$.subscribe((isLoading) => {
       if (!isLoading) {
         expect(isLoading).toBeFalse();
-        done(); // Ensure the test finishes only after the expected value is emitted
+        done(); 
       }
     });
 

@@ -31,26 +31,26 @@ describe('UnauthorisedErrorComponent', () => {
   });
 
   it('should clear local storage and call SSO logout if isSsoLogin returns true', () => {
-    // Arrange
+    
     mockLocalStorageService.isSsoLogin.and.returnValue(true);
 
-    // Act
+    
     component.backToLogin();
 
-    // Assert
+    
     expect(mockLocalStorageService.clear).toHaveBeenCalled();
     expect(mockSsoInitializationService.logout).toHaveBeenCalled();
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
   it('should navigate to logout page if isSsoLogin returns false', () => {
-    // Arrange
+    
     mockLocalStorageService.isSsoLogin.and.returnValue(false);
 
-    // Act
+    
     component.backToLogin();
 
-    // Assert
+    
     expect(mockRouter.navigate).toHaveBeenCalledWith([NavigationURLs.LOGOUT]);
     expect(mockLocalStorageService.clear).not.toHaveBeenCalled();
     expect(mockSsoInitializationService.logout).not.toHaveBeenCalled();

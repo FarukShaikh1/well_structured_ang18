@@ -1,25 +1,27 @@
 <header class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm">
   <div class="banner-text d-flex align-items-center flex-shrink-0">
-    <!-- <img src="../../../../CurrencyCollector.png" alt="Project Logo"
-      class="logo me-2 img-fluid d-none d-sm-block" /> -->
+    
     Hello {{ localStorageService.getLoggedInUserData()?.firstName + ' ' + localStorageService.getLoggedInUserData()?.lastName }}!
   </div>
-
-
+  <button class="btn btn-light d-md-none ms-2" type="button" (click)="toggleMenu()">
+    <i class="bi" [ngClass]="isMenuOpen ? 'bi-x-lg' : 'bi-list'" aria-hidden="true"></i>
+    <span class="visually-hidden">Toggle navigation</span>
+  </button>
 
   <div class="d-flex align-items-center flex-grow-1 justify-content-end">
     <div class="d-flex align-items-center position-relative me-3 flex-shrink-0">
-      @for(mod of moduleList;track $index){
-      <button (click)="navigate(mod.route)" class="font-weight-bold p-2 txt-btn"
-        [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
-        {{ mod.moduleName }}
-      </button>
-      
-      &nbsp;
-      }
+      <div class="d-none d-md-flex align-items-center" >
+        @for(mod of moduleList;track $index){
+        <button (click)="navigate(mod.route)" class="font-weight-bold p-2 txt-btn"
+          [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
+          {{ mod.moduleName }}
+        </button>
+        &nbsp;
+        }
+      </div>
 
       @if(showNotificationIcon()) {
-      <!-- For Notifications -->
+      
       <div class="position-relative" #notificationDropdown>
         <button class="btn p-0 position-relative notification-btn" (click)="toggleSystemNotificationList()">
           <i class="bi bi-bell"></i>
@@ -50,7 +52,7 @@
             <button class="btn notification-item text-start" (click)="markSystemNotificationAsRead(notification)">
               <div>{{ notification.notificationMessage }}</div>
               <small>{{ getRelativeTime(notification.createdOn) }}</small>
-              <!-- Spinner (optional) -->
+              
               <div *ngIf="notification.isLoading" class="spinner-border spinner-border-sm notification-spinner mt-2"
                 role="status"></div>
             </button>
@@ -95,7 +97,19 @@
         </li>
       </ul>
     </div>
-    <!-- } -->
+    
   </div>
 </header>
+<div class="public-page-bg d-md-none" [class.d-none]="!isMenuOpen">
+  <div class="container-fluid py-2">
+    <div class="d-flex flex-column gap-1">
+      @for(mod of moduleList;track $index){
+      <button (click)="navigate(mod.route); toggleMenu()" class="btn btn-link text-start txt-btn px-2"
+        [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
+        {{ mod.moduleName }}
+      </button>
+      }
+    </div>
+  </div>
+</div>
 <app-confirm-box (confirmResult)="handleConfirmResult($event)"></app-confirm-box>

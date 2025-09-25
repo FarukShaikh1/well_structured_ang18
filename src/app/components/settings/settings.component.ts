@@ -96,11 +96,11 @@ export class SettingsComponent {
         this.loadConfigGrid(userId, this.currentConfig);
       }
     });
-    // this.globalService.refreshList$.subscribe((listName: string) => {
-    //   if (listName === ApplicationModules.SETTINGS) {
-    //     this.applyFilters();
-    //   }
-    // });
+    
+    
+    
+    
+    
 
   }
 
@@ -128,7 +128,7 @@ export class SettingsComponent {
           }
         }
         event.stopPropagation();
-      } else { // Hide global dropdown
+      } else { 
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -244,7 +244,7 @@ export class SettingsComponent {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
       }
@@ -286,7 +286,7 @@ export class SettingsComponent {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
       }
@@ -328,7 +328,7 @@ export class SettingsComponent {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
       }
@@ -371,7 +371,7 @@ export class SettingsComponent {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
       }

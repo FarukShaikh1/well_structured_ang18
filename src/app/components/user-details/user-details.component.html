@@ -106,11 +106,11 @@
               }">
               <option value="" selected hidden>Select roleId</option>
               @for(roleId of roleList;track $index){
-              <!--@if(roleId.name!==ApplicationRoles.Platform_Admin) {-->
+              
               <option value="{{ roleId.id }}" >
                 {{ roleId.roleName }}
               </option>
-              } <!--}-->
+              } 
             </select>
 
             @if((userForm.get('roleId')?.dirty || userForm.get('roleId')?.touched)

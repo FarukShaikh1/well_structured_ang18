@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  // serverUrl: 'https://localhost:7069/',
+  
   serverUrl: 'http://localhost:85/',
   apiPrefix: 'api',
   msalConfig: {
@@ -16,7 +16,7 @@ export const environment = {
     uri: 'https://graph.microsoft.com/v1.0/me'
   },
 
-  // Local
+  
   oktaConfig: {
     clientId: '0oak77ummws4KkUwg5d7',
     issuer: 'https://dev-04327378.okta.com/oauth2/default',
@@ -25,12 +25,12 @@ export const environment = {
     pkce: true,
   }
 
-  // Application Okta configs
-  // oktaConfig: {
-  //   clientId: '0oahqvs1awk4Jcjni1d7',
-  //   issuer: 'https://cfbm.oktapreview.com',
-  //   redirectUri: 'https://dev.Application.com/login/callback',
-  //   scopes: ['openid', 'profile', 'email'],
-  //   pkce: true,
-  // }
+  
+  
+  
+  
+  
+  
+  
+  
 };

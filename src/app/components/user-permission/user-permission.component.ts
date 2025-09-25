@@ -71,7 +71,7 @@ export class UserPermissionComponent implements OnInit {
     this.roleService.getPermission(userId).subscribe({
       next: (result: any) => {
 
-        // Sort the data by pageId
+        
         this.rolePageMappingData = result.data;
         this.loaderService.hideLoader();
       },

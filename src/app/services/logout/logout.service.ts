@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { OKTA_AUTH, OktaAuthStateService } from '@okta/okta-angular';
 import OktaAuth from '@okta/okta-auth-js';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
-// import { SignalRService } from '../../services/signal-r/signal-r.service';
+
 import { NavigationURLs } from '../../../utils/application-constants';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class LogoutService {
   constructor(
     private router: Router,
     private localStorageService: LocalStorageService,
-    // private signalRService: SignalRService,
+    
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth,
     public authService: OktaAuthStateService
   ) { }

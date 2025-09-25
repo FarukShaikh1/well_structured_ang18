@@ -1,13 +1,13 @@
 <h1>Bar chart</h1>
-<div style="overflow-x: auto;">
-  <div style="height: 500px;">
+<div class="overflow-auto">
+  <div class="h-500">
     <canvas
       baseChart
       [data]="barChartData"
       [options]="barChartOptions"
       [type]="'bar'"
       [style.width.px]="barChartWidth"
-      style="height: 100%;"
+      class="h-100 w-100"
       >
     </canvas>
   </div>

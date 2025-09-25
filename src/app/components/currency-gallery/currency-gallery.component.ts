@@ -33,8 +33,8 @@ export class CurrencyGalleryComponent implements OnInit {
   images: any;
   currencyTypeList: any;
   countryList: any;
-  selectedTypes: string[] = []; // Array to store selected months
-  selectedCountries: string[] = []; // Array to store selected months
+  selectedTypes: string[] = []; 
+  selectedCountries: string[] = []; 
   lableForTypeDropDown = "";
   lableForCountryDropDown: string = '';
   ActionConstant = ActionConstant;
@@ -116,7 +116,7 @@ export class CurrencyGalleryComponent implements OnInit {
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
     if (isConfirmed) {
-      // this.loaderService.showLoader();
+      
       this.currencyCoinService.deleteCurrencyCoin(this.currencyCoinId).subscribe({
         next: (res: any) => {
         },
@@ -135,7 +135,7 @@ export class CurrencyGalleryComponent implements OnInit {
   applyFilters() {
     const searchText = this.searchText?.toLowerCase() || '';
     this.filteredCoinList = this.coinList.filter((item: any) => {
-      // Text search logic
+      
       const matchesText =
         !searchText ||
         item.coinNoteName?.toLowerCase().includes(searchText) ||
@@ -144,7 +144,7 @@ export class CurrencyGalleryComponent implements OnInit {
         item.indianValue?.toString().toLowerCase().includes(searchText) ||
         item.description?.toLowerCase().includes(searchText);
 
-      // Multi-select dropdown logic
+      
       const matchesCurrencyType =
         this.selectedTypes?.length === 0 ||
         this.selectedTypes.includes(item.currencyCoinType);
@@ -153,12 +153,12 @@ export class CurrencyGalleryComponent implements OnInit {
         this.selectedCountries?.length === 0 ||
         this.selectedCountries?.includes(item.countryName);
 
-      // Combine logic: text search + multi-select filters (AND logic for filters)
+      
       return matchesText && matchesCurrencyType && matchesCountry;
     });
   }
 
-  // Handle "Select All" checkbox
+  
   toggleAllTypeCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     this.selectedTypes = checked
@@ -167,7 +167,7 @@ export class CurrencyGalleryComponent implements OnInit {
     this.getTypeDropdownLabel();
     this.applyFilters();
   }
-  // Handle individual type selection
+  
   toggleTypeCheck(event: Event, typeName: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -191,7 +191,7 @@ export class CurrencyGalleryComponent implements OnInit {
 
 
 
-  // Handle "Select All" checkbox
+  
   toggleAllCountryCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     this.selectedCountries = checked
@@ -200,7 +200,7 @@ export class CurrencyGalleryComponent implements OnInit {
     this.getCountryDropdownLabel();
     this.applyFilters();
   }
-  // Handle individual country selection
+  
   toggleCountryCheck(event: Event, countryName: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {

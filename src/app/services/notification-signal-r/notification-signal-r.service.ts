@@ -16,9 +16,9 @@ export class NotificationSignalRService {
   constructor(
     private localStorageService: LocalStorageService
   ) {
-    // const socket = new WebSocket('wss://dev.skpt.com/notifications');
-    // socket.onopen = () => console.log('WebSocket connection established');
-    // socket.onmessage = (message) => console.log('Received message:', message.data);
+    
+    
+    
     const loggedInUser = localStorageService.getLoggedInUserData();
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(API_URL.NOTIFICATION_URL + '?userId=' + loggedInUser?.userId)
@@ -50,17 +50,17 @@ export class NotificationSignalRService {
             console.log(
               'Error while starting notification signalr connection retrying in 5 seconds: ' + err
             );
-            setTimeout(() => this.startConnection(userId), 5000); // Retry after 5 seconds
+            setTimeout(() => this.startConnection(userId), 5000); 
           }
         });
     }
-    // Listen for incoming messages from backend and then call Notification API
+    
     this.hubConnection.on('NotificationReceived', (message) => {
       this.NotificationReceived$.next(message);
     });
   }
 
-  // if tab closed, browser or window closed connection will stop automatically
+  
   @HostListener('window:beforeunload', ['$event'])
   async closeConnection() {
     await this.hubConnection.stop();

@@ -68,8 +68,8 @@ describe('HttpInterceptorService', () => {
     service.get('/test').subscribe({
       next: () => fail('should have failed with the 500 error'),
       error: (error: HttpErrorResponse) => {
-        // expect(error.status).toBe(500); // Ensure this is HttpErrorResponse
-        expect(error.message).toContain('500 Server Error'); // Check error message
+        
+        expect(error.message).toContain('500 Server Error'); 
       },
     });
 

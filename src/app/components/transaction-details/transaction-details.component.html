@@ -98,8 +98,8 @@
                   (focusout)="focusOutPurpose()" />
                 @if(filteredPurposeList!==undefined && filteredPurposeList !=
                 null && focusInPurpose){
-                <ul class="list-group position-absolute w-50 mt-0 overflow-auto"
-                  style="max-height: 300px; overflow-y: auto">
+                <ul class="list-group position-absolute w-50 mt-0 overflow-auto maxh-300"
+                  >
                   @for(option of filteredPurposeList;track $index){
                   <li class="list-group-item list-group-item-action" (click)="selectPurpose(option)">
                     {{ option }}
@@ -115,8 +115,8 @@
                   class="form-control form-control-lg text-dark bg-transparent"></textarea>
                 @if(filteredDescriptionList!==undefined &&
                 filteredDescriptionList != null && focusInDescription){
-                <ul class="list-group position-absolute w-50 mt-0 overflow-auto"
-                  style="max-height: 300px; overflow-y: auto">
+                <ul class="list-group position-absolute w-50 mt-0 overflow-auto maxh-300"
+                  >
                   @for(option of filteredDescriptionList;track $index){
                   <li class="list-group-item list-group-item-action" (click)="selectDescription(option)">
                     {{ option }}

@@ -26,20 +26,20 @@ export class HttpInterceptorService implements HttpInterceptor {
     return next.handle(clonedRequest).pipe(
       map((event: HttpEvent<unknown>) => {
         if (event instanceof HttpResponse) {
-          // You can perform actions on the response here
+          
         }
         return event;
       }),
       catchError((error: HttpErrorResponse) => {
         if (!request.url.includes('/login') && !request.url.includes('/resetpassword') && !request.url.includes('userPermissions/getmodulemappedtologgedinuser')) {
           if (error?.status === 401) {
-            // Redirect to the /unauthorized route
+            
             this.router.navigate([NavigationURLs.UNAUTHORIZED_PAGE]);
           }
         }
         console.error('Error Intercepted', error);
-        // Handle specific HTTP error codes (e.g., 401, 404, 500)
-        // Show user-friendly error messages
+        
+        
         return throwError(() => new Error(error.message));
       })
     );

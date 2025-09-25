@@ -14,7 +14,7 @@ export const moduleAccessGuard: CanActivateFn = (route: ActivatedRouteSnapshot, 
     const globalService = inject(GlobalService);
     const router = inject(Router);
 
-    const moduleName = route.data['moduleName']; // Get the module name from the route data
+    const moduleName = route.data['moduleName']; 
 
     if (globalService.isAccessible(ActionConstant.VIEW)) {
       return true;
@@ -23,15 +23,15 @@ export const moduleAccessGuard: CanActivateFn = (route: ActivatedRouteSnapshot, 
       return false;
     }
   } catch (error) {
-    // Handle the error using the global error handler service or custom logic
+    
     const globalErrorHandler = inject(GlobalErrorHandlerService);
     globalErrorHandler.handleError(error);
 
-    // Optionally, you can redirect the user to a specific error page
-    // const router = inject(Router);
-    // router.navigate([Url_To_Navigate.ERROR_PAGE]);
+    
+    
+    
 
-    // Return false to prevent navigation in case of an error
+    
     return false;
   }
 };

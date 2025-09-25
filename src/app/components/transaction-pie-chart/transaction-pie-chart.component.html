@@ -1,12 +1,12 @@
 <h1>Pie Chart</h1>
 <div class="row">
-  <!-- Chart -->
+  
   <div class="col-8">
     <canvas baseChart [type]="'pie'" [data]="pieChartData" [options]="pieChartOptions">
     </canvas>
   </div>
 
-  <!-- Legend (right side) -->
+  
   <div class="col-4">
     <div class="category-toggle">
       <label class="category-option income" [class.active]="selectedType === 'income'"
@@ -18,17 +18,15 @@
         Expense
       </label>
     </div>
-    <div style="max-height: 400px; overflow-y: auto;">
-      <ul style="list-style: none; padding: 0; margin: 0;" class="pt-4">
+    <div class="maxh-400 overflow-auto">
+      <ul class="list-unstyled p-0 m-0 pt-4">
         @for(label of pieChartData?.labels; track $index) {
-        <li style="margin-bottom: 4px;">
+        <li class="mb-1">
           @if(pieChartData != null && pieChartData != undefined && pieChartData.datasets != null &&
           pieChartData.datasets[0].backgroundColor != null) {
           <div class="d-flex align-items-center justify-content-between">
             <span>
-              <span [style.background-color]="pieChartData?.datasets[0].backgroundColor[$index]"
-                style="display:inline-block;width:15px;height:15px;margin-right:8px;">
-              </span>
+              <span [style.background-color]="pieChartData?.datasets[0].backgroundColor[$index]" class="legend-swatch"></span>
               <span class="label-text">
                 {{ label }}
               </span>

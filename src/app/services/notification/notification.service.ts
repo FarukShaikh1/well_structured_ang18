@@ -25,12 +25,12 @@ export class NotificationService {
   }
 
   getAllNotifications(pageNo: number, pageSize: number): Observable<any> {
-    // return this.httpService.get(API_URL.GET_ALL_SYSTEM_NOTIFICATIONS + `${pageNo}&pagesize=${pageSize}`);
+    
     return this.httpService.get(API_URL.GET_ALL_ROLES + `${pageNo}&pagesize=${pageSize}`);
   }
 
   markAsRead(notificationId: string): Observable<any> {
-    // return this.httpService.patch(API_URL.MARK_A_SYSTEM_NOTIFICATION_AS_READ + `${notificationId}`, {});
+    
     return this.httpService.patch(API_URL.GET_ALL_ROLES + `${notificationId}`, {});
   }
 

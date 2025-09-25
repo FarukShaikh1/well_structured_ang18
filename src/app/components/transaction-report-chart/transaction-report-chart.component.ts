@@ -1,4 +1,4 @@
-// transaction-report-chart.component.ts
+
 import { Component, Input, OnChanges } from '@angular/core';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { CommonModule } from '@angular/common';
@@ -18,7 +18,7 @@ export class TransactionReportChartComponent implements OnChanges {
     labels: [],
     datasets: []
   };
-  barChartWidth = 800; // default width
+  barChartWidth = 800; 
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
@@ -40,7 +40,7 @@ export class TransactionReportChartComponent implements OnChanges {
     },
     datasets: {
       bar: {
-        barThickness: 20, // Fixed width for each bar
+        barThickness: 20, 
         maxBarThickness: 40
       }
     }
@@ -53,7 +53,7 @@ export class TransactionReportChartComponent implements OnChanges {
     const takenAmounts = this.reportData.map(x => x.takenAmount || 0);
     const givenAmounts = this.reportData.map(x => x.givenAmount || 0);
 
-    // Each label gets 37.8px (~1 cm) space
+    
     const widthPerLabel = 20;
     this.barChartWidth = Math.max(800, labels.length * widthPerLabel);
 
@@ -66,7 +66,7 @@ export class TransactionReportChartComponent implements OnChanges {
     };
 
     this.barChartOptions = {
-      responsive: false, // disable auto-resizing
+      responsive: false, 
       maintainAspectRatio: true,
       plugins: {
         legend: { position: 'top' },

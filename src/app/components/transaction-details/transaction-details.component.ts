@@ -209,7 +209,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   validateAmountFields() {
-    // This method is no longer needed due to the change in how validation is handled.
+    
   }
 
   getTransactionSuggestionList() {
@@ -305,7 +305,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.transactionDetailsForm.controls["sourceOrReason"].patchValue(
       inputValue
     );
-    // Trigger filtering for other fields
+    
     this.onSourceReasonChange(inputValue);
     this.focusInSource = false;
   }
@@ -433,7 +433,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Ensures description is filled */
+  
   private ensureDescription() {
     if (!this.transactionDetailsForm.value["description"]) {
       this.transactionDetailsForm.value["description"] =
@@ -441,7 +441,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Corrects date */
+  
   private correctTransactionDate() {
     this.transactionDetailsForm.value["transactionDate"] =
       DateUtils.CorrectedDate(
@@ -449,7 +449,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       );
   }
 
-  /** Validate account entries */
+  
   private validateAccountEntries(): string | null {
     for (const acc of this.accountList) {
       const category = this.transactionDetailsForm.value["category_" + acc.id];
@@ -467,7 +467,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  /** Build splits */
+  
   private buildSplits() {
     return this.accountList.map((acc: any) => ({
       accountId: acc.id,
@@ -475,10 +475,10 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         this.transactionDetailsForm.value["category_" + acc.id] || "expense",
       amount: this.transactionDetailsForm.value[acc.id] || 0,
     }));
-    // .filter((split: { category: any; amount: number }) => split.category && split.amount !== 0);
+    
   }
 
-  /** Save transaction (update or add) */
+  
   private saveTransaction(request: TransactionRequest) {
     const isUpdate = !!request.transactionGroupId;
     const request$ = isUpdate
@@ -518,7 +518,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  /** Helpers for messages */
+  
   private showError(message: string) {
     this.loaderService.hideLoader();
     this.toaster.showMessage(message, "error");
@@ -534,7 +534,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     const current = this.transactionDetailsForm.get(key)?.value;
 
     if (current === value) {
-      this.transactionDetailsForm.get(key)?.setValue(null); // Unselect if same clicked
+      this.transactionDetailsForm.get(key)?.setValue(null); 
     } else {
       this.transactionDetailsForm.get(key)?.setValue(value);
     }

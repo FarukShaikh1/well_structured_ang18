@@ -16,9 +16,7 @@ export class UnauthorisedErrorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    /**
-     * If directly navigate to this page, hide the loader.
-     */
+    
     this.loaderService.hideLoader();
   }
 

@@ -87,10 +87,7 @@ export class ExpenseAdjustmentComponent implements OnInit {
     this.getSourceOrReasonList("", "cash");
     this.getSourceOrReasonList("", "other");
   }
-  /* private _filter(value: string): string[] {
-     const filterValue = value.toLowerCase();
-     return this.sourceOrReasonList.filter((option: string) => option.toLowerCase().includes(filterValue));
-   }*/
+  
 
   onSourceReasonChange(valueToFilter: any, accountType: string) {
     this.getSourceOrReasonList(valueToFilter.target.value, accountType);
@@ -235,7 +232,7 @@ export class ExpenseAdjustmentComponent implements OnInit {
 
     if (this.sbiValid || this.cbiValid || this.cashValid || this.otherValid) {
       if (!this.expenseAdjustmentForm.valid) {
-        //this.globalService.openSnackBar('Some issue is there');
+        
         return;
       } else {
         try {
@@ -264,19 +261,19 @@ export class ExpenseAdjustmentComponent implements OnInit {
             .adjustExpense(this.expenseAdjustmentForm.value)
             .subscribe((result) => {
               if (result) {
-                //this.globalService.openSnackBar("Record added successfully");
+                
               } else {
-                //this.globalService.openSnackBar('some issue is in adding the data');
+                
                 return;
               }
             });
         } catch (error) {
-          //this.globalService.openSnackBar("Error in adding data : " + error);
+          
           console.error("Error in adding data : ", error);
         }
       }
     } else {
-      //this.globalService.openSnackBar('Amount can not be blank or 0');
+      
       return;
     }
   }

@@ -35,9 +35,9 @@ export class LocalStorageService {
     const isUserLoggedIn = localStorage.getItem(LocalStorageConstants.USER) || null;
 
     return !!(
-      // loginToken &&
+      
       (
-        isUserLoggedIn !== null && // Ensure the value is exactly 'true'
+        isUserLoggedIn !== null && 
         userName
       )
     );

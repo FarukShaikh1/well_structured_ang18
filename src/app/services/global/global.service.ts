@@ -26,16 +26,16 @@ export class GlobalService {
   private reloadComponentSubject = new Subject<void>();
   private reloadBannerOnSubject = new Subject<void>();
 
-  //it will be used to refresh the grid list after closing the popup
+  
   private reloadGridSubject = new Subject<string>();
   private applyFilterSubject = new Subject<string>();
 
-  // Observable to notify components
+  
   reloadGrid$ = this.reloadGridSubject.asObservable();
   refreshList$ = this.applyFilterSubject.asObservable();
   reloadBanner$ = this.reloadBannerOnSubject.asObservable();
 
-  // Method to call when data changes in the child component
+  
   triggerGridReload(moduleName: string) {
     this.reloadGridSubject.next(moduleName);
   }
@@ -113,9 +113,9 @@ export class GlobalService {
       .map((m: any) => ({
         moduleName: m.moduleName,
         route: m.route,
-        isVisible: true, // Since view = true, mark as visible
-        displayOrder: m.displayOrder ?? 0, // fallback to 0 if undefined
-        iconClass: m.iconClass || ''       // fallback to empty string if undefined
+        isVisible: true, 
+        displayOrder: m.displayOrder ?? 0, 
+        iconClass: m.iconClass || ''       
       }));
   }
 
@@ -128,21 +128,12 @@ export class GlobalService {
     return false;
   }
 
-  /**
-   * Formats a message by replacing placeholders with given values.
-   *
-   * Example: formatMessage('Password must be {0}-{1} characters long.', 8, 15)
-   * Output: Password must be 8-15 characters long.
-   *
-   * @param {string} message - the message to format
-   * @param {...any[]} values - the values to replace placeholders in the message
-   * @returns {string} the formatted message
-   */
+  
   formatMessage(message: string, ...values: any[]): string {
     return message.replace(/{(\d+)}/g, (match, index) => values[index] || "");
   }
 
-  // Unique name validator for type ahead
+  
   uniqueNameValidator(clientNames: string[]): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const name = control.value?.trim().toLowerCase();
@@ -166,7 +157,7 @@ export class GlobalService {
   }
 
   trimAllFields(form: any) {
-    // Trim whitespace from all form control values
+    
     Object.keys(form?.controls).forEach((key) => {
       const control = form?.get(key);
       if (key !== 'picture' && control && typeof control.value === "string") {
@@ -176,7 +167,7 @@ export class GlobalService {
   }
 
   validateAmount(event: any) {
-    // if (event.target.value.match(/^[0-9]{0,20}$/)) {
+    
     if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.]$/)) {
       event.preventDefault();
     }
@@ -199,18 +190,18 @@ export class GlobalService {
 
   showGlobalDropdownMenu(button: HTMLElement, menuOptions: any) {
 
-    // Remove any existing menu
+    
     const oldMenu = document.getElementById('globalDropdownMenu');
     if (oldMenu) oldMenu.remove();
 
-    // Create menu
+    
     const menu = document.createElement('ul');
     menu.className = 'dropdown-menu show options-menu';
     menu.id = 'globalDropdownMenu';
     menu.style.position = 'absolute';
     menu.style.zIndex = '9999';
 
-    // Populate menu
+    
     menuOptions.forEach((option: any) => {
       const menuItem = document.createElement('li');
       menuItem.innerHTML = `<a class="dropdown-item" href="#">${option.label}</a>`;
@@ -222,12 +213,12 @@ export class GlobalService {
       menu.appendChild(menuItem);
     });
 
-    // Position menu
+    
     const rect = button.getBoundingClientRect();
     menu.style.top = `${rect.bottom + window.scrollY}px`;
     menu.style.left = `${rect.left + window.scrollX - 70}px`;
 
-    // Append to body
+    
     document.body.appendChild(menu);
   }
 
@@ -261,7 +252,7 @@ export class GlobalService {
       if (thumbnailPath) {
         thumbnailPath = API_URL.ATTACHMENT + thumbnailPath;
   
-        // const html = `<i class="bi bi-person-circle fs-3" style="color: blue;"></i>`;
+        
         const html = `<img src="${thumbnailPath}" style="width: 40px; height: 40px; object-fit: cover;" />`;
         console.log('html : ', html);
   

@@ -50,88 +50,88 @@ describe('HomeComponent', () => {
   });
 
   it('ngOnInit(): should call hideLoader and getUnreadChatCountForNotification on ngOnInit', () => {
-    // Act
+    
     component.ngOnInit();
 
-    // Assert
+    
     expect(loaderService.hideLoader).toHaveBeenCalled();
     expect(signalRService.getUnreadChatCountForNotification).toHaveBeenCalled();
   });
 
   it('clientList(): should call router.navigate with CLIENT_LIST URL on clientList', () => {
-    // Act
+    
     component.clientList();
 
-    // Assert
+    
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.CLIENT_LIST]);
   });
 
   it('userList(): should call router.navigate with USER_LIST URL on userList', () => {
-    // Act
+    
     component.userList();
 
-    // Assert
+    
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.USER_LIST]);
   });
 
   it('userPermissions(): should call router.navigate with ROLE_MODULE_MAPPING URL on user-permission list', () => {
-    // Act
+    
     component.userPermissions();
 
-    // Assert
+    
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.ROLE_MODULE_MAPPING]);
   });
 
   it('goToPrograms(): should call router.navigate with PROGRAMS URL on programs list', () => {
-    // Act
+    
     component.goToPrograms();
 
-    // Assert
+    
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.PROGRAMS]);
   });
 
   it('chatSystem(): should call router.navigate with chatSystem URL on chat list', () => {
-    // Act
+    
     component.chatSystem();
 
-    // Assert
+    
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.NAV_CHAT_PANEL]);
   });
 
   it('should set currentModuleName to "Home" and toggle displayFeedbackButton on FeedbackBtnClicked', () => {
-    // Initial state
+    
     component.displayFeedbackButton = true;
 
-    // Act
+    
     component.FeedbackBtnClicked();
 
-    // Assert
+    
     expect(component.currentModuleName).toBe('Home');
-    expect(component.displayFeedbackButton).toBe(false); // It should toggle to false
+    expect(component.displayFeedbackButton).toBe(false); 
 
-    // Act again to toggle back
+    
     component.FeedbackBtnClicked();
 
-    // Assert again
-    expect(component.displayFeedbackButton).toBe(true); // It should toggle back to true
+    
+    expect(component.displayFeedbackButton).toBe(true); 
   });
 
   it('should set displayFeedback to false on closeFeedback', () => {
-    // Initial state
+    
     component.displayFeedback = true;
 
-    // Act
+    
     component.closeFeedback();
 
-    // Assert
+    
     expect(component.displayFeedback).toBe(false);
   });
 
   it('should log message on ngOnDestroy', () => {
-    // Act
+    
     component.ngOnDestroy();
 
-    // Assert
+    
     expect(consoleLogSpy).toHaveBeenCalledWith('Home Page Destroyed');
   });
 

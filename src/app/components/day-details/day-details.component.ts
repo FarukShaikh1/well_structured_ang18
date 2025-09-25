@@ -128,7 +128,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       const file = files[0];
       this.selectedImageFile = files[0];
       if (file.type.startsWith("image/")) {
-        this.formData.set("file", file); // Use set to replace existing file
+        this.formData.set("file", file); 
 
         const reader = new FileReader();
         reader.onload = () => {

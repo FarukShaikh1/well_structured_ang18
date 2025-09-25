@@ -11,7 +11,7 @@ export class FilterPipe implements PipeTransform {
     searchText = searchText.toLowerCase();
 
     return items.filter(item => {
-      // Customize this condition based on your filtering requirements
+      
       return item.name.toLowerCase().includes(searchText);
     });
   }
@@ -30,7 +30,7 @@ export class FilterWithMenteeFirstNamePipe implements PipeTransform {
     searchText = searchText.toLowerCase();
 
     return items.filter(item => {
-      // Customize this condition based on your filtering requirements
+      
       return item.menteeFirstName.toLowerCase().includes(searchText);
     });
   }

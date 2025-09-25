@@ -38,7 +38,7 @@ export class DayService {
       .set("isToday", isToday)
       .set("isTomorrow", isTomorrow)
       .set("isYesterday", isYesterday);
-    return this.http.get(API_URL.GET_SPECIAL_OCCASION_LIST, { params: params }); //?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&occasionType='+occasionType);
+    return this.http.get(API_URL.GET_SPECIAL_OCCASION_LIST, { params: params }); 
   }
 
   addDay(specialOccasionRequest: SpecialOccasionRequest): Observable<any> {
@@ -54,14 +54,14 @@ export class DayService {
     return this.http.post(API_URL.UPDATE_SPECIAL_OCCASION + String(localStorage.getItem(LocalStorageConstants.USERID)), specialOccasionRequest);
   }
 
-  // uploadImage(assetId: string, documentType: string, file: any): Observable<any> {
-  //   if (assetId) {
-  //     return this.http.post(API_URL.UPLOAD_IMAGE + String(localStorage.getItem(LocalStorageConstants.USERID)) + "&assetId=" + assetId + "&documentType=" + documentType, file);
-  //   }
-  //   else {
-  //     return this.http.post(API_URL.UPLOAD_IMAGE + String(localStorage.getItem(LocalStorageConstants.USERID)) + "&documentType=" + documentType,file);
-  //   }
-  // }
+  
+  
+  
+  
+  
+  
+  
+  
 
 
   deleteDay(dayId: string): Observable<any> {

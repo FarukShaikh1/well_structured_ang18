@@ -2,7 +2,7 @@ import { Injectable, TemplateRef } from '@angular/core';
 
 export interface Toast {
 	template: TemplateRef<any>;
-	autohide: boolean; // Added autohide property
+	autohide: boolean; 
 	classname?: string;
 	delay?: number;
 }

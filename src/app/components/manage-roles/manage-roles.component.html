@@ -9,18 +9,18 @@
             <table class="styled-table">
                 <thead>
                     <tr>
-                        <th style="width: 5%;"></th>
-                        <th style="width: 20%;">Sr.No.</th>
-                        <th style="width: 30%">
+                        <th class="w-5"></th>
+                        <th class="w-20">Sr.No.</th>
+                        <th class="w-30">
                             <span>Role Name</span>
                             <i class="bi bi-arrow-down-up inlinebox" (click)="onSortClick($event, 'name')"></i>
                         </th>
-                        <th style="width: 40%;">Role Description</th>
-                        <th style="width: 10%;"></th>
+                        <th class="w-40">Role Description</th>
+                        <th class="w-10"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="height:20px" *ngFor=" let item of rolesDataSource index as i"
+                    <tr class="h-20px" *ngFor=" let item of rolesDataSource index as i"
                         (onclick)="rowClicked(item.roleName)">
                         <td></td>
                         <td data-label="Sr.No."> {{i+1}}</td>
@@ -39,7 +39,7 @@
                 <div class="pagination-holder">
                 <div class="results-info">Showing {{ itemcount() }} Out Of {{ rolesDataSource.length }}
                     results </div>
-                <div class="form-field" style="margin-left: 20px;">
+                <div class="form-field ms-3">
                     <label for="pageSizeSelect"> Items per page:</label>
                     <select id="pageSizeSelect">
                         <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
@@ -64,22 +64,7 @@
                 <button >Delete</button>
             </div>
         </div>
-        <!-- <div class="table-container">
-            <ul>
-                @for()
-                <li *ngFor="let node of nodes">
-                    <input type="checkbox" [checked]="node.checked" [indeterminate]="node.indeterminate"
-                        (change)="onParentChange(node)">
-                    {{node.label}}
-                    <ul *ngIf="node.children?.length">
-                        <li *ngFor="let child of node.children">
-                            <input type="checkbox" [checked]="child.checked" (change)="onChildChange(node, child)">
-                            {{child.label}}
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div> -->
+        
     </div>
 
     </div>

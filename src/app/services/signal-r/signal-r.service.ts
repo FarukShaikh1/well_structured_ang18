@@ -84,47 +84,47 @@ export class SignalRService {
             console.log(
               'Error while starting connection retrying in 5 seconds: ' + err
             );
-            setTimeout(() => this.startConnection(userId), 5000); // Retry after 5 seconds
+            setTimeout(() => this.startConnection(userId), 5000); 
           }
         });
     }
 
-    // Listen for the UserList event from the server
+    
     this.hubConnection.on('ReceiveUserList', (userList: any) => {
-      this.userList$.next(userList); // Update the observable with the received user list
+      this.userList$.next(userList); 
     });
 
-    // listen the notification count to display with notification icon
+    
     this.hubConnection.on('NotificationCount', (count) => {
-      this.unreadMessageCount$.next(count); // Update the observable with the received count
+      this.unreadMessageCount$.next(count); 
     });
 
-    // Listen for message sent to any user and update userlist(for latest sender up)
+    
     this.hubConnection.on('MessageSent', (message, userList) => {
       this.MessageSent$.next(message);
       this.userList$.next(userList);
     });
 
-    // Listen for incoming messages from any user and update userlist(for latest sender up)
+    
     this.hubConnection.on('MessageReceived', (message, userList) => {
       this.MessageReceived$.next(message);
       this.userList$.next(userList);
     });
 
-    //listen the Message opened to update message status at sender side
+    
     this.hubConnection.on('MessageOpened', (chatHistory, userList) => {
-      this.chatHistory$.next(chatHistory); // Update the observable with the received message
-      this.userList$.next(userList); // Update the observable with the received user list
+      this.chatHistory$.next(chatHistory); 
+      this.userList$.next(userList); 
     });
   }
 
-  // if tab closed, browser or window closed connection will stop automatically
+  
   @HostListener('window:beforeunload', ['$event'])
   async closeConnection() {
     await this.hubConnection.stop();
   }
 
-  // Method to request the user list
+  
   async getUserList() {
     if (!this.hubConnection.connectionId) {
       await this.startConnection('');
@@ -137,7 +137,7 @@ export class SignalRService {
     } catch (error) {
       if (this.startConnectionCount < 5) {
         this.startConnectionCount++;
-        setTimeout(() => this.getUserList(), 5000); // Retry after every 5 seconds
+        setTimeout(() => this.getUserList(), 5000); 
       }
     }
   }
@@ -154,7 +154,7 @@ export class SignalRService {
     } catch (error) {
       if (this.GetNotificationCount < 5) {
         this.GetNotificationCount++;
-        setTimeout(() => this.getUnreadChatCountForNotification(), 3000); // Retry after every 3 seconds
+        setTimeout(() => this.getUnreadChatCountForNotification(), 3000); 
       }
     }
   }
@@ -178,12 +178,12 @@ export class SignalRService {
         this.localStorageService.getLoggedInUserData().userId
       );
     } catch (error) {
-      // setTimeout(() => this.sendMessage(chatMessage), 5000); // Retry after every 5 seconds
+      
     }
     this.message = '';
   }
 
-  // Notify to sender that reciever opened his message
+  
   async messageOpened(userId: string, openedByUserId: string) {
     if (!this.hubConnection.connectionId) {
       await this.startConnection('');
@@ -191,7 +191,7 @@ export class SignalRService {
     try {
       await this.hubConnection.invoke('MessageOpened', userId, openedByUserId);
     } catch (error) {
-      setTimeout(() => this.messageOpened(userId, openedByUserId), 5); // Retry after every 10 seconds
+      setTimeout(() => this.messageOpened(userId, openedByUserId), 5); 
     }
   }
 }

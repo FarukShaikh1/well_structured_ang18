@@ -47,10 +47,10 @@ export const routes: Routes = [
         path: "expenses",
         title: "Transactions",
         component: TransactionComponent,
-        // component: ExpenseComponent,
+        
       },
-      // { path: "expense-summary", component: ExpenseSummaryComponent },
-      // { path: "expense-report", component: ExpenseReportComponent },
+      
+      
       {
         path: "currency-coin",
         title: "Currency Collection",
@@ -72,7 +72,7 @@ export const routes: Routes = [
           import("./components/user-list/user-list.component").then(
             (m) => m.UserListComponent
           ),
-        // canActivate: [moduleAccessGuard],
+        
         data: { moduleName: ApplicationModules.USER },
       },
       {
@@ -82,14 +82,14 @@ export const routes: Routes = [
           import(
             "./components/user-permission/user-permission.component"
           ).then((m) => m.UserPermissionComponent),
-        // canActivate: [moduleAccessGuard],
+        
         data: { moduleName: ApplicationModules.USER_PERMISSIONS },
       },
       {
         path: "settings",
         title: "Settings",
         component: SettingsComponent,
-        // canActivate: [moduleAccessGuard],
+        
       },
       {
         path: "change-password",
@@ -99,14 +99,14 @@ export const routes: Routes = [
             (m) => m.ChangePasswordComponent
           ),
       },
-      // {
-      //   path: 'nav-chat-panel',
-      //   title: 'Chat Panel',
-      //   loadComponent: () =>
-      //     import('./components/nav-chat-panel/nav-chat-panel.component').then(
-      //       (m) => m.NavChatPanelComponent
-      //     ),
-      // },
+      
+      
+      
+      
+      
+      
+      
+      
       {
         path: "unauthorised",
         title: "Unauthorised User",

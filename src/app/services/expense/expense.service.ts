@@ -4,7 +4,7 @@ import { Observable } from "rxjs/internal/Observable";
 import { API_URL } from "../../../utils/api-url";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
 import { ExpenseRequest } from "../../interfaces/expense-request";
-// import { DataSource } from '@angular/cdk/collections';
+
 
 @Injectable({
   providedIn: "root",
@@ -73,7 +73,7 @@ export class ExpenseService {
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.get(API_URL.GET_EXPENSE_SUGGESTION_LIST, {
       params: params,
-    }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem(LocalStorageConstants.USERID)));
+    }); 
   }
 
   getAvailAmount(
@@ -84,7 +84,7 @@ export class ExpenseService {
       .set("userid", this.loggedInUserId)
       .set("onDate", onDate)
       .set("accountType", accountType);
-    return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params }); //?expenseId=' + expenseId + '&userId=' + String(localStorage.getItem(LocalStorageConstants.USERID)));
+    return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params }); 
   }
 
 }

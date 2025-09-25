@@ -10,8 +10,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'app-profile',
   standalone:true,
   imports: [
-    ReactiveFormsModule, // Add this
-    // other imports
+    ReactiveFormsModule, 
+    
   ],
     templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
@@ -23,7 +23,7 @@ export class ProfileComponent {
   userNameCheckboxValue:any;
   readonly:Boolean = false;
 
-  userList: any;// {id:number,userName:string,password:string};
+  userList: any;
   constructor(private fb: FormBuilder, private router: Router, private userService: UserServiceService, 
     private http: HttpClient,public globalService:GlobalService) {
           this.profileForm = this.fb.group(
@@ -63,41 +63,41 @@ export class ProfileComponent {
   updateProfile() {
     if(this.profileForm.value["userName"]!=null && this.profileForm.value["userName"].length<=0)
     {
-      // ////this.globalService.openSnackBar("userName should not be blank")
+      
       return;
     }
     if(this.profileForm.value["emailAddress"]!=null && this.profileForm.value["emailAddress"].length<=0)
     {
-      // ////this.globalService.openSnackBar("emailAddress should not be blank")
+      
       return;
     }
     if(this.profileForm.value["firstName"]!=null && this.profileForm.value["firstName"].length<=0)
     {
-      ////this.globalService.openSnackBar("firstName should not be blank")
+      
       return;
     }
     if(this.profileForm.value["mobileNumber"]!=null && this.profileForm.value["mobileNumber"].length<=0)
     {
-      ////this.globalService.openSnackBar("mobileNumber should not be blank")
+      
       return;
     }
     if(this.profileForm.value["roleName"]!=null && this.profileForm.value["roleName"].length<=0)
     {
-      ////this.globalService.openSnackBar("roleName should not be blank")
+      
       return;
     }
     if(this.profileForm.value["password"]!=null && this.profileForm.value["password"].length<=0)
     {
-      ////this.globalService.openSnackBar("Please enter password to confirm your identity")
+      
       return;
     }
     this.userService.updateUserDetails(this.profileForm.value).subscribe((result) => {
       if (result) {
-        ////this.globalService.openSnackBar('Record Updated Successfully');
-        // 
+        
+        
       }
       else {
-        ////this.globalService.openSnackBar('some issue is in update the data');
+        
         return;
       }
     });
@@ -123,8 +123,8 @@ export class ProfileComponent {
       this.profileForm.controls['mobileNumber2'].patchValue(res.MobileNumber2);
       this.profileForm.controls['roleName'].patchValue(res.roleName);
       }
-        // reload() {
-  //   this.globalService.reloadComponent();
-  // }
+        
+  
+  
     }
 } 

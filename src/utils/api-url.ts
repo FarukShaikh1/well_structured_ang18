@@ -4,8 +4,8 @@ const serverUrl = environment.serverUrl;
 const apiPrefix = environment.apiPrefix;
 
 export const API_URL = {
-  // Verified APIs
-  ATTACHMENT: "../../../assets/ProjectAttatchments", // Should be compared with "PhysicalPathDirectory" in "AppSettings" in DotNet
+  
+  ATTACHMENT: "../../../assets/ProjectAttatchments", 
   COLLECTIONCOINS: "Collection_Coins",
   BIRTHDAYPERSONPIC: "Birthday_Person_Pic",
 
@@ -35,7 +35,7 @@ export const API_URL = {
   UPDATE_EXPENSE: `${serverUrl}${apiPrefix}/expense/update?userId=`,
   DELETE_EXPENSE: `${serverUrl}${apiPrefix}/expense/delete?expenseId=`,
   GET_EXPENSE_SUGGESTION_LIST: `${serverUrl}${apiPrefix}/expense/GetExpenseSuggestionList`,
-  // GET_AVAIL_AMOUNT: `${serverUrl}${apiPrefix}/expense/getAvailAmount`,
+  
 
   GET_TRANSACTION_DETAILS: `${serverUrl}${apiPrefix}/transaction/GetDetails`,
   GET_TRANSACTION_SUMMARY_LIST: `${serverUrl}${apiPrefix}/transaction/GetSummary`,
@@ -69,7 +69,7 @@ export const API_URL = {
   GET_CONFIG_DELETE: `${serverUrl}${apiPrefix}/settings/DeleteConfig`,
   GET_CONFIG_DEACTIVATE: `${serverUrl}${apiPrefix}/settings/DeactiveConfig`,
 
-  // //Non verified 
+  
   REGISTER_USER: `${serverUrl}${apiPrefix}/auth/register`,
   UPDATE_USER: `${serverUrl}${apiPrefix}/user/updateUserDetails?userId=`,
   RESET_PASSWORD: `${serverUrl}${apiPrefix}/auth/resetpassword`,

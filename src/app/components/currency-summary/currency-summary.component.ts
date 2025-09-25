@@ -101,18 +101,18 @@ ActionConstant: any;
   }
 
   ngOnInit() {
-    // this.loaderService.showLoader();
+    
     this.collectionCoinColumnConfiguration();
     this.LoadSummaryGrid();
     this.globalService.reloadGrid$.subscribe(() => {
-      // if (listName === ApplicationModules.COLLECTIONCOIN) {
-      //   this.LoadGrid();
-      // }
+      
+      
+      
     });
     this.globalService.refreshList$.subscribe(() => {
-      // if (listName === ApplicationModules.COLLECTIONCOIN) {
-      //   this.applyFilters();
-      // }
+      
+      
+      
     });
 
   }
@@ -164,7 +164,7 @@ ActionConstant: any;
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
-          this.hideCollectionCoin(collectionCoinId); // Call the hideCollectionCoin method
+          this.hideCollectionCoin(collectionCoinId); 
         },
         headerSort: false,
       },
@@ -201,17 +201,17 @@ ActionConstant: any;
         field: "actualValue",
         sorter: "alphanum",
         formatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
-        bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
+        bottomCalcFormatter: this.amountColorFormatter.bind(this), 
+        bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
       },
       {
         title: "indianValue",
         field: "indianValue",
         sorter: "alphanum",
         formatter: this.amountColorFormatter.bind(this),
-        bottomCalc: "sum", // This will calculate the sum
-        bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
-        bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
+        bottomCalc: "sum", 
+        bottomCalcFormatter: this.amountColorFormatter.bind(this), 
+        bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
       },
       {
         title: "description",
@@ -225,7 +225,7 @@ ActionConstant: any;
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
-          this.hideCollectionCoin(collectionCoinId); // Call the hideCollectionCoin method
+          this.hideCollectionCoin(collectionCoinId); 
         },
       },
       {
@@ -321,7 +321,7 @@ ActionConstant: any;
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
     if (isConfirmed) {
-      // this.loaderService.showLoader();
+      
       this.currencyCoinService.deleteCurrencyCoin(this.currencyCoinId).subscribe({
         next: (res: any) => {
           this.LoadGrid(0);

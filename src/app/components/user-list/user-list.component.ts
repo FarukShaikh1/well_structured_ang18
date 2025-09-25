@@ -88,7 +88,7 @@ export class UserListComponent implements OnInit {
           }
         }
         event.stopPropagation();
-      } else { // Hide global dropdown
+      } else { 
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -136,7 +136,7 @@ export class UserListComponent implements OnInit {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
       });
@@ -178,7 +178,7 @@ export class UserListComponent implements OnInit {
 
   deactivateUser(id: string, isdeactivate: boolean) {
     if (id) {
-      // Logic to handle user deactivation
+      
       if (isdeactivate) {
         this.confirmModalComponent.openConfirmationPopup(
           'Confirmation',
@@ -196,7 +196,7 @@ export class UserListComponent implements OnInit {
 
   handleConfirmResult(result: boolean) {
     if (result) {
-      //add logic for activate / deactivate
+      
     }
   }
 
@@ -254,7 +254,7 @@ export class UserListComponent implements OnInit {
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
     }, 0);
-    // this.tabulatorGrid.applySearch(this.searchText);
+    
   }
 
   openUserDetailsPopup(id: string) {

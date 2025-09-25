@@ -56,14 +56,14 @@ export class CurrencyCoinComponent implements OnInit {
     this.countryList = this.localStorageService.getCountryList();
     this.LoadGrid();
     this.globalService.reloadGrid$.subscribe(() => {
-      // if (listName === ApplicationModules.COLLECTIONCOIN) {
-      //   this.LoadGrid();
-      // }
+      
+      
+      
     });
     this.globalService.refreshList$.subscribe(() => {
-      // if (listName === ApplicationModules.COLLECTIONCOIN) {
-      //   this.applyFilters();
-      // }
+      
+      
+      
     });
 
   }
@@ -85,17 +85,17 @@ export class CurrencyCoinComponent implements OnInit {
         field: "actualValue",
         sorter: "alphanum",
         formatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
-        bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
+        bottomCalcFormatter: this.amountColorFormatter.bind(this), 
+        bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
       },
       {
         title: "Indian Value",
         field: "indianValue",
         sorter: "alphanum",
         formatter: this.amountColorFormatter.bind(this),
-        bottomCalc: "sum", // This will calculate the sum
-        bottomCalcFormatter: this.amountColorFormatter.bind(this), // Optional: Format the sum (if it's a currency value)
-        bottomCalcFormatterParams: { symbol: "", precision: 2 }, // Customize formatting
+        bottomCalc: "sum", 
+        bottomCalcFormatter: this.amountColorFormatter.bind(this), 
+        bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
       },
       {
         title: "Other details",
@@ -114,7 +114,7 @@ export class CurrencyCoinComponent implements OnInit {
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
-          this.hideCollectionCoin(collectionCoinId); // Call the hideCollectionCoin method
+          this.hideCollectionCoin(collectionCoinId); 
         },
         headerSort: false,
       },
@@ -127,7 +127,7 @@ export class CurrencyCoinComponent implements OnInit {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
       });
@@ -153,7 +153,7 @@ export class CurrencyCoinComponent implements OnInit {
         }
         event.stopPropagation();
       } else {
-        // Hide global dropdown
+        
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -251,7 +251,7 @@ export class CurrencyCoinComponent implements OnInit {
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
     if (isConfirmed) {
-      // this.loaderService.showLoader();
+      
       this.currencyCoinService.deleteCurrencyCoin(this.currencyCoinId).subscribe({
         next: (res: any) => {
           this.LoadGrid();
@@ -280,7 +280,7 @@ export class CurrencyCoinComponent implements OnInit {
     });
   }
 
-  // Handle "Select All" checkbox
+  
   toggleAllCountryCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
 
@@ -291,7 +291,7 @@ export class CurrencyCoinComponent implements OnInit {
     this.getCountryDropdownLabel();
     this.applyFilters();
   }
-  // Handle individual daytype selection
+  
   toggleCountryCheck(event: Event, countryName: string, code: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {

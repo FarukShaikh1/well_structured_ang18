@@ -37,17 +37,17 @@ export class HttpService {
     return this.http.patch<T>(url, body, { headers });
   }
 
-  // New method to handle FormData requests
+  
   postFormData<T>(
     url: string,
     formData: FormData,
     headers?: HttpHeaders
   ): Observable<T> {
-    // Set the content type to 'multipart/form-data' (optional, as the browser sets it automatically)
+    
     const options = headers ? { headers } : {};
     return this.http.post<T>(url, formData, options);
   }
-  // Generic method for downloading a blob
+  
   downloadBlob(
     url: string,
     params?: HttpParams,
@@ -56,8 +56,8 @@ export class HttpService {
     return this.http.get<Blob>(url, {
       params,
       headers,
-      observe: 'response', // Observe full response
-      responseType: 'blob' as 'json', // Explicitly specify responseType as 'blob'
+      observe: 'response', 
+      responseType: 'blob' as 'json', 
     });
   }
   downloadReport(url: string): Observable<HttpResponse<Blob>> {

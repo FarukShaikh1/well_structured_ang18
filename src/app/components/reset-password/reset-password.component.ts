@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-// import { Tooltip } from 'bootstrap';
+
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
@@ -110,7 +110,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
             Validators.pattern(
               ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_PASSWORD
             ),
-            this.passwordNotContainingName(this.personName), // Add the custom validator here
+            this.passwordNotContainingName(this.personName), 
           ],
         ],
         confirmPassword: ['', [Validators.required]],
@@ -120,14 +120,14 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // const tooltipTriggerList = Array.from(
-    //   document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    // );
-    // tooltipTriggerList.forEach((tooltipTriggerEl) => {
-    //   new Tooltip(tooltipTriggerEl, {
-    //     html: true, // Enable HTML content
-    //   });
-    // });
+    
+    
+    
+    
+    
+    
+    
+    
   }
 
   getPasswordLengthMessage(): string {
@@ -152,7 +152,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
     ) {
       confirmPassword?.setErrors({ passwordMismatch: true });
     } else {
-      // Clear passwordMismatch error only if present
+      
       if (confirmPassword?.hasError('passwordMismatch')) {
         confirmPassword.setErrors(null);
       }
@@ -175,7 +175,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
         return null;
       }
 
-      // Check if the password contains any part of the name
+      
       const containsNamePart = nameParts.some((part) =>
         password.toLowerCase().includes(part.toLowerCase())
       );

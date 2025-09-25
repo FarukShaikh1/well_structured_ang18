@@ -46,7 +46,7 @@ export class OTPVerificationComponent
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @Input() numberOfOtpDigits: number | null = 0;
   @Input() otpExpiryTimeInMinutes: number | null = 0;
-  @Input() otpMaxTrial!: number;//= 0;
+  @Input() otpMaxTrial!: number;
 
   @Input() loginRequest!: UserLoginRequest;
 
@@ -54,7 +54,7 @@ export class OTPVerificationComponent
   @Output() backToLogin: EventEmitter<void> = new EventEmitter<void>();
 
   otpForm: FormGroup = new FormGroup({});
-  controlNames: string[] = []; // List of control names for the form
+  controlNames: string[] = []; 
   maskedEmail: string | null | undefined = '';
   timerDisplay: string = '';
   timerSubscription!: Subscription;
@@ -77,7 +77,7 @@ export class OTPVerificationComponent
     this.otpMaxTrial = 3;
     this.maskedEmail = this.maskEmail(this.loginRequest?.email);
 
-    // Initialize OTP form controls dynamically
+    
     if (this.numberOfOtpDigits !== null) {
       for (let i = 0; i < this.numberOfOtpDigits; i++) {
         const controlName = `otp${i}`;
@@ -88,14 +88,14 @@ export class OTPVerificationComponent
             Validators.pattern('[0-9]'),
           ])
         );
-        this.controlNames.push(controlName); // Keep track of control names
+        this.controlNames.push(controlName); 
       }
     }
 
     this.startOtpTimer();
 
-    //Use this to show confirmation message before reloading the page.
-    // window.addEventListener('beforeunload', this.handleBeforeUnload);
+    
+    
 
     this.loaderService.hideLoader();
   }
@@ -108,14 +108,14 @@ export class OTPVerificationComponent
 
   stopTimer() {
     if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe(); // Stop the timer
-      this.timerActive = false; // Update the timer state
+      this.timerSubscription.unsubscribe(); 
+      this.timerActive = false; 
     }
   }
 
   ngOnDestroy() {
-    //Use this while showing confirmation message before reloading the page.
-    // window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    
+    
 
     this.stopTimer();
   }
@@ -124,21 +124,21 @@ export class OTPVerificationComponent
     this.focucToInput();
   }
 
-  //Use this to show a confirmation message before reloading the page.
+  
   private handleBeforeUnload = (event: BeforeUnloadEvent): void => {
     if (!this.isUserNavigatingAway) {
-      // Display confirmation dialog
+      
       const confirmationMessage =
         'You have unsaved changes. Are you sure you want to leave?';
-      event.returnValue = confirmationMessage; // For legacy browsers
-      //***** Modern browsers don't display the custom message but still show a generic dialog. ****
+      event.returnValue = confirmationMessage; 
+      
     }
   };
 
-  // Simulate navigation to another page
+  
   navigateAway(): void {
     this.isUserNavigatingAway = true;
-    // Perform navigation logic here
+    
   }
 
   focucToInput() {
@@ -158,14 +158,14 @@ export class OTPVerificationComponent
       return '-';
     }
 
-    // Mask the local part of the email
+    
     const maskedLocalPart =
       localPart.slice(0, 1) + '******' + localPart.slice(-2);
     return `${maskedLocalPart}@${domain}`;
   }
 
   startTimer(duration: number) {
-    this.timerActive = true; // Start the timer
+    this.timerActive = true; 
     this.timerSubscription = interval(1000)
       .pipe(
         take(duration),
@@ -173,7 +173,7 @@ export class OTPVerificationComponent
       )
       .subscribe((remainingTime) => {
         if (remainingTime === 0) {
-          this.timerActive = false; // Timer has ended
+          this.timerActive = false; 
         }
         const minutes = Math.floor(remainingTime / 60);
         const seconds = remainingTime % 60;
@@ -186,7 +186,7 @@ export class OTPVerificationComponent
     const input = event.target as HTMLInputElement;
     const value = input.value;
 
-    // If pasting a copied OTP
+    
     if (value.length === this.numberOfOtpDigits) {
       value.split('').forEach((digit, i) => {
         const control = this.otpForm.get(`otp${i}`);
@@ -198,7 +198,7 @@ export class OTPVerificationComponent
       return;
     }
 
-    // Move focus to next input
+    
     if (this.numberOfOtpDigits !== null) {
       if (value && index < this.numberOfOtpDigits - 1) {
         const nextInput = document.getElementById(
@@ -210,7 +210,7 @@ export class OTPVerificationComponent
       }
     }
 
-    // Check if OTP is fully entered
+    
     this.isOtpEntered = Object.values(this.otpForm.controls).every(
       (control) => control.valid
     );
@@ -229,12 +229,12 @@ export class OTPVerificationComponent
         }
       });
 
-      // Update the form validity and enable the "Verify OTP" button if valid
+      
       this.isOtpEntered = Object.values(this.otpForm.controls).every(
         (control) => control.valid
       );
 
-      // Focus the last input field of the pasted OTP
+      
       const lastInputIndex = Math.min(
         index + otpArray.length - 1,
         this.numberOfOtpDigits - 1
@@ -244,7 +244,7 @@ export class OTPVerificationComponent
         (lastInput as HTMLInputElement).focus();
       }
     }
-    event.preventDefault(); // Prevent the default paste action
+    event.preventDefault(); 
   }
 
   onResendOtp(): void {
@@ -317,10 +317,10 @@ export class OTPVerificationComponent
           this.localStorageService.setLoggedInUserData(result?.data);
 
           this.router.navigate([NavigationURLs.HOME]);
-          // this.loaderService.hideLoader();
+          
         } else {
           if (result.data.otpTrialCounter >= this.otpMaxTrial) {
-            // this.toaster.showMessage('Otp retry limit exceeded.', 'error');
+            
             this.onBackToLogin();
             this.loaderService.hideLoader();
           } else {
@@ -365,6 +365,6 @@ export class OTPVerificationComponent
   onBackToLogin() {
     this.otpForm.reset();
     this.stopTimer();
-    this.backToLogin.emit(); // Emit the back to login event
+    this.backToLogin.emit(); 
   }
 }

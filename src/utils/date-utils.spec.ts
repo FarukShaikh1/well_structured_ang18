@@ -1,203 +1,203 @@
-// import { TestBed } from '@angular/core/testing';
-// import { DateUtils } from './date-utils';
-// import { DatePipe } from '@angular/common';
 
-// describe('DateUtils', () => {
-//   let dateUtils: DateUtils;
 
-//   // beforeEach(() => {
-//   //   dateUtils = new DateUtils();
-//   // });
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       providers: [DatePipe]
-//     });
-//   });
 
-//   it('should create an instance', () => {
-//     expect(new DateUtils()).toBeTruthy();
-//   });
 
-//   describe('formatTimestamp', () => {
-//     it('should return empty string if date is null', () => {
-//       expect(dateUtils.formatTimestamp(null as any)).toBe('');
-//     });
 
-//     it('should return empty string if date is invalid', () => {
-//       expect(dateUtils.formatTimestamp('invalid-date' as any)).toBe('');
-//     });
 
-//     it('should return "just now" for a date that is the current time', () => {
-//       const now = new Date();
-//       expect(dateUtils.formatTimestamp(now)).toBe('just now');
-//     });
 
-//     it('should return "1 min ago" for a date that is 1 minute ago', () => {
-//       const date = new Date(new Date().getTime() - 60 * 1000);
-//       expect(dateUtils.formatTimestamp(date)).toBe('1 min ago');
-//     });
 
-//     it('should return "2 hours ago" for a date that is 2 hours ago', () => {
-//       const date = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
-//       expect(dateUtils.formatTimestamp(date)).toBe('2 hours ago');
-//     });
 
-//     // fit('should return the formatted time for a date earlier today in chat format', () => {
-//     //   const date = new Date(new Date().setHours(9, 30, 0));
-//     //   expect(dateUtils.formatTimestamp(date, true)).toBe('09:30 AM');
-//     // });
 
-//     it('should return the formatted date and time for a date this year', () => {
-//       const date = new Date(new Date().setMonth(2, 15)); // March 15th
-//       expect(dateUtils.formatTimestamp(date)).toContain('15 Mar - ');
-//     });
 
-//     it('should return the formatted date and time for a date in a different year', () => {
-//       const date = new Date(2020, 5, 20); // June 20, 2020
-//       expect(dateUtils.formatTimestamp(date)).toContain('20 Jun 2020 - ');
-//     });
-//   });
 
-//   describe('timeStampForChat', () => {
-//     it('should return empty string if date is null', () => {
-//       expect(dateUtils.timeStampForChat(null as any)).toBe('');
-//     });
 
-//     it('should return empty string if date is invalid', () => {
-//       expect(dateUtils.timeStampForChat('invalid-date' as any)).toBe('');
-//     });
 
-//     it('should return "Today" if the date is today and divider is true', () => {
-//       const today = new Date();
-//       expect(dateUtils.timeStampForChat(today, true)).toBe('Today');
-//     });
 
-//     it('should return the formatted time if the date is today and divider is false', () => {
-//       const today = new Date(new Date().setHours(10, 15, 0));
-//       expect(dateUtils.timeStampForChat(today)).toBe('10:15 AM');
-//     });
 
-//     it('should return "Yesterday" if the date is yesterday', () => {
-//       const yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
-//       expect(dateUtils.timeStampForChat(yesterday)).toBe('Yesterday');
-//     });
 
-//     it('should return the day name for a date within the last 7 days', () => {
-//       const lastWeek = new Date(new Date().setDate(new Date().getDate() - 3)); // 3 days ago
-//       const options = { weekday: 'long' } as const;
-//       expect(dateUtils.timeStampForChat(lastWeek)).toBe(lastWeek.toLocaleDateString('en-US', options));
-//     });
 
-//     it('should return the formatted date for a date from a different year', () => {
-//       const date = new Date(2020, 0, 10); // January 10, 2020
-//       expect(dateUtils.timeStampForChat(date)).toBe('Jan 10, 2020');
-//     });
 
-//     // fit('should return the formatted date for a date that is not today, yesterday, or within the last week', () => {
-//     //   const date = new Date(new Date().setDate(new Date().getDate() - 10)); // 10 days ago
-//     //   expect(dateUtils.timeStampForChat(date)).toBe('22 Aug'); // Assuming today is August 31st
-//     // });
-//   });
 
-//   describe('formatDateString', () => {
-//     it('should format a valid date string', () => {
-//       const input = '2022-07-25T14:30:00.000Z';
-//       const expectedOutput = '2022-07-25';
-//       expect(DateUtils.formatDateString(input)).toBe(expectedOutput);
-//     });
 
-//     it('should handle an invalid date string (non-ISO format)', () => {
-//       const input = 'July 25, 2022';
-//       expect(() => DateUtils.formatDateString(input)).toThrowError();
-//     });
 
-//     it('should handle an edge case - January 1st', () => {
-//       const input = '2022-01-01T00:00:00.000Z';
-//       const expectedOutput = '2022-01-01';
-//       expect(DateUtils.formatDateString(input)).toBe(expectedOutput);
-//     });
 
-//     it('should handle an edge case - December 31st', () => {
-//       const input = '2022-12-31T23:59:59.999Z';
-//       const expectedOutput = '2022-12-31';
-//       expect(DateUtils.formatDateString(input)).toBe(expectedOutput);
-//     });
 
-//     it('should handle a single-digit day/month', () => {
-//       const input = '2022-05-05T12:00:00.000Z';
-//       const expectedOutput = '2022-05-05';
-//       expect(DateUtils.formatDateString(input)).toBe(expectedOutput);
-//     });
 
-//     it('should handle a date string with timezone offset', () => {
-//       const input = '2022-07-25T14:30:00.000+02:00';
-//       const expectedOutput = '2022-07-25';
-//       expect(DateUtils.formatDateString(input)).toBe(expectedOutput);
-//     });
 
-//     // it('should handle a null input', () => {
-//     //   const input = null;
-//     //   expect(() => DateUtils.formatDateString(input)).toThrowError();
-//     // });
 
-//     // it('should handle an undefined input', () => {
-//     //   const input = undefined;
-//     //   expect(() => DateUtils.formatDateString(input)).toThrowError();
-//     // });
-//   });
 
-//   describe('formatDateStringToYYYYMonDD', () => {
-//     it('should format a valid date string', () => {
-//       const input = '2022-07-25T14:30:00.000Z';
-//       const expectedOutput = '2022-07-25';
-//       expect(DateUtils.formatDateStringToYYYYMonDD(input)).toBe(expectedOutput);
-//     });
 
-//     it('should handle an invalid date string (non-ISO format)', () => {
-//       const input = 'July 25, 2022';
-//       const expectedOutput = 'July 25, 2022';
-//       expect(DateUtils.formatDateStringToYYYYMonDD(input)).toBe(input);
-//     });
 
-//     it('should handle an edge case - January 1st', () => {
-//       const input = '2022-01-01T00:00:00.000Z';
-//       const expectedOutput = '2022-01-01';
-//       expect(DateUtils.formatDateStringToYYYYMonDD(input)).toBe(expectedOutput);
-//     });
 
-//     it('should handle an edge case - December 31st', () => {
-//       const input = '2022-12-31T23:59:59.999Z';
-//       const expectedOutput = '2022-12-31';
-//       expect(DateUtils.formatDateStringToYYYYMonDD(input)).toBe(expectedOutput);
-//     });
 
-//     it('should handle a single-digit day/month', () => {
-//       const input = '2022-05-05T12:00:00.000Z';
-//       const expectedOutput = '2022-05-05';
-//       expect(DateUtils.formatDateStringToYYYYMonDD(input)).toBe(expectedOutput);
-//     });
 
-//     it('should handle a date string with timezone offset', () => {
-//       const input = '2022-07-25T14:30:00.000+02:00';
-//       const expectedOutput = '2022-07-25';
-//       expect(DateUtils.formatDateStringToYYYYMonDD(input)).toBe(expectedOutput);
-//     });
 
-//     it('should handle a null input', () => {
-//       const input = null;
-//       const expectedOutput = '';
-//       expect(DateUtils.formatDateStringToYYYYMonDD(input)).toBe(expectedOutput);
-//     });
 
-//     it('should handle an undefined input', () => {
-//       const input = undefined;
-//       const expectedOutput = '';
-//       expect(DateUtils.formatDateStringToYYYYMonDD(input)).toBe(expectedOutput);
-//     });
 
-//   });
-// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

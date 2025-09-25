@@ -12,8 +12,8 @@ import { UserService } from "../../services/user/user.service";
   selector: "app-login",
   standalone: true,
   imports: [
-    ReactiveFormsModule, // Add this
-    // other imports
+    ReactiveFormsModule, 
+    
   ],
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
@@ -33,7 +33,7 @@ export class LoginComponent {
   }
   loginForm: FormGroup;
 
-  userList: any; // {id:number,userName:string,password:string};
+  userList: any; 
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -56,11 +56,11 @@ export class LoginComponent {
       this.loginForm.value["userName"] != null &&
       this.loginForm.value["userName"].length <= 0
     ) {
-      //this.globalService.openSnackBar("email should not be blank")
+      
       return;
     }
     if (this.loginForm.value["password"].length <= 0) {
-      //this.globalService.openSnackBar("Password should not be blank")
+      
       return;
     }
     this.userService.getUser(this.loginForm.value).subscribe((res: any) => {
@@ -76,21 +76,21 @@ export class LoginComponent {
           this.data?.userName != null &&
           this.data?.userName?.length > 0
         ) {
-          localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data)); // Convert object to string
-          localStorage.setItem(LocalStorageConstants.USERID, this.data.id); // Convert object to string
+          localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data)); 
+          localStorage.setItem(LocalStorageConstants.USERID, this.data.id); 
 
 
-          //this.globalService.openSnackBar("Log in successfully")
+          
           this.reload();
           if (this.data.roleName?.toLowerCase() === "super admin")
             this.router.navigate([
               "/home/manage-users/",
-            ]); //, this.data.UserId]);
-          else this.router.navigate(["/home/day/"]); //, this.data.UserId]);
+            ]); 
+          else this.router.navigate(["/home/day/"]); 
           this.setValuesInLocalStorage();
         }
       } else {
-        // this.toaster("Invalid credentials, Please check the details correctly.");
+        
       }
     });
   }

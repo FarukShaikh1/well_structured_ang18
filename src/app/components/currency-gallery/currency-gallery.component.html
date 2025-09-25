@@ -2,7 +2,7 @@
   @if(globalService.isAccessible(ActionConstant.ADD)){
   <button (click)="currencyCoinDetails('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
     data-bs-target="#detailsPopup">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
       <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
     </svg>
@@ -96,13 +96,7 @@
     </div>
   </div>
 </div>
-<!-- <div class="row mt-4">
-  <div class="col-12 d-flex flex-wrap">
-    <div *ngFor="let coin of filteredCoinList" class="m-2 border shadow-sm rounded overflow-hidden"
-      [ngClass]="coin.isNote ? 'note-image' : 'coin-image'">
-      <img [src]="basePath + coin.imagePath" alt="Currency Image" class="img-fluid" />
-    </div>
-  </div> -->
+
 
   <app-currency-details></app-currency-details>
   <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>

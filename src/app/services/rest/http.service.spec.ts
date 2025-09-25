@@ -39,7 +39,7 @@ describe('HttpService', () => {
     );
 
     expect(req.request.method).toBe('GET');
-    req.flush({}); // Mocking an empty response
+    req.flush({}); 
   });
 
   it('should make a POST request with correct URL, body, and headers', () => {
@@ -55,7 +55,7 @@ describe('HttpService', () => {
 
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(requestBody);
-    req.flush({}); // Mocking an empty response
+    req.flush({}); 
   });
 
   it('should make a PUT request with correct URL, body, and headers', () => {
@@ -71,7 +71,7 @@ describe('HttpService', () => {
 
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual(requestBody);
-    req.flush({}); // Mocking an empty response
+    req.flush({}); 
   });
 
   it('should make a DELETE request with correct URL and headers', () => {
@@ -85,6 +85,6 @@ describe('HttpService', () => {
     );
 
     expect(req.request.method).toBe('DELETE');
-    req.flush({}); // Mocking an empty response
+    req.flush({}); 
   });
 });

@@ -57,9 +57,9 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         "",
         [Validators.required],
       ],
-      collectionCoinType: [null, Validators.required], // Already present
+      collectionCoinType: [null, Validators.required], 
       countryId: [0, Validators.required],
-      address: "", // Already present
+      address: "", 
       assetId: null,
       picture: null,
       coinWeightInGrams: [0],
@@ -261,7 +261,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     };
 
     if (!this.currencyCoinDetailsForm.valid) {
-      //this.globalService.openSnackBar('Some issue is there');
+      
       return;
     } else {
       try {
@@ -269,7 +269,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
           this.uploadImageAndSaveData();
         }
       } catch (error) {
-        //this.globalService.openSnackBar("Error in adding data : " + error);
+        
         console.error("Error in adding data : ", error);
       }
     }
@@ -290,7 +290,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         error: (error: any) => {
           this.loaderService.hideLoader();
           this.toaster.showMessage("Some issue is in Update the data.", "error");
-          //this.globalService.openSnackBar('some issue is in update the data');
+          
           return;
         },
       });
@@ -308,7 +308,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       error: (error: any) => {
         this.loaderService.hideLoader();
         this.toaster.showMessage("Some issue is in Update the data.", "error");
-        //this.globalService.openSnackBar('some issue is in update the data');
+        
         return;
       },
     });

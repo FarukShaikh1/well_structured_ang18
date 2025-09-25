@@ -75,7 +75,7 @@ export class ChangePasswordComponent implements OnInit {
             Validators.pattern(
               ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_PASSWORD
             ),
-            this.passwordNotContainingName(this.userFullName), // Add the custom validator here
+            this.passwordNotContainingName(this.userFullName), 
           ],
         ],
         confirmPassword: ['', [Validators.required]],
@@ -113,7 +113,7 @@ export class ChangePasswordComponent implements OnInit {
     ) {
       confirmPassword?.setErrors({ passwordMismatch: true });
     } else {
-      // Clear passwordMismatch error only if present
+      
       if (confirmPassword?.hasError('passwordMismatch')) {
         confirmPassword.setErrors(null);
       }
@@ -136,7 +136,7 @@ export class ChangePasswordComponent implements OnInit {
         return null;
       }
 
-      // Check if the password contains any part of the name
+      
       const containsNamePart = nameParts.some((part) =>
         password.toLowerCase().includes(part.toLowerCase())
       );
@@ -158,7 +158,7 @@ export class ChangePasswordComponent implements OnInit {
       return { sameAsOld: true };
     } else {
       if (form.get('newPassword')?.hasError('sameAsOld')) {
-        form.get('newPassword')?.setErrors(null); // Clear sameAsOld error if no longer applicable
+        form.get('newPassword')?.setErrors(null); 
       }
       return null;
     }

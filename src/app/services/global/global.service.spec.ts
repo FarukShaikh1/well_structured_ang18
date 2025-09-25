@@ -149,14 +149,14 @@ describe('GlobalService', () => {
   it('should handle error and return false in getRolePageMappingData', () => {
     const mockError = new Error('Test error');
   
-    // Simulate an error being thrown from the roleService observable
+    
     roleService.getLoggedInUserPermissions.and.returnValue(throwError(mockError));
   
-    spyOn(console, 'error'); // Spy on console.error
+    spyOn(console, 'error'); 
   
     service.getUserPermissionData().subscribe((result) => {
-      expect(result).toBeFalse(); // Expect the result to be false due to the error
-      expect(console.error).toHaveBeenCalledWith('Error fetching role data', mockError.message); // Expect the error to be logged
+      expect(result).toBeFalse(); 
+      expect(console.error).toHaveBeenCalledWith('Error fetching role data', mockError.message); 
     });
   });
 });

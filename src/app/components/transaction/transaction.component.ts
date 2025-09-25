@@ -182,7 +182,7 @@ export class TransactionComponent implements OnInit {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.optionDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.optionDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
       });
@@ -195,19 +195,19 @@ export class TransactionComponent implements OnInit {
         title: "Transaction Date",
         field: "transactionDate",
         sorter: "alphanum",
-        // width: 100,
+        
         formatter: this.dateFormatter.bind(this),
       },
       {
         title: "Source/Reason",
         field: "sourceOrReason",
-        // width: 150,
+        
         sorter: "alphanum",
       },
       {
         title: "Description",
         field: "description",
-        // width: 200,
+        
         sorter: "alphanum",
       },
     ];
@@ -221,7 +221,7 @@ export class TransactionComponent implements OnInit {
           this.columnConfig.push({
             title: key,
             field: `accountData.${key}`,
-            // field:this.globalService.lowercaseFirstLetterOfEachWord(key),
+            
             formatter: this.summaryAmountColorFormatter.bind(this),
             hozAlign: "center",
             headerHozAlign: "center",
@@ -229,7 +229,7 @@ export class TransactionComponent implements OnInit {
             bottomCalc: "sum",
             bottomCalcFormatter: this.amountColorFormatter.bind(this),
             bottomCalcFormatterParams: { symbol: "", precision: 2 },
-            // width: 150,
+            
           });
         }
       }
@@ -253,7 +253,7 @@ export class TransactionComponent implements OnInit {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.optionDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.optionDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
       });
@@ -267,7 +267,7 @@ export class TransactionComponent implements OnInit {
         title: "Transaction Date",
         field: "transactionDate",
         sorter: "alphanum",
-        // width: 100,
+        
         formatter: this.dateFormatter.bind(this),
       },
     ];
@@ -281,7 +281,7 @@ export class TransactionComponent implements OnInit {
           this.columnConfig.push({
             title: key,
             field: `accountData.${key}`,
-            // field:this.globalService.lowercaseFirstLetterOfEachWord(key),
+            
             formatter: this.summaryAmountColorFormatter.bind(this),
             hozAlign: "center",
             headerHozAlign: "center",
@@ -289,7 +289,7 @@ export class TransactionComponent implements OnInit {
             bottomCalc: "sum",
             bottomCalcFormatter: this.amountColorFormatter.bind(this),
             bottomCalcFormatterParams: { symbol: "", precision: 2 },
-            // width: 150,
+            
           });
         }
       }
@@ -523,9 +523,9 @@ export class TransactionComponent implements OnInit {
   summaryAmountColorFormatter(cell: CellComponent) {
     const cellValue = cell.getValue();
     const transactionData = cell.getRow().getData();
-    const field = cell.getColumn().getField(); // e.g., "accountData.SBI_Amount"
+    const field = cell.getColumn().getField(); 
 
-    // Format currency
+    
     const formattedValue = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
@@ -535,14 +535,14 @@ export class TransactionComponent implements OnInit {
     if (!transactionData || !transactionData['accountData'] || (typeof cellValue !== 'number' && cellValue !== null && cellValue !== undefined)) {
       return `<span>${formattedValue}</span>`;
     }
-    // Extract base account name from the amount field
+    
     const amountKeyMatch = field.match(/accountData\.([^.]+)_Amount/i);
     const balanceKeyMatch = field.match(/accountData\.([^.]+)_Balance/i);
     if (amountKeyMatch) {
       if (cellValue === 0) {
         return `<span></span>`;
       }
-      const accountBase = amountKeyMatch[1]; // e.g., "SBI"
+      const accountBase = amountKeyMatch[1]; 
       const categoryField = `${accountBase}_Category`;
       const category = transactionData['accountData'][categoryField];
 
@@ -624,7 +624,7 @@ export class TransactionComponent implements OnInit {
           }
         }
         event.stopPropagation();
-      } else { // Hide global dropdown
+      } else { 
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -659,22 +659,22 @@ export class TransactionComponent implements OnInit {
           (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) >= this.minAmount) ||
           (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) >= this.minAmount) ||
           (item.other !== null && item.other !== 0 && Math.abs(item.other) >= this.minAmount);
-        // (item.sbiBalance !== null && item.sbiBalance !== 0 && Math.abs(item.sbiBalance) >= this.minAmount) || 
-        // (item.cbiBalance !== null && item.cbiBalance !== 0 && Math.abs(item.cbiBalance) >= this.minAmount) ||
-        // (item.cashBalance !== null && item.cashBalance !== 0 && Math.abs(item.cashBalance) >= this.minAmount) ||
-        // (item.otherBalance !== null && item.otherBalance !== 0 && Math.abs(item.otherBalance) >= this.minAmount) ||
-        // (item.totalAvailable !== null && item.totalAvailable !== 0 && Math.abs(item.totalAvailable) >= this.minAmount);
+        
+        
+        
+        
+        
         const maxAmountCondition =
           this.maxAmount == 0 ||
           (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) <= this.maxAmount) ||
           (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) <= this.maxAmount) ||
           (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) <= this.maxAmount) ||
           (item.other !== null && item.other !== 0 && Math.abs(item.other) <= this.maxAmount);
-        // (item.sbiBalance !== null && item.sbiBalance !== 0 && Math.abs(item.sbiBalance) <= this.maxAmount) || 
-        // (item.cbiBalance !== null && item.cbiBalance !== 0 && Math.abs(item.cbiBalance) <= this.maxAmount) ||
-        // (item.cashBalance !== null && item.cashBalance !== 0 && Math.abs(item.cashBalance) <= this.maxAmount) ||
-        // (item.otherBalance !== null && item.otherBalance !== 0 && Math.abs(item.otherBalance) <= this.maxAmount)||
-        // (item.totalAvailable !== null && item.totalAvailable !== 0 && Math.abs(item.totalAvailable) <= this.minAmount);
+        
+        
+        
+        
+        
 
         return searchText && minAmountCondition && maxAmountCondition;
       });
@@ -916,7 +916,7 @@ export class TransactionComponent implements OnInit {
   setTransactionSuggestions() {
     this.transactionService.getTransactionSuggestionList().subscribe({
       next: (res: any) => {
-        this.localStorageService.setTransactionSuggestions(res.data); // Convert object to string
+        this.localStorageService.setTransactionSuggestions(res.data); 
       },
       error: (error: any) => {
         console.log("error : ", error);

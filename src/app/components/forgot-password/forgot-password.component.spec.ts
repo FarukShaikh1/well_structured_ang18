@@ -59,7 +59,7 @@ describe('ForgotPasswordComponent', () => {
     expect(spyUserService).toHaveBeenCalledWith({ email: 'test@example.com' });
     expect(spyToaster).toHaveBeenCalledWith('Password reset link sent successfully', 'success');
 
-    tick(2000); // Simulate the passage of time for setTimeout
+    tick(2000); 
 
     expect(spyRouter).toHaveBeenCalledWith(['/']);
     expect(spyLoaderHide).toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe('ForgotPasswordComponent', () => {
     const spyLoaderHide = spyOn(loaderService, 'hideLoader').and.callThrough();
     const spyConsoleError = spyOn(console, 'error').and.callThrough();
     const errorResponse = { message: 'Network error' };
-    const spyUserService = spyOn(userService, 'forgotPassword').and.returnValue(throwError(() => errorResponse)); // Updated to use a factory function
+    const spyUserService = spyOn(userService, 'forgotPassword').and.returnValue(throwError(() => errorResponse)); 
     const spyToaster = spyOn(component.toaster, 'showMessage').and.callThrough();
   
     component.forgotPasswordForm.controls['email'].setValue('test@example.com');

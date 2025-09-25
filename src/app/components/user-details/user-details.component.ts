@@ -80,7 +80,7 @@ export class UserDetailsComponent {
   }
 
   trimAllFields() {
-    // Trim whitespace from all form control values
+    
     Object.keys(this.userForm.controls).forEach(key => {
       const control = this.userForm.get(key);
       if (control && typeof control.value === 'string') {
@@ -112,7 +112,7 @@ export class UserDetailsComponent {
           this.renderer
             .selectRootElement(this.btnCloseUserPopup?.nativeElement)
             .click();
-          // this.closePopup();
+          
           this.loaderService.hideLoader();
           this.globalService.triggerGridReload(ApplicationModules.USER);
         } else {

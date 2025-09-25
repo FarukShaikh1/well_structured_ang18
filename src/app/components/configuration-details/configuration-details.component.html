@@ -8,7 +8,7 @@
 
       <div class="modal-body">
         <form [formGroup]="configForm" (ngSubmit)="onSubmit(currentConfig)" novalidate>
-          <!-- Configuration Name -->
+          
           <div class="form-group">
             <label for="configurationName">{{currentConfig}} Name</label>
             <input type="text" id="configurationName" class="form-control" formControlName="configurationName"
@@ -24,7 +24,7 @@
             </div>
           </div>
 
-          <!-- Configuration Description -->
+          
           <div class="form-group">
             <label for="configurationDescription">{{currentConfig}} Description</label>
             <textarea id="configurationDescription" class="form-control" formControlName="configurationDescription"
@@ -41,7 +41,7 @@
             </div>
           </div>
 
-          <!-- Display Sequence -->
+          
           <div class="form-group">
             <label for="displaySequence">Display Sequence</label>
             <input type="number" id="displaySequence" class="form-control" formControlName="displaySequence"
@@ -54,7 +54,7 @@
             </div>
           </div>
 
-          <!-- Submit Button -->
+          
           <button type="submit" class="btn btn-primary" [disabled]="configForm.invalid">
             Submit
           </button>

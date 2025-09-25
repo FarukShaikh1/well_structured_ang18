@@ -15,7 +15,7 @@ describe('authGuard', () => {
   let globalServiceSpy: jasmine.SpyObj<GlobalService>;
   let routerSpy: jasmine.SpyObj<Router>;
 
-  // Define the guard execution method with proper typing
+  
   const executeGuard = async (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot

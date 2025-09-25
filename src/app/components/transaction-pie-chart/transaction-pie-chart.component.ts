@@ -15,8 +15,8 @@ import { CommonModule } from "@angular/common";
 export class TransactionPieChartComponent implements OnChanges {
   @Input() reportData: TransactionReportResponse[] = [];
 
-  originalReportData: TransactionReportResponse[] = []; // store original copy
-  selectedType = 'expense'; // default to expense
+  originalReportData: TransactionReportResponse[] = []; 
+  selectedType = 'expense'; 
 
   pieChartData: any;
   pieChartOptions: ChartConfiguration<'pie'>['options'] = {
@@ -39,7 +39,7 @@ export class TransactionPieChartComponent implements OnChanges {
   ngOnChanges(): void {
     if (!this.reportData?.length) return;
 
-    // Save original data only when input changes from parent
+    
     this.originalReportData = JSON.parse(JSON.stringify(this.reportData));
 
     this.updateChart();
@@ -57,7 +57,7 @@ export class TransactionPieChartComponent implements OnChanges {
       ? filteredData.map(x => x.takenAmount || 0)
       : filteredData.map(x => x.givenAmount || 0);
 
-    this.colorIndex = 60000; // reset color sequence
+    this.colorIndex = 60000; 
     const colors = labels.map(() => this.getSequentialColor());
 
     this.pieChartData = {
@@ -77,7 +77,7 @@ export class TransactionPieChartComponent implements OnChanges {
   toggleCategory(value: string) {
     if (this.selectedType !== value) {
       this.selectedType = value;
-      // Reset reportData from original when switching type
+      
       this.reportData = JSON.parse(JSON.stringify(this.originalReportData));
       this.updateChart();
     }

@@ -4,5 +4,5 @@ export interface TransactionSummaryResponse {
   sourceOrReason?: string;
   purpose?: string;
   description?: string;
-  accountData: { [key: string]: any }; // dynamic fields
+  accountData: { [key: string]: any }; 
 }

@@ -62,19 +62,19 @@ export class DayComponent implements OnInit {
   searchText: string = "";
   lableForMonthDropDown = "";
   lableForMonthDropDownIds = "";
-  selectedMonths: string[] = []; // Array to store selected months
-  selectedMonthsIds: number[] = []; // Array to store selected months
+  selectedMonths: string[] = []; 
+  selectedMonthsIds: number[] = []; 
   lableForOccasionTypeDropDown = "";
   lableForOccasionTypeDropDownIds = "";
   lableForRelationTypeDropDown = "";
   lableForRelationTypeDropDownIds = "";
-  selectedOccasionType: string[] = []; // Array to store selected OccasionTypes
-  selectedRelationType: string[] = []; // Array to store selected OccasionTypes
+  selectedOccasionType: string[] = []; 
+  selectedRelationType: string[] = []; 
   id: string = '';
   loggedInUserId: string = '';
   constructor(
     private _dayService: DayService,
-    // public tableUtils: TableUtils,
+    
     public localStorageService: LocalStorageService,
     public globalService: GlobalService,
     private loaderService: LoaderService,
@@ -86,11 +86,11 @@ export class DayComponent implements OnInit {
     this.loggedInUserId = localStorage.getItem(LocalStorageConstants.USERID) || '';
     this.monthList = this.localStorageService.getCommonListItems(LocalStorageConstants.MONTH_LIST);
 
-    // this.loaderService.showLoader();
+    
     this.configService.getConfigList(this.loggedInUserId, UserConfig.OCCASION_TYPE).subscribe({
       next: (res: any) => {
         this.occasionTypeList = res.data;
-        // this.loaderService.hideLoader();
+        
       },
       error: (error: any) => {
         console.log("error : ", error);
@@ -222,7 +222,7 @@ export class DayComponent implements OnInit {
         title: "",
         field: "option",
         maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),//will used for row-wise condition
+        formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
       });
@@ -257,7 +257,7 @@ export class DayComponent implements OnInit {
           }
         }
         event.stopPropagation();
-      } else { // Hide global dropdown
+      } else { 
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -315,7 +315,7 @@ export class DayComponent implements OnInit {
     }
   }
 
-  // Handle "Select All" checkbox
+  
   toggleAllMonthCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -328,7 +328,7 @@ export class DayComponent implements OnInit {
     this.getMonthDropdownLabel();
     this.applyFilters();
   }
-  // Handle individual month selection
+  
   toggleMonthCheck(event: Event, monthName: string, seqNum: number) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -352,7 +352,7 @@ export class DayComponent implements OnInit {
       this.lableForMonthDropDownIds = this.selectedMonthsIds.join(", ");
     }
   }
-  // Handle "Select All" checkbox
+  
   toggleAllOccasionTypeCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
 
@@ -363,7 +363,7 @@ export class DayComponent implements OnInit {
     this.getOccasionTypeDropdownLabel();
     this.applyFilters();
   }
-  // Handle individual daytype selection
+  
   toggleOccasionTypeCheck(event: Event, daytypeName: string, dayId: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -386,7 +386,7 @@ export class DayComponent implements OnInit {
     }
   }
 
-  // Handle "Select All" checkbox
+  
   toggleAllRelationCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
 
@@ -397,7 +397,7 @@ export class DayComponent implements OnInit {
     this.getRelationTypeDropdownLabel();
     this.applyFilters();
   }
-  // Handle individual relationtype selection
+  
   toggleRelationCheck(event: Event, relationtypeName: string, relationId: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -461,34 +461,34 @@ export class DayComponent implements OnInit {
   };
   allComplete: boolean = false;
 
-  // updateAllComplete() {
-  //   this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
+  
+  
 
-  //   this.isToday = (this.task.subtasks != null && this.task.subtasks[0].completed);//(t => t.completed);
-  //   this.isYesterday = (this.task.subtasks != null && this.task.subtasks[1].completed);//(t => t.completed);
-  //   this.isTomorrow = (this.task.subtasks != null && this.task.subtasks[2].completed);//(t => t.completed);
-  //   if (this.searchInput) {
-  //     this.searchInput.nativeElement.value = '';
-  //   }
-  //   if (this.monthInput) {
-  //     // this.selectedMonths = '';
-  //     this.monthInput.value = [];
-  //   }
-  //   if (this.typeInput) {
-  //     this.typeInput.value = [];
-  //   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-  //   this.loadGrid();
+  
 
-  // }
+  
 
   someComplete(): boolean {
     this.isToday =
-      this.task.subtasks != null && this.task.subtasks[0].completed; //(t => t.completed);
+      this.task.subtasks != null && this.task.subtasks[0].completed; 
     this.isTomorrow =
-      this.task.subtasks != null && this.task.subtasks[1].completed; //(t => t.completed);
+      this.task.subtasks != null && this.task.subtasks[1].completed; 
     this.isYesterday =
-      this.task.subtasks != null && this.task.subtasks[2].completed; //(t => t.completed);
+      this.task.subtasks != null && this.task.subtasks[2].completed; 
 
     if (this.task.subtasks == null) {
       return false;
@@ -499,29 +499,29 @@ export class DayComponent implements OnInit {
     );
   }
 
-  // setAll(completed: boolean) {
-  //   if (this.searchInput) {
-  //     this.searchInput.nativeElement.value = '';
-  //   }
-  //   if (this.monthInput) {
-  //     // this.selectedMonths = '';
-  //     this.monthInput.value = [];
-  //   }
-  //   if (this.typeInput) {
-  //     this.typeInput.value = [];
-  //   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-  //   this.allComplete = completed;
-  //   if (this.task.subtasks == null) {
-  //     return;
-  //   }
-  //   this.task.subtasks.forEach(t => (t.completed = completed));
-  //   this.isToday = (this.task.subtasks != null && this.task.subtasks[0].completed);//(t => t.completed);
-  //   this.isTomorrow = (this.task.subtasks != null && this.task.subtasks[1].completed);//(t => t.completed);
-  //   this.isYesterday = (this.task.subtasks != null && this.task.subtasks[2].completed);//(t => t.completed);
+  
+  
+  
+  
+  
+  
+  
+  
 
-  //   this.loadGrid();
-  // }
+  
+  
 
   applyFilters() {
     console.log("this.tableData : ", this.tableData);
@@ -544,9 +544,9 @@ export class DayComponent implements OnInit {
         this.selectedMonths.length === 0 ||
         (month !== null && this.selectedMonthsIds.includes(month));
 
-      // const matchesMonth =
-      //   this.selectedMonths.length === 0 ||
-      //   this.selectedMonths.includes(item.month);
+      
+      
+      
       const matchesOccasionType =
         this.selectedOccasionType.length === 0 ||
         this.selectedOccasionType.includes(item.dayType);

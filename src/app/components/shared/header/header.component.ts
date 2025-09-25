@@ -11,7 +11,7 @@ import { Router } from "@angular/router";
 import { GlobalService } from "../../../services/global/global.service";
 import { LocalStorageService } from "../../../services/local-storage/local-storage.service";
 import { LogoutService } from "../../../services/logout/logout.service";
-// import { SignalRService } from '../../../services/signal-r/signal-r.service';
+
 import { formatDistanceToNow } from "date-fns";
 import {
   ActionConstant,
@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   notifications: SystemNotifications[] = [];
   notificationTotalUnreadCount: number = 0;
   showNotificationList: boolean = false;
+  isMenuOpen: boolean = false;
 
   @ViewChild(ConfirmBoxComponent)
   confirmationPopupComponent!: ConfirmBoxComponent;
@@ -57,13 +58,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   loggedInUserName: string = "";
   userNameInitials: string = "";
   moduleList: ModuleResponse[] = [];
-  // profilePicUrl: string = '';
+  
 
   constructor(
     private router: Router,
     public localStorageService: LocalStorageService,
     public globalService: GlobalService,
-    // private signalRService: SignalRService,
+    
     private logoutService: LogoutService,
     private notificationService: NotificationService
   ) {
@@ -74,7 +75,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.loggedInUsername = "";
-    // Unsubscribe SignalR
+    
   }
 
   ngOnInit(): void {
@@ -90,20 +91,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.moduleList = this.localStorageService.getLoggedInUserPermissions();
 
-    // this.roleService.getModuleList().subscribe({
-    //     next: (res: any) => {
-    //       this.moduleList = res.data;
-    //     },
-    //     error: (error: any) => {
-    //       //this.globalService.openSnackBar('some issue is in update the data');
-    //       return;
-    //     },
-    //   });
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    // const userData = this.localStorageService.getLoggedInUserData();
-    // if (userData) {
-    //     this.moduleList = userData.accessibleModuleIds;
-    // }
+    
+    
+    
+    
   }
 
   isActiveMenu(route: string): boolean {
@@ -115,9 +116,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([route]);
   }
   setLoginDisplay() {
-    // this.loginDisplay =
-    //   this.ssoInitializationService.authService.instance.getAllAccounts()
-    //     .length > 0;
+    
+    
+    
   }
 
   isUserAuthorized(): boolean {
@@ -210,7 +211,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   navigateToChatSystem() {
-    // this.router.navigate([NavigationURLs.NAV_CHAT_PANEL]);
+    
   }
 
   getUserNameInitials(): string {
@@ -239,7 +240,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([NavigationURLs.CHANGE_PASSWORD]);
   }
 
-  /* ********************** System notification *********************** */
+  
 
   fetchAllSystemNotifications() {
     this.notificationService
@@ -266,7 +267,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.notificationTotalUnreadCount =
             notifications.data.unreadNotificationCount;
 
-          // Update the unread notification count in the shared service
+          
           this.notificationService.updateUnreadNotificationCount(
             this.notificationTotalUnreadCount
           );
@@ -282,6 +283,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.showNotificationList = false;
   }
 
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   @HostListener("document:click", ["$event.target"])
   onClickOutside(targetElement: HTMLElement) {
     if (
@@ -294,13 +299,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   markSystemNotificationAsRead(notification: SystemNotifications) {
     if (notification.hasRead || notification.isLoading) {
-      return; // Already marked as read, no action needed
+      return; 
     }
 
     notification.isLoading = true;
     this.notificationService.markAsRead(notification.notificationId).subscribe({
       next: () => {
-        this.fetchAllSystemNotifications(); // Refresh notifications
+        this.fetchAllSystemNotifications(); 
         notification.isLoading = false;
       },
       error: (err) => {

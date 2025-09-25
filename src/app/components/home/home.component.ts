@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
-// import { SignalRService } from '../../services/signal-r/signal-r.service';
+
 import { RouterModule } from '@angular/router';
 import {
     ActionConstant,
@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         private route: ActivatedRoute,
         private loaderService: LoaderService,
         public router: Router,
-        // public signalRService: SignalRService,
+        
         public globalService: GlobalService,
         private localStorageService: LocalStorageService,
         private notificationService: NotificationService,
@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.notificationService.unreadNotificationCount$.subscribe((count) => {
             this.unreadSystemNotificationCount = count;
         });
-        // this.signalRService.getUnreadChatCountForNotification();
+        
         this.getLoggedInUserData();
         this.getLoggedInUserData();
     }
@@ -88,16 +88,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     setDropDownColor() {
         const dropdownButton = document.getElementById('statusDropdown');
         const dropdownItems = document.querySelectorAll('.dropdown-item');
-        // Add event listeners to each dropdown item
+        
         dropdownItems.forEach((item) => {
             item.addEventListener('click', function (event) {
-                event.preventDefault(); // Prevent default link behavior
+                event.preventDefault(); 
 
-                // Get the status text and color from the clicked item
+                
                 const status = item.getAttribute('data-status');
                 const color = item.getAttribute('data-color');
 
-                // Update the button text and add a colored dot, if color and status are valid
+                
                 if (color && status && dropdownButton) {
                     dropdownButton.innerHTML = `<span class="dot ${color}"></span> ${status}`;
                 }

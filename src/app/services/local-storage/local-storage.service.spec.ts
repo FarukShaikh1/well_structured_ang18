@@ -7,12 +7,12 @@ describe('LocalStorageService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(LocalStorageService);
-    // Clear localStorage before each test to ensure isolation
+    
     localStorage.clear();
   });
 
   afterEach(() => {
-    // Clean up localStorage after each test
+    
     localStorage.clear();
   });
 

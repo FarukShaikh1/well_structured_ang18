@@ -15,20 +15,20 @@ export class CurrencyCoinService {
   getCurrencyCoinList(): Observable<any> {
     const params = new HttpParams()
       .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
-    return this.http.get(API_URL.GET_COLLECTION_COIN_GALLERY, { params: params });//?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&occasionType='+occasionType);
+    return this.http.get(API_URL.GET_COLLECTION_COIN_GALLERY, { params: params });
   }
   getCurrencyCoinRecords(countryId: number = 0): Observable<any> {
 
     const params = new HttpParams()
       .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
       .set('countryId', String(countryId))
-    return this.http.get(API_URL.GET_COLLECTION_COIN_LIST, { params: params });//?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&occasionType='+occasionType);
+    return this.http.get(API_URL.GET_COLLECTION_COIN_LIST, { params: params });
   }
 
   getCurrencyCoinSummary(): Observable<any> {
     const params = new HttpParams()
       .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
-    return this.http.get(API_URL.GET_COLLECTION_SUMMARY, { params: params });//?userid=' + this.loggedInUserId+'&searchText='+searchText+'&month='+month+'&occasionType='+occasionType);
+    return this.http.get(API_URL.GET_COLLECTION_SUMMARY, { params: params });
   }
 
   getCurrencyCoinDetails(collectionCoinId: string) {
