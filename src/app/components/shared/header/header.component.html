@@ -69,32 +69,17 @@
         </ul>
         }
       </div>
-      <!-- End of Notifications section -->
       }
     </div>
-    <!-- @if(showSettingsIcon()) { -->
     <div class="dropdown flex-shrink-0 me-4">
       <button class="btn dropdown-toggle p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
         <div class="profile-circle">
-          <!-- @if(profilePicUrl!=''){
-          <img [src]="profilePicUrl" alt="Profile Picture" class="icon img-fluid" />
-          } @else{ <span>{{ getLoggedInUserName().charAt(0) }}</span>
-          } -->
           <span title="{{ loggedInUserName }}">{{ userNameInitials }}</span>
         </div>
-        <!-- <img src="../../../assets/icons/settings-svgrepo-com.svg" class="icon img-fluid" /> -->
       </button>
 
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <!-- <li class="top-dropdown-item">
-      <a class="dropdown-item logout-btn" (click)="goToProfilePage()">
-        <img
-          alt="Profile Picture"
-          style="width: 20px"
-          src="../../../assets/icons/user1icon.png"
-        />&nbsp;My Profile</a
-      >
-    </li> -->
+     
         <li class="top-dropdown-item">
           <a class="dropdown-item logout-btn" (click)="goToChangePasswordPage()">
             <i class="bi bi-pencil-square"></i>
