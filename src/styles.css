@@ -331,6 +331,40 @@ body.dark-mode .tabulator .tabulator-row.tabulator-odd {
   border-top: 1px solid var(--theme-border);
 }
 
+/* Dark mode: Tabulator footer and pagination */
+body.dark-mode .tabulator .tabulator-footer {
+  background-color: var(--surface-1) !important;
+  color: var(--theme-text) !important;
+  border-top: 1px solid var(--theme-border) !important;
+}
+/* Ensure specific pagination buttons also follow dark theme */
+body.dark-mode .tabulator .tabulator-footer .tabulator-page[data-page="first"],
+body.dark-mode .tabulator .tabulator-footer .tabulator-page[data-page="prev"],
+body.dark-mode .tabulator .tabulator-footer .tabulator-page[data-page="next"],
+body.dark-mode .tabulator .tabulator-footer .tabulator-page[data-page="last"],
+body.dark-mode .tabulator .tabulator-footer .tabulator-page:disabled:hover {
+  background-color: transparent !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+body.dark-mode .tabulator .tabulator-footer .tabulator-page {
+  background-color: transparent !important;
+  color: var(--theme-text) !important;
+  border: 1px solid var(--theme-border) !important;
+}
+body.dark-mode .tabulator .tabulator-footer .tabulator-page:hover,
+body.dark-mode .tabulator .tabulator-footer .tabulator-page.active {
+  background-color: var(--theme-secondary-bg) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+body.dark-mode .tabulator .tabulator-footer .tabulator-page[disabled],
+body.dark-mode .tabulator .tabulator-footer .tabulator-page[disabled]:hover {
+  background-color: transparent !important;
+  color: #6b7280 !important; /* gray-500 */
+  border-color: var(--theme-border) !important;
+}
+
 .tabulator .tabulator-footer .tabulator-page[data-page="first"],
 .tabulator .tabulator-footer .tabulator-page[data-page="prev"],
 .tabulator .tabulator-footer .tabulator-page[data-page="next"],
@@ -1007,6 +1041,24 @@ input[type="password"]::-ms-clear {
 body.dark-mode .public-page-bg {
   background-color: var(--header-bg);
   color: var(--header-text);
+}
+
+/* Dark mode form field visibility fixes */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select,
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+  background-color: var(--surface-1) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  caret-color: var(--theme-text) !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: var(--theme-text) !important;
+  opacity: 0.6 !important;
 }
 
 /* Improve header text/icon contrast */
