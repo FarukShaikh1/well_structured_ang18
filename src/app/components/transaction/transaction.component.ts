@@ -549,9 +549,9 @@ export class TransactionComponent implements OnInit {
 
 
       if (category === 'Income') {
-        return `<span style="color:#129D0A; font-weight:bold">${formattedValue}</span>`;
+        return `<span style="color: var(--success-color); font-weight:bold">${formattedValue}</span>`;
       } else if (category === 'Expense') {
-        return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
+        return `<span style="color: var(--danger-color); font-weight:bold">${formattedValue}</span>`;
       }
     }
     if (balanceKeyMatch) {
@@ -559,9 +559,9 @@ export class TransactionComponent implements OnInit {
         return `<span></span>`;
       }
       if (cellValue > 0) {
-        return `<span style="color:#129D0A; font-weight:bold">${formattedValue}</span>`;
+        return `<span style="color: var(--success-color); font-weight:bold">${formattedValue}</span>`;
       }
-      return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
+      return `<span style="color: var(--danger-color); font-weight:bold">${formattedValue}</span>`;
     }
     return `<span></span>`;
   }
@@ -572,13 +572,13 @@ export class TransactionComponent implements OnInit {
     const sourceValue = transactionData["sourceOrReason"];
 
     if (columnValue?.toLowerCase().includes("emergency")) {
-      return `<span style="color:#FF0000; font-weight:bold">${sourceValue}</span>`;
+      return `<span style="color: var(--danger-color); font-weight:bold">${sourceValue}</span>`;
     } else if (columnValue?.toLowerCase().includes("return")) {
-      return `<span style="color:#129D0A; font-weight:bold">${sourceValue}</span>`;
+      return `<span style="color: var(--success-color); font-weight:bold">${sourceValue}</span>`;
     } else if (columnValue?.toLowerCase().includes("recharge")) {
-      return `<span style="color:#F29D0A; font-weight:bold">${sourceValue}</span>`;
+      return `<span style="color: var(--theme-accent-orange); font-weight:bold">${sourceValue}</span>`;
     } else {
-      return `<span style="color:#000000; font-weight:bold">${sourceValue}</span>`;
+      return `<span style="color: var(--theme-text); font-weight:bold">${sourceValue}</span>`;
     }
   }
 
