@@ -293,6 +293,49 @@ input[type="checkbox"]:disabled:checked {
   padding: 0.50857em 0.60571em;
 }
 
+/* Tabulator calculation rows */
+.tabulator .tabulator-calcs-holder {
+  background-color: var(--surface-2);
+  border-top: 1px solid var(--theme-border);
+  border-bottom: 1px solid var(--theme-border);
+}
+.tabulator .tabulator-calcs-holder .tabulator-row.tabulator-calcs,
+.tabulator .tabulator-footer .tabulator-calcs-holder .tabulator-row.tabulator-calcs,
+.tabulator .tabulator-header .tabulator-calcs-holder .tabulator-row.tabulator-calcs,
+.tabulator .tabulator-calcs,
+.tabulator .tabulator-calcs-top,
+.tabulator .tabulator-calcs-bottom {
+  background-color: var(--surface-2) !important;
+  color: var(--theme-text) !important;
+}
+.tabulator .tabulator-calcs-holder .tabulator-row.tabulator-calcs .tabulator-cell,
+.tabulator .tabulator-calcs .tabulator-cell,
+.tabulator .tabulator-calcs-top .tabulator-cell,
+.tabulator .tabulator-calcs-bottom .tabulator-cell {
+  color: inherit !important;
+}
+
+/* Dark mode: calculation rows */
+body.dark-mode .tabulator .tabulator-calcs-holder {
+  background-color: var(--surface-1) !important;
+  border-top: 1px solid var(--theme-border) !important;
+  border-bottom: 1px solid var(--theme-border) !important;
+}
+body.dark-mode .tabulator .tabulator-calcs-holder .tabulator-row.tabulator-calcs,
+body.dark-mode .tabulator .tabulator-footer .tabulator-calcs-holder .tabulator-row.tabulator-calcs,
+body.dark-mode .tabulator .tabulator-calcs,
+body.dark-mode .tabulator .tabulator-calcs-top,
+body.dark-mode .tabulator .tabulator-calcs-bottom {
+  background-color: var(--surface-1) !important;
+  color: var(--theme-text) !important;
+}
+body.dark-mode .tabulator .tabulator-calcs-holder .tabulator-row.tabulator-calcs .tabulator-cell,
+body.dark-mode .tabulator .tabulator-calcs .tabulator-cell,
+body.dark-mode .tabulator .tabulator-calcs-top .tabulator-cell,
+body.dark-mode .tabulator .tabulator-calcs-bottom .tabulator-cell {
+  color: inherit !important;
+}
+
 .tabulator .tabulator-range-selected.tabulator-range-only-cell-selected {
   border-color: #ff7a00;
 }
@@ -363,6 +406,30 @@ body.dark-mode .tabulator .tabulator-footer .tabulator-page[disabled]:hover {
   background-color: transparent !important;
   color: #6b7280 !important; /* gray-500 */
   border-color: var(--theme-border) !important;
+}
+
+/* Dark mode: ensure all footer controls inherit dark theme */
+body.dark-mode .tabulator .tabulator-footer .tabulator-pages button,
+body.dark-mode .tabulator .tabulator-footer .tabulator-pages .tabulator-page {
+  background-color: transparent !important;
+  color: var(--theme-text) !important;
+  border: 1px solid var(--theme-border) !important;
+}
+body.dark-mode .tabulator .tabulator-footer .tabulator-pages button:hover,
+body.dark-mode .tabulator .tabulator-footer .tabulator-pages .tabulator-page:hover,
+body.dark-mode .tabulator .tabulator-footer .tabulator-pages .tabulator-page.active {
+  background-color: var(--theme-secondary-bg) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+body.dark-mode .tabulator .tabulator-footer .tabulator-page-size select,
+body.dark-mode .tabulator .tabulator-footer .tabulator-page-size input,
+body.dark-mode .tabulator .tabulator-footer .tabulator-page-counter input,
+body.dark-mode .tabulator .tabulator-footer .tabulator-page-size label,
+body.dark-mode .tabulator .tabulator-footer .tabulator-page-counter label {
+  background-color: var(--surface-1) !important;
+  color: var(--theme-text) !important;
+  border: 1px solid var(--theme-border) !important;
 }
 
 .tabulator .tabulator-footer .tabulator-page[data-page="first"],
