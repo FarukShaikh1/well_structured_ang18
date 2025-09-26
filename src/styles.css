@@ -193,19 +193,18 @@ h4.modal-title, h2.section-header {
 }
 
 .form-control,
-.form-select {
+.form-select,
+select.form-select,
+input[type="date"].form-control,
+input[type="date"],
+input[type="text"],
+input[type="number"],
+textarea {
   border-radius: 0.25rem;
   font-size: var(--font-size-base);
-  background-color: var(--theme-secondary-bg);
+  background-color: transparent;
   color: var(--theme-text);
   border: 1px solid var(--theme-border);
-}
-
-/* Ensure form fields are never transparent even if bg-transparent is applied */
-input.form-control.bg-transparent,
-textarea.form-control.bg-transparent,
-select.form-select.bg-transparent {
-  background-color: var(--theme-secondary-bg) !important;
 }
 
 .form-control:focus {
@@ -230,7 +229,7 @@ select.form-select.bg-transparent {
 .form-select:read-only,
 .readonly-select {
   color: var(--theme-text);
-  background-color: var(--theme-secondary-bg) !important;
+  background-color: transparent !important;
 }
 
 input::placeholder {
@@ -1123,7 +1122,7 @@ body.dark-mode textarea,
 body.dark-mode select,
 body.dark-mode .form-control,
 body.dark-mode .form-select {
-  background-color: var(--surface-1) !important;
+  background-color: transparent !important;
   color: var(--theme-text) !important;
   border-color: var(--theme-border) !important;
   caret-color: var(--theme-text) !important;
@@ -1162,7 +1161,7 @@ header.public-page-bg .notification-btn .bi-bell {
 
 input {
   font-size: 14px;
-  background-color: #F1F2F4;
+  background-color: transparent;
 }
 
 .rounded-button {
@@ -1375,7 +1374,7 @@ input {
 
 /* Make custom dropdown button look like a select and show caret */
 .styled-select {
-  background-color: #ffffff;
+  background-color: transparent;
   color: var(--theme-text);
   border: 1px solid var(--theme-border);
   border-radius: 0.25rem;
