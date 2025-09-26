@@ -196,9 +196,16 @@ h4.modal-title, h2.section-header {
 .form-select {
   border-radius: 0.25rem;
   font-size: var(--font-size-base);
-  background-color: var(--surface-2);
+  background-color: var(--theme-secondary-bg);
   color: var(--theme-text);
   border: 1px solid var(--theme-border);
+}
+
+/* Ensure form fields are never transparent even if bg-transparent is applied */
+input.form-control.bg-transparent,
+textarea.form-control.bg-transparent,
+select.form-select.bg-transparent {
+  background-color: var(--theme-secondary-bg) !important;
 }
 
 .form-control:focus {
