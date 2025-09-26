@@ -9,9 +9,11 @@
     Add Collection Item
   </button>
    }
-    <button (click)="currencyCoinGallery()" class="btn btn-primary rounded-button">
-    Gallery
-  </button>
+  <div class="d-inline-flex gap-2 ms-2">
+    <button (click)="setView('grid')" class="btn btn-primary rounded-button">Data</button>
+    <button (click)="setView('gallery')" class="btn btn-primary rounded-button">Gallery</button>
+    <button (click)="setView('grid')" class="btn btn-primary rounded-button">Summary</button>
+  </div>
   <div class="row pb-2">
     <div class="col-5 col-sm-4 col-md-3 col-lg-2">
       <div appearance="outline">
@@ -54,13 +56,26 @@
       </div>
 
   </div>
-</div>
-<div class="row pb-2">
+  <div class="row pb-2" *ngIf="viewMode === 'grid'">
+    <div class="mb-2">
+      <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
+        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
+      </app-tabulator-grid>
+    </div>
+  </div>
 
-<div class="mb-2">
-  <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-    [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
-  </app-tabulator-grid>
-</div>
-<app-currency-details></app-currency-details>
-<app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
+  <div class="row mt-4" *ngIf="viewMode === 'gallery'">
+    <div class="gallery-grid">
+      <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'" *ngFor="let coin of filteredCoinList">
+        <img [src]="basePath + coin.imagePath" [alt]="coin.coinNoteName" />
+        <div class="gallery-caption">
+          <h3>{{ coin.coinNoteName }}</h3>
+          <p>{{ coin.description }}</p>
+          <small>{{ coin.currencyCoinType }} - {{ coin.printedYear }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-currency-details></app-currency-details>
+  <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>

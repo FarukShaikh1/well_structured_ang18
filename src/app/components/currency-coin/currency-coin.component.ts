@@ -37,10 +37,12 @@ export class CurrencyCoinComponent implements OnInit {
   currencyCoinId: string = '';
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
+  public filteredCoinList: any[] = [];
   public columnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
+  public viewMode: 'grid' | 'gallery' = 'grid';
 
   constructor(
     private router: Router,
@@ -197,6 +199,7 @@ export class CurrencyCoinComponent implements OnInit {
       next: (res: any) => {
         this.tableData = res.data;
         this.filteredTableData = res.data;
+        this.filteredCoinList = res.data;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -265,7 +268,7 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   applyFilters() {
-    this.filteredTableData = this.tableData.filter((item: any) => {
+    const filtered = this.tableData.filter((item: any) => {
       const matchesCoinName = item.coinNoteName?.toLowerCase().includes(this.searchText);
       const matchesCountryName = item.countryName?.toLowerCase().includes(this.searchText);
       const matchesActulaValue = item.actualValue?.toString()?.toLowerCase().includes(this.searchText);
@@ -278,6 +281,8 @@ export class CurrencyCoinComponent implements OnInit {
 
       return (matchesCoinName || matchesCountryName || matchesActulaValue || matchesIndianValue || matchesDescription) && matchesCountry;
     });
+    this.filteredTableData = filtered;
+    this.filteredCoinList = filtered as any[];
   }
 
   
@@ -315,8 +320,8 @@ export class CurrencyCoinComponent implements OnInit {
     }
   }
 
-  currencyCoinGallery() {
-    this.router.navigate([NavigationURLs.CURRENCY_GALLERY]);
+  setView(mode: 'grid' | 'gallery') {
+    this.viewMode = mode;
   }
 
 }

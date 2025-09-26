@@ -11,13 +11,13 @@
   <div class="d-flex align-items-center flex-grow-1 justify-content-end">
     <div class="d-flex align-items-center position-relative me-3 flex-shrink-0">
       <div class="d-none d-md-flex align-items-center" >
-        @for(mod of moduleList;track $index){
-        <button (click)="navigate(mod.route)" class="font-weight-bold p-2 txt-btn"
-          [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
-          {{ mod.moduleName }}
-        </button>
-        &nbsp;
-        }
+      @for(mod of moduleList;track $index){
+      <button (click)="navigate(mod.route)" class="font-weight-bold p-2 txt-btn"
+        [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
+        {{ mod.moduleName }}
+      </button>
+      &nbsp;
+      }
       </div>
 
       @if(showNotificationIcon()) {
@@ -74,7 +74,7 @@
       }
     </div>
     <div class="dropdown flex-shrink-0 me-4">
-      <button class="btn dropdown-toggle1 p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+      <button class="btn p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
         <div class="profile-circle">
           <span title="{{ loggedInUserName }}">{{ userNameInitials }}</span>
         </div>
