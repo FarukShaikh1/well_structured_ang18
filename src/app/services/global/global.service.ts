@@ -182,9 +182,9 @@ export class GlobalService {
     const userData = cell.getRow().getData();
     const columnValue = userData[columnName];
     if (columnValue) {
-      return '<span style="color:#ff7a00">Active</span>';
+      return '<span class="status-active">Active</span>';
     } else {
-      return '<span style="color:gray">Disabled</span>';
+      return '<span class="status-disabled">Disabled</span>';
     }
   }
 
@@ -259,8 +259,8 @@ export class GlobalService {
         return html;
       }
       const imagePath = rowData["imagePath"];
-      if (imagePath) {
-        const html = `<i class="bi bi-person-circle fs-3" style="color: blue;"></i>`;
+    if (imagePath) {
+      const html = `<i class="bi bi-person-circle fs-3" style="color: var(--theme-primary);"></i>`;
         return html;
       }
       const html = "";
