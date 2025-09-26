@@ -42,6 +42,7 @@ export class UserListComponent implements OnInit {
   searchText: string = '';
   noDataMessage = 'No Data Exists.';
   noMatchingDataMessage = 'No Data Exists.';
+  isGridLoading: boolean = false;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(UserDetailsComponent) userDetailsComponent!: UserDetailsComponent;
   @ViewChild(ConfirmationDialogComponent)
@@ -201,7 +202,7 @@ export class UserListComponent implements OnInit {
   }
 
   loadGrid() {
-    this.loaderService.showLoader();
+    this.isGridLoading = true;
     this.userService.getAllUsers().subscribe({
       next: (result: any) => {
         if (result) {
@@ -211,11 +212,11 @@ export class UserListComponent implements OnInit {
           console.error(Messages.ERROR_IN_FETCH_USER);
           this.toaster.showMessage(Messages.ERROR_IN_FETCH_USER, 'error');
         }
-        this.loaderService.hideLoader();
+        this.isGridLoading = false;
       },
       error: (error: any) => {
         console.error(Messages.ERROR_IN_FETCH_USER, error);
-        this.loaderService.hideLoader();
+        this.isGridLoading = false;
       },
     });
   }

@@ -61,6 +61,7 @@ export class TransactionComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
+  isGridLoading: boolean = false;
 
   lastTransactionDate: Date = new Date();
   NavigationURLs = NavigationURLs;
@@ -744,8 +745,7 @@ export class TransactionComponent implements OnInit {
   }
 
   LoadGrid() {
-
-    this.loaderService.showLoader();
+    this.isGridLoading = true;
     this.columnConfiguration();
     this.transactionfilterRequest = {
       fromDate: this.fromDate,
@@ -762,11 +762,11 @@ export class TransactionComponent implements OnInit {
             this.tableData = res.data;
             this.filteredTableData = res.data;
             this.lastTransactionDate = this.getLatestTransactionDate();
-            this.loaderService.hideLoader();
+            this.isGridLoading = false;
           },
           error: (error: any) => {
             console.log("error : ", error);
-            this.loaderService.hideLoader();
+            this.isGridLoading = false;
           },
         });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
@@ -784,16 +784,16 @@ export class TransactionComponent implements OnInit {
               this.columnConfiguration();
 
               this.lastTransactionDate = this.getLatestTransactionDate();
-              this.loaderService.hideLoader();
+              this.isGridLoading = false;
             } catch (error) {
-              this.loaderService.hideLoader();
+              this.isGridLoading = false;
               console.error("Error in processing summary list:", error);
             }
 
           },
           error: (error: any) => {
             console.log("error : ", error);
-            this.loaderService.hideLoader();
+            this.isGridLoading = false;
           },
         });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST) {
@@ -807,11 +807,11 @@ export class TransactionComponent implements OnInit {
             this.columnConfiguration();
 
             this.lastTransactionDate = this.getLatestTransactionDate();
-            this.loaderService.hideLoader();
+            this.isGridLoading = false;
           },
           error: (error: any) => {
             console.log("error : ", error);
-            this.loaderService.hideLoader();
+            this.isGridLoading = false;
           },
         });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
@@ -823,16 +823,16 @@ export class TransactionComponent implements OnInit {
             this.tableData = res.data;
             this.filteredTableData = res.data;
             this.lastTransactionDate = this.getLatestTransactionDate();
-            this.loaderService.hideLoader();
+            this.isGridLoading = false;
           },
           error: (error: any) => {
             console.log("error : ", error);
-            this.loaderService.hideLoader();
+            this.isGridLoading = false;
           },
         });
     }
     else {
-      this.loaderService.hideLoader();
+      this.isGridLoading = false;
     }
   }
 

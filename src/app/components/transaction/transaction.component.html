@@ -130,7 +130,8 @@
     }
     <div class="mb-2">
       <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
+        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
+        [isLoading]="isGridLoading" [loadingText]="'Loading transactions...'">
       </app-tabulator-grid>
     </div>
   </div>

@@ -1,0 +1,16 @@
+.table-container {
+  position: relative;
+}
+
+.loading-disabled {
+  pointer-events: none;
+  user-select: none;
+}
+
+.loading-disabled .tabulator-grid-wrapper {
+  opacity: 0.6;
+}
+
+.tabulator-grid-wrapper {
+  min-height: 200px;
+}

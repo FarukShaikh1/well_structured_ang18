@@ -51,6 +51,7 @@ export class DayComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
+  isGridLoading: boolean = false;
   ActionConstant = ActionConstant;
   monthList: any;
   occasionTypeList: any = "";
@@ -122,7 +123,7 @@ export class DayComponent implements OnInit {
   }
 
   loadGrid() {
-    this.loaderService.showLoader();
+    this.isGridLoading = true;
     this._dayService
       .getDayList(
         this.lableForMonthDropDownIds,
@@ -139,11 +140,11 @@ export class DayComponent implements OnInit {
           this.filteredTableData = res.data;
           console.log("res : ", res);
 
-          this.loaderService.hideLoader();
+          this.isGridLoading = false;
         },
         error: (error: any) => {
           console.log("error : ", error);
-          this.loaderService.hideLoader();
+          this.isGridLoading = false;
         },
       });
   }

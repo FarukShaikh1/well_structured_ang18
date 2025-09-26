@@ -20,13 +20,15 @@ import {
   ColumnDefinition,
   TabulatorFull,
 } from "tabulator-tables";
+import { CommonModule } from "@angular/common";
+import { GridLoaderComponent } from "../grid-loader/grid-loader.component";
 
 
 @Component({
   selector: "app-tabulator-grid",
   templateUrl: "./tabulator-grid.component.html",
   styleUrls: ["./tabulator-grid.component.css"],
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule, GridLoaderComponent],
   standalone: true,
 })
 export class TabulatorGridComponent implements OnChanges, OnDestroy {
@@ -42,6 +44,8 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   @Input() allowCSVExport!: boolean;
   @Input() noDataMessage = "No Data";
   @Input() noMatchingDataMessage = "No Matching Data";
+  @Input() isLoading: boolean = false;
+  @Input() loadingText: string = "Loading data...";
 
   public filterForm!: FormGroup;
 

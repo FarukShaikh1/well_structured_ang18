@@ -43,6 +43,8 @@ ActionConstant: any;
   public summaryPaginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; 
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE; 
   public allowCSVExport = false;
+  isSummaryGridLoading: boolean = false;
+  isGridLoading: boolean = false;
 
   summaryOptionsMenu = [
     {
@@ -249,29 +251,31 @@ ActionConstant: any;
   }
 
   LoadSummaryGrid() {
+    this.isSummaryGridLoading = true;
     this.currencyCoinService.getCurrencyCoinSummary().subscribe({
       next: (res: any) => {
         this.summaryTableData = res.data;
         this.filteredSummaryTableData = res.data;
-        this.loaderService.hideLoader();
+        this.isSummaryGridLoading = false;
       },
       error: (error: any) => {
         console.log("error : ", error);
-        this.loaderService.hideLoader();
+        this.isSummaryGridLoading = false;
       },
     },
     )
   }
   LoadGrid(countryId:number) {
+    this.isGridLoading = true;
     this.currencyCoinService.getCurrencyCoinRecords(countryId).subscribe({
       next: (res: any) => {
         this.tableData = res.data;
         this.filteredTableData = res.data;
-        this.loaderService.hideLoader();
+        this.isGridLoading = false;
       },
       error: (error: any) => {
         console.log("error : ", error);
-        this.loaderService.hideLoader();
+        this.isGridLoading = false;
       },
     },
     )

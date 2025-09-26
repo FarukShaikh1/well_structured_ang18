@@ -28,6 +28,10 @@ export class SettingsComponent {
   searchText: string = '';
   noDataMessage = 'No Data Exists.';
   noMatchingDataMessage = 'No Data Exists.';
+  isAccountGridLoading: boolean = false;
+  isOccasionTypeGridLoading: boolean = false;
+  isRelationGridLoading: boolean = false;
+  isUserGridLoading: boolean = false;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(ConfirmationDialogComponent)
   confirmModalComponent!: ConfirmationDialogComponent;
@@ -170,28 +174,48 @@ export class SettingsComponent {
     this.accountColumnConfiguration();
     this.relationColumnConfiguration();
     this.occasionTypeColumnConfiguration();
+    
+    if (config === UserConfig.ACCOUNT) {
+      this.isAccountGridLoading = true;
+    } else if (config === UserConfig.RELATION) {
+      this.isRelationGridLoading = true;
+    } else if (config === UserConfig.OCCASION_TYPE) {
+      this.isOccasionTypeGridLoading = true;
+    }
+    
     this.configurationService.getConfigList(userId, config).subscribe({
       next: (result: any) => {
         if (config === UserConfig.ACCOUNT) {
           this.filteredAccountTableData = result.data;
           this.accountTableData = result.data;
+          this.isAccountGridLoading = false;
         }
         else if (config === UserConfig.RELATION) {
           this.filteredRelationTableData = result.data;
           this.relationTableData = result.data;
+          this.isRelationGridLoading = false;
         }
         else if (config === UserConfig.OCCASION_TYPE) {
           this.filteredOccasionTypeTableData = result.data;
           this.occasionTypeTableData = result.data;
+          this.isOccasionTypeGridLoading = false;
         }
       },
       error: (error: any) => {
         console.error('Error fetching user list', error);
+        if (config === UserConfig.ACCOUNT) {
+          this.isAccountGridLoading = false;
+        } else if (config === UserConfig.RELATION) {
+          this.isRelationGridLoading = false;
+        } else if (config === UserConfig.OCCASION_TYPE) {
+          this.isOccasionTypeGridLoading = false;
+        }
       },
     });
   }
 
   loadUserGrid(userId: string) {
+    this.isUserGridLoading = true;
     this.userColumnConfiguration();
     this.userService.getAllUsers().subscribe({
       next: (result: any) => {
@@ -201,9 +225,11 @@ export class SettingsComponent {
         } else {
           console.error(Messages.ERROR_IN_FETCH_USER);
         }
+        this.isUserGridLoading = false;
       },
       error: (error: any) => {
         console.error(Messages.ERROR_IN_FETCH_USER, error);
+        this.isUserGridLoading = false;
       },
     });
   }

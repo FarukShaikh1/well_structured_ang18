@@ -26,14 +26,16 @@
 
   <div class="col-xxl-4 col-xl-4 col-lg-5 col-md-6 mb-2">
     <app-tabulator-grid [tableData]="filteredSummaryTableData" [columnConfig]="summaryTableColumnConfig"
-      [height]="'320px'" [paginationSize]="paginationSize" [allowCSVExport]="allowCSVExport">
+      [height]="'320px'" [paginationSize]="paginationSize" [allowCSVExport]="allowCSVExport"
+      [isLoading]="isSummaryGridLoading" [loadingText]="'Loading summary...'">
     </app-tabulator-grid>
   </div>
   <div class="col-xxl-8 col-xl-8 col-lg-7 col-md-6 mb-2">
     @if(filteredTableData.length){
     @if(showGrid){
     <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-      [paginationSize]="paginationSize" [allowCSVExport]="allowCSVExport">
+      [paginationSize]="paginationSize" [allowCSVExport]="allowCSVExport"
+      [isLoading]="isGridLoading" [loadingText]="'Loading currency data...'">
     </app-tabulator-grid>
     }
     @if(showGallery){
