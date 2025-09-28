@@ -718,10 +718,8 @@ export class TransactionComponent implements OnInit {
 
   getLatestTransactionDate(): any {
     if (!this.filteredTableData || this.filteredTableData.length === 0) {
-      this.loaderService.hideLoader();
       return new Date();
     }
-    this.loaderService.hideLoader();
     return this.filteredTableData[0]["transactionDate"];
   }
 
@@ -745,7 +743,7 @@ export class TransactionComponent implements OnInit {
   }
 
   LoadGrid() {
-    this.isGridLoading = true;
+    this.loaderService.showLoader('Loading transactions...');
     this.columnConfiguration();
     this.transactionfilterRequest = {
       fromDate: this.fromDate,
@@ -762,11 +760,11 @@ export class TransactionComponent implements OnInit {
             this.tableData = res.data;
             this.filteredTableData = res.data;
             this.lastTransactionDate = this.getLatestTransactionDate();
-            this.isGridLoading = false;
+            this.loaderService.hideLoader();
           },
           error: (error: any) => {
             console.log("error : ", error);
-            this.isGridLoading = false;
+            this.loaderService.hideLoader();
           },
         });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
@@ -784,16 +782,16 @@ export class TransactionComponent implements OnInit {
               this.columnConfiguration();
 
               this.lastTransactionDate = this.getLatestTransactionDate();
-              this.isGridLoading = false;
+              this.loaderService.hideLoader();
             } catch (error) {
-              this.isGridLoading = false;
+              this.loaderService.hideLoader();
               console.error("Error in processing summary list:", error);
             }
 
           },
           error: (error: any) => {
             console.log("error : ", error);
-            this.isGridLoading = false;
+            this.loaderService.hideLoader();
           },
         });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST) {
@@ -807,11 +805,11 @@ export class TransactionComponent implements OnInit {
             this.columnConfiguration();
 
             this.lastTransactionDate = this.getLatestTransactionDate();
-            this.isGridLoading = false;
+            this.loaderService.hideLoader();
           },
           error: (error: any) => {
             console.log("error : ", error);
-            this.isGridLoading = false;
+            this.loaderService.hideLoader();
           },
         });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
@@ -823,16 +821,16 @@ export class TransactionComponent implements OnInit {
             this.tableData = res.data;
             this.filteredTableData = res.data;
             this.lastTransactionDate = this.getLatestTransactionDate();
-            this.isGridLoading = false;
+            this.loaderService.hideLoader();
           },
           error: (error: any) => {
             console.log("error : ", error);
-            this.isGridLoading = false;
+            this.loaderService.hideLoader();
           },
         });
     }
     else {
-      this.isGridLoading = false;
+            this.loaderService.hideLoader();
     }
   }
 
@@ -853,7 +851,7 @@ export class TransactionComponent implements OnInit {
   handleConfirmResult(isConfirmed: boolean) {
     console.log(isConfirmed);
     if (isConfirmed) {
-      this.loaderService.showLoader();
+      this.loaderService.showLoader('Deleting transaction...');
       this.transactionService.deleteTransaction(this.transactionGroupId).subscribe({
         next: (res: any) => {
           this.removeTransaction(this.transactionGroupId);

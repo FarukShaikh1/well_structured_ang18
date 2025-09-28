@@ -123,7 +123,7 @@ export class DayComponent implements OnInit {
   }
 
   loadGrid() {
-    this.isGridLoading = true;
+    this.loaderService.showLoader('Loading day data...');
     this._dayService
       .getDayList(
         this.lableForMonthDropDownIds,
@@ -140,11 +140,11 @@ export class DayComponent implements OnInit {
           this.filteredTableData = res.data;
           console.log("res : ", res);
 
-          this.isGridLoading = false;
+          this.loaderService.hideLoader();
         },
         error: (error: any) => {
           console.log("error : ", error);
-          this.isGridLoading = false;
+          this.loaderService.hideLoader();
         },
       });
   }

@@ -202,7 +202,7 @@ export class UserListComponent implements OnInit {
   }
 
   loadGrid() {
-    this.isGridLoading = true;
+    this.loaderService.showLoader('Loading users...');
     this.userService.getAllUsers().subscribe({
       next: (result: any) => {
         if (result) {
@@ -212,11 +212,11 @@ export class UserListComponent implements OnInit {
           console.error(Messages.ERROR_IN_FETCH_USER);
           this.toaster.showMessage(Messages.ERROR_IN_FETCH_USER, 'error');
         }
-        this.isGridLoading = false;
+        this.loaderService.hideLoader();
       },
       error: (error: any) => {
         console.error(Messages.ERROR_IN_FETCH_USER, error);
-        this.isGridLoading = false;
+        this.loaderService.hideLoader();
       },
     });
   }

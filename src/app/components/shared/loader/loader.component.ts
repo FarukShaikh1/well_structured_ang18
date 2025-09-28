@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LoaderService } from '../../../services/loader/loader.service';
+import { LoaderService, LoaderState } from '../../../services/loader/loader.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,9 +11,9 @@ import { CommonModule } from '@angular/common';
     imports:[CommonModule]
 })
 export class LoaderComponent {
-  isLoading$: Observable<boolean>;
+  loaderState$: Observable<LoaderState>;
 
   constructor(private loaderService: LoaderService) {
-    this.isLoading$ = this.loaderService.isLoading$;
+    this.loaderState$ = this.loaderService.isLoading$;
   }
 }

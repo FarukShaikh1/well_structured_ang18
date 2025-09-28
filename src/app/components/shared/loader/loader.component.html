@@ -1,5 +1,4 @@
-<div class="loader-overlay" *ngIf="isLoading$ | async">
-  <div class="loader">
-    <div class="spinner-border text-primary" role="status"></div>
-  </div>
+<div class="loader-overlay" *ngIf="(loaderState$ | async)?.isLoading">
+  <div class="spinner-border text-primary" role="status"></div>
+  <span class="loader-text">{{ (loaderState$ | async)?.message || 'Loading...' }}</span>
 </div>

@@ -266,16 +266,16 @@ ActionConstant: any;
     )
   }
   LoadGrid(countryId:number) {
-    this.isGridLoading = true;
+    this.loaderService.showLoader('Loading currency summary...');
     this.currencyCoinService.getCurrencyCoinRecords(countryId).subscribe({
       next: (res: any) => {
         this.tableData = res.data;
         this.filteredTableData = res.data;
-        this.isGridLoading = false;
+        this.loaderService.hideLoader();
       },
       error: (error: any) => {
         console.log("error : ", error);
-        this.isGridLoading = false;
+        this.loaderService.hideLoader();
       },
     },
     )

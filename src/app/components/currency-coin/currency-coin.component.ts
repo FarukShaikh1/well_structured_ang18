@@ -53,7 +53,7 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loaderService.showLoader();
+    this.loaderService.showLoader('Loading currency data...');
     this.columnConfiguration();
     this.countryList = this.localStorageService.getCountryList();
     this.LoadGrid();
