@@ -38,11 +38,14 @@ export class CurrencyCoinComponent implements OnInit {
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
   public filteredCoinList: any[] = [];
-  public columnConfig: ColumnDefinition[] = [];
+  public columnConfig: ColumnDefinition[] = [];  
+  public summaryTableData: Record<string, unknown>[] = [];
+  public filteredSummaryTableData: Record<string, unknown>[] = [];
+  public summaryTableColumnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  public viewMode: 'grid' | 'gallery' = 'grid';
+  public viewMode: 'grid' | 'gallery'| 'summary' = 'grid';
 
   constructor(
     private router: Router,
@@ -57,6 +60,7 @@ export class CurrencyCoinComponent implements OnInit {
     this.columnConfiguration();
     this.countryList = this.localStorageService.getCountryList();
     this.LoadGrid();
+    this.LoadSummaryGrid();
     this.globalService.reloadGrid$.subscribe(() => {
       
       
@@ -135,6 +139,67 @@ export class CurrencyCoinComponent implements OnInit {
       });
     }
 
+    
+    this.summaryTableColumnConfig = [
+      {
+        title: "Country",
+        field: "countryName",
+        sorter: "alphanum",
+      },
+      {
+        title: "Currency",
+        field: "currencyName",
+        sorter: "alphanum",
+        formatter: (cell) => {
+          const data = cell.getRow().getData();
+          return `${data['currencyName']} (${data['currencyCode']}) (${data['currencySymbol']})`;
+        },
+      },
+      {
+        title: "Coins",
+        field: "numberOfCoins",
+        sorter: "alphanum",
+        headerHozAlign: "center",
+        hozAlign: "center",
+        bottomCalc: "sum",
+      },
+      {
+        title: "Notes",
+        field: "numberOfNotes",
+        sorter: "alphanum",
+        headerHozAlign: "center",
+        hozAlign: "center",
+        bottomCalc: "sum",
+      },
+      {
+        title: "Total",
+        field: "total",
+        sorter: "alphanum",
+        headerHozAlign: "center",
+        hozAlign: "center",
+        bottomCalc: "sum",
+      },
+      {
+        title: "",
+        field: "",
+        maxWidth: 50,
+        formatter: this.globalService.hidebuttonFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
+          this.hideCollectionCoin(collectionCoinId); 
+        },
+        headerSort: false,
+      },
+      {
+        title: "",
+        field: "",
+        maxWidth: 50,
+        formatter: (_cell) =>
+          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+        hozAlign: "left",
+        headerSort: false,
+      },
+    ];
   }
 
   ngAfterViewInit() {
@@ -210,6 +275,21 @@ export class CurrencyCoinComponent implements OnInit {
     )
   }
 
+  LoadSummaryGrid() {
+    this.loaderService.showLoader('Loading currency summary...');
+    this.currencyCoinService.getCurrencyCoinSummary().subscribe({
+      next: (res: any) => {
+        this.summaryTableData = res.data;
+        this.filteredSummaryTableData = res.data;
+        this.loaderService.hideLoader();
+      },
+      error: (error: any) => {
+        console.log("error : ", error);
+        this.loaderService.hideLoader();
+      },
+    },
+    )
+  }
   amountColorFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
     const coinData = cell.getRow().getData();
@@ -320,7 +400,7 @@ export class CurrencyCoinComponent implements OnInit {
     }
   }
 
-  setView(mode: 'grid' | 'gallery') {
+  setView(mode: 'grid' | 'gallery' | 'summary') {
     this.viewMode = mode;
   }
 

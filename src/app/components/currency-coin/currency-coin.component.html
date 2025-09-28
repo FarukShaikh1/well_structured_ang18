@@ -12,7 +12,7 @@
   <div class="d-inline-flex gap-2 ms-2">
     <button (click)="setView('grid')" class="btn btn-primary rounded-button">Data</button>
     <button (click)="setView('gallery')" class="btn btn-primary rounded-button">Gallery</button>
-    <button (click)="setView('grid')" class="btn btn-primary rounded-button">Summary</button>
+    <button (click)="setView('summary')" class="btn btn-primary rounded-button">Summary</button>
   </div>
   <div class="row pb-2">
     <div class="col-5 col-sm-4 col-md-3 col-lg-2">
@@ -60,6 +60,15 @@
     <div class="mb-2">
       <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
         [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
+      </app-tabulator-grid>
+    </div>
+  </div>
+
+  
+  <div class="row pb-2" *ngIf="viewMode === 'summary'">
+    <div class="mb-2">
+      <app-tabulator-grid [tableData]="filteredSummaryTableData" [columnConfig]="summaryTableColumnConfig" [height]="'320px'"
+        [paginationSize]="paginationSize" [filterColumns]="summaryTableColumnConfig" [allowCSVExport]="allowCSVExport">
       </app-tabulator-grid>
     </div>
   </div>
