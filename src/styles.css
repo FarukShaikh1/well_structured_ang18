@@ -1347,7 +1347,7 @@ input {
 }
 
 .dropdown-menu li .dropdown-item {
-  padding: 3px 5px;
+  padding: 5px 5px;
 }
 
 .tabulator-cell .dropdown-menu li {
@@ -1584,7 +1584,7 @@ select option {
 
  .dropdown-menu {
     max-height: 300px;
-    padding: 0 10px 0 10px;
+    padding: 0px 0px 0px 0px;
     overflow-y: auto;
 }
 
