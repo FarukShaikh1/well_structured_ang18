@@ -52,6 +52,12 @@ body.dark-mode {
   background-image: none !important;
 }
 
+/* Remove decorative background images in dark mode */
+body.dark-mode .chat {
+  background-image: none !important;
+  background-color: var(--surface-1) !important;
+}
+
 @font-face {
   font-family: 'lexendregular';
   src: url('./assets/fonts/lexend-variablefont_wght-webfont.woff2') format('woff2'),
@@ -1718,7 +1724,15 @@ img{
   -webkit-text-security: square;
 }
 
+.invalid-otp-section {
+    min-height: 20px; 
+    transition: min-height 0.2s ease;
+}
 
+.invalid-otp-msg {
+    margin: 0;
+    padding: 0;
+}
 
 @media (max-width: 768px) {
   
@@ -1768,7 +1782,25 @@ img{
   }
 }
 
-
+.otp-card{
+  background: var(--theme-card-bg);
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  align-items: center ;
+}
+.otp-box{
+  width: 40px;
+  height: 40px;
+  margin: 0 5px;
+  font-size: 24px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 @media (max-width: 576px) {
   
   .left-section {

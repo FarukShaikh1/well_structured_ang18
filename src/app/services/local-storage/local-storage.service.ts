@@ -26,6 +26,10 @@ export class LocalStorageService {
   }
 
   isAuthenticated(): boolean {
+    let isLoggedIn = localStorage.getItem(LocalStorageConstants.IS_LOGGED_IN) === 'true';
+    if (!isLoggedIn) {
+      return false;
+    }
     const user = this.getLoggedInUserData();
     if (!user) {
       return false;

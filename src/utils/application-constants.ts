@@ -6,10 +6,10 @@ export const ApplicationConstants = {
         '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
 
     MIN_LENGTH_PASSWORD: 12,
-    MAX_LENGTH_PASSWORD: 15, 
+    MAX_LENGTH_PASSWORD: 15,
     PATTERN_REQUIRED_CHARS_IN_PASSWORD:
         '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*. ]{8,}$',
-    DISALLOWED_CHARS_IN_PASSWORD: [' ', '#', '(', ')', '-', '_', '+', '{', '}'], 
+    DISALLOWED_CHARS_IN_PASSWORD: [' ', '#', '(', ')', '-', '_', '+', '{', '}'],
     SCREEN_SIZE_SM: 576,
     PATTERN_REQUIRED_CHARS_IN_NAME: '^(?=.*[a-zA-Z])[a-zA-Z \\-_]+$',
     PATTERN_REQUIRED_CHARS_IN_LOCATION:
@@ -21,17 +21,17 @@ export const ApplicationConstants = {
     SAMPLE_TRACKING_SYSTEM_ID: '01234556-89AB-1DEF-8123-456789ABCDEF',
     FORM_TYPE_ID: '01234556-89AB-1DEF-8123-456789ABCDEF',
 
-    
-    SYSTEM_NOTIFICATION_FETCHING_FREQUENCY: 30000, 
+
+    SYSTEM_NOTIFICATION_FETCHING_FREQUENCY: 30000,
     NUMBER_OF_TOP_SYSTEM_NOTIFICATIONS_TO_SHOW: 5,
 
-    GLOBAL_NUMERIC_DATE_FORMAT: 'dd/MM/yyyy', 
-    GLOBAL_DATE_FORMAT: 'dd-MMM-yyyy', 
-    GLOBAL_DATE_TIME_FORMAT_WITH_MINUTES: 'dd-MMM-yyyy HH:mm', 
-    GLOBAL_DATE_TIME_FORMAT: 'dd-MMM-yyyy HH:mm:ss', 
+    GLOBAL_NUMERIC_DATE_FORMAT: 'dd/MM/yyyy',
+    GLOBAL_DATE_FORMAT: 'dd-MMM-yyyy',
+    GLOBAL_DATE_TIME_FORMAT_WITH_MINUTES: 'dd-MMM-yyyy HH:mm',
+    GLOBAL_DATE_TIME_FORMAT: 'dd-MMM-yyyy HH:mm:ss',
 
-    REGEX_DASH_DOT_UNDERSCORE_WITH_SPACE: /(?<=[a-zA-Z0-9])[-_.](?=[a-zA-Z0-9])/g, 
-    REGEX_CAPITALIZE_FIRST_LETTER: /\b\w/g, 
+    REGEX_DASH_DOT_UNDERSCORE_WITH_SPACE: /(?<=[a-zA-Z0-9])[-_.](?=[a-zA-Z0-9])/g,
+    REGEX_CAPITALIZE_FIRST_LETTER: /\b\w/g,
     APPLICATIONS_OWNER_EMAILID: 'farukshaikh908@gmail.com'
 };
 
@@ -49,11 +49,22 @@ export const ApplicationTableConstants = {
 };
 
 export const ToasterConfigs = {
-    TIMEOUT: 10000, 
+    TIMEOUT: 10000,
 };
 
+
+export const OtpConfig = {
+    NumberOfOtpDigits: 6,
+    OTP_EXPIRES_IN_MINUTES: 2,
+    otpMaxTrial: 3,
+    LOGIN: 'Login',
+    FORGOT_PASSWORD: 'ForgotPassword',
+    RESET_PASSWORD: 'ResetPassword',
+    REGISTER: 'Register',
+    VERIFY_EMAIL: 'VerifyEmail'
+}
 export const LoaderConfigs = {
-    TIMEOUT: 10000, 
+    TIMEOUT: 10000,
 };
 
 export const UserConfig = {
@@ -64,6 +75,7 @@ export const UserConfig = {
 
 
 export const LocalStorageConstants = {
+    IS_LOGGED_IN: 'IsLoggedIn',
     USER: 'user',
     USERID: 'userId',
     COUNTRY_LIST: 'countryList',
@@ -72,6 +84,7 @@ export const LocalStorageConstants = {
     COIN_TYPE: 'CoinType',
     USER_ROLE_ID: 'loggedInUserRoleId',
     USER_PERMISSIONS: 'UserPermissions',
+    OTP_EXPIRES_ON: 'OtpExpiresOn',
 };
 
 export const DBConstants = {
@@ -271,4 +284,39 @@ export const ApplicationRoles = {
     Sample_Management_User: 'Sample Management User',
     External_Expense: 'External Expense',
     SUPER_ADMIN: 'Super Admin'
+};
+
+// Generic UI strings for consistent labels across components
+export const UIStrings = {
+    COLUMN_TITLES: {
+        NAME: 'Name',
+        EMAIL: 'Email Id',
+        MOBILE_NUMBER: 'Mobile Number',
+        ROLE: 'Role',
+        STATUS: 'Status',
+        DESCRIPTION: 'Description',
+        DISPLAY_ORDER: 'Display Order',
+        ACCOUNT_NAME: 'Account Name',
+        OCCASION_TYPE_NAME: 'OccasionType Name',
+        RELATION_TYPE_NAME: 'RelationType Name',
+        COIN_NOTE_NAME: 'Coin/Note Name',
+        COUNTRY: 'Country',
+        REAL_VALUE: 'Real Value',
+        INDIAN_VALUE: 'Indian Value',
+        OTHER_DETAILS: 'Other details',
+        PIC: 'Pic',
+        CURRENCY: 'Currency',
+        COINS: 'Coins',
+        NOTES: 'Notes',
+        TOTAL: 'Total'
+    },
+    COMMON: {
+        NO_DATA: 'No Data Exists.',
+        VIEW_ALL: 'View All',
+        CONFIRMATION: 'Confirmation'
+    },
+    LOADERS: {
+        LOADING_CURRENCY_DATA: 'Loading currency data...',
+        LOADING_CURRENCY_SUMMARY: 'Loading currency summary...'
+    }
 };

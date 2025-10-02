@@ -21,6 +21,14 @@ export const routes: Routes = [
     canActivate: [publicGuard],
   },
   {
+    path: "otp-verification",
+    title: "otp-verification",
+    loadComponent: () =>
+      import("./components/otp-verification/otp-verification.component").then(
+        (m) => m.OTPVerificationComponent
+      ),
+  },
+  {
     path: "logout",
     loadComponent: () =>
       import("./components/logout/logout.component").then(
@@ -47,10 +55,10 @@ export const routes: Routes = [
         path: "expenses",
         title: "Transactions",
         component: TransactionComponent,
-        
+
       },
-      
-      
+
+
       {
         path: "currency-coin",
         title: "Currency Collection",
@@ -72,7 +80,7 @@ export const routes: Routes = [
           import("./components/user-list/user-list.component").then(
             (m) => m.UserListComponent
           ),
-        
+
         data: { moduleName: ApplicationModules.USER },
       },
       {
@@ -82,14 +90,14 @@ export const routes: Routes = [
           import(
             "./components/user-permission/user-permission.component"
           ).then((m) => m.UserPermissionComponent),
-        
+
         data: { moduleName: ApplicationModules.USER_PERMISSIONS },
       },
       {
         path: "settings",
         title: "Settings",
         component: SettingsComponent,
-        
+
       },
       {
         path: "change-password",
@@ -99,14 +107,14 @@ export const routes: Routes = [
             (m) => m.ChangePasswordComponent
           ),
       },
-      
-      
-      
-      
-      
-      
-      
-      
+
+
+
+
+
+
+
+
       {
         path: "unauthorised",
         title: "Unauthorised User",

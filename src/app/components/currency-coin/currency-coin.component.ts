@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
-import { ActionConstant, ApplicationConstantHtml, ApplicationTableConstants, NavigationURLs } from '../../../utils/application-constants';
+import { ActionConstant, ApplicationConstantHtml, ApplicationTableConstants, UIStrings, NavigationURLs } from '../../../utils/application-constants';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
@@ -56,7 +56,7 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loaderService.showLoader('Loading currency data...');
+    this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
     this.columnConfiguration();
     this.countryList = this.localStorageService.getCountryList();
     this.LoadGrid();
@@ -77,17 +77,17 @@ export class CurrencyCoinComponent implements OnInit {
   columnConfiguration() {
     this.columnConfig = [
       {
-        title: "Coin/Note Name",
+        title: UIStrings.COLUMN_TITLES.COIN_NOTE_NAME,
         field: "coinNoteName",
         sorter: "alphanum",
       },
       {
-        title: "Country",
+        title: UIStrings.COLUMN_TITLES.COUNTRY,
         field: "countryName",
         sorter: "alphanum",
       },
       {
-        title: "Real Value",
+        title: UIStrings.COLUMN_TITLES.REAL_VALUE,
         field: "actualValue",
         sorter: "alphanum",
         formatter: this.amountColorFormatter.bind(this),
@@ -95,7 +95,7 @@ export class CurrencyCoinComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
       },
       {
-        title: "Indian Value",
+        title: UIStrings.COLUMN_TITLES.INDIAN_VALUE,
         field: "indianValue",
         sorter: "alphanum",
         formatter: this.amountColorFormatter.bind(this),
@@ -104,12 +104,12 @@ export class CurrencyCoinComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
       },
       {
-        title: "Other details",
+        title: UIStrings.COLUMN_TITLES.OTHER_DETAILS,
         field: "description",
         sorter: "alphanum",
       },
        {
-        title: "Pic",
+        title: UIStrings.COLUMN_TITLES.PIC,
         field: "thumbnailPath",
         formatter: this.globalService.thumbnailFormatter.bind(this),
       },
@@ -142,12 +142,12 @@ export class CurrencyCoinComponent implements OnInit {
     
     this.summaryTableColumnConfig = [
       {
-        title: "Country",
+        title: UIStrings.COLUMN_TITLES.COUNTRY,
         field: "countryName",
         sorter: "alphanum",
       },
       {
-        title: "Currency",
+        title: UIStrings.COLUMN_TITLES.CURRENCY,
         field: "currencyName",
         sorter: "alphanum",
         formatter: (cell) => {
@@ -156,7 +156,7 @@ export class CurrencyCoinComponent implements OnInit {
         },
       },
       {
-        title: "Coins",
+        title: UIStrings.COLUMN_TITLES.COINS,
         field: "numberOfCoins",
         sorter: "alphanum",
         headerHozAlign: "center",
@@ -164,7 +164,7 @@ export class CurrencyCoinComponent implements OnInit {
         bottomCalc: "sum",
       },
       {
-        title: "Notes",
+        title: UIStrings.COLUMN_TITLES.NOTES,
         field: "numberOfNotes",
         sorter: "alphanum",
         headerHozAlign: "center",
@@ -172,7 +172,7 @@ export class CurrencyCoinComponent implements OnInit {
         bottomCalc: "sum",
       },
       {
-        title: "Total",
+        title: UIStrings.COLUMN_TITLES.TOTAL,
         field: "total",
         sorter: "alphanum",
         headerHozAlign: "center",

@@ -9,7 +9,7 @@
     >Enter OTP sent on <strong>{{ maskedEmail || "-" }}</strong></span
   >
   <form [formGroup]="otpForm" (ngSubmit)="onVerifyOtp()">
-    <div class="otp-inputs">
+    <div class="otp-inputs mt-2">
       
 
       <input
@@ -28,16 +28,15 @@
     </div>
 
     @if(invalidOtp){
-    <div class="text-danger invalid-otp-msg">
+    <div class="text-danger invalid-otp-msg mt-2">
       <small>Incorrect OTP.<br /></small>
     </div>
     } @else {
       <div class="blank"></div>
     }
 
-    
 
-    <div class="timer-section">
+    <div class="timer-section mt-4">
       @if(timerActive) {
       <span class="resend-text">
         OTP will expire in

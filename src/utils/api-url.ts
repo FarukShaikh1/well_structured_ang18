@@ -75,7 +75,8 @@ export const API_URL = {
   RESET_PASSWORD: `${serverUrl}${apiPrefix}/auth/resetpassword`,
   CHANGE_PASSWORD: `${serverUrl}${apiPrefix}/auth/changepassword`,
   FORGOT_PASSWORD: `${serverUrl}${apiPrefix}/auth/forgotpassword`,
-  VERIFY_OTP: `${serverUrl}${apiPrefix}/auth/verifyotp?emailId={0}&otpCode={1}`,
+  VERIFY_OTP: `${serverUrl}${apiPrefix}/otp/verify`,
+  SEND_OTP: `${serverUrl}${apiPrefix}/otp/send`,
   LOGIN: `${serverUrl}${apiPrefix}/user/Login`,
 
 };

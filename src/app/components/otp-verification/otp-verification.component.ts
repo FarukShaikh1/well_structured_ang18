@@ -3,12 +3,9 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  EventEmitter,
-  Input,
   OnDestroy,
   OnInit,
-  Output,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import {
   FormControl,
@@ -19,14 +16,13 @@ import {
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { NavigationURLs } from '../../../utils/application-constants';
-import { DateUtils } from '../../../utils/date-utils';
+import { LocalStorageConstants, NavigationURLs, OtpConfig } from '../../../utils/application-constants';
+import { SendOtpRequest, VerifyOtpRequest } from '../../interfaces/otp-request ';
 import { UserLoginRequest } from '../../interfaces/user-login-request';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
-import { UserService } from '../../services/user/user.service';
-import { LoaderComponent } from '../shared/loader/loader.component';
+import { OtpService } from '../../services/otp/otp.service';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 @Component({
@@ -35,8 +31,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ToasterComponent,
-    LoaderComponent,
+    ToasterComponent
   ],
   templateUrl: './otp-verification.component.html',
   styleUrl: './otp-verification.component.css',
@@ -44,17 +39,13 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 export class OTPVerificationComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
-  @Input() numberOfOtpDigits: number | null = 0;
-  @Input() otpExpiryTimeInMinutes: number | null = 0;
-  @Input() otpMaxTrial!: number;
 
-  @Input() loginRequest!: UserLoginRequest;
+  loginRequest!: UserLoginRequest;
 
   @ViewChild('firstOtpInput') firstInput!: ElementRef<HTMLInputElement>;
-  @Output() backToLogin: EventEmitter<void> = new EventEmitter<void>();
 
   otpForm: FormGroup = new FormGroup({});
-  controlNames: string[] = []; 
+  controlNames: string[] = [];
   maskedEmail: string | null | undefined = '';
   timerDisplay: string = '';
   timerSubscription!: Subscription;
@@ -62,61 +53,73 @@ export class OTPVerificationComponent
   timerActive: boolean = true;
   otpResent: boolean = false;
   invalidOtp: boolean = false;
-
+  verifyOtpRequest: VerifyOtpRequest = {
+    emailId: '',
+    otpCode: '',
+    purpose: OtpConfig.LOGIN
+  }
   private isUserNavigatingAway: boolean = false;
+  enteredEmail: any;
+  otpExpiresAt: any;
+  userId: any;
+  sendOtpRequest: SendOtpRequest = {
+    EmailId: '',
+    Purpose: OtpConfig.LOGIN
+  };
 
   constructor(
     private router: Router,
-    private userService: UserService,
+    private otpService: OtpService,
     private localStorageService: LocalStorageService,
     private loaderService: LoaderService,
     public globalService: GlobalService
   ) { }
 
   ngOnInit() {
-    this.otpMaxTrial = 3;
-    this.maskedEmail = this.maskEmail(this.loginRequest?.email);
+    this.enteredEmail = this.localStorageService.getLoggedInUserData()?.emailAddress;
+    this.userId = this.localStorageService.getLoggedInUserData()?.id;
+    this.otpExpiresAt = Number(localStorage.getItem(LocalStorageConstants.OTP_EXPIRES_ON));
 
-    
-    if (this.numberOfOtpDigits !== null) {
-      for (let i = 0; i < this.numberOfOtpDigits; i++) {
-        const controlName = `otp${i}`;
-        this.otpForm.addControl(
-          controlName,
-          new FormControl('', [
-            Validators.required,
-            Validators.pattern('[0-9]'),
-          ])
-        );
-        this.controlNames.push(controlName); 
-      }
+    if (!this.enteredEmail) {
+      this.onBackToLogin();
+      return;
     }
+    this.maskedEmail = this.maskEmail(this.enteredEmail);
 
+    for (let i = 0; i < OtpConfig.NumberOfOtpDigits; i++) {
+      const controlName = `otp${i}`;
+      this.otpForm.addControl(
+        controlName,
+        new FormControl('', [
+          Validators.required,
+          Validators.pattern('[0-9]'),
+        ])
+      );
+      this.controlNames.push(controlName);
+    }
     this.startOtpTimer();
-
-    
-    
-
     this.loaderService.hideLoader();
   }
 
   startOtpTimer() {
-    if (this.otpExpiryTimeInMinutes !== null) {
-      this.startTimer(this.otpExpiryTimeInMinutes * 60);
+    const now = Date.now();
+    if (this.otpExpiresAt > now) {
+      const durationInSeconds = Math.floor((this.otpExpiresAt - now) / 1000);
+      this.startTimer(durationInSeconds);
+    } else {
+      // already expired
+      this.timerActive = false;
+      this.timerDisplay = "0:00";
     }
   }
-
   stopTimer() {
     if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe(); 
-      this.timerActive = false; 
+      this.timerSubscription.unsubscribe();
+      this.timerActive = false;
     }
   }
 
   ngOnDestroy() {
-    
-    
-
     this.stopTimer();
   }
 
@@ -124,21 +127,21 @@ export class OTPVerificationComponent
     this.focucToInput();
   }
 
-  
+
   private handleBeforeUnload = (event: BeforeUnloadEvent): void => {
     if (!this.isUserNavigatingAway) {
-      
+
       const confirmationMessage =
         'You have unsaved changes. Are you sure you want to leave?';
-      event.returnValue = confirmationMessage; 
-      
+      event.returnValue = confirmationMessage;
+
     }
   };
 
-  
+
   navigateAway(): void {
     this.isUserNavigatingAway = true;
-    
+
   }
 
   focucToInput() {
@@ -158,22 +161,22 @@ export class OTPVerificationComponent
       return '-';
     }
 
-    
+
     const maskedLocalPart =
       localPart.slice(0, 1) + '******' + localPart.slice(-2);
     return `${maskedLocalPart}@${domain}`;
   }
 
-  startTimer(duration: number) {
-    this.timerActive = true; 
+  startTimer(durationInSeconds: number) {
+    this.timerActive = true;
     this.timerSubscription = interval(1000)
       .pipe(
-        take(duration),
-        map((elapsed) => duration - elapsed - 1)
+        take(durationInSeconds),
+        map((elapsed) => durationInSeconds - elapsed - 1)
       )
       .subscribe((remainingTime) => {
-        if (remainingTime === 0) {
-          this.timerActive = false; 
+        if (remainingTime <= 0) {
+          this.timerActive = false;
         }
         const minutes = Math.floor(remainingTime / 60);
         const seconds = remainingTime % 60;
@@ -186,8 +189,7 @@ export class OTPVerificationComponent
     const input = event.target as HTMLInputElement;
     const value = input.value;
 
-    
-    if (value.length === this.numberOfOtpDigits) {
+    if (value.length === OtpConfig.NumberOfOtpDigits) {
       value.split('').forEach((digit, i) => {
         const control = this.otpForm.get(`otp${i}`);
         if (control) {
@@ -198,19 +200,16 @@ export class OTPVerificationComponent
       return;
     }
 
-    
-    if (this.numberOfOtpDigits !== null) {
-      if (value && index < this.numberOfOtpDigits - 1) {
-        const nextInput = document.getElementById(
-          `otp${index + 1}`
-        ) as HTMLInputElement;
-        if (nextInput) {
-          nextInput.focus();
-        }
+
+    if (value && index < OtpConfig.NumberOfOtpDigits - 1) {
+      const nextInput = document.getElementById(
+        `otp${index + 1}`
+      ) as HTMLInputElement;
+      if (nextInput) {
+        nextInput.focus();
       }
     }
 
-    
     this.isOtpEntered = Object.values(this.otpForm.controls).every(
       (control) => control.valid
     );
@@ -220,8 +219,8 @@ export class OTPVerificationComponent
     this.invalidOtp = false;
     const clipboardData = event.clipboardData;
     const pastedData = clipboardData?.getData('text');
-    if (pastedData && this.numberOfOtpDigits !== null) {
-      const otpArray = pastedData.slice(0, this.numberOfOtpDigits).split('');
+    if (pastedData && OtpConfig.NumberOfOtpDigits !== null) {
+      const otpArray = pastedData.slice(0, OtpConfig.NumberOfOtpDigits).split('');
       otpArray.forEach((digit, idx) => {
         const controlName = `otp${index + idx}`;
         if (this.otpForm.get(controlName)) {
@@ -229,22 +228,20 @@ export class OTPVerificationComponent
         }
       });
 
-      
       this.isOtpEntered = Object.values(this.otpForm.controls).every(
         (control) => control.valid
       );
 
-      
       const lastInputIndex = Math.min(
         index + otpArray.length - 1,
-        this.numberOfOtpDigits - 1
+        OtpConfig.NumberOfOtpDigits - 1
       );
       const lastInput = document.getElementById(`otp${lastInputIndex}`);
       if (lastInput) {
         (lastInput as HTMLInputElement).focus();
       }
     }
-    event.preventDefault(); 
+    event.preventDefault();
   }
 
   onResendOtp(): void {
@@ -253,17 +250,18 @@ export class OTPVerificationComponent
     this.otpForm.reset();
     this.stopTimer();
     this.otpResent = true;
-    this.userService.authenticateUser(this.loginRequest).subscribe({
+    this.sendOtpRequest =
+    {
+      EmailId: this.enteredEmail,
+      Purpose: OtpConfig.LOGIN
+    }
+    this.otpService.sendOtp(this.sendOtpRequest).subscribe({
       next: (result: any) => {
-        this.localStorageService.clear();
         if (result.success) {
-          const data = result.data;
-          this.numberOfOtpDigits = data.otpDigitsLength
-            ? data.otpDigitsLength
-            : 0;
-          this.otpExpiryTimeInMinutes = data.otpExpiryTime
-            ? DateUtils.convertTimeToMinutesSafe(data.otpExpiryTime)
-            : 0;
+          localStorage.setItem(
+            LocalStorageConstants.OTP_EXPIRES_ON,
+            (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString()
+          );
           this.focucToInput();
           this.startOtpTimer();
           this.loaderService.hideLoader();
@@ -277,6 +275,7 @@ export class OTPVerificationComponent
           this.loaderService.hideLoader();
         }
       },
+
       error: (_error: any) => {
         this.loaderService.hideLoader();
 
@@ -300,27 +299,43 @@ export class OTPVerificationComponent
   }
 
   onVerifyOtp() {
-    this.loaderService.showLoader();
+    debugger;
     const otp = this.getOtp();
-    if (otp.length === this.numberOfOtpDigits && this.loginRequest?.email) {
-      this.callVerifyOtpApi(otp);
+    this.verifyOtpRequest = {
+      emailId: this.localStorageService.getLoggedInUserData()?.emailAddress,
+      otpCode: otp,
+      purpose: OtpConfig.LOGIN
+    }
+    this.loaderService.showLoader();
+    if (otp.length === OtpConfig.NumberOfOtpDigits && this.verifyOtpRequest.emailId) {
+      this.callVerifyOtpApi(this.verifyOtpRequest);
     } else {
       this.loaderService.hideLoader();
+      this.onBackToLogin();
     }
   }
 
-  callVerifyOtpApi(otp: string) {
-    this.userService.verifyOtp(this.loginRequest?.email, otp).subscribe({
+  callVerifyOtpApi(verifyOtpRequest: VerifyOtpRequest) {
+    this.otpService.verifyOtp(verifyOtpRequest).subscribe({
       next: (result: any) => {
-        this.localStorageService.clear();
         if (result.success) {
-          this.localStorageService.setLoggedInUserData(result?.data);
-
+          this.toaster.showMessage(
+            'OTP verified successfully.',
+            'success'
+          );
+            localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN,'true');
+          this.globalService.setValuesInLocalStorage();
           this.router.navigate([NavigationURLs.HOME]);
-          
-        } else {
-          if (result.data.otpTrialCounter >= this.otpMaxTrial) {
-            
+
+        }
+        else {
+           this.toaster.showMessage(
+          'Error in verifying OTP, please try again later.',
+          'error'
+        );
+            localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN,'false');
+          if (result.data.otpTrialCounter >= OtpConfig.otpMaxTrial) {
+
             this.onBackToLogin();
             this.loaderService.hideLoader();
           } else {
@@ -365,6 +380,7 @@ export class OTPVerificationComponent
   onBackToLogin() {
     this.otpForm.reset();
     this.stopTimer();
-    this.backToLogin.emit(); 
+    this.router.navigate([NavigationURLs.LOGIN]);
+    this.localStorageService.clear();
   }
 }

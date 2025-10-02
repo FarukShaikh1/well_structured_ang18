@@ -44,12 +44,6 @@ export class UserService {
     return this.httpService.post<any>(API_URL.CHANGE_PASSWORD, changePassword);
   }
 
-  verifyOtp(emailId: string | null, otpCode: string): Observable<any> {
-    const url = API_URL.VERIFY_OTP?.replace('{0}', emailId || '')?.replace('{1}', otpCode);
-    return this.httpService.get<any>(url);
-  }
-
-
   getUser(userLoginRequest: UserLoginRequest) {
     return this.httpService.post(API_URL.LOGIN, userLoginRequest);
   }
@@ -57,11 +51,6 @@ export class UserService {
   updateUserDetails(userDetailsForm: any): Observable<any> {
     return this.httpService.post(API_URL.UPDATE_USER + 'updateUserDetails?userId=', userDetailsForm);
   }
-
-  
-  
-  
-
 
   getUserList(): Observable<any> {
     return this.httpService.get(API_URL.GET_ALL_USERS);

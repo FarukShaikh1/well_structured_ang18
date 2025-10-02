@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, Messages, UserConfig } from "../../../utils/application-constants";
+import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, Messages, UIStrings, UserConfig } from "../../../utils/application-constants";
 import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { GlobalService } from '../../services/global/global.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
@@ -26,8 +26,8 @@ export class SettingsComponent {
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
   searchText: string = '';
-  noDataMessage = 'No Data Exists.';
-  noMatchingDataMessage = 'No Data Exists.';
+  noDataMessage = UIStrings.COMMON.NO_DATA;
+  noMatchingDataMessage = UIStrings.COMMON.NO_DATA;
   isAccountGridLoading: boolean = false;
   isOccasionTypeGridLoading: boolean = false;
   isRelationGridLoading: boolean = false;
@@ -237,19 +237,19 @@ export class SettingsComponent {
   userColumnConfiguration() {
     this.userColumnConfig = [
       {
-        title: 'Name',
+        title: UIStrings.COLUMN_TITLES.NAME,
         field: 'firstName',
         sorter: 'string',
       },
-      { title: 'Email Id', field: 'emailAddress', sorter: 'string' },
+      { title: UIStrings.COLUMN_TITLES.EMAIL, field: 'emailAddress', sorter: 'string' },
       {
-        title: "Mobile Number",
+        title: UIStrings.COLUMN_TITLES.MOBILE_NUMBER,
         field: "mobileNumber",
         sorter: "alphanum",
       },
-      { title: 'Role', field: 'roleName', sorter: 'string' },
+      { title: UIStrings.COLUMN_TITLES.ROLE, field: 'roleName', sorter: 'string' },
       {
-        title: 'Statussss',
+        title: UIStrings.COLUMN_TITLES.STATUS,
         field: 'isLocked',
         sorter: 'string',
         formatter: this.globalService.statusFormatter.bind(this),
@@ -280,18 +280,18 @@ export class SettingsComponent {
   accountColumnConfiguration() {
     this.accountColumnConfig = [
       {
-        title: 'Account Name',
+        title: UIStrings.COLUMN_TITLES.ACCOUNT_NAME,
         field: 'configurationName',
         sorter: 'string',
       },
-      { title: 'Description', field: 'description', sorter: 'string' },
+      { title: UIStrings.COLUMN_TITLES.DESCRIPTION, field: 'description', sorter: 'string' },
       {
-        title: "Display Order",
+        title: UIStrings.COLUMN_TITLES.DISPLAY_ORDER,
         field: "displayOrder",
         sorter: "alphanum",
       },
       {
-        title: 'Status',
+        title: UIStrings.COLUMN_TITLES.STATUS,
         field: 'isActive',
         sorter: 'string',
         formatter: this.globalService.statusFormatter.bind(this),
@@ -322,18 +322,18 @@ export class SettingsComponent {
   occasionTypeColumnConfiguration() {
     this.occasionTypeColumnConfig = [
       {
-        title: 'OccasionType Name',
+        title: UIStrings.COLUMN_TITLES.OCCASION_TYPE_NAME,
         field: 'configurationName',
         sorter: 'string',
       },
-      { title: 'Description', field: 'description', sorter: 'string' },
+      { title: UIStrings.COLUMN_TITLES.DESCRIPTION, field: 'description', sorter: 'string' },
       {
-        title: "Display Order",
+        title: UIStrings.COLUMN_TITLES.DISPLAY_ORDER,
         field: "displayOrder",
         sorter: "alphanum",
       },
       {
-        title: 'Statussss',
+        title: UIStrings.COLUMN_TITLES.STATUS,
         field: 'isActive',
         sorter: 'string',
         formatter: this.globalService.statusFormatter.bind(this),
@@ -365,18 +365,18 @@ export class SettingsComponent {
   relationColumnConfiguration() {
     this.relationColumnConfig = [
       {
-        title: 'RelationType Name',
+        title: UIStrings.COLUMN_TITLES.RELATION_TYPE_NAME,
         field: 'configurationName',
         sorter: 'string',
       },
-      { title: 'Description', field: 'description', sorter: 'string' },
+      { title: UIStrings.COLUMN_TITLES.DESCRIPTION, field: 'description', sorter: 'string' },
       {
-        title: "Display Order",
+        title: UIStrings.COLUMN_TITLES.DISPLAY_ORDER,
         field: "displayOrder",
         sorter: "alphanum",
       },
       {
-        title: 'Status',
+        title: UIStrings.COLUMN_TITLES.STATUS,
         field: 'isActive',
         sorter: 'string',
         formatter: this.globalService.statusFormatter.bind(this),
