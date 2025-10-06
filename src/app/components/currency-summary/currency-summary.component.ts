@@ -259,7 +259,6 @@ ActionConstant: any;
         this.isSummaryGridLoading = false;
       },
       error: (error: any) => {
-        console.log("error : ", error);
         this.isSummaryGridLoading = false;
       },
     },
@@ -274,7 +273,6 @@ ActionConstant: any;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
-        console.log("error : ", error);
         this.loaderService.hideLoader();
       },
     },
@@ -323,7 +321,6 @@ ActionConstant: any;
   }
 
   handleConfirmResult(isConfirmed: boolean) {
-    console.log(isConfirmed);
     if (isConfirmed) {
       
       this.currencyCoinService.deleteCurrencyCoin(this.currencyCoinId).subscribe({
@@ -331,7 +328,6 @@ ActionConstant: any;
           this.LoadGrid(0);
         },
         error: (error: any) => {
-          console.log("error : ", error);
           this.loaderService.hideLoader();
         },
       });

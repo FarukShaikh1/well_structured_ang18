@@ -21,6 +21,7 @@ import {
   ActionConstant,
   ApplicationConstants,
   ApplicationModules,
+  DdlConfig,
   LocalStorageConstants,
   UserConfig
 } from "../../../utils/application-constants";
@@ -240,10 +241,10 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadOccasionTypeList() {
-    this.occasionTypeList = this.globalService.getConfigList(UserConfig.OCCASION_TYPE);
+    this.occasionTypeList = this.globalService.getConfigList(DdlConfig.OCCASION_TYPES);
   }
   loadRelationList() {
-    this.relationList = this.globalService.getConfigList(UserConfig.RELATION);
+    this.relationList = this.globalService.getConfigList(DdlConfig.RELATIONS);
   }
 
   openDetailsPopup(specialOccasionId: any) {

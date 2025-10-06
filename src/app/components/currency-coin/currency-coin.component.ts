@@ -11,6 +11,7 @@ import { LocalStorageService } from '../../services/local-storage/local-storage.
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
+import { CacheService } from '../../services/cache/cache.service';
 
 @Component({
   selector: 'app-currency-coin',
@@ -38,20 +39,20 @@ export class CurrencyCoinComponent implements OnInit {
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
   public filteredCoinList: any[] = [];
-  public columnConfig: ColumnDefinition[] = [];  
+  public columnConfig: ColumnDefinition[] = [];
   public summaryTableData: Record<string, unknown>[] = [];
   public filteredSummaryTableData: Record<string, unknown>[] = [];
   public summaryTableColumnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  public viewMode: 'grid' | 'gallery'| 'summary' = 'grid';
+  public viewMode: 'grid' | 'gallery' | 'summary' = 'grid';
 
   constructor(
-    private router: Router,
     private currencyCoinService: CurrencyCoinService,
     private localStorageService: LocalStorageService,
     public globalService: GlobalService,
+    private cacheService: CacheService,
     private loaderService: LoaderService) {
   }
 
@@ -60,18 +61,11 @@ export class CurrencyCoinComponent implements OnInit {
     this.columnConfiguration();
     this.countryList = this.localStorageService.getCountryList();
     this.LoadGrid();
-    this.LoadSummaryGrid();
-    this.globalService.reloadGrid$.subscribe(() => {
-      
-      
-      
-    });
-    this.globalService.refreshList$.subscribe(() => {
-      
-      
-      
-    });
-
+    setTimeout(() => {
+      this.LoadSummaryGrid();
+    }, 2000);
+    this.globalService.reloadGrid$.subscribe(() => { });
+    this.globalService.refreshList$.subscribe(() => { });
   }
 
   columnConfiguration() {
@@ -91,24 +85,24 @@ export class CurrencyCoinComponent implements OnInit {
         field: "actualValue",
         sorter: "alphanum",
         formatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatter: this.amountColorFormatter.bind(this), 
-        bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
       },
       {
         title: UIStrings.COLUMN_TITLES.INDIAN_VALUE,
         field: "indianValue",
         sorter: "alphanum",
         formatter: this.amountColorFormatter.bind(this),
-        bottomCalc: "sum", 
-        bottomCalcFormatter: this.amountColorFormatter.bind(this), 
-        bottomCalcFormatterParams: { symbol: "", precision: 2 }, 
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
       },
       {
         title: UIStrings.COLUMN_TITLES.OTHER_DETAILS,
         field: "description",
         sorter: "alphanum",
       },
-       {
+      {
         title: UIStrings.COLUMN_TITLES.PIC,
         field: "thumbnailPath",
         formatter: this.globalService.thumbnailFormatter.bind(this),
@@ -120,7 +114,7 @@ export class CurrencyCoinComponent implements OnInit {
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
-          this.hideCollectionCoin(collectionCoinId); 
+          this.hideCollectionCoin(collectionCoinId);
         },
         headerSort: false,
       },
@@ -139,7 +133,7 @@ export class CurrencyCoinComponent implements OnInit {
       });
     }
 
-    
+
     this.summaryTableColumnConfig = [
       {
         title: UIStrings.COLUMN_TITLES.COUNTRY,
@@ -186,7 +180,7 @@ export class CurrencyCoinComponent implements OnInit {
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
-          this.hideCollectionCoin(collectionCoinId); 
+          this.hideCollectionCoin(collectionCoinId);
         },
         headerSort: false,
       },
@@ -220,7 +214,7 @@ export class CurrencyCoinComponent implements OnInit {
         }
         event.stopPropagation();
       } else {
-        
+
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -260,15 +254,26 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   LoadGrid() {
+    // ✅ 1. Check cache first
+    const cacheKey = NavigationURLs.CURRENCY_LIST;
+    const cachedData = this.cacheService.get<any[]>(cacheKey, 30); // 30 minutes cache
+    if (cachedData) {
+      this.tableData = cachedData;
+      this.filteredTableData = cachedData;
+      this.filteredCoinList = cachedData;
+        this.loaderService.hideLoader();
+      return;
+    }
+
     this.currencyCoinService.getCurrencyCoinRecords().subscribe({
       next: (res: any) => {
         this.tableData = res.data;
         this.filteredTableData = res.data;
         this.filteredCoinList = res.data;
+        this.cacheService.set(cacheKey, res.data);
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
-        console.log("error : ", error);
         this.loaderService.hideLoader();
       },
     },
@@ -276,15 +281,23 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   LoadSummaryGrid() {
+    const cacheKey = NavigationURLs.CURRENCY_SUMMARY;
+    const cachedData = this.cacheService.get<any[]>(cacheKey, 30); // 30 minutes cache
+    if (cachedData) {
+      this.summaryTableData = cachedData;
+      this.filteredSummaryTableData = cachedData;
+        this.loaderService.hideLoader();
+      return;
+    }
     this.loaderService.showLoader('Loading currency summary...');
     this.currencyCoinService.getCurrencyCoinSummary().subscribe({
       next: (res: any) => {
         this.summaryTableData = res.data;
         this.filteredSummaryTableData = res.data;
+        this.cacheService.set(cacheKey, res.data);
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
-        console.log("error : ", error);
         this.loaderService.hideLoader();
       },
     },
@@ -332,15 +345,13 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   handleConfirmResult(isConfirmed: boolean) {
-    console.log(isConfirmed);
     if (isConfirmed) {
-      
+
       this.currencyCoinService.deleteCurrencyCoin(this.currencyCoinId).subscribe({
         next: (res: any) => {
           this.LoadGrid();
         },
         error: (error: any) => {
-          console.log("error : ", error);
           this.loaderService.hideLoader();
         },
       });
@@ -365,7 +376,7 @@ export class CurrencyCoinComponent implements OnInit {
     this.filteredCoinList = filtered as any[];
   }
 
-  
+
   toggleAllCountryCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
 
@@ -376,7 +387,7 @@ export class CurrencyCoinComponent implements OnInit {
     this.getCountryDropdownLabel();
     this.applyFilters();
   }
-  
+
   toggleCountryCheck(event: Event, countryName: string, code: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {

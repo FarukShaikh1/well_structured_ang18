@@ -7,7 +7,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { API_URL } from "../../../utils/api-url";
-import { ActionConstant, ApplicationModules, LocalStorageConstants } from "../../../utils/application-constants";
+import { ActionConstant, ApplicationModules, DdlConfig, LocalStorageConstants } from "../../../utils/application-constants";
 import { CoinNoteCollectionRequest } from "../../interfaces/coin-note-collection-request";
 import { AssetService } from "../../services/asset/asset.service";
 import { CurrencyCoinService } from "../../services/currency-coin/currency-coin.service";
@@ -110,7 +110,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
 
   openDetailsPopup(currencyCoinId: string) {
     this.loaderService.showLoader();
-    this.currencyTypeList = this.localStorageService.getCommonListItems(LocalStorageConstants.COIN_TYPE);
+    this.currencyTypeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
 
     this.countryList = this.localStorageService.getCountryList();
 
@@ -149,10 +149,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       .getCurrencyCoinDetails(collectionCoinId)
       .subscribe({
         next: (res: any) => {
-          console.log("res : ", res);
           this.patchValues(res.data);
           this.currencyCoinDetails = res.data;
-          console.log("this.currencyCoinDetails?.assetId : ", this.currencyCoinDetails?.assetId);
 
           if (this.currencyCoinDetails?.assetId) {
             this.getAssetDetails(this.currencyCoinDetails.assetId);
@@ -168,15 +166,10 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   getAssetDetails(assetId: string) {
     this._assetService.getAssetDetails(assetId).subscribe({
       next: (res: any) => {
-        console.log();
-
         this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
-        console.log("this.selectedImage : ", this.selectedImage);
-
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
-        console.log("error : ", error);
         this.loaderService.hideLoader();
       },
     });
@@ -268,8 +261,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         if (this.formData) {
           this.uploadImageAndSaveData();
         }
-      } catch (error) {
-        
+      } catch (error) {        
         console.error("Error in adding data : ", error);
       }
     }
@@ -334,7 +326,6 @@ export class CurrencyCoinDetailsComponent implements OnInit {
             this.loaderService.hideLoader();
           },
           error: (error: any) => {
-            console.log("error : ", error);
             this.loaderService.hideLoader();
           },
         });

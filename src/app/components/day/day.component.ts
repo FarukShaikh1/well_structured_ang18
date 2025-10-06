@@ -1,15 +1,15 @@
 import { CommonModule, DatePipe } from "@angular/common";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
-import { API_URL } from "../../../utils/api-url";
 import {
   ActionConstant,
   ApplicationConstantHtml,
   ApplicationModules,
   ApplicationTableConstants,
-  LocalStorageConstants,
-  UserConfig
+  DdlConfig,
+  LocalStorageConstants
 } from "../../../utils/application-constants";
+import { CacheService } from "../../services/cache/cache.service";
 import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { DayService } from "../../services/day/day.service";
 import { GlobalService } from "../../services/global/global.service";
@@ -51,6 +51,9 @@ export class DayComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
+  private cacheKey = 'DayList';
+
+
   isGridLoading: boolean = false;
   ActionConstant = ActionConstant;
   monthList: any;
@@ -63,50 +66,31 @@ export class DayComponent implements OnInit {
   searchText: string = "";
   lableForMonthDropDown = "";
   lableForMonthDropDownIds = "";
-  selectedMonths: string[] = []; 
-  selectedMonthsIds: number[] = []; 
+  selectedMonths: string[] = [];
+  selectedMonthsIds: number[] = [];
   lableForOccasionTypeDropDown = "";
   lableForOccasionTypeDropDownIds = "";
   lableForRelationTypeDropDown = "";
   lableForRelationTypeDropDownIds = "";
-  selectedOccasionType: string[] = []; 
-  selectedRelationType: string[] = []; 
+  selectedOccasionType: string[] = [];
+  selectedRelationType: string[] = [];
   id: string = '';
-  loggedInUserId: string = '';
   constructor(
     private _dayService: DayService,
-    
+
     public localStorageService: LocalStorageService,
     public globalService: GlobalService,
     private loaderService: LoaderService,
     public configService: ConfigurationService,
+    private cacheService: CacheService,
     public datePipe: DatePipe
   ) { }
 
   ngOnInit() {
-    this.loggedInUserId = localStorage.getItem(LocalStorageConstants.USERID) || '';
-    this.monthList = this.localStorageService.getCommonListItems(LocalStorageConstants.MONTH_LIST);
+    this.monthList = this.localStorageService.getCommonListItems(DdlConfig.MONTHS);
 
-    
-    this.configService.getConfigList(this.loggedInUserId, UserConfig.OCCASION_TYPE).subscribe({
-      next: (res: any) => {
-        this.occasionTypeList = res.data;
-        
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
-    this.configService.getConfigList(this.loggedInUserId, UserConfig.RELATION).subscribe({
-      next: (res: any) => {
-        this.relationList = res.data;
-      },
-      error: (error: any) => {
-        console.log("error : ", error);
-        this.loaderService.hideLoader();
-      },
-    });
+    this.occasionTypeList = this.localStorageService.getConfigList(DdlConfig.OCCASION_TYPES);
+    this.relationList = this.localStorageService.getConfigList(DdlConfig.RELATIONS);
 
     this.columnConfiguration();
     this.loadGrid();
@@ -123,6 +107,13 @@ export class DayComponent implements OnInit {
   }
 
   loadGrid() {
+    // ✅ 1. Check cache first
+    const cachedData = this.cacheService.get<any[]>(this.cacheKey, 30); // 30 minutes cache
+    if (cachedData) {
+      this.tableData = cachedData;
+      this.filteredTableData = cachedData;
+      return;
+    }
     this.loaderService.showLoader('Loading day data...');
     this._dayService
       .getDayList(
@@ -138,15 +129,18 @@ export class DayComponent implements OnInit {
         next: (res: any) => {
           this.tableData = res.data;
           this.filteredTableData = res.data;
-          console.log("res : ", res);
-
+          this.cacheService.set(this.cacheKey, res.data);
           this.loaderService.hideLoader();
         },
         error: (error: any) => {
-          console.log("error : ", error);
           this.loaderService.hideLoader();
         },
       });
+  }
+
+  // ✅ Method to clear cache for this grid only
+  clearGridCache(): void {
+    this.cacheService.clear(this.cacheKey);
   }
 
   columnConfiguration() {
@@ -258,7 +252,7 @@ export class DayComponent implements OnInit {
           }
         }
         event.stopPropagation();
-      } else { 
+      } else {
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -297,8 +291,6 @@ export class DayComponent implements OnInit {
   }
 
   handleConfirmResult(isConfirmed: boolean) {
-    console.log(isConfirmed);
-
     if (isConfirmed) {
       this.loaderService.showLoader();
       this._dayService.deleteDay(this.id).subscribe({
@@ -308,7 +300,6 @@ export class DayComponent implements OnInit {
           this.loaderService.hideLoader();
         },
         error: (error: any) => {
-          console.log("error : ", error);
           this.toaster.showMessage("Failed to delete the record.", "error");
           this.loaderService.hideLoader();
         },
@@ -316,7 +307,7 @@ export class DayComponent implements OnInit {
     }
   }
 
-  
+
   toggleAllMonthCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -329,7 +320,7 @@ export class DayComponent implements OnInit {
     this.getMonthDropdownLabel();
     this.applyFilters();
   }
-  
+
   toggleMonthCheck(event: Event, monthName: string, seqNum: number) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -353,7 +344,7 @@ export class DayComponent implements OnInit {
       this.lableForMonthDropDownIds = this.selectedMonthsIds.join(", ");
     }
   }
-  
+
   toggleAllOccasionTypeCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
 
@@ -364,7 +355,7 @@ export class DayComponent implements OnInit {
     this.getOccasionTypeDropdownLabel();
     this.applyFilters();
   }
-  
+
   toggleOccasionTypeCheck(event: Event, daytypeName: string, dayId: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -387,7 +378,7 @@ export class DayComponent implements OnInit {
     }
   }
 
-  
+
   toggleAllRelationCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
 
@@ -398,7 +389,7 @@ export class DayComponent implements OnInit {
     this.getRelationTypeDropdownLabel();
     this.applyFilters();
   }
-  
+
   toggleRelationCheck(event: Event, relationtypeName: string, relationId: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -422,7 +413,6 @@ export class DayComponent implements OnInit {
   }
 
   openDetailsPopup(dayId: any) {
-    console.log("dayDetails clicked");
     this.dayDetailsComponent.openDetailsPopup(dayId);
   }
 
@@ -462,34 +452,34 @@ export class DayComponent implements OnInit {
   };
   allComplete: boolean = false;
 
-  
-  
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
-  
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   someComplete(): boolean {
     this.isToday =
-      this.task.subtasks != null && this.task.subtasks[0].completed; 
+      this.task.subtasks != null && this.task.subtasks[0].completed;
     this.isTomorrow =
-      this.task.subtasks != null && this.task.subtasks[1].completed; 
+      this.task.subtasks != null && this.task.subtasks[1].completed;
     this.isYesterday =
-      this.task.subtasks != null && this.task.subtasks[2].completed; 
+      this.task.subtasks != null && this.task.subtasks[2].completed;
 
     if (this.task.subtasks == null) {
       return false;
@@ -500,32 +490,7 @@ export class DayComponent implements OnInit {
     );
   }
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-
   applyFilters() {
-    console.log("this.tableData : ", this.tableData);
     this.filteredTableData = this.tableData.filter((item: any) => {
       const matchesName = item.personName
         ?.toLowerCase()
@@ -545,9 +510,9 @@ export class DayComponent implements OnInit {
         this.selectedMonths.length === 0 ||
         (month !== null && this.selectedMonthsIds.includes(month));
 
-      
-      
-      
+
+
+
       const matchesOccasionType =
         this.selectedOccasionType.length === 0 ||
         this.selectedOccasionType.includes(item.dayType);
@@ -561,6 +526,5 @@ export class DayComponent implements OnInit {
         matchesRelationType
       );
     });
-    console.log("this.filteredTableData : ", this.filteredTableData);
   }
 }

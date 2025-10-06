@@ -16,6 +16,7 @@ import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confi
 import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { UserDetailsComponent } from '../user-details/user-details.component';
+import { CacheService } from '../../services/cache/cache.service';
 @Component({
   selector: 'app-user-list',
   standalone: true,
@@ -29,7 +30,7 @@ import { UserDetailsComponent } from '../user-details/user-details.component';
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
   providers: [],
-})  
+})
 export class UserListComponent implements OnInit {
   @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
   @ViewChild('searchInput') searchInput!: ElementRef;
@@ -51,11 +52,13 @@ export class UserListComponent implements OnInit {
   ActionConstant = ActionConstant;
   sourceOrReason: any;
   id: string = '';
+  cacheKey: string = 'UserList';
 
   constructor(
     private userService: UserService,
     public globalService: GlobalService,
     private loaderService: LoaderService,
+    private cacheService: CacheService,
     private router: Router
   ) { }
 
@@ -89,7 +92,7 @@ export class UserListComponent implements OnInit {
           }
         }
         event.stopPropagation();
-      } else { 
+      } else {
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -130,7 +133,7 @@ export class UserListComponent implements OnInit {
       },
     ];
     if (
-      this.globalService.isAccessible(ActionConstant.EDIT)||
+      this.globalService.isAccessible(ActionConstant.EDIT) ||
       this.globalService.isAccessible(ActionConstant.DELETE)
     ) {
       this.columnConfig.push({
@@ -179,7 +182,7 @@ export class UserListComponent implements OnInit {
 
   deactivateUser(id: string, isdeactivate: boolean) {
     if (id) {
-      
+
       if (isdeactivate) {
         this.confirmModalComponent.openConfirmationPopup(
           'Confirmation',
@@ -197,17 +200,24 @@ export class UserListComponent implements OnInit {
 
   handleConfirmResult(result: boolean) {
     if (result) {
-      
+
     }
   }
 
   loadGrid() {
+    const cachedData = this.cacheService.get<any[]>(this.cacheKey, 30); // 30 minutes cache
+    if (cachedData) {
+      this.tableData = cachedData;
+      this.filteredTableData = cachedData;
+      return;
+    }
     this.loaderService.showLoader('Loading users...');
     this.userService.getAllUsers().subscribe({
       next: (result: any) => {
         if (result) {
           this.tableData = result.data;
           this.filteredTableData = result.data;
+          this.cacheService.set(this.cacheKey, result.data);
         } else {
           console.error(Messages.ERROR_IN_FETCH_USER);
           this.toaster.showMessage(Messages.ERROR_IN_FETCH_USER, 'error');
@@ -255,7 +265,7 @@ export class UserListComponent implements OnInit {
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
     }, 0);
-    
+
   }
 
   openUserDetailsPopup(id: string) {

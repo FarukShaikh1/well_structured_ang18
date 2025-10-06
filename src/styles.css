@@ -1590,7 +1590,7 @@ select option {
 
  .dropdown-menu {
     max-height: 300px;
-    padding: 0px 0px 0px 0px;
+    padding: 10px;
     overflow-y: auto;
 }
 

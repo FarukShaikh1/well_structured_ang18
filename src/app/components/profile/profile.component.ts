@@ -105,16 +105,6 @@ export class ProfileComponent {
 
   patchValues(res: any) {
     if (res != undefined) {
-      console.log(res);
-      console.log("UserId : ",res.UserId);
-      console.log("UserId : ", res.UserId);
-      console.log("userName : ", res.userName);
-      console.log("EmailAddress : ", res.EmailAddress);
-      console.log("FirstName : ",res.FirstName);
-      console.log("LastName : ", res.LastName);
-      console.log("MobileNumber : ", res.MobileNumber);
-      console.log("MobileNumber1 : ", res.MobileNumber1);
-      console.log("roleName : ",res.roleName);
       this.profileForm.controls['userName'].patchValue(res.userName);
       this.profileForm.controls['emailAddress'].patchValue(res.EmailAddress);
       this.profileForm.controls['firstName'].patchValue(res.FirstName);

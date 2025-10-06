@@ -249,7 +249,7 @@ export class OTPVerificationComponent
     this.invalidOtp = false;
     this.otpForm.reset();
     this.stopTimer();
-    this.otpResent = true;
+    // this.otpResent = true;
     this.sendOtpRequest =
     {
       EmailId: this.enteredEmail,
@@ -266,7 +266,7 @@ export class OTPVerificationComponent
           this.startOtpTimer();
           this.loaderService.hideLoader();
           this.toaster.showMessage(
-            'An OTP has been sent to your registered email ID. Resend OTP link is allowed only once and has already been used.',
+            'An OTP has been sent to your registered email ID',
             'success',
             5000
           );
@@ -299,7 +299,6 @@ export class OTPVerificationComponent
   }
 
   onVerifyOtp() {
-    debugger;
     const otp = this.getOtp();
     this.verifyOtpRequest = {
       emailId: this.localStorageService.getLoggedInUserData()?.emailAddress,

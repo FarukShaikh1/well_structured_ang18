@@ -1,9 +1,10 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { DBConstants, LocalStorageConstants, NavigationURLs, OtpConfig, UserConfig } from "../../../utils/application-constants";
+import { LocalStorageConstants, NavigationURLs, OtpConfig } from "../../../utils/application-constants";
 import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { GlobalService } from "../../services/global/global.service";
+import { LoaderService } from "../../services/loader/loader.service";
 import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 import { RoleService } from "../../services/role/role.service";
 import { UserService } from "../../services/user/user.service";
@@ -24,6 +25,7 @@ export class LoginComponent {
   relationList: any;
   user: any;
   ngOninit() {
+    this.loaderService.hideLoader();
     if (this.localStorageService.isAuthenticated()) {
       this.router.navigate([NavigationURLs.HOME]);
     } else {
@@ -40,7 +42,7 @@ export class LoginComponent {
     private userService: UserService,
     public globalService: GlobalService,
     public roleService: RoleService,
-    private configurationService: ConfigurationService,
+    private loaderService: LoaderService,
     private localStorageService: LocalStorageService
   ) {
     this.loginForm = this.fb.group({
@@ -51,55 +53,71 @@ export class LoginComponent {
   parameters = "";
 
   data: any;
+
   submitLogin() {
+    this.loaderService.showLoader('Checking details...');
+
     if (
       this.loginForm.value["userName"] != null &&
       this.loginForm.value["userName"].length <= 0
     ) {
+      this.loaderService.hideLoader();
 
       return;
     }
     if (this.loginForm.value["password"].length <= 0) {
+      this.loaderService.hideLoader();
 
       return;
     }
-    this.userService.getUser(this.loginForm.value).subscribe((res: any) => {
-      if (res) {
+    this.userService.getUser(this.loginForm.value).subscribe({
+      next: (res: any) => {
+        this.loaderService.showLoader('Please wait we are setting up some things for better performance...');
         this.data = res.data;
         if (!this.data) {
           localStorage.clear();
+          this.loaderService.hideLoader();
           return;
         }
-
         if (
           this.data != null &&
           this.data?.userName != null &&
           this.data?.userName?.length > 0
         ) {
           localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
-            localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN,'false');
+          localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
           if (this.data.isOtpRequired) {
             localStorage.setItem(
               LocalStorageConstants.OTP_EXPIRES_ON,
               (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString()
             );
-             this.router.navigate(["/otp-verification"])
+            this.loaderService.hideLoader();
+            this.router.navigate(["/otp-verification"])
           }
           else {
-            localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN,'true');
-            localStorage.setItem(LocalStorageConstants.USERID, this.data.id);
-            this.reload();
-            if (this.data.roleName?.toLowerCase() === "super admin")
+            localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
+            localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'true');
+            this.loaderService.hideLoader();
+            if (this.data.roleName?.toLowerCase() === "super admin") {
               this.router.navigate([
                 "/home/manage-users/",
               ]);
-            else this.router.navigate(["/home/day/"]);
-            this.globalService.setValuesInLocalStorage();
-
+            }
+            else {
+              this.router.navigate(["/home/day/"]);
+            }
+            // ✅ Defer heavy/non-blocking operations
+            setTimeout(() => {
+              this.globalService.setValuesInLocalStorage();
+              console.log('✅ Background localStorage setup done');
+            }, 0);
           }
         } else {
-
+          this.loaderService.hideLoader();
         }
+      },
+      error: (err: any) => {
+        this.loaderService.hideLoader();
       }
     });
   }

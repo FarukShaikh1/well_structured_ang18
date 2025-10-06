@@ -23,6 +23,7 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { TransactionDetailsComponent } from "../transaction-details/transaction-details.component";
 import { TransactionPieChartComponent } from "../transaction-pie-chart/transaction-pie-chart.component";
 import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
+import { CacheService } from "../../services/cache/cache.service";
 export interface Task {
   name: string;
   completed: boolean;
@@ -61,7 +62,6 @@ export class TransactionComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  isGridLoading: boolean = false;
 
   lastTransactionDate: Date = new Date();
   NavigationURLs = NavigationURLs;
@@ -84,13 +84,16 @@ export class TransactionComponent implements OnInit {
   ActionConstant = ActionConstant;
   accountColumns: any;
   transactionReports: TransactionReportResponse[] = [];
- 
+  columnList: string = '_col';
+  accountColumnList: string = '_AccountColumns';
+
   constructor(
     private transactionService: TransactionService,
     public datePipe: DatePipe,
     public globalService: GlobalService,
     private loaderService: LoaderService,
     private localStorageService: LocalStorageService,
+    private cacheService: CacheService,
   ) { }
 
   ngOnInit() {
@@ -108,6 +111,11 @@ export class TransactionComponent implements OnInit {
   }
 
   columnConfiguration() {
+    const cachedColumns = this.cacheService.get<any[]>(this.activeComponent + this.columnList, 30); // 30 minutes cache
+    if (cachedColumns) {
+      this.columnConfig = cachedColumns;
+      return;
+    }
     if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
       this.loadConfigForExpenseList();
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
@@ -188,6 +196,9 @@ export class TransactionComponent implements OnInit {
         headerSort: false,
       });
     }
+    setTimeout(() => {
+      this.cacheService.set(`${this.activeComponent}${this.columnList}`, this.columnConfig);
+    }, 2000);
   }
 
   loadConfigForExpenseSummaryList() {
@@ -196,42 +207,46 @@ export class TransactionComponent implements OnInit {
         title: "Transaction Date",
         field: "transactionDate",
         sorter: "alphanum",
-        
+
         formatter: this.dateFormatter.bind(this),
       },
       {
         title: "Source/Reason",
         field: "sourceOrReason",
-        
+
         sorter: "alphanum",
       },
       {
         title: "Description",
         field: "description",
-        
+
         sorter: "alphanum",
       },
     ];
 
-    if (this.tableData.length > 0 && this.accountColumns) {
-      for (const key of Object.keys(this.accountColumns)) {
-        const isAmount = key.toLowerCase().includes("amount");
-        const isBalance = key.toLowerCase().includes("balance");
-        const isCategory = key.toLowerCase().includes("category");
-        if (!isCategory) {
-          this.columnConfig.push({
-            title: key,
-            field: `accountData.${key}`,
-            
-            formatter: this.summaryAmountColorFormatter.bind(this),
-            hozAlign: "center",
-            headerHozAlign: "center",
-            cssClass: "amount-column",
-            bottomCalc: "sum",
-            bottomCalcFormatter: this.amountColorFormatter.bind(this),
-            bottomCalcFormatterParams: { symbol: "", precision: 2 },
-            
-          });
+    if (this.tableData.length > 0) {
+      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList, 30); // 30 minutes cache
+      if (accountColumnList) {
+
+        for (const key of Object.keys(this.accountColumns)) {
+          const isAmount = key.toLowerCase().includes("amount");
+          const isBalance = key.toLowerCase().includes("balance");
+          const isCategory = key.toLowerCase().includes("category");
+          if (!isCategory) {
+            this.columnConfig.push({
+              title: key,
+              field: `accountData.${key}`,
+
+              formatter: this.summaryAmountColorFormatter.bind(this),
+              hozAlign: "center",
+              headerHozAlign: "center",
+              cssClass: "amount-column",
+              bottomCalc: "sum",
+              bottomCalcFormatter: this.amountColorFormatter.bind(this),
+              bottomCalcFormatterParams: { symbol: "", precision: 2 },
+
+            });
+          }
         }
       }
     }
@@ -259,6 +274,9 @@ export class TransactionComponent implements OnInit {
         headerSort: false,
       });
     }
+    setTimeout(() => {
+      this.cacheService.set(`${this.activeComponent}${this.columnList}`, this.columnConfig);
+    }, 2000);
 
   }
 
@@ -268,30 +286,33 @@ export class TransactionComponent implements OnInit {
         title: "Transaction Date",
         field: "transactionDate",
         sorter: "alphanum",
-        
+
         formatter: this.dateFormatter.bind(this),
       },
     ];
 
-    if (this.tableData.length > 0 && this.accountColumns) {
-      for (const key of Object.keys(this.accountColumns)) {
-        const isAmount = key.toLowerCase().includes("amount");
-        const isBalance = key.toLowerCase().includes("balance");
-        const isCategory = key.toLowerCase().includes("category");
-        if (!key.toLowerCase().includes("category")) {
-          this.columnConfig.push({
-            title: key,
-            field: `accountData.${key}`,
-            
-            formatter: this.summaryAmountColorFormatter.bind(this),
-            hozAlign: "center",
-            headerHozAlign: "center",
-            cssClass: "amount-column",
-            bottomCalc: "sum",
-            bottomCalcFormatter: this.amountColorFormatter.bind(this),
-            bottomCalcFormatterParams: { symbol: "", precision: 2 },
-            
-          });
+    if (this.tableData.length > 0) {
+      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList, 30); // 30 minutes cache
+      if (accountColumnList) {
+        for (const key of Object.keys(accountColumnList)) {
+          const isAmount = key.toLowerCase().includes("amount");
+          const isBalance = key.toLowerCase().includes("balance");
+          const isCategory = key.toLowerCase().includes("category");
+          if (!key.toLowerCase().includes("category")) {
+            this.columnConfig.push({
+              title: key,
+              field: `accountData.${key}`,
+
+              formatter: this.summaryAmountColorFormatter.bind(this),
+              hozAlign: "center",
+              headerHozAlign: "center",
+              cssClass: "amount-column",
+              bottomCalc: "sum",
+              bottomCalcFormatter: this.amountColorFormatter.bind(this),
+              bottomCalcFormatterParams: { symbol: "", precision: 2 },
+
+            });
+          }
         }
       }
     }
@@ -306,6 +327,10 @@ export class TransactionComponent implements OnInit {
       },
       headerSort: false,
     });
+
+    setTimeout(() => {
+      this.cacheService.set(`${this.activeComponent}${this.columnList}`, this.columnConfig);
+    }, 2000);
   }
 
   loadConfigForExpenseReportList() {
@@ -426,6 +451,9 @@ export class TransactionComponent implements OnInit {
         headerSort: false,
       },
     ];
+    setTimeout(() => {
+      this.cacheService.set(`${this.activeComponent}${this.columnList}`, this.columnConfig);
+    }, 2000);
   }
 
   generateOptionsMenu(rowData: Record<string, any>) {
@@ -524,9 +552,9 @@ export class TransactionComponent implements OnInit {
   summaryAmountColorFormatter(cell: CellComponent) {
     const cellValue = cell.getValue();
     const transactionData = cell.getRow().getData();
-    const field = cell.getColumn().getField(); 
+    const field = cell.getColumn().getField();
 
-    
+
     const formattedValue = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
@@ -536,14 +564,14 @@ export class TransactionComponent implements OnInit {
     if (!transactionData || !transactionData['accountData'] || (typeof cellValue !== 'number' && cellValue !== null && cellValue !== undefined)) {
       return `<span>${formattedValue}</span>`;
     }
-    
+
     const amountKeyMatch = field.match(/accountData\.([^.]+)_Amount/i);
     const balanceKeyMatch = field.match(/accountData\.([^.]+)_Balance/i);
     if (amountKeyMatch) {
       if (cellValue === 0) {
         return `<span></span>`;
       }
-      const accountBase = amountKeyMatch[1]; 
+      const accountBase = amountKeyMatch[1];
       const categoryField = `${accountBase}_Category`;
       const category = transactionData['accountData'][categoryField];
 
@@ -625,7 +653,7 @@ export class TransactionComponent implements OnInit {
           }
         }
         event.stopPropagation();
-      } else { 
+      } else {
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -660,22 +688,22 @@ export class TransactionComponent implements OnInit {
           (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) >= this.minAmount) ||
           (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) >= this.minAmount) ||
           (item.other !== null && item.other !== 0 && Math.abs(item.other) >= this.minAmount);
-        
-        
-        
-        
-        
+
+
+
+
+
         const maxAmountCondition =
           this.maxAmount == 0 ||
           (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) <= this.maxAmount) ||
           (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) <= this.maxAmount) ||
           (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) <= this.maxAmount) ||
           (item.other !== null && item.other !== 0 && Math.abs(item.other) <= this.maxAmount);
-        
-        
-        
-        
-        
+
+
+
+
+
 
         return searchText && minAmountCondition && maxAmountCondition;
       });
@@ -745,6 +773,14 @@ export class TransactionComponent implements OnInit {
   LoadGrid() {
     this.loaderService.showLoader('Loading transactions...');
     this.columnConfiguration();
+    const cachedData = this.cacheService.get<any[]>(this.activeComponent, 30); // 30 minutes cache
+    if (cachedData) {
+      this.tableData = cachedData;
+      this.filteredTableData = cachedData;
+    this.loaderService.hideLoader();
+      return;
+    }
+
     this.transactionfilterRequest = {
       fromDate: this.fromDate,
       toDate: this.toDate,
@@ -759,11 +795,11 @@ export class TransactionComponent implements OnInit {
           next: (res: any) => {
             this.tableData = res.data;
             this.filteredTableData = res.data;
+            this.cacheService.set(this.activeComponent, res.data);
             this.lastTransactionDate = this.getLatestTransactionDate();
             this.loaderService.hideLoader();
           },
           error: (error: any) => {
-            console.log("error : ", error);
             this.loaderService.hideLoader();
           },
         });
@@ -772,25 +808,17 @@ export class TransactionComponent implements OnInit {
         .getTransactionSummaryList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
-            try {
               this.tableData = res.data;
               this.filteredTableData = res.data;
-              console.log("res: ", res);
-              console.log("res.data : ", res.data);
-              console.log("res.data[0]?.accountData  ", res.data[0]?.accountData);
               this.accountColumns = res.data[0]?.accountData;
+              this.cacheService.set(this.activeComponent + this.accountColumnList, res.data[0]?.accountData);
               this.columnConfiguration();
-
+              this.cacheService.set(this.activeComponent, res.data);
               this.lastTransactionDate = this.getLatestTransactionDate();
               this.loaderService.hideLoader();
-            } catch (error) {
-              this.loaderService.hideLoader();
-              console.error("Error in processing summary list:", error);
-            }
-
           },
           error: (error: any) => {
-            console.log("error : ", error);
+            console.error("error : ", error);
             this.loaderService.hideLoader();
           },
         });
@@ -802,13 +830,15 @@ export class TransactionComponent implements OnInit {
             this.tableData = res.data;
             this.filteredTableData = res.data;
             this.accountColumns = res.data[0]?.accountData;
+            this.cacheService.set(this.activeComponent + this.accountColumnList, res.data[0]?.accountData);
             this.columnConfiguration();
+            this.cacheService.set(this.activeComponent, res.data);
 
             this.lastTransactionDate = this.getLatestTransactionDate();
             this.loaderService.hideLoader();
           },
           error: (error: any) => {
-            console.log("error : ", error);
+            console.error("error : ", error);
             this.loaderService.hideLoader();
           },
         });
@@ -821,19 +851,23 @@ export class TransactionComponent implements OnInit {
             this.tableData = res.data;
             this.filteredTableData = res.data;
             this.lastTransactionDate = this.getLatestTransactionDate();
+            this.cacheService.set(this.activeComponent, res.data);
             this.loaderService.hideLoader();
           },
           error: (error: any) => {
-            console.log("error : ", error);
+            console.error("error : ", error);
             this.loaderService.hideLoader();
           },
         });
     }
     else {
-            this.loaderService.hideLoader();
+      this.loaderService.hideLoader();
     }
   }
 
+  clearGridCache(): void {
+    this.cacheService.clear(this.activeComponent);
+  }
   transactionDetails(data: any) {
     this.transactionDetailsComponent.openDetailsPopup(data);
   }
@@ -849,7 +883,6 @@ export class TransactionComponent implements OnInit {
   }
 
   handleConfirmResult(isConfirmed: boolean) {
-    console.log(isConfirmed);
     if (isConfirmed) {
       this.loaderService.showLoader('Deleting transaction...');
       this.transactionService.deleteTransaction(this.transactionGroupId).subscribe({
@@ -858,7 +891,7 @@ export class TransactionComponent implements OnInit {
           this.loaderService.hideLoader();
         },
         error: (error: any) => {
-          console.log("error : ", error);
+          console.error("error : ", error);
           this.loaderService.hideLoader();
         },
       });
@@ -914,10 +947,10 @@ export class TransactionComponent implements OnInit {
   setTransactionSuggestions() {
     this.transactionService.getTransactionSuggestionList().subscribe({
       next: (res: any) => {
-        this.localStorageService.setTransactionSuggestions(res.data); 
+        this.localStorageService.setTransactionSuggestions(res.data);
       },
       error: (error: any) => {
-        console.log("error : ", error);
+        console.error("error : ", error);
       },
     });
 

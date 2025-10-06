@@ -54,7 +54,6 @@ export class CurrencyGalleryComponent implements OnInit {
       next: (res: any) => {
         this.coinList = res.data;
         this.filteredCoinList = res.data;
-        console.log('this.coinList : ', this.coinList);
         this.countryList = Array.from(
           new Map(
             res.data.map((item: any) => [item.countryName, { countryName: item.countryName, countryId: item.countryName }])
@@ -67,7 +66,6 @@ export class CurrencyGalleryComponent implements OnInit {
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
-        console.log("error : ", error);
         this.loaderService.hideLoader();
       },
     },
@@ -76,14 +74,10 @@ export class CurrencyGalleryComponent implements OnInit {
     this.globalService.getCommonListItems(DBConstants.COINTYPE).subscribe({
       next: (res: any) => {
         this.currencyTypeList = res.data;
-        console.log('currencyTypeList : ', this.currencyTypeList);
-
         this.selectedTypes.push('Indian Rare Coin');
-
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
-        console.log("error : ", error);
         this.loaderService.hideLoader();
       },
     });
@@ -114,14 +108,12 @@ export class CurrencyGalleryComponent implements OnInit {
   }
 
   handleConfirmResult(isConfirmed: boolean) {
-    console.log(isConfirmed);
     if (isConfirmed) {
       
       this.currencyCoinService.deleteCurrencyCoin(this.currencyCoinId).subscribe({
         next: (res: any) => {
         },
         error: (error: any) => {
-          console.log("error : ", error);
           this.loaderService.hideLoader();
         },
       });

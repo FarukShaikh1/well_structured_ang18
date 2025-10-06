@@ -29,6 +29,7 @@ import {
 import {
   ApplicationConstants,
   ApplicationModules,
+  DdlConfig,
   LocalStorageConstants,
   UserConfig,
 } from "../../../utils/application-constants";
@@ -209,11 +210,10 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   validateAmountFields() {
-    
+
   }
 
   getTransactionSuggestionList() {
-    try {
       this.commonSuggestionList = JSON.parse(
         localStorage.getItem("commonSuggestionList") || "[]"
       );
@@ -229,13 +229,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         this.commonSuggestionList,
         "description"
       );
-    } catch (e) {
-      console.error(
-        "Failed to parse commonSuggestionList from localStorage",
-        e
-      );
       this.commonSuggestionList = [];
-    }
   }
 
   addTransactionSuggestion(transactionRequest: TransactionRequest): void {
@@ -255,7 +249,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         purpose: transactionRequest.purpose,
         description: transactionRequest.description,
       });
-      localStorage.setItem(LocalStorageConstants.COMMON_SUGGESTION_LIST,        JSON.stringify(this.commonSuggestionList)
+      localStorage.setItem(DdlConfig.COMMON_SUGGESTIONS, JSON.stringify(this.commonSuggestionList)
       );
     }
   }
@@ -305,7 +299,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.transactionDetailsForm.controls["sourceOrReason"].patchValue(
       inputValue
     );
-    
+
     this.onSourceReasonChange(inputValue);
     this.focusInSource = false;
   }
@@ -399,7 +393,6 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    try {
       this.ensureDescription();
       this.correctTransactionDate();
 
@@ -428,12 +421,9 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       };
 
       this.saveTransaction(request);
-    } catch (error) {
-      this.showError("Error occurred while adding the data.");
-    }
   }
 
-  
+
   private ensureDescription() {
     if (!this.transactionDetailsForm.value["description"]) {
       this.transactionDetailsForm.value["description"] =
@@ -441,7 +431,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  
+
   private correctTransactionDate() {
     this.transactionDetailsForm.value["transactionDate"] =
       DateUtils.CorrectedDate(
@@ -449,7 +439,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       );
   }
 
-  
+
   private validateAccountEntries(): string | null {
     for (const acc of this.accountList) {
       const category = this.transactionDetailsForm.value["category_" + acc.id];
@@ -459,15 +449,14 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         category !== null && category !== undefined && category !== 0;
 
       if (hasAmount && !hasCategory) {
-        return `Please select transaction category for ${
-          acc.configurationName || "Unknown Account"
-        }`;
+        return `Please select transaction category for ${acc.configurationName || "Unknown Account"
+          }`;
       }
     }
     return null;
   }
 
-  
+
   private buildSplits() {
     return this.accountList.map((acc: any) => ({
       accountId: acc.id,
@@ -475,10 +464,10 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         this.transactionDetailsForm.value["category_" + acc.id] || "expense",
       amount: this.transactionDetailsForm.value[acc.id] || 0,
     }));
-    
+
   }
 
-  
+
   private saveTransaction(request: TransactionRequest) {
     const isUpdate = !!request.transactionGroupId;
     const request$ = isUpdate
@@ -518,7 +507,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  
+
   private showError(message: string) {
     this.loaderService.hideLoader();
     this.toaster.showMessage(message, "error");
@@ -534,7 +523,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     const current = this.transactionDetailsForm.get(key)?.value;
 
     if (current === value) {
-      this.transactionDetailsForm.get(key)?.setValue(null); 
+      this.transactionDetailsForm.get(key)?.setValue(null);
     } else {
       this.transactionDetailsForm.get(key)?.setValue(value);
     }

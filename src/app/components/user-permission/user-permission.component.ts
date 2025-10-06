@@ -9,6 +9,7 @@ import { RoleService } from '../../services/role/role.service';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { UserService } from '../../services/user/user.service';
+import { CacheService } from '../../services/cache/cache.service';
 @Component({
   selector: 'app-user-permission',
   standalone: true,
@@ -23,8 +24,10 @@ export class UserPermissionComponent implements OnInit {
   userList: any;
   disableUpdate: boolean = false;
   editable: boolean = false;
+  cacheKey: string = 'UserPermission';
 
-  constructor(private userService: UserService, private roleService: RoleService, private loaderService: LoaderService, public globalService: GlobalService) { }
+  constructor(private userService: UserService, private roleService: RoleService, private loaderService: LoaderService,    private cacheService: CacheService,
+   public globalService: GlobalService) { }
 
   ngOnInit() {
     this.loaderService.showLoader();
@@ -48,8 +51,6 @@ export class UserPermissionComponent implements OnInit {
 
     const selectedRole = this.userList.find((role: any) => role.id == selectedId);
     if (selectedRole) {
-      console.log('Selected Username:', selectedRole.name);
-      console.log('Selected User ID:', selectedRole.id);
     }
   }
 
@@ -67,12 +68,19 @@ export class UserPermissionComponent implements OnInit {
     });
   }
   getPermission(userId: string) {
+    // ✅ 1. Check cache first
+    const cachedData = this.cacheService.get<any[]>(this.cacheKey, 30); // 30 minutes cache
+    if (cachedData) {
+      this.rolePageMappingData = cachedData;
+      return;
+    }
     this.loaderService.showLoader();
     this.roleService.getPermission(userId).subscribe({
       next: (result: any) => {
 
         
         this.rolePageMappingData = result.data;
+          this.cacheService.set(this.cacheKey, result.data);
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -111,11 +119,5 @@ export class UserPermissionComponent implements OnInit {
         this.toaster.showMessage('Failed to update.', 'error');
       }
     );
-  }
-
-  isMappingEditable(): boolean {
-    console.log('Checking if mapping is editable:',);
-
-    return this.globalService.isAccessible(ActionConstant.EDIT);
   }
 }

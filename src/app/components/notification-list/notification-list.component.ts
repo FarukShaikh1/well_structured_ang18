@@ -31,21 +31,13 @@ export class NotificationListComponent implements OnInit {
 
   constructor(
     private notificationService: NotificationService,
-    private loaderService: LoaderService,
-    
-    
+    private loaderService: LoaderService
   ) {}
 
   ngOnInit(): void {
     this.isLoadingInitialPage = true;
     this.loaderService.showLoader();
     this.loadPage(this.currentPage);
-    
-    
-    
-    
-    
-    
   }
 
   
@@ -67,18 +59,13 @@ export class NotificationListComponent implements OnInit {
               this.notifications = [...newNotifications, ...this.notifications];
             } else {
               this.notifications = [...this.notifications, ...newNotifications];
-            }
-
-            
+            }            
             this.categorizeNotifications(this.notifications);
-
-            
             this.pagesInMemory.add(page);
             this.currentPage = page;
             this.hasMoreUp = page > 1; 
             this.hasMoreDown = newNotifications.length === this.pageSize; 
           }
-
           this.isLoading = false;
           this.loaderService.hideLoader();
           this.isLoadingInitialPage = false;
@@ -92,7 +79,6 @@ export class NotificationListComponent implements OnInit {
       });
   }
 
-  
   purgeData(): void {
     if (this.notifications.length > this.maxCacheSize) {
       const pages = Array.from(this.pagesInMemory).sort((a, b) => a - b);
@@ -203,7 +189,6 @@ export class NotificationListComponent implements OnInit {
       this.loadPage(previousPage);
       this.purgeData();
     }
-
     
     if (
       scrollBottom > document.documentElement.scrollHeight - threshold &&

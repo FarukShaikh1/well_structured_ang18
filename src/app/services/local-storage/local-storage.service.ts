@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { LocalStorageConstants } from "../../../utils/application-constants";
+import { DdlConfig, LocalStorageConstants } from "../../../utils/application-constants";
 import { ServiceResponse } from "../../interfaces/service-response";
 
 @Injectable({
@@ -60,11 +60,11 @@ export class LocalStorageService {
   }
 
   setCountryList(data: any[]) {
-    localStorage.setItem(LocalStorageConstants.COUNTRY_LIST, JSON.stringify(data));
+    localStorage.setItem(DdlConfig.COUNTRIES, JSON.stringify(data));
   }
 
   getCountryList(): any[] {
-    return JSON.parse(localStorage.getItem(LocalStorageConstants.COUNTRY_LIST) || "[]");
+    return JSON.parse(localStorage.getItem(DdlConfig.COUNTRIES) || "[]");
   }
 
   setCommonListItems(key: string, data: any[]) {
@@ -92,7 +92,7 @@ export class LocalStorageService {
   }
 
   setTransactionSuggestions(data: any[]) {
-    localStorage.setItem(LocalStorageConstants.COMMON_SUGGESTION_LIST, JSON.stringify(data));
+    localStorage.setItem(DdlConfig.COMMON_SUGGESTIONS, JSON.stringify(data));
   }
   isUserAuthorized(): boolean {
     const userPermissions = this.getUserPermission();

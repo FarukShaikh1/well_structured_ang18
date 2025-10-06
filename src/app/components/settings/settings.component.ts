@@ -10,6 +10,7 @@ import { ConfigurationDetailsComponent } from '../configuration-details/configur
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { CacheService } from "../../services/cache/cache.service";
 
 @Component({
   selector: 'app-settings',
@@ -79,6 +80,7 @@ export class SettingsComponent {
     private configurationService: ConfigurationService,
     public globalService: GlobalService,
     private userService: UserService,
+        private cacheService: CacheService,
     private localStorageService: LocalStorageService
   ) { }
 
@@ -100,12 +102,6 @@ export class SettingsComponent {
         this.loadConfigGrid(userId, this.currentConfig);
       }
     });
-    
-    
-    
-    
-    
-
   }
 
   ngAfterViewInit() {
@@ -183,8 +179,30 @@ export class SettingsComponent {
       this.isOccasionTypeGridLoading = true;
     }
     
+    // ✅ 1. Check cache first
+    const cachedData = this.cacheService.get<any[]>(config, 30); // 30 minutes cache
+    if (cachedData) {
+      if (config === UserConfig.ACCOUNT) {
+          this.filteredAccountTableData =cachedData;
+          this.accountTableData =cachedData;
+          this.isAccountGridLoading = false;
+        }
+        else if (config === UserConfig.RELATION) {
+          this.filteredRelationTableData =cachedData;
+          this.relationTableData =cachedData;
+          this.isRelationGridLoading = false;
+        }
+        else if (config === UserConfig.OCCASION_TYPE) {
+          this.filteredOccasionTypeTableData =cachedData;
+          this.occasionTypeTableData =cachedData;
+          this.isOccasionTypeGridLoading = false;
+        }
+return;
+    }
     this.configurationService.getConfigList(userId, config).subscribe({
       next: (result: any) => {
+          this.cacheService.set(config, result.data);
+
         if (config === UserConfig.ACCOUNT) {
           this.filteredAccountTableData = result.data;
           this.accountTableData = result.data;
@@ -202,7 +220,6 @@ export class SettingsComponent {
         }
       },
       error: (error: any) => {
-        console.error('Error fetching user list', error);
         if (config === UserConfig.ACCOUNT) {
           this.isAccountGridLoading = false;
         } else if (config === UserConfig.RELATION) {

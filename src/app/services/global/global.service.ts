@@ -6,12 +6,11 @@ import { Observable, of, Subject } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { CellComponent } from "tabulator-tables";
 import { API_URL } from "../../../utils/api-url";
-import { DBConstants, LocalStorageConstants, NavigationURLs, UserConfig } from "../../../utils/application-constants";
+import { DBConstants, DdlConfig, LocalStorageConstants, NavigationURLs, UserConfig } from "../../../utils/application-constants";
 import { ModuleResponse } from "../../interfaces/module-response";
+import { ConfigurationService } from "../configuration/configuration.service";
 import { LocalStorageService } from "../local-storage/local-storage.service";
 import { RoleService } from "../role/role.service";
-import { Configuration } from "@azure/msal-browser";
-import { ConfigurationService } from "../configuration/configuration.service";
 
 @Injectable({
   providedIn: "root",
@@ -74,7 +73,7 @@ export class GlobalService {
           this.localStorageService.setUserPermission(result.data);
           if (result.data.length > 0) {
             const user = this.localStorageService.getLoggedInUserData();
-            user.role = result.role;
+            // user.role = result.roleName;
             localStorage.setItem("user", JSON.stringify(user));
             return true;
           }
@@ -289,21 +288,22 @@ export class GlobalService {
       user = JSON.parse(userString);
     }
     const userId = user?.id;
-    this.setConfigToLocalStorage(userId, UserConfig.ACCOUNT);
-    this.setConfigToLocalStorage(userId, UserConfig.RELATION);
-    this.setConfigToLocalStorage(userId, UserConfig.OCCASION_TYPE);
+    localStorage.setItem(LocalStorageConstants.USERID, user.id);
+    this.setConfigToLocalStorage(userId, UserConfig.ACCOUNT, DdlConfig.ACCOUNTS);
+    this.setConfigToLocalStorage(userId, UserConfig.RELATION, DdlConfig.RELATIONS);
+    this.setConfigToLocalStorage(userId, UserConfig.OCCASION_TYPE, DdlConfig.OCCASION_TYPES);
     this.setCountryListToLocalStorage();
-    this.setCommonListItemsToLocalStorage(DBConstants.COINTYPE, LocalStorageConstants.COIN_TYPE);
-    this.setCommonListItemsToLocalStorage(DBConstants.MONTH, LocalStorageConstants.MONTH_LIST);
-    this.setLoggedInUserPermissionsToLocalStorage();
+    this.setCommonListItemsToLocalStorage(DBConstants.COINTYPE, DdlConfig.COIN_TYPES);
+    this.setCommonListItemsToLocalStorage(DBConstants.MONTH, DdlConfig.MONTHS);
+    // this.setLoggedInUserPermissionsToLocalStorage();
   }
 
-  setConfigToLocalStorage(id: string, config: string) {
+  setConfigToLocalStorage(id: string, config: string, DdlConfig: string) {
     // const id = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
     this.configurationService.getActiveConfigList(id, config).subscribe({
       next: (result: any) => {
         console.log('result : ', result);
-        localStorage.setItem(config, result.data ? JSON.stringify(result.data) : '[]');
+        localStorage.setItem(DdlConfig, JSON.stringify(result.data));
       },
       error: (error: any) => {
         console.error('Error fetching user list', error);
@@ -335,17 +335,17 @@ export class GlobalService {
       },
     });
   }
-  setLoggedInUserPermissionsToLocalStorage() {
-    this.roleService.getLoggedInUserPermissions().subscribe({
-      next: (result: any) => {
-        console.log('result : ', result);
-        this.localStorageService.setLoggedInUserPermissions(result.data);
-      },
-      error: (error: any) => {
-        console.error('Error fetching user list', error);
-      },
-    });
-  }
+  // setLoggedInUserPermissionsToLocalStorage() {
+  //   this.roleService.getLoggedInUserPermissions().subscribe({
+  //     next: (result: any) => {
+  //       console.log('result : ', result);
+  //       this.localStorageService.setLoggedInUserPermissions(result.data);
+  //     },
+  //     error: (error: any) => {
+  //       console.error('Error fetching user list', error);
+  //     },
+  //   });
+  // }
 }
 
 

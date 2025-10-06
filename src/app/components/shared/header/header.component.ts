@@ -89,24 +89,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getModuleList() {
-    console.log('getting modulelist');
-
     this.moduleList = this.localStorageService.getLoggedInUserPermissions();
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
   }
 
   isActiveMenu(route: string): boolean {
@@ -114,7 +97,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.router.url.includes(route);
   }
   navigate(route: string) {
-    debugger
     this.router.navigate([route]);
   }
 

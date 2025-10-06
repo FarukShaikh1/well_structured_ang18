@@ -73,15 +73,20 @@ export const UserConfig = {
     ACCOUNT: 'Account',
 };
 
+export const DdlConfig = {
+    OCCASION_TYPES: 'DdlOccasionTypes',
+    RELATIONS: 'DdlRelations',
+    ACCOUNTS: 'DdlAccounts',
+    COUNTRIES: 'DdlCountries',
+    COMMON_SUGGESTIONS: 'DdlCommonSuggestions',
+    MONTHS: 'DdlMonths',
+    COIN_TYPES: 'DdlCoinTypes',
+};
 
 export const LocalStorageConstants = {
     IS_LOGGED_IN: 'IsLoggedIn',
     USER: 'user',
     USERID: 'userId',
-    COUNTRY_LIST: 'countryList',
-    COMMON_SUGGESTION_LIST: 'commonSuggestionList',
-    MONTH_LIST: 'monthList',
-    COIN_TYPE: 'CoinType',
     USER_ROLE_ID: 'loggedInUserRoleId',
     USER_PERMISSIONS: 'UserPermissions',
     OTP_EXPIRES_ON: 'OtpExpiresOn',
@@ -126,6 +131,7 @@ export const NavigationURLs = {
     EXPENSE_REPORT: '/home/expense-report',
     REPORT_LIST: '/home/expenses/reports',
     CURRENCY_LIST: '/home/currency-coin',
+    CURRENCY_SUMMARY: '/home/currency-summary',
     CURRENCY_GALLERY: '/home/currency-gallery',
     ALL_NOTIFICATIONS: '/home/notifications',
 };
