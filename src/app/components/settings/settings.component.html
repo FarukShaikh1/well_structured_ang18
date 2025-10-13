@@ -6,7 +6,7 @@
             <app-tabulator-grid [tableData]="filteredUserTableData" [columnConfig]="userColumnConfig" [height]="'320px'"
                 [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
             </app-tabulator-grid>
-            
+
         </div>
         }
         <div class="col-12 pt-2">
@@ -44,27 +44,30 @@
                 Add Occasion Type
             </button>
         </div>
-        <div class="col-6 pt-2">
+        <div class="col-12 col-lg-6 pt-2">
             <app-tabulator-grid [tableData]="filteredAccountTableData" [columnConfig]="accountColumnConfig"
                 [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
-                [allowCSVExport]="allowCSVExport" [isLoading]="isAccountGridLoading" [loadingText]="'Loading accounts...'">
+                [allowCSVExport]="allowCSVExport" [isLoading]="isAccountGridLoading"
+                [loadingText]="'Loading accounts...'">
             </app-tabulator-grid>
-            
+
         </div>
-        <div class="col-6 pt-2">
+        <div class="col-12 col-lg-6 pt-2">
             <app-tabulator-grid [tableData]="filteredOccasionTypeTableData" [columnConfig]="occasionTypeColumnConfig"
                 [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
-                [allowCSVExport]="allowCSVExport" [isLoading]="isOccasionTypeGridLoading" [loadingText]="'Loading occasion types...'">
+                [allowCSVExport]="allowCSVExport" [isLoading]="isOccasionTypeGridLoading"
+                [loadingText]="'Loading occasion types...'">
             </app-tabulator-grid>
-            
-            
+
+
         </div>
-        <div class="col-6 pt-2">
+        <div class="col-12 col-lg-6 pt-2">
             <app-tabulator-grid [tableData]="filteredRelationTableData" [columnConfig]="relationColumnConfig"
                 [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
-                [allowCSVExport]="allowCSVExport" [isLoading]="isRelationGridLoading" [loadingText]="'Loading relations...'">
+                [allowCSVExport]="allowCSVExport" [isLoading]="isRelationGridLoading"
+                [loadingText]="'Loading relations...'">
             </app-tabulator-grid>
-            
+
         </div>
     </div>
     <app-configuration-details></app-configuration-details>

@@ -254,10 +254,7 @@ export class GlobalService {
     if (thumbnailPath) {
       thumbnailPath = API_URL.ATTACHMENT + thumbnailPath;
 
-
       const html = `<img src="${thumbnailPath}" style="width: 40px; height: 40px; object-fit: cover;" />`;
-      console.log('html : ', html);
-
       return html;
     }
     const imagePath = rowData["imagePath"];
@@ -302,7 +299,6 @@ export class GlobalService {
     // const id = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
     this.configurationService.getActiveConfigList(id, config).subscribe({
       next: (result: any) => {
-        console.log('result : ', result);
         localStorage.setItem(DdlConfig, JSON.stringify(result.data));
       },
       error: (error: any) => {
@@ -315,7 +311,6 @@ export class GlobalService {
   setCountryListToLocalStorage() {
     this.getCountryList().subscribe({
       next: (result: any) => {
-        console.log('result : ', result);
         this.localStorageService.setCountryList(result.data);
       },
       error: (error: any) => {

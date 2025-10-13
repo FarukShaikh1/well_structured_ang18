@@ -90,6 +90,7 @@ export const LocalStorageConstants = {
     USER_ROLE_ID: 'loggedInUserRoleId',
     USER_PERMISSIONS: 'UserPermissions',
     OTP_EXPIRES_ON: 'OtpExpiresOn',
+    COMMON_SUGGESTION_LIST: 'commonSuggestionList',
 };
 
 export const DBConstants = {

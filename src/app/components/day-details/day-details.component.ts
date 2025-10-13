@@ -23,6 +23,7 @@ import {
   ApplicationModules,
   DdlConfig,
   LocalStorageConstants,
+  NavigationURLs,
   UserConfig
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
@@ -129,7 +130,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       const file = files[0];
       this.selectedImageFile = files[0];
       if (file.type.startsWith("image/")) {
-        this.formData.set("file", file); 
+        this.formData.set("file", file);
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -277,6 +278,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       tap(() => {
         this.showSuccess("Record Added Successfully.");
         this.renderer.selectRootElement(this.btnCloseDayPopup?.nativeElement).click();
+        localStorage.removeItem(NavigationURLs.DAY_LIST);
         this.globalService.triggerGridReload(ApplicationModules.DAY);
       }),
       catchError((error) => {
@@ -290,6 +292,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       tap(() => {
         this.showSuccess("Record Updated Successfully.");
         this.renderer.selectRootElement(this.btnCloseDayPopup?.nativeElement).click();
+        localStorage.removeItem(NavigationURLs.DAY_LIST);
         this.globalService.triggerGridReload(ApplicationModules.DAY);
       }),
       catchError((error) => {

@@ -10,7 +10,7 @@ export class CacheService {
     localStorage.setItem(key, JSON.stringify(payload));
   }
 
-  get<T>(key: string, maxAgeMinutes: number = 30): T | null {
+  get<T>(key: string, maxAgeMinutes: number = 720): T | null {
     const item = localStorage.getItem(key);
     if (!item) return null;
 

@@ -80,7 +80,7 @@ export class SettingsComponent {
     private configurationService: ConfigurationService,
     public globalService: GlobalService,
     private userService: UserService,
-        private cacheService: CacheService,
+    private cacheService: CacheService,
     private localStorageService: LocalStorageService
   ) { }
 
@@ -128,7 +128,7 @@ export class SettingsComponent {
           }
         }
         event.stopPropagation();
-      } else { 
+      } else {
         const globalMenu = document.getElementById('globalDropdownMenu');
         if (globalMenu) globalMenu.remove();
       }
@@ -170,7 +170,7 @@ export class SettingsComponent {
     this.accountColumnConfiguration();
     this.relationColumnConfiguration();
     this.occasionTypeColumnConfiguration();
-    
+
     if (config === UserConfig.ACCOUNT) {
       this.isAccountGridLoading = true;
     } else if (config === UserConfig.RELATION) {
@@ -178,30 +178,30 @@ export class SettingsComponent {
     } else if (config === UserConfig.OCCASION_TYPE) {
       this.isOccasionTypeGridLoading = true;
     }
-    
+
     // ✅ 1. Check cache first
     const cachedData = this.cacheService.get<any[]>(config, 30); // 30 minutes cache
     if (cachedData) {
       if (config === UserConfig.ACCOUNT) {
-          this.filteredAccountTableData =cachedData;
-          this.accountTableData =cachedData;
-          this.isAccountGridLoading = false;
-        }
-        else if (config === UserConfig.RELATION) {
-          this.filteredRelationTableData =cachedData;
-          this.relationTableData =cachedData;
-          this.isRelationGridLoading = false;
-        }
-        else if (config === UserConfig.OCCASION_TYPE) {
-          this.filteredOccasionTypeTableData =cachedData;
-          this.occasionTypeTableData =cachedData;
-          this.isOccasionTypeGridLoading = false;
-        }
-return;
+        this.filteredAccountTableData = cachedData;
+        this.accountTableData = cachedData;
+        this.isAccountGridLoading = false;
+      }
+      else if (config === UserConfig.RELATION) {
+        this.filteredRelationTableData = cachedData;
+        this.relationTableData = cachedData;
+        this.isRelationGridLoading = false;
+      }
+      else if (config === UserConfig.OCCASION_TYPE) {
+        this.filteredOccasionTypeTableData = cachedData;
+        this.occasionTypeTableData = cachedData;
+        this.isOccasionTypeGridLoading = false;
+      }
+      return;
     }
     this.configurationService.getConfigList(userId, config).subscribe({
       next: (result: any) => {
-          this.cacheService.set(config, result.data);
+        this.cacheService.set(config, result.data);
 
         if (config === UserConfig.ACCOUNT) {
           this.filteredAccountTableData = result.data;

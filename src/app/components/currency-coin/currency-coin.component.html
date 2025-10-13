@@ -1,15 +1,15 @@
-<div class="main-body"> 
-   @if(globalService.isAccessible(ActionConstant.ADD)){
-  <button (click)="currencyCoinDetails('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
-    data-bs-target="#detailsPopup">
-    <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    Add Collection Item
-  </button>
-   }
+<div class="main-body">
   <div class="d-inline-flex gap-2 ms-2">
+    @if(globalService.isAccessible(ActionConstant.ADD)){
+    <button (click)="currencyCoinDetails('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
+      data-bs-target="#detailsPopup">
+      <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      Add Collection Item
+    </button>
+    }
     <button (click)="setView('grid')" class="btn btn-primary rounded-button">Data</button>
     <button (click)="setView('gallery')" class="btn btn-primary rounded-button">Gallery</button>
     <button (click)="setView('summary')" class="btn btn-primary rounded-button">Summary</button>
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="col-5 col-sm-4 col-md-3 col-lg-2">
-          <div appearance="outline" class="form-field">
+      <div appearance="outline" class="form-field">
         <label>Select Country</label>
         <button
           class="form-select form-control form-control-lg text-dark bg-transparent styled-select  scrollable-button text-start"
@@ -53,7 +53,7 @@
           }
         </ul>
       </div>
-      </div>
+    </div>
 
   </div>
   <div class="row pb-2" *ngIf="viewMode === 'grid'">
@@ -64,18 +64,20 @@
     </div>
   </div>
 
-  
+
   <div class="row pb-2" *ngIf="viewMode === 'summary'">
     <div class="mb-2">
-      <app-tabulator-grid [tableData]="filteredSummaryTableData" [columnConfig]="summaryTableColumnConfig" [height]="'320px'"
-        [paginationSize]="paginationSize" [filterColumns]="summaryTableColumnConfig" [allowCSVExport]="allowCSVExport">
+      <app-tabulator-grid [tableData]="filteredSummaryTableData" [columnConfig]="summaryTableColumnConfig"
+        [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="summaryTableColumnConfig"
+        [allowCSVExport]="allowCSVExport">
       </app-tabulator-grid>
     </div>
   </div>
 
   <div class="row mt-4" *ngIf="viewMode === 'gallery'">
     <div class="gallery-grid">
-      <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'" *ngFor="let coin of filteredCoinList">
+      <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'"
+        *ngFor="let coin of filteredCoinList">
         <img [src]="basePath + coin.imagePath" [alt]="coin.coinNoteName" />
         <div class="gallery-caption">
           <h3>{{ coin.coinNoteName }}</h3>

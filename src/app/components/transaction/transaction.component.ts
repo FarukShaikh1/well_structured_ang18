@@ -8,11 +8,13 @@ import {
   ApplicationConstants,
   ApplicationModules,
   ApplicationTableConstants,
+  DdlConfig,
   NavigationURLs,
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
 import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
+import { CacheService } from "../../services/cache/cache.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
 import { LocalStorageService } from "../../services/local-storage/local-storage.service";
@@ -23,7 +25,6 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { TransactionDetailsComponent } from "../transaction-details/transaction-details.component";
 import { TransactionPieChartComponent } from "../transaction-pie-chart/transaction-pie-chart.component";
 import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
-import { CacheService } from "../../services/cache/cache.service";
 export interface Task {
   name: string;
   completed: boolean;
@@ -66,7 +67,7 @@ export class TransactionComponent implements OnInit {
   lastTransactionDate: Date = new Date();
   NavigationURLs = NavigationURLs;
   fromDate = DateUtils.GetDateBeforeDays(30);
-  toDate = DateUtils.GetDateBeforeDays(0);
+  toDate = DateUtils.GetDateBeforeDays(-30);
   sourceOrReason: string = "";
   minAmount: number = 0;
   maxAmount: number = 0;
@@ -100,6 +101,7 @@ export class TransactionComponent implements OnInit {
     this.ClearFilter();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
+        debugger;
         this.LoadGrid();
       }
     });
@@ -111,19 +113,24 @@ export class TransactionComponent implements OnInit {
   }
 
   columnConfiguration() {
-    const cachedColumns = this.cacheService.get<any[]>(this.activeComponent + this.columnList, 30); // 30 minutes cache
-    if (cachedColumns) {
-      this.columnConfig = cachedColumns;
-      return;
-    }
     if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
       this.loadConfigForExpenseList();
-    } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
+      return;
+    }
+    if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
+      this.loadConfigForExpenseReportList();
+      return;
+    }
+
+    // const cachedColumns = this.cacheService.get<any[]>(this.activeComponent + this.columnList, 720); // 30 minutes cache
+    // if (cachedColumns) {
+    //   this.columnConfig = cachedColumns;
+    //   return;
+    // }
+    if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
       this.loadConfigForExpenseSummaryList();
     } else if (this.activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST) {
       this.loadConfigForBalanceList();
-    } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
-      this.loadConfigForExpenseReportList();
     }
   }
 
@@ -196,9 +203,6 @@ export class TransactionComponent implements OnInit {
         headerSort: false,
       });
     }
-    setTimeout(() => {
-      this.cacheService.set(`${this.activeComponent}${this.columnList}`, this.columnConfig);
-    }, 2000);
   }
 
   loadConfigForExpenseSummaryList() {
@@ -225,10 +229,10 @@ export class TransactionComponent implements OnInit {
     ];
 
     if (this.tableData.length > 0) {
-      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList, 30); // 30 minutes cache
+      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList, 720); // 30 minutes cache
       if (accountColumnList) {
 
-        for (const key of Object.keys(this.accountColumns)) {
+        for (const key of Object.keys(accountColumnList)) {
           const isAmount = key.toLowerCase().includes("amount");
           const isBalance = key.toLowerCase().includes("balance");
           const isCategory = key.toLowerCase().includes("category");
@@ -274,10 +278,6 @@ export class TransactionComponent implements OnInit {
         headerSort: false,
       });
     }
-    setTimeout(() => {
-      this.cacheService.set(`${this.activeComponent}${this.columnList}`, this.columnConfig);
-    }, 2000);
-
   }
 
   loadConfigForBalanceList() {
@@ -292,7 +292,7 @@ export class TransactionComponent implements OnInit {
     ];
 
     if (this.tableData.length > 0) {
-      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList, 30); // 30 minutes cache
+      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList, 720); // 30 minutes cache
       if (accountColumnList) {
         for (const key of Object.keys(accountColumnList)) {
           const isAmount = key.toLowerCase().includes("amount");
@@ -327,10 +327,6 @@ export class TransactionComponent implements OnInit {
       },
       headerSort: false,
     });
-
-    setTimeout(() => {
-      this.cacheService.set(`${this.activeComponent}${this.columnList}`, this.columnConfig);
-    }, 2000);
   }
 
   loadConfigForExpenseReportList() {
@@ -451,9 +447,6 @@ export class TransactionComponent implements OnInit {
         headerSort: false,
       },
     ];
-    setTimeout(() => {
-      this.cacheService.set(`${this.activeComponent}${this.columnList}`, this.columnConfig);
-    }, 2000);
   }
 
   generateOptionsMenu(rowData: Record<string, any>) {
@@ -609,6 +602,21 @@ export class TransactionComponent implements OnInit {
       return `<span style="color: var(--theme-text); font-weight:bold">${sourceValue}</span>`;
     }
   }
+
+  removeGridFromLocalStorage() {
+    localStorage.removeItem(NavigationURLs.EXPENSE_LIST);
+    localStorage.removeItem(NavigationURLs.EXPENSE_LIST + '_col');
+
+    localStorage.removeItem(NavigationURLs.EXPENSE_SUMMARY_LIST);
+    localStorage.removeItem(NavigationURLs.EXPENSE_SUMMARY_LIST + '_col');
+
+    localStorage.removeItem(NavigationURLs.EXPENSE_REPORT);
+    localStorage.removeItem(NavigationURLs.EXPENSE_REPORT + '_col');
+
+    localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
+    localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST + '_col');
+  }
+
 
 
   ngAfterViewInit() {
@@ -772,12 +780,13 @@ export class TransactionComponent implements OnInit {
 
   LoadGrid() {
     this.loaderService.showLoader('Loading transactions...');
-    this.columnConfiguration();
-    const cachedData = this.cacheService.get<any[]>(this.activeComponent, 30); // 30 minutes cache
+    const cachedData = this.cacheService.get<any[]>(this.activeComponent, 720); // 30 minutes cache
     if (cachedData) {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;
-    this.loaderService.hideLoader();
+      this.transactionReports = cachedData;
+      this.columnConfiguration();
+      this.loaderService.hideLoader();
       return;
     }
 
@@ -796,7 +805,9 @@ export class TransactionComponent implements OnInit {
             this.tableData = res.data;
             this.filteredTableData = res.data;
             this.cacheService.set(this.activeComponent, res.data);
+            debugger;
             this.lastTransactionDate = this.getLatestTransactionDate();
+            this.columnConfiguration();
             this.loaderService.hideLoader();
           },
           error: (error: any) => {
@@ -808,14 +819,14 @@ export class TransactionComponent implements OnInit {
         .getTransactionSummaryList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
-              this.tableData = res.data;
-              this.filteredTableData = res.data;
-              this.accountColumns = res.data[0]?.accountData;
-              this.cacheService.set(this.activeComponent + this.accountColumnList, res.data[0]?.accountData);
-              this.columnConfiguration();
-              this.cacheService.set(this.activeComponent, res.data);
-              this.lastTransactionDate = this.getLatestTransactionDate();
-              this.loaderService.hideLoader();
+            this.tableData = res.data;
+            this.filteredTableData = res.data;
+            this.accountColumns = res.data[0]?.accountData;
+            this.cacheService.set(this.activeComponent + this.accountColumnList, res.data[0]?.accountData);
+            this.cacheService.set(this.activeComponent, res.data);
+            this.lastTransactionDate = this.getLatestTransactionDate();
+            this.columnConfiguration();
+            this.loaderService.hideLoader();
           },
           error: (error: any) => {
             console.error("error : ", error);
@@ -831,10 +842,9 @@ export class TransactionComponent implements OnInit {
             this.filteredTableData = res.data;
             this.accountColumns = res.data[0]?.accountData;
             this.cacheService.set(this.activeComponent + this.accountColumnList, res.data[0]?.accountData);
-            this.columnConfiguration();
             this.cacheService.set(this.activeComponent, res.data);
-
             this.lastTransactionDate = this.getLatestTransactionDate();
+            this.columnConfiguration();
             this.loaderService.hideLoader();
           },
           error: (error: any) => {
@@ -852,6 +862,7 @@ export class TransactionComponent implements OnInit {
             this.filteredTableData = res.data;
             this.lastTransactionDate = this.getLatestTransactionDate();
             this.cacheService.set(this.activeComponent, res.data);
+            this.columnConfiguration();
             this.loaderService.hideLoader();
           },
           error: (error: any) => {
@@ -900,11 +911,13 @@ export class TransactionComponent implements OnInit {
 
   filterGridByFromDate(date: any) {
     this.fromDate = DateUtils.CorrectedDate(date);
+    this.removeGridFromLocalStorage();
     this.LoadGrid();
   }
 
   filterGridByToDate(date: any) {
     this.toDate = DateUtils.CorrectedDate(date);
+    this.removeGridFromLocalStorage();
     this.LoadGrid();
   }
 
@@ -945,6 +958,11 @@ export class TransactionComponent implements OnInit {
   }
 
   setTransactionSuggestions() {
+
+    const suggestions = this.cacheService.get<any[]>(DdlConfig.COMMON_SUGGESTIONS, 720); // 30 minutes cache
+    if (suggestions) {
+      return;
+    }
     this.transactionService.getTransactionSuggestionList().subscribe({
       next: (res: any) => {
         this.localStorageService.setTransactionSuggestions(res.data);
@@ -953,7 +971,5 @@ export class TransactionComponent implements OnInit {
         console.error("error : ", error);
       },
     });
-
   }
-
 }

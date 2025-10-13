@@ -82,12 +82,6 @@
 
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <li class="top-dropdown-item">
-          <button class="dropdown-item" type="button" (click)="toggleTheme()">
-            <i class="bi" [ngClass]="isDarkMode ? 'bi-sun-fill' : 'bi-moon-fill'"></i>
-            &nbsp;{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
-          </button>
-        </li>
-        <li class="top-dropdown-item">
           <a class="dropdown-item logout-btn" (click)="goToChangePasswordPage()">
             <i class="bi bi-pencil-square"></i>
             &nbsp;Change Password

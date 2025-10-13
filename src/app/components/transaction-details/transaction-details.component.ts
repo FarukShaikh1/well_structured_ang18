@@ -31,13 +31,13 @@ import {
   ApplicationModules,
   DdlConfig,
   LocalStorageConstants,
-  UserConfig,
+  NavigationURLs
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
 import { TransactionRequest } from "../../interfaces/transaction-request";
-import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
+import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 import { TransactionService } from "../../services/transaction/transaction.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
 
@@ -91,7 +91,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     public globalService: GlobalService,
     private loaderService: LoaderService,
     private renderer: Renderer2,
-    private configurationService: ConfigurationService,
+    private localStorageService: LocalStorageService,
     private datepipe: DatePipe
   ) {
     this.transactionDetailsForm = this.fb.group({
@@ -155,7 +155,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadAccountList() {
-    this.accountList = this.globalService.getConfigList(UserConfig.ACCOUNT);
+    this.accountList = this.globalService.getConfigList(DdlConfig.ACCOUNTS);
   }
 
   loadAccountFields() {
@@ -214,24 +214,46 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   getTransactionSuggestionList() {
-      this.commonSuggestionList = JSON.parse(
-        localStorage.getItem("commonSuggestionList") || "[]"
-      );
-      this.sourceOrReasonList = this.extractUniqueCapitalized(
-        this.commonSuggestionList,
-        "sourceOrReason"
-      );
-      this.purposeList = this.extractUniqueCapitalized(
-        this.commonSuggestionList,
-        "purpose"
-      );
-      this.descriptionList = this.extractUniqueCapitalized(
-        this.commonSuggestionList,
-        "description"
-      );
-      this.commonSuggestionList = [];
+    const cachedData = localStorage.getItem(LocalStorageConstants.COMMON_SUGGESTION_LIST);
+    if (cachedData) {
+      // ✅ Load from local storage
+      this.commonSuggestionList = JSON.parse(cachedData);
+      this.getListValues();
+
+      // console.log('Loaded from localStorage');
+    } else {
+      this.transactionService.getTransactionSuggestionList().subscribe({
+        next: (res: any) => {
+          if (res && res.data) {
+            this.commonSuggestionList = res.data;
+            this.localStorageService.setTransactionSuggestions(res.data);
+            this.getListValues();
+
+          }
+        },
+        error: (error: any) => {
+          console.error("error : ", error);
+        },
+      });
+
+    }
+    // this.commonSuggestionList = [];
   }
 
+  getListValues() {
+    this.sourceOrReasonList = this.extractUniqueCapitalized(
+      this.commonSuggestionList,
+      "sourceOrReason"
+    );
+    this.purposeList = this.extractUniqueCapitalized(
+      this.commonSuggestionList,
+      "purpose"
+    );
+    this.descriptionList = this.extractUniqueCapitalized(
+      this.commonSuggestionList,
+      "description"
+    );
+  }
   addTransactionSuggestion(transactionRequest: TransactionRequest): void {
     if (!this.commonSuggestionList) {
       this.commonSuggestionList = [];
@@ -278,21 +300,25 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       (option: any) =>
         option?.sourceOrReason &&
         option.sourceOrReason.trim() !== "" &&
-        option.sourceOrReason.toLowerCase().includes(inputValue.toLowerCase())
+        option.sourceOrReason.toLowerCase().includes(inputValue?.toLowerCase())
     );
 
     this.filteredSourceOrReasonList = this.extractUniqueCapitalized(
       filteredList,
       "sourceOrReason"
     );
+    console.log('filteredSourceOrReasonList', this.filteredSourceOrReasonList);
+
     this.filteredPurposeList = this.extractUniqueCapitalized(
       filteredList,
       "purpose"
     );
+    console.log('filteredPurposeList', this.filteredPurposeList);
     this.filteredDescriptionList = this.extractUniqueCapitalized(
       filteredList,
       "description"
     );
+    console.log('filteredDescriptionList', this.filteredDescriptionList);
   }
 
   selectSourceOrReason(inputValue: string): void {
@@ -393,34 +419,34 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-      this.ensureDescription();
-      this.correctTransactionDate();
+    this.ensureDescription();
+    this.correctTransactionDate();
 
-      const validationError = this.validateAccountEntries();
-      if (validationError) {
-        this.showError(validationError);
-        return;
-      }
+    const validationError = this.validateAccountEntries();
+    if (validationError) {
+      this.showError(validationError);
+      return;
+    }
 
-      const splits = this.buildSplits();
-      if (splits.length === 0) {
-        this.showError("Please enter valid amount for at least one account.");
-        return;
-      }
+    const splits = this.buildSplits();
+    if (splits.length === 0) {
+      this.showError("Please enter valid amount for at least one account.");
+      return;
+    }
 
-      const request: TransactionRequest = {
-        transactionGroupId:
-          this.transactionDetailsForm.value.transactionGroupId || null,
-        transactionDate: DateUtils.IstDate(
-          this.transactionDetailsForm.value.transactionDate
-        ),
-        sourceOrReason: this.transactionDetailsForm.value.sourceOrReason,
-        purpose: this.transactionDetailsForm.value.purpose,
-        description: this.transactionDetailsForm.value.description,
-        accountSplits: splits,
-      };
+    const request: TransactionRequest = {
+      transactionGroupId:
+        this.transactionDetailsForm.value.transactionGroupId || null,
+      transactionDate: DateUtils.IstDate(
+        this.transactionDetailsForm.value.transactionDate
+      ),
+      sourceOrReason: this.transactionDetailsForm.value.sourceOrReason,
+      purpose: this.transactionDetailsForm.value.purpose,
+      description: this.transactionDetailsForm.value.description,
+      accountSplits: splits,
+    };
 
-      this.saveTransaction(request);
+    this.saveTransaction(request);
   }
 
 
@@ -470,41 +496,53 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   private saveTransaction(request: TransactionRequest) {
     const isUpdate = !!request.transactionGroupId;
-    const request$ = isUpdate
-      ? this.transactionService.updateTransaction(request)
-      : this.transactionService.addTransaction(request);
-
-    request$
-      .pipe(
-        tap((result) => {
-          if (
-            !result ||
-            (!isUpdate && this.globalService.isEmptyGuid(result))
-          ) {
-            throw new Error(
-              isUpdate
-                ? "Some issue occurred while updating."
-                : "Data is not added in the database."
+    if (isUpdate) {
+      this.transactionService.updateTransaction(request).subscribe({
+        next: (res: any) => {
+          if (res && res.data) {
+            this.toaster.showMessage(
+              res.message, "success"
             );
+            removeGridFromLocalStorage();
+            this.renderer
+              .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
+              .click();
+            this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
+            this.addTransactionSuggestion(request);
+            return res.data;
           }
-
-          this.showSuccess(
-            isUpdate
-              ? "Record updated successfully."
-              : "Record added successfully."
+        },
+        error: (error: any) => {
+          this.toaster.showMessage(
+            error?.message, "error"
           );
-          this.renderer
-            .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
-            .click();
-          this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
-          this.addTransactionSuggestion(request);
-        }),
-        catchError((error) => {
-          this.showError(error?.message || "An error occurred.");
           return of(null);
-        })
-      )
-      .subscribe();
+        }
+      })
+    } else {
+      this.transactionService.addTransaction(request).subscribe({
+        next: (res: any) => {
+          if (res && res.data) {
+            this.toaster.showMessage(
+              res.message, "success"
+            );
+            removeGridFromLocalStorage();
+            this.renderer
+              .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
+              .click();
+            this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
+            this.addTransactionSuggestion(request);
+            return res.data;
+          }
+        },
+        error: (error: any) => {
+          this.toaster.showMessage(
+            error?.message, "error"
+          );
+          return of(null);
+        }
+      });
+    }
   }
 
 
@@ -551,3 +589,17 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     );
   }
 }
+function removeGridFromLocalStorage() {
+  localStorage.removeItem(NavigationURLs.EXPENSE_LIST);
+  localStorage.removeItem(NavigationURLs.EXPENSE_LIST + '_col');
+
+  localStorage.removeItem(NavigationURLs.EXPENSE_SUMMARY_LIST);
+  localStorage.removeItem(NavigationURLs.EXPENSE_SUMMARY_LIST + '_col');
+
+  localStorage.removeItem(NavigationURLs.EXPENSE_REPORT);
+  localStorage.removeItem(NavigationURLs.EXPENSE_REPORT + '_col');
+
+  localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
+  localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST + '_col');
+}
+

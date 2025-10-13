@@ -31,6 +31,10 @@
   --header-text: #ffffff;
 }
 
+.toast-header{
+  padding:0;
+}
+html.dark-mode,
 body.dark-mode {
   --theme-bg: #121212;
   --theme-card-bg: #1e1e1e;
@@ -50,6 +54,7 @@ body.dark-mode {
   --header-bg: #111827; /* Slate 900 */
   --header-text: #e5e7eb; /* Gray 200 */
   background-image: none !important;
+  background-color: var(--theme-bg) !important;
 }
 
 /* Remove decorative background images in dark mode */
@@ -66,7 +71,7 @@ body.dark-mode .chat {
   font-style: normal;
 }
 
-html, body {
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -1782,15 +1787,55 @@ img{
   }
 }
 
-.otp-card{
+.otp-card {
   background: var(--theme-card-bg);
-  width: 50%;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 400px; /* Limits card width on large screens */
+  margin: 40px auto;
   text-align: center;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  border-radius: 8px;
-  align-items: center ;
+  padding: 24px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Subtle hover effect for larger screens */
+@media (hover: hover) {
+  .otp-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Typography adjustments */
+.otp-card h1,
+.otp-card h2,
+.otp-card h3 {
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.otp-card p {
+  margin-bottom: 16px;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .otp-card {
+    margin: 20px;
+    padding: 20px 15px;
+    border-radius: 10px;
+  }
+
+  .otp-card p {
+    font-size: 0.9rem;
+  }
 }
 .otp-box{
   width: 40px;

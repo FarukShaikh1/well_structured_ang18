@@ -78,7 +78,7 @@ export class ConfigurationDetailsComponent {
     this.configForm?.reset();
   }
 
-  onSubmit(config:string) {
+  onSubmit(config: string) {
     this.globalService.trimAllFields(this.configForm);
     if (this.configForm.invalid) {
       return;
@@ -92,11 +92,11 @@ export class ConfigurationDetailsComponent {
     };
     this.loaderService.showLoader();
     if (this.configurationRequest.id) {
-      this.updateConfigDetails(this.configurationRequest,config);
+      this.updateConfigDetails(this.configurationRequest, config);
     }
     else {
       this.configurationRequest.id = null;
-    this.addConfigDetails(this.configurationRequest, config);
+      this.addConfigDetails(this.configurationRequest, config);
     }
   }
 
@@ -108,6 +108,7 @@ export class ConfigurationDetailsComponent {
         this.renderer
           .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
           .click();
+        localStorage.removeItem(config);
         this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
       },
       error: (error: any) => {
@@ -116,9 +117,6 @@ export class ConfigurationDetailsComponent {
         return;
       },
     });
-    
-    
-    
   }
 
   updateConfigDetails(request: ConfigurationRequest, config: string) {
@@ -129,6 +127,7 @@ export class ConfigurationDetailsComponent {
         this.renderer
           .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
           .click();
+        localStorage.removeItem(config);
         this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
       },
       error: (error: any) => {
@@ -147,7 +146,7 @@ export class ConfigurationDetailsComponent {
           this.renderer
             .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
             .click();
-          
+
           this.loaderService.hideLoader();
           this.globalService.triggerGridReload(ApplicationModules.USER);
         } else {
@@ -162,7 +161,7 @@ export class ConfigurationDetailsComponent {
     };
   }
 
-  getConfigDetailsById(id: string = '',config: string = '') {
+  getConfigDetailsById(id: string = '', config: string = '') {
     this.configurationService?.getConfigDetailsById(id, config).subscribe({
       next: (result: any) => {
         this.loaderService.showLoader();

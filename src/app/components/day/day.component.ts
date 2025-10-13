@@ -7,7 +7,8 @@ import {
   ApplicationModules,
   ApplicationTableConstants,
   DdlConfig,
-  LocalStorageConstants
+  LocalStorageConstants,
+  NavigationURLs
 } from "../../../utils/application-constants";
 import { CacheService } from "../../services/cache/cache.service";
 import { ConfigurationService } from "../../services/configuration/configuration.service";
@@ -51,9 +52,7 @@ export class DayComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  private cacheKey = 'DayList';
-
-
+  private cacheKey = NavigationURLs.DAY_LIST;
   isGridLoading: boolean = false;
   ActionConstant = ActionConstant;
   monthList: any;

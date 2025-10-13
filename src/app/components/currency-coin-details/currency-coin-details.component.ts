@@ -7,7 +7,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { API_URL } from "../../../utils/api-url";
-import { ActionConstant, ApplicationModules, DdlConfig, LocalStorageConstants } from "../../../utils/application-constants";
+import { ActionConstant, ApplicationModules, DdlConfig, LocalStorageConstants, NavigationURLs } from "../../../utils/application-constants";
 import { CoinNoteCollectionRequest } from "../../interfaces/coin-note-collection-request";
 import { AssetService } from "../../services/asset/asset.service";
 import { CurrencyCoinService } from "../../services/currency-coin/currency-coin.service";
@@ -57,9 +57,9 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         "",
         [Validators.required],
       ],
-      collectionCoinType: [null, Validators.required], 
+      collectionCoinType: [null, Validators.required],
       countryId: [0, Validators.required],
-      address: "", 
+      address: "",
       assetId: null,
       picture: null,
       coinWeightInGrams: [0],
@@ -254,14 +254,14 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     };
 
     if (!this.currencyCoinDetailsForm.valid) {
-      
+
       return;
     } else {
       try {
         if (this.formData) {
           this.uploadImageAndSaveData();
         }
-      } catch (error) {        
+      } catch (error) {
         console.error("Error in adding data : ", error);
       }
     }
@@ -277,12 +277,13 @@ export class CurrencyCoinDetailsComponent implements OnInit {
           this.renderer
             .selectRootElement(this.btnCloseDayPopup?.nativeElement)
             .click();
+          localStorage.removeItem(NavigationURLs.CURRENCY_LIST);
+          localStorage.removeItem(NavigationURLs.CURRENCY_SUMMARY);
           this.globalService.triggerGridReload(ApplicationModules.COIN_NOTE_COLLECTION);
         },
         error: (error: any) => {
           this.loaderService.hideLoader();
           this.toaster.showMessage("Some issue is in Update the data.", "error");
-          
           return;
         },
       });
@@ -295,12 +296,13 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         this.renderer
           .selectRootElement(this.btnCloseDayPopup?.nativeElement)
           .click();
+        localStorage.removeItem(NavigationURLs.CURRENCY_LIST);
+        localStorage.removeItem(NavigationURLs.CURRENCY_SUMMARY);
         this.globalService.triggerGridReload(ApplicationModules.COIN_NOTE_COLLECTION);
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
         this.toaster.showMessage("Some issue is in Update the data.", "error");
-        
         return;
       },
     });
