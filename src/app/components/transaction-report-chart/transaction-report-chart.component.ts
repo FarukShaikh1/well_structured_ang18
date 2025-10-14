@@ -13,7 +13,11 @@ import { TransactionReportResponse } from '../../interfaces/transaction-report-r
 })
 export class TransactionReportChartComponent implements OnChanges {
   @Input() reportData: TransactionReportResponse[] = [];
-
+private getTextColor(): string {
+  const stored = localStorage.getItem('app-theme');
+      const isDarkMode = stored === 'dark';
+    return isDarkMode ? '#FFFFFF' : '#000000';
+  }
   barChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
     datasets: []
@@ -23,7 +27,7 @@ export class TransactionReportChartComponent implements OnChanges {
     responsive: false,            // Important: Turn off responsive to control width manually
     maintainAspectRatio: false,   // Allow flexible height
     plugins: {
-      legend: { position: 'top' },
+      legend: { display: false },
       tooltip: {
         callbacks: {
           label: (context) => `${context.dataset.label}: ₹${context.parsed.y}`
@@ -32,12 +36,15 @@ export class TransactionReportChartComponent implements OnChanges {
     },
     scales: {
       x: {
-        ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 },
+        ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: this.getTextColor() },
         grid: { display: false }
       },
       y: {
         beginAtZero: true,
-        grid: { display: true }
+        grid: { display: true },
+          ticks: {
+          color: this.getTextColor()   // ✅ Text color updated
+        },
       }
     },
     datasets: {

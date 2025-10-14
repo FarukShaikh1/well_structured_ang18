@@ -63,6 +63,8 @@ body.dark-mode .chat {
   background-color: var(--surface-1) !important;
 }
 
+
+
 @font-face {
   font-family: 'lexendregular';
   src: url('./assets/fonts/lexend-variablefont_wght-webfont.woff2') format('woff2'),
@@ -1915,3 +1917,18 @@ img{
     right: 0;
   }
 }
+
+/* ============================
+   Chart Container & Legend Styling
+   ============================ */
+.card {
+  background-color: var(--theme-card-bg);
+  color: var(--theme-text);
+  border: 1px solid var(--theme-border);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
