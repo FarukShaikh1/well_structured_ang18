@@ -1,4 +1,3 @@
-
 import { Component, Input, OnChanges } from '@angular/core';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { CommonModule } from '@angular/common';
@@ -9,7 +8,8 @@ import { TransactionReportResponse } from '../../interfaces/transaction-report-r
   selector: 'app-transaction-report-chart',
   standalone: true,
   imports: [CommonModule, NgChartsModule],
-  templateUrl: "./transaction-report-chart.component.html"
+  templateUrl: './transaction-report-chart.component.html',
+  styleUrls: ['./transaction-report-chart.component.scss']
 })
 export class TransactionReportChartComponent implements OnChanges {
   @Input() reportData: TransactionReportResponse[] = [];
@@ -20,7 +20,8 @@ export class TransactionReportChartComponent implements OnChanges {
   };
   barChartWidth = 800; 
   barChartOptions: ChartOptions<'bar'> = {
-    responsive: true,
+    responsive: false,            // Important: Turn off responsive to control width manually
+    maintainAspectRatio: false,   // Allow flexible height
     plugins: {
       legend: { position: 'top' },
       tooltip: {
@@ -31,17 +32,18 @@ export class TransactionReportChartComponent implements OnChanges {
     },
     scales: {
       x: {
-        ticks: { autoSkip: false },
-        grid: { display: true }
+        ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 },
+        grid: { display: false }
       },
       y: {
-        beginAtZero: true
+        beginAtZero: true,
+        grid: { display: true }
       }
     },
     datasets: {
       bar: {
-        barThickness: 20, 
-        maxBarThickness: 40
+        barThickness: 20,       // ✅ Fixed bar width
+        maxBarThickness: 20
       }
     }
   };
@@ -53,9 +55,9 @@ export class TransactionReportChartComponent implements OnChanges {
     const takenAmounts = this.reportData.map(x => x.takenAmount || 0);
     const givenAmounts = this.reportData.map(x => x.givenAmount || 0);
 
-    
-    const widthPerLabel = 20;
-    this.barChartWidth = Math.max(800, labels.length * widthPerLabel);
+    /** Calculate total chart width based on number of labels */
+    const widthPerBar = 45; // ✅ Controls how much space each label takes including padding
+    this.barChartWidth = Math.max(800, labels.length * widthPerBar);
 
     this.barChartData = {
       labels,
@@ -64,32 +66,5 @@ export class TransactionReportChartComponent implements OnChanges {
         { label: 'Expense', data: givenAmounts, backgroundColor: '#F44336' }
       ]
     };
-
-    this.barChartOptions = {
-      responsive: false, 
-      maintainAspectRatio: true,
-      plugins: {
-        legend: { position: 'top' },
-        tooltip: {
-          callbacks: {
-            label: (context) => `${context.dataset.label}: ₹${context.parsed.y}`
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { autoSkip: false },
-          grid: { display: true }
-        },
-        y: { beginAtZero: true }
-      },
-      datasets: {
-        bar: {
-          barThickness: Math.min(widthPerLabel / 2, 40),
-          maxBarThickness: 40
-        }
-      }
-    };
   }
-
 }

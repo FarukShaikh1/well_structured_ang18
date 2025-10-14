@@ -1,14 +1,14 @@
-<h1>Bar chart</h1>
-<div class="overflow-auto">
-  <div class="h-500">
+<h1>Bar Chart</h1>
+<div class="chart-container">
+  <div class="chart-scroll">
     <canvas
       baseChart
       [data]="barChartData"
       [options]="barChartOptions"
       [type]="'bar'"
       [style.width.px]="barChartWidth"
-      class="h-100 w-100"
-      >
-    </canvas>
+      height="400"
+    >
+  </canvas>
   </div>
 </div>

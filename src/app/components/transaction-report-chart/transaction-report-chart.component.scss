@@ -1,0 +1,13 @@
+.chart-container {
+  width: 100%;
+  overflow-x: auto;       /* ✅ Scroll horizontally when too many labels */
+  overflow-y: hidden;
+}
+
+.chart-scroll {
+  min-height: 400px;      /* Fixed height container */
+}
+
+canvas {
+  display: block;
+}
