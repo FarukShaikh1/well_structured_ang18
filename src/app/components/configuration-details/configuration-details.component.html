@@ -1,0 +1,67 @@
+<div class="modal fade" id="configDetailsPopup" data-bs-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Account Details</h4>
+        <button #btnCloseConfigPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="configForm" (ngSubmit)="onSubmit(currentConfig)" novalidate>
+          
+          <div class="form-group">
+            <label for="configurationName">{{currentConfig}} Name</label>
+            <input type="text" id="configurationName" class="form-control" formControlName="configurationName"
+              placeholder="Enter configuration name" />
+            <div *ngIf="configForm.get('configurationName')?.touched && configForm.get('configurationName')?.invalid"
+              class="text-danger">
+              <small *ngIf="configForm.get('configurationName')?.errors?.['required']">
+                Configuration Name is required.
+              </small>
+              <small *ngIf="configForm.get('configurationName')?.errors?.['pattern']">
+                Configuration Name cannot be empty or whitespace.
+              </small>
+            </div>
+          </div>
+
+          
+          <div class="form-group">
+            <label for="configurationDescription">{{currentConfig}} Description</label>
+            <textarea id="configurationDescription" class="form-control" formControlName="configurationDescription"
+              placeholder="Enter configuration description"></textarea>
+            <div
+              *ngIf="configForm.get('configurationDescription')?.touched && configForm.get('configurationDescription')?.invalid"
+              class="text-danger">
+              <small *ngIf="configForm.get('configurationDescription')?.errors?.['required']">
+                Description is required.
+              </small>
+              <small *ngIf="configForm.get('configurationDescription')?.errors?.['pattern']">
+                Description cannot be empty or whitespace.
+              </small>
+            </div>
+          </div>
+
+          
+          <div class="form-group">
+            <label for="displaySequence">Display Sequence</label>
+            <input type="number" id="displaySequence" class="form-control" formControlName="displaySequence"
+              placeholder="Enter display sequence" />
+            <div *ngIf="configForm.get('displaySequence')?.touched && configForm.get('displaySequence')?.invalid"
+              class="text-danger">
+              <small *ngIf="configForm.get('displaySequence')?.errors?.['pattern']">
+                Display Sequence cannot be only whitespace.
+              </small>
+            </div>
+          </div>
+
+          
+          <button type="submit" class="btn btn-primary" [disabled]="configForm.invalid">
+            Submit
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+<app-toaster></app-toaster>

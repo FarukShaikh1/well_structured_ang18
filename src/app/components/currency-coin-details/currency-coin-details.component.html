@@ -1,0 +1,167 @@
+<div class="modal fade modal-xl" id="detailsPopup" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add Coin</h4>
+        <button #btnCloseDetailsPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="currencyCoinDetailsForm" (ngSubmit)="submitCurrencyCoinDetails()"
+          enctype="multipart/form-data">
+          <div class="d-none">
+            <label>collectionCoinId</label>
+            <input formControlName="collectionCoinId" />
+            <input formControlName="assetId" />
+          </div>
+
+          <div class="row">
+            <div class="col-12 col-lg-6">
+              <div class="row">
+                <div class="col-6">
+                  <label>Coin Name</label>
+                  <input formControlName="coinNoteName" class="form-control form-control-lg text-dark bg-transparent"
+                    [ngClass]="{
+                      'error-border':
+                        currencyCoinDetailsForm.get('coinNoteName')
+                          ?.touched &&
+                        currencyCoinDetailsForm.get('coinNoteName')
+                          ?.invalid
+                    }" />
+                  @if(currencyCoinDetailsForm.get('coinNoteName')?.touched
+                  &&
+                  currencyCoinDetailsForm.get('coinNoteName')?.invalid){
+                  <div class="text-danger">
+                    @if(currencyCoinDetailsForm.get('coinNoteName')?.errors?.['required']){
+                    Coin Name is required }
+                    @if(currencyCoinDetailsForm.get('coinNoteName')?.errors?.['pattern']){
+                    Invalid Coin Name }
+                  </div>
+                  }
+                </div>
+                <div class="col">
+                  <label>Coin Type</label>
+                  <select formControlName="collectionCoinType"
+                    class="form-select form-control form-control-lg text-dark bg-transparent styled-select "
+                    [ngClass]="{
+                      'error-border':
+                        currencyCoinDetailsForm.get('collectionCoinType')
+                          ?.touched &&
+                        currencyCoinDetailsForm.get('collectionCoinType')
+                          ?.invalid
+                    }">
+                    @for(item of currencyTypeList; track $index){
+                    <option [value]="item.id">
+                      {{ item.listItemName }}
+                    </option>
+                    }
+                  </select>
+                  @if(currencyCoinDetailsForm.get('collectionCoinType')?.touched
+                  &&
+                  currencyCoinDetailsForm.get('collectionCoinType')?.invalid){
+                  <div class="text-danger">
+                    @if(currencyCoinDetailsForm.get('collectionCoinType')?.errors?.['required']){
+                    Type is required }
+                  </div>
+                  }
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label>Country</label>
+                  <select formControlName="countryId" class="form-select form-control-lg bg-transparent">
+                    @for(item of countryList; track $index){
+                    <option [value]="item.id">
+                      {{ item.country }}
+                    </option>
+                    }
+                  </select>
+                </div>
+
+                <div class="col-6">
+                  <label>Coin Weight (g)</label>
+                  <input type="number" formControlName="coinWeightInGrams" class="form-control bg-transparent" />
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label>Actual Value</label>
+                  <input type="number" formControlName="actualValue" class="form-control bg-transparent" />
+                </div>
+                <div class="col-6">
+                  <label>Indian Value</label>
+                  <input type="number" formControlName="indianValue" class="form-control bg-transparent" />
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label>Printed Year</label>
+                  <input type="text" formControlName="printedYear" class="form-control bg-transparent" />
+                </div>
+                <div class="col-6">
+                  <label>Speciality</label>
+                  <input type="text" formControlName="speciality" class="form-control bg-transparent" />
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label>Diameter (mm)</label>
+                  <input type="number" formControlName="diameterOfCoin" class="form-control bg-transparent" />
+                </div>
+                <div class="col-6">
+                  <label>Metal Used</label>
+                  <input type="text" formControlName="metalsUsed" class="form-control bg-transparent" />
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label>Note Length (mm)</label>
+                  <input type="number" formControlName="lengthOfNote" class="form-control bg-transparent" />
+                </div>
+                <div class="col-6">
+                  <label>Note Breadth (mm)</label>
+                  <input type="number" formControlName="breadthOfNote" class="form-control bg-transparent" />
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label>Description</label>
+                <textarea formControlName="description" rows="3" class="form-control bg-transparent"></textarea>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 image-container">
+              <input type="file" (change)="onFileSelected($event)" accept="image/*" formControlName="picture" />
+              <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+                <div id="image">
+                  <img [src]="selectedImage" />
+                </div>
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-12 col-sm-12">
+                <div class="action d-flex justify-content-end">
+                  <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()"
+                    data-bs-dismiss="modal">
+                    Cancel
+                  </button>
+                  @if(globalService.isAccessible(ActionConstant.ADD) ||
+                  globalService.isAccessible(ActionConstant.EDIT)){
+                  <button class="btn btn-primary rounded-button" type="submit"
+                    [disabled]="currencyCoinDetailsForm.invalid">
+                    Save
+                  </button>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<app-toaster></app-toaster>

@@ -1,0 +1,346 @@
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { Router } from "@angular/router";
+import { Observable, of, Subject } from "rxjs";
+import { catchError, map } from "rxjs/operators";
+import { CellComponent } from "tabulator-tables";
+import { API_URL } from "../../../utils/api-url";
+import { DBConstants, DdlConfig, LocalStorageConstants, NavigationURLs, UserConfig } from "../../../utils/application-constants";
+import { ModuleResponse } from "../../interfaces/module-response";
+import { ConfigurationService } from "../configuration/configuration.service";
+import { LocalStorageService } from "../local-storage/local-storage.service";
+import { RoleService } from "../role/role.service";
+
+@Injectable({
+  providedIn: "root",
+})
+export class GlobalService {
+  constructor(
+    private http: HttpClient,
+    private localStorageService: LocalStorageService,
+    private configurationService: ConfigurationService,
+    private roleService: RoleService,
+    private router: Router
+
+  ) { }
+
+  private reloadComponentSubject = new Subject<void>();
+  private reloadBannerOnSubject = new Subject<void>();
+
+
+  private reloadGridSubject = new Subject<string>();
+  private applyFilterSubject = new Subject<string>();
+
+
+  reloadGrid$ = this.reloadGridSubject.asObservable();
+  refreshList$ = this.applyFilterSubject.asObservable();
+  reloadBanner$ = this.reloadBannerOnSubject.asObservable();
+
+
+  triggerGridReload(moduleName: string) {
+    this.reloadGridSubject.next(moduleName);
+  }
+
+  triggerApplyFilter(moduleName: string) {
+    this.applyFilterSubject.next(moduleName);
+  }
+
+  getReloadObservable() {
+    return this.reloadComponentSubject.asObservable();
+  }
+
+  reloadComponent() {
+    this.reloadComponentSubject.next();
+  }
+
+  reloadBanner() {
+    this.reloadBannerOnSubject.next();
+  }
+
+  roleBasedNavigation(router: Router) {
+    this.navigate(NavigationURLs.HOME, router);
+  }
+
+  navigate(url: string, router: Router) {
+    router.navigate([url]);
+  }
+
+  getUserPermissionData(): Observable<boolean> {
+    return this.roleService.getLoggedInUserPermissions().pipe(
+      map((result) => {
+        if (result.success) {
+          this.localStorageService.setUserPermission(result.data);
+          if (result.data.length > 0) {
+            const user = this.localStorageService.getLoggedInUserData();
+            // user.role = result.roleName;
+            localStorage.setItem("user", JSON.stringify(user));
+            return true;
+          }
+        }
+        return false;
+      }),
+      catchError((error: any) => {
+        console.error("Error fetching role data", error?.message);
+        return of(false);
+      })
+    );
+  }
+
+  getCurrentRoute(): string {
+    const tree = this.router.parseUrl(this.router.url);
+    return tree.root.children['primary']?.segments.map(it => it.path)?.join('/')?.toLowerCase() || '';
+  }
+
+  isAccessible(action: string): boolean {
+    const permissions = this.localStorageService.getUserPermission();
+    const lowerCaseAction = action.toLowerCase();
+    const mapping = permissions.find(
+      (m: any) => m.route?.toLowerCase() === '/' + this.getCurrentRoute()
+    );
+    if (!mapping) {
+      return false;
+    }
+    return mapping[lowerCaseAction] === true;
+  }
+
+  getConfigList(config: string) {
+    return this.localStorageService.getConfigList(config);
+  }
+
+  AccessibleModuleList(): ModuleResponse[] {
+    const permissions = this.localStorageService.getUserPermission();
+    return permissions
+      .filter((m: any) => m.view === true)
+      .map((m: any) => ({
+        moduleName: m.moduleName,
+        route: m.route,
+        isVisible: true,
+        displayOrder: m.displayOrder ?? 0,
+        iconClass: m.iconClass || ''
+      }));
+  }
+
+  isPermitted(roles: string[]) {
+    const user = this.localStorageService.getLoggedInUserData();
+    const loggedInUserRole = user?.role;
+    if (roles.includes(loggedInUserRole)) {
+      return true;
+    }
+    return false;
+  }
+
+
+  formatMessage(message: string, ...values: any[]): string {
+    return message.replace(/{(\d+)}/g, (match, index) => values[index] || "");
+  }
+
+
+  uniqueNameValidator(clientNames: string[]): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const name = control.value?.trim().toLowerCase();
+      const isDuplicate = clientNames.some(
+        (existingName) => existingName.toLowerCase() === name
+      );
+      return isDuplicate ? { nameExists: true } : null;
+    };
+  }
+
+  getCommonListItems(commonListId: String) {
+    const params = new HttpParams().set(
+      "commonListId",
+      commonListId.toString()
+    );
+    return this.http.get(API_URL.GET_COMMON_LIST_ITEMS, { params: params });
+  }
+
+  getCountryList() {
+    return this.http.get(API_URL.GET_COUNTRY_LIST);
+  }
+
+  trimAllFields(form: any) {
+
+    Object.keys(form?.controls).forEach((key) => {
+      const control = form?.get(key);
+      if (key !== 'picture' && control && typeof control.value === "string") {
+        control.setValue(control.value.trim());
+      }
+    });
+  }
+
+  validateAmount(event: any) {
+
+    if (event.key.match(/^[\D]$/) && event.key.match(/^[^\.]$/)) {
+      event.preventDefault();
+    }
+  }
+
+  hidebuttonFormatter(cell: CellComponent) {
+    return `<button class="action-buttons" title="Hide"><i class="bi bi-dash-lg btn-link"></i></button>`;
+  }
+
+  statusFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const userData = cell.getRow().getData();
+    const columnValue = userData[columnName];
+    if (columnValue) {
+      return '<span class="status-active">Active</span>';
+    } else {
+      return '<span class="status-disabled">Disabled</span>';
+    }
+  }
+
+  showGlobalDropdownMenu(button: HTMLElement, menuOptions: any) {
+
+
+    const oldMenu = document.getElementById('globalDropdownMenu');
+    if (oldMenu) oldMenu.remove();
+
+
+    const menu = document.createElement('ul');
+    menu.className = 'dropdown-menu show options-menu';
+    menu.id = 'globalDropdownMenu';
+    menu.style.position = 'absolute';
+    menu.style.zIndex = '9999';
+
+
+    menuOptions.forEach((option: any) => {
+      const menuItem = document.createElement('li');
+      menuItem.innerHTML = `<a class="dropdown-item" href="#">${option.label}</a>`;
+      menuItem.addEventListener('click', (event) => {
+        event.preventDefault();
+        option.action();
+        menu.remove();
+      });
+      menu.appendChild(menuItem);
+    });
+
+
+    const rect = button.getBoundingClientRect();
+    menu.style.top = `${rect.bottom + window.scrollY}px`;
+    menu.style.left = `${rect.left + window.scrollX - 70}px`;
+
+
+    document.body.appendChild(menu);
+  }
+
+  threeDotsFormatter(cell: CellComponent) {
+    const rowData = cell.getRow().getData();
+    const rowId = rowData['id'];
+    return `
+        <div class="dropdown" style="position: relative;">
+          <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end options-menu" id="dropdownMenuItems${rowId}"></ul>
+        </div>`;
+  }
+
+  optionDotsFormatter(cell: CellComponent) {
+    const rowData = cell.getRow().getData();
+    const rowId = rowData['transactionGroupId'];
+    return `
+        <div class="dropdown" style="position: relative;">
+          <button class="btn btn-link OPTIONS_MENU_THREE_DOTS action-buttons p-0" type="button" data-row-id="${rowId}">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end options-menu" id="dropdownMenuItems${rowId}"></ul>
+        </div>`;
+  }
+
+  thumbnailFormatter(cell: CellComponent) {
+    const rowData = cell.getRow().getData();
+    let thumbnailPath = rowData["thumbnailPath"];
+    if (thumbnailPath) {
+      thumbnailPath = API_URL.ATTACHMENT + thumbnailPath;
+
+      const html = `<img src="${thumbnailPath}" style="width: 40px; height: 40px; object-fit: cover;" />`;
+      return html;
+    }
+    const imagePath = rowData["imagePath"];
+    if (imagePath) {
+      const html = `<i class="bi bi-person-circle fs-3" style="color: var(--theme-primary);"></i>`;
+      return html;
+    }
+    const html = "";
+    return html;
+  }
+  isValidGuid(value: string) {
+    const guidPattern =
+      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+    return guidPattern.test(value);
+  }
+
+  isEmptyGuid(value: string) {
+    const guidPattern =
+      /^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/;
+    return guidPattern.test(value);
+  }
+
+  public setValuesInLocalStorage() {
+
+    const userString = localStorage.getItem(LocalStorageConstants.USER);
+    let user = null;
+    if (userString) {
+      user = JSON.parse(userString);
+    }
+    const userId = user?.id;
+    localStorage.setItem(LocalStorageConstants.USERID, user.id);
+    this.setConfigToLocalStorage(userId, UserConfig.ACCOUNT, DdlConfig.ACCOUNTS);
+    this.setConfigToLocalStorage(userId, UserConfig.RELATION, DdlConfig.RELATIONS);
+    this.setConfigToLocalStorage(userId, UserConfig.OCCASION_TYPE, DdlConfig.OCCASION_TYPES);
+    this.setCountryListToLocalStorage();
+    this.setCommonListItemsToLocalStorage(DBConstants.COINTYPE, DdlConfig.COIN_TYPES);
+    this.setCommonListItemsToLocalStorage(DBConstants.MONTH, DdlConfig.MONTHS);
+    // this.setLoggedInUserPermissionsToLocalStorage();
+  }
+
+  setConfigToLocalStorage(id: string, config: string, DdlConfig: string) {
+    // const id = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
+    this.configurationService.getActiveConfigList(id, config).subscribe({
+      next: (result: any) => {
+        localStorage.setItem(DdlConfig, JSON.stringify(result.data));
+      },
+      error: (error: any) => {
+        console.error('Error fetching user list', error);
+      },
+    });
+
+  }
+
+  setCountryListToLocalStorage() {
+    this.getCountryList().subscribe({
+      next: (result: any) => {
+        this.localStorageService.setCountryList(result.data);
+      },
+      error: (error: any) => {
+        console.error('Error fetching user list', error);
+      },
+    });
+  }
+
+  setCommonListItemsToLocalStorage(id: string, key: string) {
+    this.getCommonListItems(id).subscribe({
+      next: (result: any) => {
+        console.log('result : ', result);
+        this.localStorageService.setCommonListItems(key, result.data);
+      },
+      error: (error: any) => {
+        console.error('Error fetching user list', error);
+      },
+    });
+  }
+  // setLoggedInUserPermissionsToLocalStorage() {
+  //   this.roleService.getLoggedInUserPermissions().subscribe({
+  //     next: (result: any) => {
+  //       console.log('result : ', result);
+  //       this.localStorageService.setLoggedInUserPermissions(result.data);
+  //     },
+  //     error: (error: any) => {
+  //       console.error('Error fetching user list', error);
+  //     },
+  //   });
+  // }
+}
+
+

@@ -1,0 +1,114 @@
+<header class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm">
+  <div class="banner-text d-flex align-items-center flex-shrink-0">
+    
+    Hello {{ localStorageService.getLoggedInUserData()?.firstName + ' ' + localStorageService.getLoggedInUserData()?.lastName }}!
+  </div>
+  <button class="btn btn-light d-md-none ms-2" type="button" (click)="toggleMenu()">
+    <i class="bi" [ngClass]="isMenuOpen ? 'bi-x-lg' : 'bi-list'" aria-hidden="true"></i>
+    <span class="visually-hidden">Toggle navigation</span>
+  </button>
+
+  <div class="d-flex align-items-center flex-grow-1 justify-content-end">
+    <div class="d-flex align-items-center position-relative me-3 flex-shrink-0">
+      <div class="d-none d-md-flex align-items-center" >
+      @for(mod of moduleList;track $index){
+      <button (click)="navigate(mod.route)" class="font-weight-bold p-2 txt-btn"
+        [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
+        {{ mod.moduleName }}
+      </button>
+      &nbsp;
+      }
+      </div>
+
+      @if(showNotificationIcon()) {
+      
+      <div class="position-relative" #notificationDropdown>
+        <button class="btn p-0 position-relative notification-btn" (click)="toggleSystemNotificationList()">
+          <i class="bi bi-bell"></i>
+          @if(notificationTotalUnreadCount > 0) {
+          <span class="notification position-absolute translate-middle btn-danger">
+            {{ notificationTotalUnreadCount }}
+          </span>
+          }
+        </button>
+
+        @if(showNotificationList) {
+        <ul class="dropdown-menu dropdown-menu-notification dropdown-menu-end show">
+          <div class="d-flex justify-content-between align-items-center px-3 py-2 pb-2 border-bottom">
+            <span><strong>Notifications</strong></span>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemNotificationList()"></button>
+          </div>
+          @if(notifications.length === 0) {
+          <li class="text-center p-2">
+            <span class="text-muted">No notifications</span>
+          </li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+          } @for(notification of notifications; track $index;) {
+          <li class="dropdown-item notification-item" [ngClass]="
+              notification.hasRead ? 'read-notification' : 'unread-notification'
+            ">
+            <button class="btn notification-item text-start" (click)="markSystemNotificationAsRead(notification)">
+              <div>{{ notification.notificationMessage }}</div>
+              <small>{{ getRelativeTime(notification.createdOn) }}</small>
+              
+              <div *ngIf="notification.isLoading" class="spinner-border spinner-border-sm notification-spinner mt-2"
+                role="status"></div>
+            </button>
+          </li>
+          @if($index < notifications.length ) { <li>
+            <hr class="dropdown-divider" />
+            </li>
+            } } @if(notifications.length) {
+            <li class="text-center">
+              <button class="dropdown-item view-all-btn py-2" (click)="viewAllSystemNotifications()"
+                [disabled]="notifications.length === 0">
+                View All
+              </button>
+            </li>
+            }
+        </ul>
+        }
+      </div>
+      }
+    </div>
+    <div class="dropdown flex-shrink-0 me-4">
+      <button class="btn p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+        <div class="profile-circle">
+          <span title="{{ loggedInUserName }}">{{ userNameInitials }}</span>
+        </div>
+      </button>
+
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li class="top-dropdown-item">
+          <a class="dropdown-item logout-btn" (click)="goToChangePasswordPage()">
+            <i class="bi bi-pencil-square"></i>
+            &nbsp;Change Password
+          </a>
+        </li>
+
+        <li class="top-dropdown-item">
+          <a class="dropdown-item logout-btn" (click)="logout()" data-bs-toggle="modal" data-bs-target="#confirmBox">
+            <i class="bi bi-box-arrow-right"></i>
+            &nbsp;Log Out
+          </a>
+        </li>
+      </ul>
+    </div>
+    
+  </div>
+</header>
+<div class="public-page-bg d-md-none" [class.d-none]="!isMenuOpen">
+  <div class="container-fluid py-2">
+    <div class="d-flex flex-column gap-1">
+      @for(mod of moduleList;track $index){
+      <button (click)="navigate(mod.route); toggleMenu()" class="btn btn-link text-start txt-btn px-2"
+        [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
+        {{ mod.moduleName }}
+      </button>
+      }
+    </div>
+  </div>
+</div>
+<app-confirm-box (confirmResult)="handleConfirmResult($event)"></app-confirm-box>

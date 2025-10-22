@@ -1,0 +1,40 @@
+.table-container {
+  position: relative;
+}
+
+.loading-disabled {
+  pointer-events: none;
+  user-select: none;
+}
+
+.loading-disabled .tabulator-grid-wrapper {
+  opacity: 1;
+}
+
+.tabulator-grid-wrapper {
+  min-height: 200px;
+}
+
+/* Grid loader overlay - moved to global theme tokens */
+.grid-loader-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(1px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  border-radius: 8px;
+}
+body.dark-mode .grid-loader-overlay {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+.grid-loader-content .loader-text {
+  color: var(--theme-text);
+  font-size: 14px;
+  font-weight: 500;
+}

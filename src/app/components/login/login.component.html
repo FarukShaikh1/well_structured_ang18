@@ -1,0 +1,20 @@
+<div class="otp-card">
+    <div class="text-center mb-4">
+        <h4 class="fw-bold">Sign In to FMS Collection</h4>
+    </div>
+    <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+        <div class="row">
+            <div class="col-12 mt-4">
+                <input type="text" formControlName="userName" class="form-input form-control"
+                    placeholder="Enter User Name" required="required">
+            </div>
+            <div class="col-12 mt-4">
+                <input type="text" formControlName="password" class="form-input form-control password-text p4"
+                    placeholder="Enter Password" required="" />
+            </div>
+            <div class="col-12 mt-4">
+                <button class="btn btn-primary rounded-button mt-4" id="BtnLogin">Login</button>
+            </div>
+        </div>
+    </form>
+</div>

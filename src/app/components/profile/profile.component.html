@@ -1,0 +1,91 @@
+<form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+    <div class="common-form">
+        <table>
+            <tr>
+                <td class="lable">
+                    FirstName
+                </td>
+                <td>
+                    <input type="text" formControlName="firstName" class="form-input form-control">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable">
+                    LastName
+                </td>
+                <td>
+                    <input type="text" formControlName="lastName" class="form-input form-control">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable">
+                    MobileNumber
+                </td>
+                <td>
+                    <input type="text" formControlName="mobileNumber" class="form-input form-control">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable">
+                    Alternate number
+                </td>
+                <td>
+                    <input type="text" formControlName="mobileNumber2" class="form-input form-control">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable">
+                    Email Id
+                </td>
+                <td>
+                    <input type="text" formControlName="emailAddress" class="form-input form-control"
+                        [readonly]="readonly">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable">
+                    userName same as Email
+                </td>
+                <td>
+                    <input type="checkbox" formControlName="userNameCheckbox" id="userNameCheckbox"
+                       [checked]="userNameCheckboxValue"
+                        (change)="onCheckboxChange()">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable">
+                    userName
+                </td>
+                <td>
+                    <input type="text" formControlName="userName" class="form-input form-control" [readOnly]="readonly">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable">
+                    Password
+                </td>
+                <td>
+                    <input type="password" formControlName="password" class="form-input form-control">
+                </td>
+            </tr>
+            <tr>
+                <td class="lable">
+                    roleName
+                </td>
+                <td>
+                    <input type="text" formControlName="roleName" class="form-input form-control" readonly="readonly">
+                </td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center">
+                    <input type="submit" class="btn-md form-button btn-secondary form-control" id="BtnProfile"
+                        value="Update Profile">
+                    <button class="btn-md form-button btn-secondary form-control" id="BtnBack">Back to Home</button>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</form>

@@ -1,0 +1,152 @@
+<div class="modal fade modal-md" id="detailsPopup" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add Transaction</h4>
+        <button #btnCloseDetailsPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="transactionDetailsForm" (ngSubmit)="submitTransactionDetails()">
+          <div>
+            <div class="d-none">
+              <p>transactionGroupId</p>
+              <input formControlName="transactionGroupId" />
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <label class="required"> Choose a date</label>
+                <input id="transactionDate" class="form-control form-control-lg text-dark bg-transparent" type="date"
+                  placeholder="DD/MM/YYYY" appearance="outline" formControlName="transactionDate" [ngClass]="{
+                    'error-border':
+                      transactionDetailsForm.get('transactionDate')?.touched &&
+                      transactionDetailsForm.get('transactionDate')?.invalid
+                  }" />
+                @if(transactionDetailsForm.get('transactionDate')?.touched &&
+                transactionDetailsForm.get('transactionDate')?.invalid){
+                <div class="text-danger">
+                  @if(transactionDetailsForm.get('transactionDate')?.errors?.['required']){
+                  Date is required. }
+                  @else if(transactionDetailsForm.get('transactionDate')?.errors?.['pattern']){
+                  Invalid Date. }
+                </div>
+                }
+              </div>
+
+              <div class="col-6">
+                <label class="required">Source or reason</label>
+                <input type="text" placeholder="Type something" aria-label="Source and reasons"
+                  class="form-control form-control-lg text-dark bg-transparent" formControlName="sourceOrReason"
+                  (focus)="focusInSource = true" (focusout)="focusOutSource()" [ngClass]="{
+                    'error-border':
+                      transactionDetailsForm.get('sourceOrReason')?.touched &&
+                      transactionDetailsForm.get('sourceOrReason')?.invalid
+                  }" />
+                @if(transactionDetailsForm.get('sourceOrReason')?.touched &&
+                transactionDetailsForm.get('sourceOrReason')?.invalid){
+                <div class="text-danger">
+                  @if(transactionDetailsForm.get('sourceOrReason')?.errors?.['required']){
+                  Source/Reason is required. }
+                  @else if(transactionDetailsForm.get('sourceOrReason')?.errors?.['pattern']){
+                  Invalid source/Reason. }
+                </div>
+                } @if(filteredSourceOrReasonList!==undefined &&
+                filteredSourceOrReasonList != null && focusInSource){
+                <ul class="list-group suggestion-list">
+                  @for(option of filteredSourceOrReasonList;track $index){
+                  <li class="list-group-item list-group-item-action" (click)="selectSourceOrReason(option)">
+                    {{ option }}
+                  </li>
+                  }
+                </ul>
+                }
+              </div>
+            </div>
+            <div class="row">
+              @for(account of accountList; track $index){
+              <div class="col-6 mt-4">
+                <div class="d-flex justify-content-between align-items-center">
+                  <label>{{ account.configurationName }}</label> &nbsp;
+
+                  <div class="category-toggle">
+                    <label class="category-option income" [class.active]="
+                        transactionDetailsForm.get('category_' + account.id)
+                          ?.value === 'income'
+                      " (click)="toggleCategory(account.id, 'income')">
+                      Income
+                    </label>
+                    <label class="category-option expense" [class.active]="
+                        transactionDetailsForm.get('category_' + account.id)
+                          ?.value === 'expense'
+                      " (click)="toggleCategory(account.id, 'expense')">
+                      Expense
+                    </label>
+                  </div>
+                </div>
+                <input type="hidden" [formControlName]="'category_' + account.id" />
+
+                <input [formControlName]="account.id" class="form-control form-control-lg text-dark bg-transparent"
+                  (keydown)="globalService.validateAmount($event)" />
+              </div>
+              }
+            </div>
+            <div class="row mt-4">
+              <div class="col-6">
+                <label>Purpose </label>
+                <input type="text" placeholder="Type something" aria-label="purpose" matInput formControlName="purpose"
+                  class="form-control form-control-lg text-dark bg-transparent" (focus)="focusInPurpose = true"
+                  (focusout)="focusOutPurpose()" />
+                @if(filteredPurposeList!==undefined && filteredPurposeList !=
+                null && focusInPurpose){
+                <ul class="list-group position-absolute w-50 mt-0 overflow-auto maxh-300"
+                  >
+                  @for(option of filteredPurposeList;track $index){
+                  <li class="list-group-item list-group-item-action" (click)="selectPurpose(option)">
+                    {{ option }}
+                  </li>
+                  }
+                </ul>
+                }
+              </div>
+              <div class="col-6">
+                <label>Description </label>
+                <textarea formControlName="description" (focus)="focusInDescription = true"
+                  (focusout)="focusOutDescription()" placeholder="Details about transaction"
+                  class="form-control form-control-lg text-dark bg-transparent"></textarea>
+                @if(filteredDescriptionList!==undefined &&
+                filteredDescriptionList != null && focusInDescription){
+                <ul class="list-group position-absolute w-50 mt-0 overflow-auto maxh-300"
+                  >
+                  @for(option of filteredDescriptionList;track $index){
+                  <li class="list-group-item list-group-item-action" (click)="selectDescription(option)">
+                    {{ option }}
+                  </li>
+                  }
+                </ul>
+                }
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-12 col-sm-12">
+                <div class="action d-flex justify-content-end">
+                  <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()"
+                    data-bs-dismiss="modal">
+                    Cancel
+                  </button>
+                  <button class="btn btn-danger rounded-button" type="reset">
+                    Reset
+                  </button>
+                  <button class="btn btn-primary rounded-button" type="submit"
+                    [disabled]="transactionDetailsForm.invalid">
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<app-toaster></app-toaster>

@@ -1,0 +1,96 @@
+/* Chart Options Section */
+.chart-container {
+  width: 100%;
+  overflow-x: auto;       /* ✅ Scroll horizontally when too many labels */
+  overflow-y: hidden;
+}
+
+.chart-scroll {
+  min-height: 400px;      /* Fixed height container */
+}
+
+canvas {
+  display: block;
+}
+
+.chart-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.legend {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.legend-color.income {
+  background-color: #4caf50;
+}
+
+.legend-color.expense {
+  background-color: #f44336;
+}
+
+.chart-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chart-controls button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  background-color: #f7f7f7;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chart-controls button:hover {
+  background-color: #e6e6e6;
+}
+
+.chart-controls button.active {
+  background-color: #4caf50;
+  color: white;
+  border-color: #4caf50;
+}
+
+/* Chart Layout */
+.chart-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  overflow: hidden;
+}
+
+.y-axis-chart {
+  flex: 0 0 80px;
+  border-right: 1px solid #ddd;
+}
+
+.bar-chart-scroll {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+}

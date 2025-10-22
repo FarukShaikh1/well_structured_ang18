@@ -1,0 +1,6 @@
+<div class="table-container" [class.loading-disabled]="isLoading">
+  <div class="row">
+    <div class="col-12 tabulator-grid-wrapper" #tabulatorGridWrapper id="tabulator-grid-wrapper"></div>
+  </div>
+  <app-grid-loader [isLoading]="isLoading" [loadingText]="loadingText"></app-grid-loader>
+</div>

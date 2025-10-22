@@ -1,0 +1,145 @@
+<div mat-dialog-title>Expense Adjustment</div>
+<form [formGroup]="expenseAdjustmentForm" (ngSubmit)="submitExpenseAdjustment()">
+    <div mat-dialog-content>
+
+        <div class="row">
+            <label style="width:10%; padding-top: 15px;">SBI Account</label>
+            <div appearance="outline" style="width:20%">
+                <label>Choose a date</label>
+                <input [value]="expenseDateValueSbi" appearance="outline" formControlName="expenseDateSbi" (dateChange)="dateChange($event, 'sbi')">
+                <div>MM/DD/YYYY</div>
+                <div matIconSuffix ></div>
+                <div #pickerSbi startView="month"></div>
+            </div>
+            <div class="example-full-width" style="width:20%">
+                <label>Source and reasons</label>
+                <input type="text" placeholder="Type something" aria-label="Source and reasons" matInput
+                    formControlName="sourceOrReasonSbi"  (input)="onSourceReasonChange($event, 'sbi')">
+                <div>
+                    <option *ngFor="let option of sourceOrReasonListSbi" [value]="option.Name">
+                        {{option.Name}}
+                    </option>
+                </div>
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>Available in record</label>
+                <input [value]="availableBalanceSbi" formControlName="availableBalanceSbi" readonly="readonly">
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>Available in your hand</label>
+                <input formControlName="availableInHandSbi" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event,'sbi')">
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>You spent/gain</label>
+                <input formControlName="sbiAccount" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="row">
+            <label style="width:10%; padding-top: 15px;">CBI Account</label>
+            <div appearance="outline" style="width:20%">
+                <label>Choose a date</label>
+                <input [value]="expenseDateValueCbi" appearance="outline" formControlName="expenseDateCbi"  (dateChange)="dateChange($event,'cbi')">
+                <div>MM/DD/YYYY</div>
+                <div matIconSuffix ></div>
+                <div #pickerCbi startView="month"></div>
+            </div>
+            <div class="example-full-width" style="width:20%">
+                <label>Source and reasons</label>
+                <input type="text" placeholder="Type something" aria-label="Source and reasons" matInput
+                    formControlName="sourceOrReasonCbi" (input)="onSourceReasonChange($event, 'cbi')">
+                <div>
+                    <option *ngFor="let option of sourceOrReasonListCbi" [value]="option.Name">
+                        {{option.Name}}
+                    </option>
+                </div>
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>Available in record</label>
+                <input [value]="availableBalanceCbi" formControlName="availableBalanceCbi" readonly="readonly">
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>Available in your hand</label>
+                <input formControlName="availableInHandCbi" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event,'cbi')">
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>You spent/gain</label>
+                <input formControlName="cbiAccount" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="row">
+            <label style="width:10%; padding-top: 15px;">Cash Amount</label>
+            <div appearance="outline" style="width:20%">
+                <label>Choose a date</label>
+                <input [value]="expenseDateValueCash" appearance="outline" formControlName="expenseDateCash"  (dateChange)="dateChange($event, 'cash')">
+                <div>MM/DD/YYYY</div>
+                <div matIconSuffix ></div>
+                <div #pickerCash startView="month"></div>
+            </div>
+            <div class="example-full-width" style="width:20%">
+                <label>Source and reasons</label>
+                <input type="text" placeholder="Type something" aria-label="Source and reasons" matInput
+                    formControlName="sourceOrReasonCash"  (input)="onSourceReasonChange($event,'cash')">
+                <div>
+                    <option *ngFor="let option of sourceOrReasonListCash" [value]="option.Name">
+                        {{option.Name}}
+                    </option>
+                </div>
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>Available in record</label>
+                <input [value]="availableBalanceCash" formControlName="availableBalanceCash" readonly="readonly">
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>Available in your hand</label>
+                <input formControlName="availableInHandCash" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event,'cash')">
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>You spent/gain</label>
+                <input formControlName="cashAmount" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="row">
+            <label style="width:10%; padding-top: 15px;">Other Account</label>
+            <div appearance="outline" style="width:20%">
+                <label>Choose a date</label>
+                <input [value]="expenseDateValueOther" appearance="outline" formControlName="expenseDateOther"  (dateChange)="dateChange($event,'other')">
+                <div>MM/DD/YYYY</div>
+                <div matIconSuffix></div>
+                <div #pickerOther startView="month" ></div>
+            </div>
+            <div class="example-full-width" style="width:20%">
+                <label>Source and reasons</label>
+                <input type="text" placeholder="Type something" aria-label="Source and reasons" matInput
+                    formControlName="sourceOrReasonOther" (input)="onSourceReasonChange($event,'other')">
+                <div >
+                    <option *ngFor="let option of sourceOrReasonListOther" [value]="option.Name">
+                        {{option.Name}}
+                    </option>
+                </div>
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>Available in record</label>
+                <input [value]="availableBalanceOther" formControlName="availableBalanceOther" readonly="readonly">
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>Available in your hand</label>
+                <input formControlName="availableInHandOther" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event,'other')">
+            </div>
+            <div appearance="outline" style="width:20%">
+                <label>You spent/gain</label>
+                <input formControlName="otherAmount" readonly="readonly">
+            </div>
+        </div>
+
+    </div>
+
+    <div mat-dialog-actions class="action">
+        <button  color="primary" type="submit">Save</button>
+        <button  type="button"> Cancel</button>
+        <button  type="reset"> Reset</button>
+    </div>
+
+</form>

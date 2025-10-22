@@ -1,0 +1,156 @@
+<div class="main-body">
+  @if(globalService.isAccessible(ActionConstant.ADD)){
+  <button (click)="openDetailsPopup('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
+    data-bs-target="#detailsPopup">
+    <svg
+      class="icon-24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <line
+        x1="12"
+        y1="5"
+        x2="12"
+        y2="19"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+      <line
+        x1="5"
+        y1="12"
+        x2="19"
+        y2="12"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+    </svg>
+    Add Day
+  </button>
+  } 
+  <div class="row pb-2 pt-2">
+    <div class="col-6 col-sm-4 col-lg-2 col-xl-2">
+      <div appearance="outline" class="form-field">
+        <label>Select Month</label>
+        <button
+          class="form-select form-control form-control-lg text-dark bg-transparent styled-select scrollable-button text-start"
+          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          {{ lableForMonthDropDown }}
+        </button>
+
+        <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllMonthCheck($event)"
+                [checked]="selectedMonths.length === monthList?.length" />
+              <label class="form-check-label" for="selectAll">All</label>
+            </div>
+          </li>
+          @for(item of monthList;track $index){
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" [id]="item.listItemName"
+                [checked]="selectedMonths.includes(item.listItemName)"
+                (change)="toggleMonthCheck($event, item.listItemName,item.sequenceNumber )" />
+              <label class="form-check-label" [for]="item.listItemName">
+                {{ item.listItemDescription }}
+              </label>
+            </div>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="col-5 col-sm-4 col-md-3 col-lg-2">
+      <div appearance="outline" class="form-field">
+        <label>Day Type</label>
+        <button
+          class="form-select form-control form-control-lg text-dark bg-transparent styled-select scrollable-button text-start"
+          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          {{ lableForOccasionTypeDropDown }}
+        </button>
+
+        <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllOccasionTypeCheck($event)"
+                [checked]="selectedOccasionType.length === occasionTypeList?.length" />
+              <label class="form-check-label" for="selectAll">All</label>
+            </div>
+          </li>
+          @for(item of occasionTypeList;track $index){
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" [id]="item.description"
+                [checked]="selectedOccasionType.includes(item.description)"
+                (change)="toggleOccasionTypeCheck($event, item.configurationName, item.id)" />
+              <label class="form-check-label" [for]="item.description">
+                {{ item.description }}
+              </label>
+            </div>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="col-5 col-sm-4 col-md-3 col-lg-2">
+      <div appearance="outline">
+        <label>Search</label>
+        <input #searchInput (input)="filterGridSearchText($event)"
+          class="form-control form-control-lg text-dark bg-transparent" />
+      </div>
+    </div>
+        <div class="col-5 col-sm-4 col-md-3 col-lg-2">
+      <div appearance="outline" class="form-field">
+        <label>Relation Type</label>
+        <button
+          class="form-select form-control form-control-lg text-dark bg-transparent styled-select scrollable-button text-start"
+          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          {{ lableForRelationTypeDropDown }}
+        </button>
+
+        <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllRelationCheck($event)"
+                [checked]="selectedRelationType.length === relationList?.length" />
+              <label class="form-check-label" for="selectAll">All</label>
+            </div>
+          </li>
+          @for(item of relationList;track $index){
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" [id]="item.description"
+                [checked]="selectedRelationType.includes(item.description)"
+                (change)="toggleRelationCheck($event, item.description, item.id)" />
+              <label class="form-check-label" [for]="item.description">
+                {{ item.description }}
+              </label>
+            </div>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-6 col-sm-4 col-md-6 col-lg-5">
+      <section class="checbox-section"></section>
+    </div>
+  </div>
+</div>
+
+<div class="mb-2">
+  <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
+    [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
+    [isLoading]="isGridLoading" [loadingText]="'Loading days...'">
+  </app-tabulator-grid>
+</div>
+<app-day-details></app-day-details>
+
+<app-confirmation-dialog
+  (outputAction)="handleConfirmResult($event)"
+></app-confirmation-dialog>
+<app-toaster></app-toaster>
+  

@@ -1,0 +1,139 @@
+<div class="main-body">
+  @if (
+  this.globalService.isAccessible(ActionConstant.ADD)
+  ){
+  <button (click)="transactionDetails('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
+    data-bs-target="#detailsPopup">
+    <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+    Add Transaction
+  </button>
+  }
+  <button (click)="goToTransactionList()" class="btn btn-primary rounded-button">
+    <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M6 4H18C18.5523 4 19 4.44772 19 5V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V5C5 4.44772 5.44772 4 6 4Z"
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <line x1="8" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="8" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="8" y1="16" x2="16" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="8" y1="19" x2="16" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+
+    Transaction List
+  </button>
+  <button (click)="goToTransactionSummary()" class="btn btn-primary rounded-button">
+    <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
+      <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+    Transaction Summary
+  </button>
+  <button (click)="goToBalanceSummary()" class="btn btn-primary rounded-button">
+    <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
+      <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+    Balance Summary
+  </button>
+  <button (click)="goToTransactionReport()" class="btn btn-primary rounded-button">
+    <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      
+      <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
+        stroke="currentColor" stroke-width="2" fill="none" />
+      
+      <rect x="8" y="14" width="2" height="4" fill="currentColor" />
+      <rect x="11" y="12" width="2" height="6" fill="currentColor" />
+      <rect x="14" y="10" width="2" height="8" fill="currentColor" />
+    </svg>
+    Transaction Report
+  </button>
+  @if(sourceOrReason || minAmount || maxAmount){
+  <button (click)="ClearFilter()" class="btn btn-primary rounded-button">
+    <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 4H20L13 13V19L11 20V13L4 4Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <g transform="translate(12, 9)">
+        <circle cx="6" cy="6" r="6" fill="red" />
+        <line x1="3" y1="3" x2="9" y2="9" stroke="white" stroke-width="2" stroke-linecap="round" />
+        <line x1="9" y1="3" x2="3" y2="9" stroke="white" stroke-width="2" stroke-linecap="round" />
+      </g>
+    </svg>
+
+    Clear Filter
+  </button>
+  }
+  <div class="row pb-2 pt-2">
+    <div class="col-6 col-sm-4 col-lg col-xl">
+      From Date:
+      <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate"
+        placeholder="DD/MM/YYYY" />
+    </div>
+    <div class="col-6 col-sm-4 col-lg col-xl">
+      To Date:
+      <input class="form-control form-control-lg text-dark bg-transparent" type="Date" id="toDate"
+        placeholder="DD/MM/YYYY" />
+    </div>
+    <div class="col-6 col-sm-4 col-lg col-xl">
+      <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+
+      Min Amount
+      <input class="form-control form-control-lg text-dark bg-transparent" type="text" placeholder="Min Amount"
+        aria-label="Min Amount" #minInput (input)="filterGridByMinAmount($event)"
+        (keydown)="globalService.validateAmount($event)" />
+    </div>
+    <div class="col-6 col-sm-4 col-lg col-xl">
+      <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      Max Amount
+      <input class="form-control form-control-lg text-dark bg-transparent" type="text" placeholder="Max Amount"
+        aria-label="Max Amount" #maxInput (input)="filterGridByMaxAmount($event)"
+        (keydown)="globalService.validateAmount($event)" />
+    </div>
+    <div class="col-6 col-sm-4 col-lg col-xl">
+      <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      Source/Reason
+      <input class="form-control form-control-lg text-dark bg-transparent" type="text" placeholder="Search Something"
+        aria-label="Search Something" #searchInput (keyup)="filterGridBySearch($event)" />
+      <div></div>
+    </div>
+  </div>
+
+  <div class="row  g-3 mb-4">
+    
+    @if(activeComponent === NavigationURLs.EXPENSE_REPORT){
+    <div class="col-6 mb-4">
+      <div class="card pb-2 ps-2 pe-2">
+        <app-transaction-pie-chart [reportData]="transactionReports"></app-transaction-pie-chart>
+      </div>
+    </div>
+    <div class="col-6 mb-4">
+      <div class="card pb-2 ps-2 pe-2">
+        <app-transaction-report-chart [reportData]="transactionReports"></app-transaction-report-chart>
+      </div>
+    </div>
+    }
+    <div class="mb-2">
+      <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
+        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
+      </app-tabulator-grid>
+    </div>
+  </div>
+</div>
+<app-transaction-details [lastTransactionDate]="lastTransactionDate"></app-transaction-details>
+<app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>

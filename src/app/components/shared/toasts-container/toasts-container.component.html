@@ -1,0 +1,25 @@
+@for (toast of toastService.toasts; track toast) {
+<ngb-toast
+  [class]="toast.classname"
+  [autohide]="toast.autohide"
+  [delay]="toast.delay || 5000"
+  (hidden)="toastService.remove(toast)"
+  (mouseenter)="pauseToast(toast)"
+  (mouseleave)="resumeToast(toast)"
+>
+  <div class="toast-header text-white">
+    <ng-template [ngTemplateOutlet]="toast.template"></ng-template>
+    <button
+      type="button"
+      class="btn-close text-white"
+      aria-label="Close"
+      (click)="toastService.remove(toast)"
+    ></button>
+  </div>
+  <div
+    class="toast-progress"
+    [style.animationDuration]="toast.delay + 'ms'"
+    (animationend)="onProgressAnimationEnd(toast)"
+  ></div>
+</ngb-toast>
+}

@@ -1,0 +1,24 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#08dca0",
+    "titleBar.activeBackground": "#0E474D",
+    "titleBar.activeForeground": "#F2FCFD"
+  },
+  "eslint.validate": ["javascript", "typescript", "typescriptreact", "html"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.format.enable": true,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "eslint.alwaysShowStatus": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[jsonc]": {
+  "prettier.format.enable": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

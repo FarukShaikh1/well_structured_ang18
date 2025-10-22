@@ -1,0 +1,40 @@
+<div class="modal fade" id="confirmationPopup" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationLabel">{{ title }}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="closeConfirmationPopup(false)"
+          data-bs-toggle="modal"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ message }}</p>
+      </div>
+      <div class="d-flex justify-content-end pb-3">
+        <button
+          type="button"
+          class="btn rounded-button rounded-button-small me-2"
+          (click)="closeConfirmationPopup(false)"
+          data-bs-toggle="modal"
+          data-bs-dismiss="modal"
+        >
+          {{ cancelButtonLabel }}
+        </button>
+        <button
+          type="button"
+          class="btn rounded-button rounded-button-small btn-danger me-4"
+          (click)="closeConfirmationPopup(true)"
+          data-bs-toggle="modal"
+          data-bs-dismiss="modal"
+        >
+          {{ confirmButtonLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
