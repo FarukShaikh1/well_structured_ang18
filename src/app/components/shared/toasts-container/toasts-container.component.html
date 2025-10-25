@@ -7,7 +7,7 @@
   (mouseenter)="pauseToast(toast)"
   (mouseleave)="resumeToast(toast)"
 >
-  <div class="toast-header text-white">
+  <div class="text-white d-flex justify-content-between">
     <ng-template [ngTemplateOutlet]="toast.template"></ng-template>
     <button
       type="button"

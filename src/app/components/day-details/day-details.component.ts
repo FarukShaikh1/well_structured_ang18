@@ -279,6 +279,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
         this.showSuccess("Record Added Successfully.");
         this.renderer.selectRootElement(this.btnCloseDayPopup?.nativeElement).click();
         localStorage.removeItem(NavigationURLs.DAY_LIST);
+        localStorage.removeItem(NavigationURLs.USER_LIST);
         this.globalService.triggerGridReload(ApplicationModules.DAY);
       }),
       catchError((error) => {
@@ -293,6 +294,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
         this.showSuccess("Record Updated Successfully.");
         this.renderer.selectRootElement(this.btnCloseDayPopup?.nativeElement).click();
         localStorage.removeItem(NavigationURLs.DAY_LIST);
+        localStorage.removeItem(NavigationURLs.USER_LIST);
         this.globalService.triggerGridReload(ApplicationModules.DAY);
       }),
       catchError((error) => {
