@@ -13,7 +13,10 @@
                     placeholder="Enter Password" required="" />
             </div>
             <div class="col-12 mt-4">
-                <button class="btn btn-primary rounded-button mt-4" id="BtnLogin">Login</button>
+                <button type="submit" class="btn btn-primary rounded-button " id="BtnLogin">Login</button>
+                <button type="button" class="btn btn-primary rounded-button" (click)="navigate(NavigationURLs.SIGNUP)">New Here</button>
+                <button type="button" class="btn btn-primary rounded-button" (click)="navigate(NavigationURLs.FORGOT_PASSWORD)">Forgot Password</button>
+                <button type="button" class="btn btn-primary rounded-button" (click)="navigate(NavigationURLs.CURRENCY_LIST)">Continue Without Login</button>
             </div>
         </div>
     </form>

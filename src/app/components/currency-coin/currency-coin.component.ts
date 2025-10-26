@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
-import { ActionConstant, ApplicationConstantHtml, ApplicationTableConstants, UIStrings, NavigationURLs } from '../../../utils/application-constants';
+import { ActionConstant, ApplicationConstantHtml, ApplicationTableConstants, NavigationURLs, UIStrings } from '../../../utils/application-constants';
+import { CacheService } from '../../services/cache/cache.service';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
@@ -11,7 +11,6 @@ import { LocalStorageService } from '../../services/local-storage/local-storage.
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
-import { CacheService } from '../../services/cache/cache.service';
 
 @Component({
   selector: 'app-currency-coin',
@@ -74,11 +73,13 @@ export class CurrencyCoinComponent implements OnInit {
         title: UIStrings.COLUMN_TITLES.COIN_NOTE_NAME,
         field: "coinNoteName",
         sorter: "alphanum",
+        minWidth: 200,
       },
       {
         title: UIStrings.COLUMN_TITLES.COUNTRY,
         field: "countryName",
         sorter: "alphanum",
+        minWidth: 120,
       },
       {
         title: UIStrings.COLUMN_TITLES.REAL_VALUE,
@@ -87,6 +88,7 @@ export class CurrencyCoinComponent implements OnInit {
         formatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        minWidth: 90,
       },
       {
         title: UIStrings.COLUMN_TITLES.INDIAN_VALUE,
@@ -96,21 +98,26 @@ export class CurrencyCoinComponent implements OnInit {
         bottomCalc: "sum",
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        minWidth: 90,
       },
       {
         title: UIStrings.COLUMN_TITLES.OTHER_DETAILS,
         field: "description",
         sorter: "alphanum",
+        minWidth: 200,
       },
       {
         title: UIStrings.COLUMN_TITLES.PIC,
         field: "thumbnailPath",
         formatter: this.globalService.thumbnailFormatter.bind(this),
+        minWidth: 70,
+        maxWidth: 100,
       },
       {
         title: "",
         field: "",
-        maxWidth: 70,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
@@ -126,7 +133,8 @@ export class CurrencyCoinComponent implements OnInit {
       this.columnConfig.push({
         title: "",
         field: "option",
-        maxWidth: 70,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
@@ -139,6 +147,7 @@ export class CurrencyCoinComponent implements OnInit {
         title: UIStrings.COLUMN_TITLES.COUNTRY,
         field: "countryName",
         sorter: "alphanum",
+        minWidth: 150,
       },
       {
         title: UIStrings.COLUMN_TITLES.CURRENCY,
@@ -148,6 +157,7 @@ export class CurrencyCoinComponent implements OnInit {
           const data = cell.getRow().getData();
           return `${data['currencyName']} (${data['currencyCode']}) (${data['currencySymbol']})`;
         },
+        minWidth: 180,
       },
       {
         title: UIStrings.COLUMN_TITLES.COINS,
@@ -156,6 +166,7 @@ export class CurrencyCoinComponent implements OnInit {
         headerHozAlign: "center",
         hozAlign: "center",
         bottomCalc: "sum",
+        minWidth: 100,
       },
       {
         title: UIStrings.COLUMN_TITLES.NOTES,
@@ -164,6 +175,7 @@ export class CurrencyCoinComponent implements OnInit {
         headerHozAlign: "center",
         hozAlign: "center",
         bottomCalc: "sum",
+        minWidth: 100,
       },
       {
         title: UIStrings.COLUMN_TITLES.TOTAL,
@@ -172,11 +184,13 @@ export class CurrencyCoinComponent implements OnInit {
         headerHozAlign: "center",
         hozAlign: "center",
         bottomCalc: "sum",
+        minWidth: 120,
       },
       {
         title: "",
         field: "",
-        maxWidth: 50,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
@@ -187,7 +201,8 @@ export class CurrencyCoinComponent implements OnInit {
       {
         title: "",
         field: "",
-        maxWidth: 50,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         hozAlign: "left",

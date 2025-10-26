@@ -1,16 +1,17 @@
 import { CommonModule } from "@angular/common";
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, Messages, UIStrings, UserConfig } from "../../../utils/application-constants";
+import { ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, UIStrings, UserConfig } from "../../../utils/application-constants";
+import { CacheService } from "../../services/cache/cache.service";
 import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { GlobalService } from '../../services/global/global.service';
+import { LoaderService } from "../../services/loader/loader.service";
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 import { UserService } from "../../services/user/user.service";
 import { ConfigurationDetailsComponent } from '../configuration-details/configuration-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { CacheService } from "../../services/cache/cache.service";
 
 @Component({
   selector: 'app-settings',
@@ -37,7 +38,6 @@ export class SettingsComponent {
   @ViewChild(ConfirmationDialogComponent)
   confirmModalComponent!: ConfirmationDialogComponent;
 
-  userColumnConfig: ColumnDefinition[] = [];
   accountColumnConfig: ColumnDefinition[] = [];
   occasionTypeColumnConfig: ColumnDefinition[] = [];
   relationColumnConfig: ColumnDefinition[] = [];
@@ -75,28 +75,31 @@ export class SettingsComponent {
     },
   ];
   currentConfig: string = '';
+  userList: any;
 
   constructor(
     private configurationService: ConfigurationService,
     public globalService: GlobalService,
     private userService: UserService,
     private cacheService: CacheService,
+    private loaderService: LoaderService,
     private localStorageService: LocalStorageService
   ) { }
 
   ngOnInit() {
     var data = this.localStorageService.getLoggedInUserData();
     var userId = data?.id;
-    if (data.roleName !== 'Super Admin') {
+    if (data.roleName === 'Super Admin') {
       this.isSuperAdmin = true;
-      this.loadUserGrid(userId)
+      this.getUserList();
     }
     else {
       this.isSuperAdmin = false;
-      this.loadConfigGrid(userId, UserConfig.ACCOUNT);
-      this.loadConfigGrid(userId, UserConfig.OCCASION_TYPE);
-      this.loadConfigGrid(userId, UserConfig.RELATION);
     }
+    this.loadConfigGrid(userId, UserConfig.ACCOUNT);
+    this.loadConfigGrid(userId, UserConfig.OCCASION_TYPE);
+    this.loadConfigGrid(userId, UserConfig.RELATION);
+
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.SETTINGS) {
         this.loadConfigGrid(userId, this.currentConfig);
@@ -229,69 +232,6 @@ export class SettingsComponent {
         }
       },
     });
-  }
-
-  loadUserGrid(userId: string) {
-    this.isUserGridLoading = true;
-    this.userColumnConfiguration();
-    this.userService.getAllUsers().subscribe({
-      next: (result: any) => {
-        if (result) {
-          this.filteredUserTableData = result.data;
-          this.userTableData = result.data;
-        } else {
-          console.error(Messages.ERROR_IN_FETCH_USER);
-        }
-        this.isUserGridLoading = false;
-      },
-      error: (error: any) => {
-        console.error(Messages.ERROR_IN_FETCH_USER, error);
-        this.isUserGridLoading = false;
-      },
-    });
-  }
-
-  userColumnConfiguration() {
-    this.userColumnConfig = [
-      {
-        title: UIStrings.COLUMN_TITLES.NAME,
-        field: 'firstName',
-        sorter: 'string',
-      },
-      { title: UIStrings.COLUMN_TITLES.EMAIL, field: 'emailAddress', sorter: 'string' },
-      {
-        title: UIStrings.COLUMN_TITLES.MOBILE_NUMBER,
-        field: "mobileNumber",
-        sorter: "alphanum",
-      },
-      { title: UIStrings.COLUMN_TITLES.ROLE, field: 'roleName', sorter: 'string' },
-      {
-        title: UIStrings.COLUMN_TITLES.STATUS,
-        field: 'isLocked',
-        sorter: 'string',
-        formatter: this.globalService.statusFormatter.bind(this),
-      },
-      {
-        title: "",
-        field: "",
-        maxWidth: 70,
-        formatter: this.globalService.hidebuttonFormatter.bind(this),
-        cellClick: (e, cell) => {
-          const id = cell.getRow().getData()["id"];
-          this.hideUser(id);
-        },
-        hozAlign: "center",
-        headerSort: false,
-      },
-      {
-        title: "",
-        field: "option",
-        maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),
-        hozAlign: "center",
-        headerSort: false,
-      }
-    ];
   }
 
   accountColumnConfiguration() {
@@ -489,5 +429,34 @@ export class SettingsComponent {
 
   }
 
+  getUserList() {
+    this.loaderService.showLoader();
+    this.userService.getUserList().subscribe({
+      next: (result: any) => {
+        this.userList = result.data;
+        this.loaderService.hideLoader();
+      },
+      error: (error: any) => {
+        console.error('Error fetching user list', error);
+        this.toaster.showMessage(error?.message, 'error');
+        this.loaderService.hideLoader();
+      },
+    });
+  }
+
+  changeUser(event: Event) {
+        localStorage.removeItem(UserConfig.ACCOUNT);
+        localStorage.removeItem(UserConfig.OCCASION_TYPE);
+        localStorage.removeItem(UserConfig.RELATION);
+    const select = event.target as HTMLSelectElement;
+    const selectedId = select.value;
+    if (!selectedId) {
+    }
+    else {
+      this.loadConfigGrid(selectedId, UserConfig.ACCOUNT);
+      this.loadConfigGrid(selectedId, UserConfig.OCCASION_TYPE);
+      this.loadConfigGrid(selectedId, UserConfig.RELATION);
+    }
+  }
 
 }

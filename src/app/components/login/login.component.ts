@@ -24,6 +24,7 @@ export class LoginComponent {
   occationTypeList: any;
   relationList: any;
   user: any;
+  NavigationURLs = NavigationURLs;
   ngOninit() {
     this.loaderService.hideLoader();
     if (this.localStorageService.isAuthenticated()) {
@@ -124,6 +125,10 @@ export class LoginComponent {
 
   reload() {
     this.globalService.reloadComponent();
+  }
+
+  navigate(route: string) {
+    this.router.navigate([route]);
   }
 
 }

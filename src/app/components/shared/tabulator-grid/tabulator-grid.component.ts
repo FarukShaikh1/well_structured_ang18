@@ -141,7 +141,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         reactiveData: true,
         columns: this.columnConfig,
         layout: "fitColumns",
-        responsiveLayout: "collapse",
+        // responsiveLayout: "collapse",
         height: "530",
         maxHeight: "100%",
 

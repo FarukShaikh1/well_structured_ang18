@@ -45,10 +45,10 @@
   </button>
   <button (click)="goToTransactionReport()" class="btn btn-primary rounded-button">
     <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      
+
       <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
         stroke="currentColor" stroke-width="2" fill="none" />
-      
+
       <rect x="8" y="14" width="2" height="4" fill="currentColor" />
       <rect x="11" y="12" width="2" height="6" fill="currentColor" />
       <rect x="14" y="10" width="2" height="8" fill="currentColor" />
@@ -71,17 +71,17 @@
   </button>
   }
   <div class="row pb-2 pt-2">
-    <div class="col-6 col-sm-4 col-lg col-xl">
+    <div class="col-3 col-md-3 col-lg-2 col-xl-2 pt-2">
       From Date:
       <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate"
         placeholder="DD/MM/YYYY" />
     </div>
-    <div class="col-6 col-sm-4 col-lg col-xl">
+    <div class="col-3 col-md-3 col-lg-2 col-xl-2 pt-2">
       To Date:
       <input class="form-control form-control-lg text-dark bg-transparent" type="Date" id="toDate"
         placeholder="DD/MM/YYYY" />
     </div>
-    <div class="col-6 col-sm-4 col-lg col-xl">
+    <div class="col-3 col-md-3 col-lg-2 col-xl-2 pt-2">
       <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round" />
@@ -92,7 +92,7 @@
         aria-label="Min Amount" #minInput (input)="filterGridByMinAmount($event)"
         (keydown)="globalService.validateAmount($event)" />
     </div>
-    <div class="col-6 col-sm-4 col-lg col-xl">
+    <div class="col-3 col-md-3 col-lg-2 col-xl-2 pt-2">
       <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round" />
@@ -102,7 +102,7 @@
         aria-label="Max Amount" #maxInput (input)="filterGridByMaxAmount($event)"
         (keydown)="globalService.validateAmount($event)" />
     </div>
-    <div class="col-6 col-sm-4 col-lg col-xl">
+    <div class="col-4 col-md-3 col-lg-2 col-xl-2 pt-2">
       <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round" />
@@ -114,15 +114,15 @@
     </div>
   </div>
 
-  <div class="row  g-3 mb-4">
-    
+  <div class="row g-3 mb-4">
+
     @if(activeComponent === NavigationURLs.EXPENSE_REPORT){
-    <div class="col-6 mb-4">
+    <div class="col-12 col-xl-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
         <app-transaction-pie-chart [reportData]="transactionReports"></app-transaction-pie-chart>
       </div>
     </div>
-    <div class="col-6 mb-4">
+    <div class="col-12 col-xl-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
         <app-transaction-report-chart [reportData]="transactionReports"></app-transaction-report-chart>
       </div>

@@ -3,13 +3,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActionConstant, Messages } from '../../../utils/application-constants';
 import { UserPermission } from '../../interfaces/user-permission';
+import { CacheService } from '../../services/cache/cache.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { RoleService } from '../../services/role/role.service';
+import { UserService } from '../../services/user/user.service';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { UserService } from '../../services/user/user.service';
-import { CacheService } from '../../services/cache/cache.service';
 @Component({
   selector: 'app-user-permission',
   standalone: true,
@@ -26,8 +26,8 @@ export class UserPermissionComponent implements OnInit {
   editable: boolean = false;
   cacheKey: string = 'UserPermission';
 
-  constructor(private userService: UserService, private roleService: RoleService, private loaderService: LoaderService,    private cacheService: CacheService,
-   public globalService: GlobalService) { }
+  constructor(private userService: UserService, private roleService: RoleService, private loaderService: LoaderService, private cacheService: CacheService,
+    public globalService: GlobalService) { }
 
   ngOnInit() {
     this.loaderService.showLoader();
@@ -40,6 +40,8 @@ export class UserPermissionComponent implements OnInit {
   changeUser(event: Event) {
     const select = event.target as HTMLSelectElement;
     const selectedId = select.value;
+    localStorage.removeItem(this.cacheKey);
+
     if (!selectedId) {
       this.disableUpdate = true;
       this.getPermission("c3d0a1d1-78f3-4128-8c22-c394ad7f55e5");
@@ -78,9 +80,9 @@ export class UserPermissionComponent implements OnInit {
     this.roleService.getPermission(userId).subscribe({
       next: (result: any) => {
 
-        
+
         this.rolePageMappingData = result.data;
-          this.cacheService.set(this.cacheKey, result.data);
+        this.cacheService.set(this.cacheKey, result.data);
         this.loaderService.hideLoader();
       },
       error: (error: any) => {

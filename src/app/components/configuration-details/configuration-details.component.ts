@@ -9,6 +9,7 @@ import {
 import * as forms from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
+  ActionConstant,
   ApplicationModules,
   Messages
 } from '../../../utils/application-constants';
@@ -40,6 +41,7 @@ export class ConfigurationDetailsComponent {
     displayOrder: 0,
   };
   currentConfig: string = '';
+  ActionConstant = ActionConstant;
 
   constructor(
     private fb: FormBuilder,

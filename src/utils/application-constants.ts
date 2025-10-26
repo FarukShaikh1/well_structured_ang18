@@ -113,6 +113,7 @@ export const ApplicationConstantHtml = {
 }
 export const NavigationURLs = {
     LOGIN: '/login',
+    SIGNUP: '/SignUp',
     ERROR_PAGE: '/home/unauthorised',
     UNAUTHORIZED_PAGE: '/unauthorised',
     LOGOUT: '/logout',
@@ -135,6 +136,42 @@ export const NavigationURLs = {
     CURRENCY_SUMMARY: '/home/currency-summary',
     CURRENCY_GALLERY: '/home/currency-gallery',
     ALL_NOTIFICATIONS: '/home/notifications',
+};
+
+export const RoutePath = {
+    HOME: 'home',
+    CURRENCY_LIST: 'currency-coin',
+    EXPENSES: 'expenses',
+    DAY_LIST: 'day',
+    USER_LIST: 'manage-users',
+    USER_PERMISSIONS: 'user-permission',
+    SETTINGS: 'settings',
+    CHANGE_PASSWORD: 'change-password',
+    RESET_PASSWORD: 'reset-password',
+    FORGOT_PASSWORD: 'forgot-password',
+    LOGIN: 'login',
+    LOGOUT: 'logout',
+    OTP_VERIFICATION: 'otp-verification',
+    NOTIFICATIONS: 'notifications',
+    UNAUTHORIZED: 'unauthorised',
+};
+
+export const RoutePathTitles = {
+    HOME: 'Home',
+    CURRENCY_LIST: 'Currency Coin',
+    EXPENSES: 'Expenses',
+    DAY_LIST: 'Special Occasion Days',
+    USER_LIST: 'Manage Users',
+    USER_PERMISSIONS: 'User Permission',
+    SETTINGS: 'Settings',
+    CHANGE_PASSWORD: 'Change Password',
+    RESET_PASSWORD: 'Reset Password',
+    FORGOT_PASSWORD: 'Forgot Password',
+    LOGIN: 'Login',
+    LOGOUT: 'Logout',
+    OTP_VERIFICATION: 'Verify OTP',
+    NOTIFICATIONS: 'Notifications',
+    UNAUTHORIZED: 'Unauthorised',
 };
 
 
