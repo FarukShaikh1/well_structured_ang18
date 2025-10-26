@@ -101,7 +101,6 @@ export class TransactionComponent implements OnInit {
     this.ClearFilter();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
-        debugger;
         this.LoadGrid();
       }
     });
@@ -818,7 +817,6 @@ export class TransactionComponent implements OnInit {
             this.tableData = res.data;
             this.filteredTableData = res.data;
             this.cacheService.set(this.activeComponent, res.data);
-            debugger;
             this.lastTransactionDate = this.getLatestTransactionDate();
             this.columnConfiguration();
             this.loaderService.hideLoader();
