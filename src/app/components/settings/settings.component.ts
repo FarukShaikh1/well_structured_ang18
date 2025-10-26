@@ -16,7 +16,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, TabulatorGridComponent, ConfigurationDetailsComponent],
+  imports: [CommonModule, TabulatorGridComponent, ConfigurationDetailsComponent, ConfirmationDialogComponent, ToasterComponent],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
@@ -35,8 +35,8 @@ export class SettingsComponent {
   isRelationGridLoading: boolean = false;
   isUserGridLoading: boolean = false;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
-  @ViewChild(ConfirmationDialogComponent)
-  confirmModalComponent!: ConfirmationDialogComponent;
+  @ViewChild(ConfirmationDialogComponent, { static: false })
+  confirmationDialog!: ConfirmationDialogComponent;
 
   accountColumnConfig: ColumnDefinition[] = [];
   occasionTypeColumnConfig: ColumnDefinition[] = [];
@@ -76,6 +76,9 @@ export class SettingsComponent {
   ];
   currentConfig: string = '';
   userList: any;
+  selectedId: string = '';
+  selectedConfig: string = '';
+  selectedUserId: string = '';
 
   constructor(
     private configurationService: ConfigurationService,
@@ -88,7 +91,7 @@ export class SettingsComponent {
 
   ngOnInit() {
     var data = this.localStorageService.getLoggedInUserData();
-    var userId = data?.id;
+    this.selectedUserId = data?.id;
     if (data.roleName === 'Super Admin') {
       this.isSuperAdmin = true;
       this.getUserList();
@@ -96,13 +99,13 @@ export class SettingsComponent {
     else {
       this.isSuperAdmin = false;
     }
-    this.loadConfigGrid(userId, UserConfig.ACCOUNT);
-    this.loadConfigGrid(userId, UserConfig.OCCASION_TYPE);
-    this.loadConfigGrid(userId, UserConfig.RELATION);
+    this.loadConfigGrid(this.selectedUserId, UserConfig.ACCOUNT);
+    this.loadConfigGrid(this.selectedUserId, UserConfig.OCCASION_TYPE);
+    this.loadConfigGrid(this.selectedUserId, UserConfig.RELATION);
 
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.SETTINGS) {
-        this.loadConfigGrid(userId, this.currentConfig);
+        this.loadConfigGrid(this.selectedUserId, this.currentConfig);
       }
     });
   }
@@ -402,8 +405,36 @@ export class SettingsComponent {
   }
 
   deleteItem(id: string, config: string) {
-
+    if (id) {
+      this.selectedId = id;
+      this.selectedConfig = config;
+      this.confirmationDialog.openConfirmationPopup(
+        "Confirmation",
+        "Are you sure you want to delete? This action cannot be undone."
+      );
+    }
   }
+
+  handleConfirmResult(isConfirmed: boolean) {
+    if (isConfirmed) {
+      this.loaderService.showLoader('Deleting ...');
+      this.configurationService.deleteConfiguration(this.selectedId, this.selectedConfig).subscribe({
+        next: (res: any) => {
+          this.toaster.showMessage(res.message, res.success ? "success" : "error");
+          this.loaderService.hideLoader();
+          if (res.success) {
+          localStorage.removeItem(this.selectedConfig);
+          this.loadConfigGrid(this.selectedUserId, this.selectedConfig);
+          }
+        },
+        error: (error: any) => {
+          console.error("error : ", error);
+          this.loaderService.hideLoader();
+        },
+      });
+    }
+  }
+
 
   deactivateItem(id: string, config: string) {
     this.configurationService.deactivateConfiguration(id, config).subscribe({
@@ -445,18 +476,17 @@ export class SettingsComponent {
   }
 
   changeUser(event: Event) {
-        localStorage.removeItem(UserConfig.ACCOUNT);
-        localStorage.removeItem(UserConfig.OCCASION_TYPE);
-        localStorage.removeItem(UserConfig.RELATION);
+    localStorage.removeItem(UserConfig.ACCOUNT);
+    localStorage.removeItem(UserConfig.OCCASION_TYPE);
+    localStorage.removeItem(UserConfig.RELATION);
     const select = event.target as HTMLSelectElement;
-    const selectedId = select.value;
-    if (!selectedId) {
+    this.selectedUserId = select.value;
+    if (!this.selectedUserId) {
     }
     else {
-      this.loadConfigGrid(selectedId, UserConfig.ACCOUNT);
-      this.loadConfigGrid(selectedId, UserConfig.OCCASION_TYPE);
-      this.loadConfigGrid(selectedId, UserConfig.RELATION);
+      this.loadConfigGrid(this.selectedUserId, UserConfig.ACCOUNT);
+      this.loadConfigGrid(this.selectedUserId, UserConfig.OCCASION_TYPE);
+      this.loadConfigGrid(this.selectedUserId, UserConfig.RELATION);
     }
   }
-
 }

@@ -59,6 +59,12 @@ export class CurrencyCoinComponent implements OnInit {
     this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
     this.columnConfiguration();
     this.countryList = this.localStorageService.getCountryList();
+    if (!this.countryList || this.countryList.length == 0) {
+      this.globalService.getCountryList().subscribe((res: any) => {
+        this.countryList = res.data;
+        this.localStorageService.setCountryList(this.countryList);
+      });
+    }
     this.LoadGrid();
     setTimeout(() => {
       this.LoadSummaryGrid();
@@ -276,7 +282,7 @@ export class CurrencyCoinComponent implements OnInit {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;
       this.filteredCoinList = cachedData;
-        this.loaderService.hideLoader();
+      this.loaderService.hideLoader();
       return;
     }
 
@@ -301,7 +307,7 @@ export class CurrencyCoinComponent implements OnInit {
     if (cachedData) {
       this.summaryTableData = cachedData;
       this.filteredSummaryTableData = cachedData;
-        this.loaderService.hideLoader();
+      this.loaderService.hideLoader();
       return;
     }
     this.loaderService.showLoader('Loading currency summary...');
@@ -389,6 +395,23 @@ export class CurrencyCoinComponent implements OnInit {
     });
     this.filteredTableData = filtered;
     this.filteredCoinList = filtered as any[];
+
+    const filteredSummary = this.summaryTableData.filter((item: any) => {
+      const matchesCountryName = item.countryName?.toLowerCase().includes(this.searchText);
+      const matchesCurrencyName = item.currencyName?.toLowerCase().includes(this.searchText);
+      const matchesCurrencyCode = item.currencyCode?.toLowerCase().includes(this.searchText);
+      const matchesCurrencySymbol = item.currencySymbol?.toLowerCase().includes(this.searchText);
+      const matchesCoinCount = item.numberOfCoins == this.searchText;
+      const matchesNoteCount = item.numberOfNotes == this.searchText;
+      const matchesTotalCount = item.total == this.searchText;
+
+      const matchesCountry =
+        this.selectedCountry.length === 0 ||
+        this.selectedCountry.includes(item.countryName);
+
+      return (matchesCountryName || matchesCurrencyName || matchesCurrencyCode || matchesCurrencySymbol || matchesCoinCount || matchesNoteCount || matchesTotalCount) && matchesCountry;
+    });
+    this.filteredSummaryTableData = filteredSummary;
   }
 
 

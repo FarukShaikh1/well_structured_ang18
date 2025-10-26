@@ -225,6 +225,7 @@ export class TransactionComponent implements OnInit {
         title: "Source/Reason",
         field: "sourceOrReason",
         sorter: "alphanum",
+        formatter: this.getColorForText.bind(this),
         minWidth: 150,
       },
       {

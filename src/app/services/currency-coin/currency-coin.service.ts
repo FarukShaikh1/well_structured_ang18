@@ -13,24 +13,34 @@ export class CurrencyCoinService {
 
 
   getCurrencyCoinList(): Observable<any> {
-    const params = new HttpParams()
-      .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
-    return this.http.get(API_URL.GET_COLLECTION_COIN_GALLERY, { params: params });
+    if (localStorage.getItem(LocalStorageConstants.USERID) !== null) {
+      const params = new HttpParams()
+        .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
+      return this.http.get(API_URL.GET_COLLECTION_COIN_GALLERY, { params: params });
+    }
+    return this.http.get(API_URL.GET_COLLECTION_COIN_GALLERY);
   }
   getCurrencyCoinRecords(countryId: number = 0): Observable<any> {
-
-    const params = new HttpParams()
-      .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
-      .set('countryId', String(countryId))
-    return this.http.get(API_URL.GET_COLLECTION_COIN_LIST, { params: params });
+    if (localStorage.getItem(LocalStorageConstants.USERID) !== null) {
+      const params = new HttpParams()
+        .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
+        .set('countryId', String(countryId))
+      return this.http.get(API_URL.GET_COLLECTION_COIN_LIST, { params: params });
+    } else {
+      return this.http.get(API_URL.GET_COLLECTION_COIN_LIST);
+    }
   }
 
   getCurrencyCoinSummary(): Observable<any> {
-    const params = new HttpParams()
-      .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
-    return this.http.get(API_URL.GET_COLLECTION_SUMMARY, { params: params });
+    if (localStorage.getItem(LocalStorageConstants.USERID) !== null) {
+      const params = new HttpParams()
+        .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
+      return this.http.get(API_URL.GET_COLLECTION_SUMMARY, { params: params });
+    }
+    else {
+      return this.http.get(API_URL.GET_COLLECTION_SUMMARY);
+    }
   }
-
   getCurrencyCoinDetails(collectionCoinId: string) {
     const params = new HttpParams()
       .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
