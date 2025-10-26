@@ -113,7 +113,7 @@ export const ApplicationConstantHtml = {
 }
 export const NavigationURLs = {
     LOGIN: '/login',
-    SIGNUP: '/SignUp',
+    SIGNUP: '/sign-up',
     ERROR_PAGE: '/home/unauthorised',
     UNAUTHORIZED_PAGE: '/unauthorised',
     LOGOUT: '/logout',
@@ -151,6 +151,7 @@ export const RoutePath = {
     RESET_PASSWORD: 'reset-password',
     FORGOT_PASSWORD: 'forgot-password',
     LOGIN: 'login',
+    SIGNUP: 'sign-up',
     LOGOUT: 'logout',
     OTP_VERIFICATION: 'otp-verification',
     NOTIFICATIONS: 'notifications',
@@ -169,6 +170,7 @@ export const RoutePathTitles = {
     RESET_PASSWORD: 'Reset Password',
     FORGOT_PASSWORD: 'Forgot Password',
     LOGIN: 'Login',
+    SIGNUP: 'SignUp',
     LOGOUT: 'Logout',
     OTP_VERIFICATION: 'Verify OTP',
     NOTIFICATIONS: 'Notifications',

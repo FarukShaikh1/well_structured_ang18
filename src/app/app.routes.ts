@@ -66,7 +66,6 @@ export const routes: Routes = [
         component: SettingsComponent,
 
       },
-
       {
         path: RoutePath.CHANGE_PASSWORD,
         title: RoutePathTitles.CHANGE_PASSWORD,
@@ -126,14 +125,22 @@ export const routes: Routes = [
         (m) => m.LogoutComponent
       ),
   },
-      {
-        path: RoutePath.FORGOT_PASSWORD,
-        title: RoutePathTitles.FORGOT_PASSWORD,
-        loadComponent: () =>
-          import("./components/forgot-password/forgot-password.component").then(
-            (m) => m.ForgotPasswordComponent
-          ),
-      },
+  {
+    path: RoutePath.FORGOT_PASSWORD,
+    title: RoutePathTitles.FORGOT_PASSWORD,
+    loadComponent: () =>
+      import("./components/forgot-password/forgot-password.component").then(
+        (m) => m.ForgotPasswordComponent
+      ),
+  },
+  {
+    path: RoutePath.SIGNUP,
+    title: RoutePathTitles.SIGNUP,
+    loadComponent: () =>
+      import("./components/sign-up/sign-up.component").then(
+        (m) => m.SignUpComponent
+      ),
+  },
 
   { path: "**", redirectTo: RoutePath.EXPENSES },
 ];
