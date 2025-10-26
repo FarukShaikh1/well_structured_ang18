@@ -31,9 +31,6 @@
   --header-text: #ffffff;
 }
 
-.toast-header{
-  padding:0;
-}
 html.dark-mode,
 body.dark-mode {
   --theme-bg: #121212;
