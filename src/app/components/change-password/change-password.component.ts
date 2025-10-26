@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import {
   ApplicationConstants,
   ApplicationRoles,
+  LocalStorageConstants,
   Messages,
   NavigationURLs,
 } from '../../../utils/application-constants';
@@ -41,9 +42,9 @@ export class ChangePasswordComponent implements OnInit {
   Messages = Messages;
   Constants = ApplicationConstants;
   ApplicationRoles = ApplicationRoles;
-  userId: string = '';
   hasPasswordExpired = false;
   processing = false;
+  userId: string | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -59,7 +60,7 @@ export class ChangePasswordComponent implements OnInit {
     this.loaderService.showLoader();
     this.hasPasswordExpired = this.localStorageService.getLoggedInUserData()?.hasPasswordExpired;
 
-    this.userId = this.localStorageService.getLoggedInUserData().userId;
+    this.userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
     this.userFullName =
       this.localStorageService.getLoggedInUserData().userName;
     this.loaderService.hideLoader();
@@ -75,7 +76,7 @@ export class ChangePasswordComponent implements OnInit {
             Validators.pattern(
               ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_PASSWORD
             ),
-            this.passwordNotContainingName(this.userFullName), 
+            this.passwordNotContainingName(this.userFullName),
           ],
         ],
         confirmPassword: ['', [Validators.required]],
@@ -113,7 +114,7 @@ export class ChangePasswordComponent implements OnInit {
     ) {
       confirmPassword?.setErrors({ passwordMismatch: true });
     } else {
-      
+
       if (confirmPassword?.hasError('passwordMismatch')) {
         confirmPassword.setErrors(null);
       }
@@ -136,7 +137,7 @@ export class ChangePasswordComponent implements OnInit {
         return null;
       }
 
-      
+
       const containsNamePart = nameParts.some((part) =>
         password.toLowerCase().includes(part.toLowerCase())
       );
@@ -158,7 +159,7 @@ export class ChangePasswordComponent implements OnInit {
       return { sameAsOld: true };
     } else {
       if (form.get('newPassword')?.hasError('sameAsOld')) {
-        form.get('newPassword')?.setErrors(null); 
+        form.get('newPassword')?.setErrors(null);
       }
       return null;
     }
@@ -169,9 +170,10 @@ export class ChangePasswordComponent implements OnInit {
     this.loaderService.showLoader();
     if (this.changePasswordForm.valid) {
       const payload: ChangePassword = {
-        currentPassword: this.changePasswordForm.value.oldPassword,
-        password: this.changePasswordForm.value.newPassword,
-        confirmPassword: this.changePasswordForm.value.confirmPassword,
+        oldPassword: this.changePasswordForm.value.oldPassword,
+        newPassword: this.changePasswordForm.value.newPassword,
+        userId: this.userId,
+        modifiedBy: this.userId,
       };
 
       this.userService.changePassword(payload).subscribe({
@@ -184,13 +186,9 @@ export class ChangePasswordComponent implements OnInit {
             }, 3500);
           } else {
             this.processing = false;
-            if (response?.message?.toLowerCase() === 'incorrect password.') {
-              this.toaster.showMessage('Incorrect current password.', 'error');
-            } else {
-              this.toaster.showMessage(response?.message, 'error');
-            }
-            this.loaderService.hideLoader();
+            this.toaster.showMessage(response?.message, 'error');
           }
+          this.loaderService.hideLoader();
         },
         error: (error: any) => {
           this.processing = false;

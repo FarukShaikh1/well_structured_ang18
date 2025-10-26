@@ -5,7 +5,7 @@ export const ApplicationConstants = {
     PATTERN_REQUIRED_CHARS_IN_USERNAME:
         '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
 
-    MIN_LENGTH_PASSWORD: 12,
+    MIN_LENGTH_PASSWORD: 8,
     MAX_LENGTH_PASSWORD: 15,
     PATTERN_REQUIRED_CHARS_IN_PASSWORD:
         '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*. ]{8,}$',
@@ -136,6 +136,7 @@ export const NavigationURLs = {
     CURRENCY_SUMMARY: '/home/currency-summary',
     CURRENCY_GALLERY: '/home/currency-gallery',
     ALL_NOTIFICATIONS: '/home/notifications',
+    OTP_VERIFICATION: '/otp-verification',
 };
 
 export const RoutePath = {

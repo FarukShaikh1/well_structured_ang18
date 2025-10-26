@@ -1,31 +1,34 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { LocalStorageConstants, NavigationURLs, OtpConfig } from "../../../utils/application-constants";
-import { ConfigurationService } from "../../services/configuration/configuration.service";
+import { ApplicationRoles, LocalStorageConstants, NavigationURLs, OtpConfig } from "../../../utils/application-constants";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
 import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 import { RoleService } from "../../services/role/role.service";
 import { UserService } from "../../services/user/user.service";
+import { ToasterComponent } from "../shared/toaster/toaster.component";
 
 @Component({
   selector: "app-login",
   standalone: true,
   imports: [
-    ReactiveFormsModule,
+    ReactiveFormsModule, ToasterComponent
 
   ],
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent {
+  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
+
   accountList: any;
   occationTypeList: any;
   relationList: any;
   user: any;
   NavigationURLs = NavigationURLs;
   ngOninit() {
+    this.reload();
     this.loaderService.hideLoader();
     if (this.localStorageService.isAuthenticated()) {
       this.router.navigate([NavigationURLs.HOME]);
@@ -63,57 +66,57 @@ export class LoginComponent {
       this.loginForm.value["userName"].length <= 0
     ) {
       this.loaderService.hideLoader();
-
       return;
     }
     if (this.loginForm.value["password"].length <= 0) {
       this.loaderService.hideLoader();
-
       return;
     }
     this.userService.getUser(this.loginForm.value).subscribe({
       next: (res: any) => {
-        this.loaderService.showLoader('Please wait we are setting up some things for better performance...');
-        this.data = res.data;
-        if (!this.data) {
-          localStorage.clear();
-          this.loaderService.hideLoader();
-          return;
-        }
-        if (
-          this.data != null &&
-          this.data?.userName != null &&
-          this.data?.userName?.length > 0
-        ) {
-          localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
-          localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
-          if (this.data.isOtpRequired) {
-            localStorage.setItem(
-              LocalStorageConstants.OTP_EXPIRES_ON,
-              (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString()
-            );
+        if (res.success) {
+          this.loaderService.showLoader('Please wait we are setting up some things for better performance...');
+          this.toaster.showMessage(res.message, res.success ? 'success' : 'error');
+          this.data = res.data;
+          if (!this.data) {
+            localStorage.clear();
             this.loaderService.hideLoader();
-            this.router.navigate(["/otp-verification"])
+            return;
           }
-          else {
+          if (
+            this.data != null &&
+            this.data?.userName != null &&
+            this.data?.userName?.length > 0
+          ) {
             localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
-            localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'true');
-            this.loaderService.hideLoader();
-            if (this.data.roleName?.toLowerCase() === "super admin") {
-              this.router.navigate([
-                "/home/manage-users/",
-              ]);
+            localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
+            if (this.data.isOtpRequired) {
+              localStorage.setItem(
+                LocalStorageConstants.OTP_EXPIRES_ON,
+                (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString()
+              );
+              this.loaderService.hideLoader();
+              this.router.navigate([NavigationURLs.OTP_VERIFICATION]);
             }
             else {
-              this.router.navigate(["/home/day/"]);
+              localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
+              localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'true');
+              this.loaderService.hideLoader();
+              if (this.data.roleName?.toLowerCase() === ApplicationRoles.SUPER_ADMIN) {
+                this.router.navigate([NavigationURLs.USER_LIST]);
+              }
+              else {
+                this.router.navigate([NavigationURLs.DAY_LIST]);
+              }
+              // ✅ Defer heavy/non-blocking operations
+              setTimeout(() => {
+                this.globalService.setValuesInLocalStorage();
+                console.log('✅ Background localStorage setup done');
+              }, 0);
             }
-            // ✅ Defer heavy/non-blocking operations
-            setTimeout(() => {
-              this.globalService.setValuesInLocalStorage();
-              console.log('✅ Background localStorage setup done');
-            }, 0);
           }
         } else {
+          this.toaster.showMessage(res.message, res.success ? 'success' : 'error');
           this.loaderService.hideLoader();
         }
       },

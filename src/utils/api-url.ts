@@ -56,6 +56,7 @@ export const API_URL = {
   GET_DEFAULT_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetDefaultPermission`,
   GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,
   UPDATE_USER_PERMISSION: `${serverUrl}${apiPrefix}/user/updaterolemodulemapping`,
+  CHANGE_PASSWORD: `${serverUrl}${apiPrefix}/user/changepassword`,
 
   GET_ALL_USERS: `${serverUrl}${apiPrefix}/user/GetList`,
   GET_LOGGED_IN_USER_DETAILS: `${serverUrl}${apiPrefix}/auth/getloggedinuserdetails`,
@@ -73,7 +74,6 @@ export const API_URL = {
   REGISTER_USER: `${serverUrl}${apiPrefix}/auth/register`,
   UPDATE_USER: `${serverUrl}${apiPrefix}/user/updateUserDetails?userId=`,
   RESET_PASSWORD: `${serverUrl}${apiPrefix}/auth/resetpassword`,
-  CHANGE_PASSWORD: `${serverUrl}${apiPrefix}/auth/changepassword`,
   FORGOT_PASSWORD: `${serverUrl}${apiPrefix}/auth/forgotpassword`,
   VERIFY_OTP: `${serverUrl}${apiPrefix}/otp/verify`,
   SEND_OTP: `${serverUrl}${apiPrefix}/otp/send`,
