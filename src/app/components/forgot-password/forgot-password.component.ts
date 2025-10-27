@@ -1,19 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import * as forms from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
-import { UserService } from '../../services/user/user.service';
-import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { LoaderComponent } from '../shared/loader/loader.component';
-import { LoaderService } from '../../services/loader/loader.service';
 import {
+  ApplicationConstants,
   Messages,
   NavigationURLs,
-  ApplicationConstants,
 } from '../../../utils/application-constants';
-import { Validators } from '@angular/forms';
+import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import { LogoutService } from '../../services/logout/logout.service';
+import { UserService } from '../../services/user/user.service';
+import { LoaderComponent } from '../shared/loader/loader.component';
+import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 @Component({
   selector: 'app-forgot-password',
@@ -39,6 +40,7 @@ export class ForgotPasswordComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private loaderService: LoaderService,
+    private logoutService: LogoutService,
     private localStorageService: LocalStorageService
   ) {
     this.forgotPasswordForm = this.fb.group({
@@ -53,7 +55,7 @@ export class ForgotPasswordComponent implements OnInit {
       ],
     });
   }
-  
+
   ngOnInit(): void {
     this.localStorageService.clear();
   }
@@ -81,7 +83,7 @@ export class ForgotPasswordComponent implements OnInit {
           }
           this.loaderService.hideLoader();
         },
-        error: (error : any) => {
+        error: (error: any) => {
           if (error?.error?.errors?.ConfirmPassword) {
             console.error(
               'Could not send password reset link',
@@ -101,7 +103,7 @@ export class ForgotPasswordComponent implements OnInit {
     }
   }
 
-  goBack(): void {
-    this.router.navigate([NavigationURLs.LOGIN]);
+  logout(): void {
+    this.logoutService.logout();
   }
 }

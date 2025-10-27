@@ -6,6 +6,7 @@ import { SettingsComponent } from "./components/settings/settings.component";
 import { TransactionComponent } from "./components/transaction/transaction.component";
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
+import { DocumentsComponent } from "./components/documents/documents.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -64,6 +65,12 @@ export const routes: Routes = [
         path: RoutePath.SETTINGS,
         title: RoutePathTitles.SETTINGS,
         component: SettingsComponent,
+
+      },
+      {
+        path: RoutePath.DOCUMENT,
+        title: RoutePathTitles.DOCUMENT,
+        component: DocumentsComponent,
 
       },
       {

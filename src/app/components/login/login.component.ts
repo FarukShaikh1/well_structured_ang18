@@ -76,7 +76,6 @@ export class LoginComponent {
       next: (res: any) => {
         if (res.success) {
           this.loaderService.showLoader('Please wait we are setting up some things for better performance...');
-          this.toaster.showMessage(res.message, res.success ? 'success' : 'error');
           this.data = res.data;
           if (!this.data) {
             localStorage.clear();

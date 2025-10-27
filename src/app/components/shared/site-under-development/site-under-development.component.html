@@ -1,0 +1,13 @@
+<div class="under-development">
+    <div class="overlay-content text-center">
+        <h2>🚧 Feature Under Development 🚧</h2>
+        <p>
+            This feature is currently being built.
+            You can explore other sections of the application meanwhile.
+        </p>
+        <button class="btn btn-outline-light mt-3" (click)="logout()">Go to Login</button>
+        @if(alreadyLoggedIn) {
+        &nbsp;<button class="btn btn-outline-light mt-3" (click)="occasionList()">Go to Occasion</button>
+        }
+    </div>
+</div>

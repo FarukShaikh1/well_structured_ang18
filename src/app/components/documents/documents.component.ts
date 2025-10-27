@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { SiteUnderDevelopmentComponent } from '../shared/site-under-development/site-under-development.component';
 
 @Component({
-  selector: 'app-sign-up',
+  selector: 'app-documents',
   standalone: true,
   imports: [SiteUnderDevelopmentComponent],
-  templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css'
+  templateUrl: './documents.component.html',
+  styleUrl: './documents.component.css'
 })
-export class SignUpComponent {
+export class DocumentsComponent {
 }

@@ -55,7 +55,7 @@ export const API_URL = {
   GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetUserPermission?userId=`,
   GET_DEFAULT_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetDefaultPermission`,
   GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,
-  UPDATE_USER_PERMISSION: `${serverUrl}${apiPrefix}/user/updaterolemodulemapping`,
+  UPDATE_USER_PERMISSION: `${serverUrl}${apiPrefix}/user/updateUserPermission?userId=`,
   CHANGE_PASSWORD: `${serverUrl}${apiPrefix}/user/changepassword`,
 
   GET_ALL_USERS: `${serverUrl}${apiPrefix}/user/GetList`,
