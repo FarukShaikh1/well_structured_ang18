@@ -56,8 +56,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.notificationService.unreadNotificationCount$.subscribe((count) => {
             this.unreadSystemNotificationCount = count;
         });
-        
-        this.getLoggedInUserData();
         this.getLoggedInUserData();
     }
 

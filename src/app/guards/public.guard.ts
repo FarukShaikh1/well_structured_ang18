@@ -37,12 +37,6 @@ export const publicGuard: CanActivateFn = (
     
     const globalErrorHandler = inject(GlobalErrorHandlerService);
     globalErrorHandler.handleError(error);
-
-    
-    
-    
-
-    
     return false;
   }
 };

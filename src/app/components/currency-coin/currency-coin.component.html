@@ -88,5 +88,18 @@
     </div>
   </div>
 
+    <div class="row mt-4" *ngIf="viewMode === 'owner'">
+    <div class="gallery-grid">
+      <div class="gallery-item note"
+        <img src="basePath + coin.imagePath" alt="image missing" />
+        <div class="gallery-caption">
+          <h3>coinNoteName</h3>
+          <p>description</p>
+          <small>currencyCoinType</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <app-currency-details></app-currency-details>
   <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>

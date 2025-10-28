@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
-import { ActionConstant, ApplicationConstantHtml, ApplicationTableConstants, UIStrings, NavigationURLs } from '../../../utils/application-constants';
+import { ActionConstant, ApplicationConstantHtml, ApplicationTableConstants, NavigationURLs, UIStrings } from '../../../utils/application-constants';
+import { CacheService } from '../../services/cache/cache.service';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
@@ -11,7 +11,6 @@ import { LocalStorageService } from '../../services/local-storage/local-storage.
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
-import { CacheService } from '../../services/cache/cache.service';
 
 @Component({
   selector: 'app-currency-coin',
@@ -46,7 +45,7 @@ export class CurrencyCoinComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  public viewMode: 'grid' | 'gallery' | 'summary' = 'grid';
+  public viewMode: 'grid' | 'gallery' | 'summary' | 'owner' = 'grid';
 
   constructor(
     private currencyCoinService: CurrencyCoinService,
@@ -60,6 +59,12 @@ export class CurrencyCoinComponent implements OnInit {
     this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
     this.columnConfiguration();
     this.countryList = this.localStorageService.getCountryList();
+    if (!this.countryList || this.countryList.length == 0) {
+      this.globalService.getCountryList().subscribe((res: any) => {
+        this.countryList = res.data;
+        this.localStorageService.setCountryList(this.countryList);
+      });
+    }
     this.LoadGrid();
     setTimeout(() => {
       this.LoadSummaryGrid();
@@ -74,11 +79,13 @@ export class CurrencyCoinComponent implements OnInit {
         title: UIStrings.COLUMN_TITLES.COIN_NOTE_NAME,
         field: "coinNoteName",
         sorter: "alphanum",
+        minWidth: 200,
       },
       {
         title: UIStrings.COLUMN_TITLES.COUNTRY,
         field: "countryName",
         sorter: "alphanum",
+        minWidth: 120,
       },
       {
         title: UIStrings.COLUMN_TITLES.REAL_VALUE,
@@ -87,6 +94,7 @@ export class CurrencyCoinComponent implements OnInit {
         formatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        minWidth: 90,
       },
       {
         title: UIStrings.COLUMN_TITLES.INDIAN_VALUE,
@@ -96,21 +104,26 @@ export class CurrencyCoinComponent implements OnInit {
         bottomCalc: "sum",
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        minWidth: 90,
       },
       {
         title: UIStrings.COLUMN_TITLES.OTHER_DETAILS,
         field: "description",
         sorter: "alphanum",
+        minWidth: 200,
       },
       {
         title: UIStrings.COLUMN_TITLES.PIC,
         field: "thumbnailPath",
         formatter: this.globalService.thumbnailFormatter.bind(this),
+        minWidth: 70,
+        maxWidth: 100,
       },
       {
         title: "",
         field: "",
-        maxWidth: 70,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
@@ -126,7 +139,8 @@ export class CurrencyCoinComponent implements OnInit {
       this.columnConfig.push({
         title: "",
         field: "option",
-        maxWidth: 70,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
@@ -139,6 +153,7 @@ export class CurrencyCoinComponent implements OnInit {
         title: UIStrings.COLUMN_TITLES.COUNTRY,
         field: "countryName",
         sorter: "alphanum",
+        minWidth: 150,
       },
       {
         title: UIStrings.COLUMN_TITLES.CURRENCY,
@@ -148,6 +163,7 @@ export class CurrencyCoinComponent implements OnInit {
           const data = cell.getRow().getData();
           return `${data['currencyName']} (${data['currencyCode']}) (${data['currencySymbol']})`;
         },
+        minWidth: 180,
       },
       {
         title: UIStrings.COLUMN_TITLES.COINS,
@@ -156,6 +172,7 @@ export class CurrencyCoinComponent implements OnInit {
         headerHozAlign: "center",
         hozAlign: "center",
         bottomCalc: "sum",
+        minWidth: 100,
       },
       {
         title: UIStrings.COLUMN_TITLES.NOTES,
@@ -164,6 +181,7 @@ export class CurrencyCoinComponent implements OnInit {
         headerHozAlign: "center",
         hozAlign: "center",
         bottomCalc: "sum",
+        minWidth: 100,
       },
       {
         title: UIStrings.COLUMN_TITLES.TOTAL,
@@ -172,11 +190,13 @@ export class CurrencyCoinComponent implements OnInit {
         headerHozAlign: "center",
         hozAlign: "center",
         bottomCalc: "sum",
+        minWidth: 120,
       },
       {
         title: "",
         field: "",
-        maxWidth: 50,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
@@ -187,7 +207,8 @@ export class CurrencyCoinComponent implements OnInit {
       {
         title: "",
         field: "",
-        maxWidth: 50,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         hozAlign: "left",
@@ -261,7 +282,7 @@ export class CurrencyCoinComponent implements OnInit {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;
       this.filteredCoinList = cachedData;
-        this.loaderService.hideLoader();
+      this.loaderService.hideLoader();
       return;
     }
 
@@ -286,7 +307,7 @@ export class CurrencyCoinComponent implements OnInit {
     if (cachedData) {
       this.summaryTableData = cachedData;
       this.filteredSummaryTableData = cachedData;
-        this.loaderService.hideLoader();
+      this.loaderService.hideLoader();
       return;
     }
     this.loaderService.showLoader('Loading currency summary...');
@@ -374,6 +395,23 @@ export class CurrencyCoinComponent implements OnInit {
     });
     this.filteredTableData = filtered;
     this.filteredCoinList = filtered as any[];
+
+    const filteredSummary = this.summaryTableData.filter((item: any) => {
+      const matchesCountryName = item.countryName?.toLowerCase().includes(this.searchText);
+      const matchesCurrencyName = item.currencyName?.toLowerCase().includes(this.searchText);
+      const matchesCurrencyCode = item.currencyCode?.toLowerCase().includes(this.searchText);
+      const matchesCurrencySymbol = item.currencySymbol?.toLowerCase().includes(this.searchText);
+      const matchesCoinCount = item.numberOfCoins == this.searchText;
+      const matchesNoteCount = item.numberOfNotes == this.searchText;
+      const matchesTotalCount = item.total == this.searchText;
+
+      const matchesCountry =
+        this.selectedCountry.length === 0 ||
+        this.selectedCountry.includes(item.countryName);
+
+      return (matchesCountryName || matchesCurrencyName || matchesCurrencyCode || matchesCurrencySymbol || matchesCoinCount || matchesNoteCount || matchesTotalCount) && matchesCountry;
+    });
+    this.filteredSummaryTableData = filteredSummary;
   }
 
 
@@ -411,7 +449,7 @@ export class CurrencyCoinComponent implements OnInit {
     }
   }
 
-  setView(mode: 'grid' | 'gallery' | 'summary') {
+  setView(mode: 'grid' | 'gallery' | 'summary' | 'owner') {
     this.viewMode = mode;
   }
 

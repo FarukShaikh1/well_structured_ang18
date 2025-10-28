@@ -1,91 +1,59 @@
 import { Routes } from "@angular/router";
-import { ApplicationModules } from "../utils/application-constants";
+import { ApplicationModules, RoutePath, RoutePathTitles } from "../utils/application-constants";
 import { CurrencyCoinComponent } from "./components/currency-coin/currency-coin.component";
-import { CurrencyGalleryComponent } from "./components/currency-gallery/currency-gallery.component";
-import { CurrencySummaryComponent } from "./components/currency-summary/currency-summary.component";
-import { DayDetailsComponent } from "./components/day-details/day-details.component";
 import { DayComponent } from "./components/day/day.component";
 import { SettingsComponent } from "./components/settings/settings.component";
 import { TransactionComponent } from "./components/transaction/transaction.component";
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
+import { DocumentsComponent } from "./components/documents/documents.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
-    path: "login",
-    title: "Login",
+    path: RoutePath.HOME,
+    title: RoutePathTitles.HOME,
     loadComponent: () =>
-      import("./components/login/login.component").then(
-        (m) => m.LoginComponent
-      ),
-    canActivate: [publicGuard],
+      import("./components/home/home.component").then((m) => m.HomeComponent),
+    children: [
+      { path: "", redirectTo: RoutePath.CURRENCY_LIST, pathMatch: "full" },
+      {
+        path: RoutePath.CURRENCY_LIST,
+        title: RoutePathTitles.CURRENCY_LIST,
+        component: CurrencyCoinComponent,
+      },
+    ],
   },
+
   {
-    path: "otp-verification",
-    title: "otp-verification",
-    loadComponent: () =>
-      import("./components/otp-verification/otp-verification.component").then(
-        (m) => m.OTPVerificationComponent
-      ),
-  },
-  {
-    path: "logout",
-    loadComponent: () =>
-      import("./components/logout/logout.component").then(
-        (m) => m.LogoutComponent
-      ),
-  },
-  {
-    path: "home",
-    title: "Home",
+    path: RoutePath.HOME,
+    title: RoutePathTitles.HOME,
     loadComponent: () =>
       import("./components/home/home.component").then((m) => m.HomeComponent),
     canActivate: [authGuard],
     children: [
-      { path: "", redirectTo: "expenses", pathMatch: "full" },
+      { path: "", redirectTo: RoutePath.EXPENSES, pathMatch: "full" },
       {
-        path: "day",
-        title: "Day",
-        children: [
-          { path: "", component: DayComponent },
-          { path: "day-details", component: DayDetailsComponent },
-        ],
+        path: RoutePath.DAY_LIST,
+        title: RoutePathTitles.DAY_LIST,
+        component: DayComponent
       },
       {
-        path: "expenses",
-        title: "Transactions",
-        component: TransactionComponent,
-
-      },
-
-
-      {
-        path: "currency-coin",
-        title: "Currency Collection",
-        component: CurrencyCoinComponent,
+        path: RoutePath.EXPENSES,
+        title: RoutePathTitles.EXPENSES,
+        component: TransactionComponent
       },
       {
-        path: "currency-summary",
-        title: "Currency summary",
-        component: CurrencySummaryComponent,
-      },
-      {
-        path: "currency-gallery",
-        component: CurrencyGalleryComponent,
-      },
-      {
-        path: "manage-users",
-        title: "Users",
+        path: RoutePath.USER_LIST,
+        title: RoutePathTitles.USER_LIST,
         loadComponent: () =>
           import("./components/user-list/user-list.component").then(
             (m) => m.UserListComponent
           ),
-
         data: { moduleName: ApplicationModules.USER },
       },
       {
-        path: "user-permission",
-        title: "Role Access",
+        path: RoutePath.USER_PERMISSIONS,
+        title: RoutePathTitles.USER_PERMISSIONS,
         loadComponent: () =>
           import(
             "./components/user-permission/user-permission.component"
@@ -94,69 +62,92 @@ export const routes: Routes = [
         data: { moduleName: ApplicationModules.USER_PERMISSIONS },
       },
       {
-        path: "settings",
-        title: "Settings",
+        path: RoutePath.SETTINGS,
+        title: RoutePathTitles.SETTINGS,
         component: SettingsComponent,
 
       },
       {
-        path: "change-password",
-        title: "Change Password",
+        path: RoutePath.DOCUMENT,
+        title: RoutePathTitles.DOCUMENT,
+        component: DocumentsComponent,
+
+      },
+      {
+        path: RoutePath.CHANGE_PASSWORD,
+        title: RoutePathTitles.CHANGE_PASSWORD,
         loadComponent: () =>
           import("./components/change-password/change-password.component").then(
             (m) => m.ChangePasswordComponent
           ),
       },
-
-
-
-
-
-
-
-
       {
-        path: "unauthorised",
-        title: "Unauthorised User",
-        loadComponent: () =>
-          import(
-            "./components/shared/unauthorised-error-page/unauthorised-error.component"
-          ).then((m) => m.UnauthorisedErrorComponent),
-      },
-      {
-        path: "notifications",
-        title: "Notifications",
-        loadComponent: () =>
-          import("./components/notification-list/notification-list.component").then(
-            (m) => m.NotificationListComponent
-          ),
-      },
-      {
-        path: "reset-password",
-        title: "Reset Password",
+        path: RoutePath.RESET_PASSWORD,
+        title: RoutePathTitles.RESET_PASSWORD,
         loadComponent: () =>
           import("./components/reset-password/reset-password.component").then(
             (m) => m.ResetPasswordComponent
           ),
       },
       {
-        path: "forgot-password",
-        title: "Forgot Password",
-        loadComponent: () =>
-          import("./components/forgot-password/forgot-password.component").then(
-            (m) => m.ForgotPasswordComponent
-          ),
-      },
-      {
-        path: "unauthorised",
-        title: "Unauthorised User",
+        path: RoutePath.UNAUTHORIZED,
+        title: RoutePathTitles.UNAUTHORIZED,
         loadComponent: () =>
           import(
             "./components/shared/unauthorised-error-page/unauthorised-error.component"
           ).then((m) => m.UnauthorisedErrorComponent),
       },
+      {
+        path: RoutePath.NOTIFICATIONS,
+        title: RoutePathTitles.NOTIFICATIONS,
+        loadComponent: () =>
+          import("./components/notification-list/notification-list.component").then(
+            (m) => m.NotificationListComponent
+          ),
+      },
     ],
   },
+  {
+    path: RoutePath.LOGIN,
+    title: RoutePathTitles.LOGIN,
+    loadComponent: () =>
+      import("./components/login/login.component").then(
+        (m) => m.LoginComponent
+      ),
+    canActivate: [publicGuard],
+  },
+  {
+    path: RoutePath.OTP_VERIFICATION,
+    title: RoutePathTitles.OTP_VERIFICATION,
+    loadComponent: () =>
+      import("./components/otp-verification/otp-verification.component").then(
+        (m) => m.OTPVerificationComponent
+      ),
+  },
+  {
+    path: RoutePath.LOGOUT,
+    title: RoutePathTitles.LOGOUT,
+    loadComponent: () =>
+      import("./components/logout/logout.component").then(
+        (m) => m.LogoutComponent
+      ),
+  },
+  {
+    path: RoutePath.FORGOT_PASSWORD,
+    title: RoutePathTitles.FORGOT_PASSWORD,
+    loadComponent: () =>
+      import("./components/forgot-password/forgot-password.component").then(
+        (m) => m.ForgotPasswordComponent
+      ),
+  },
+  {
+    path: RoutePath.SIGNUP,
+    title: RoutePathTitles.SIGNUP,
+    loadComponent: () =>
+      import("./components/sign-up/sign-up.component").then(
+        (m) => m.SignUpComponent
+      ),
+  },
 
-  { path: "**", redirectTo: "expenses" },
+  { path: "**", redirectTo: RoutePath.EXPENSES },
 ];

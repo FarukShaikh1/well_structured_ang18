@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalService } from '../../services/global/global.service';
+import { NavigationURLs } from '../../../utils/application-constants';
 
 @Component({
   selector: 'app-logout',
@@ -11,15 +12,10 @@ import { GlobalService } from '../../services/global/global.service';
 export class LogoutComponent {
   constructor(private router: Router, public globalService: GlobalService) { }
 
-  ngOnInit() {
-    
-    
-    
-    
+  ngOnInit() {    
     localStorage.clear();
     this.reload();
-
-    this.router.navigate(["login"]);
+    this.router.navigate([NavigationURLs.HOME]);
   }
   reload() {
     this.globalService.reloadComponent();

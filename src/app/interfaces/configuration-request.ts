@@ -3,5 +3,5 @@ export interface ConfigurationRequest {
   configurationName?: string;
   description?: string;
   displayOrder?: number;
-  userId?: string;
+  selectedUserId?: string;
 }

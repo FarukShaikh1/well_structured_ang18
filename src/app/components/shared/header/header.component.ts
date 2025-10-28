@@ -19,6 +19,8 @@ import {
   ApplicationModules,
   ApplicationRoles,
   NavigationURLs,
+  RoutePath,
+  RoutePathTitles,
 } from "../../../../utils/application-constants";
 import { ModuleResponse } from "../../../interfaces/module-response";
 import { SystemNotifications } from "../../../interfaces/system-notifications";
@@ -59,13 +61,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userNameInitials: string = "";
   moduleList: ModuleResponse[] = [];
   isDarkMode: boolean = false;
-  
+
 
   constructor(
     private router: Router,
     public localStorageService: LocalStorageService,
     public globalService: GlobalService,
-    
     private logoutService: LogoutService,
     private notificationService: NotificationService
   ) {
@@ -76,7 +77,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.loggedInUsername = "";
-    
+
   }
 
   ngOnInit(): void {
@@ -89,6 +90,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   getModuleList() {
     this.moduleList = this.localStorageService.getLoggedInUserPermissions();
+    this.moduleList = this.moduleList.filter((module: any) => {
+      if (module.moduleName === RoutePathTitles.EXPENSES) {
+        // For Expenses: view must be true AND add must be true
+        return module.view === true && module.add === true;
+      }
+      // For all others: only view must be true
+      return module.view === true;
+    });
   }
 
   isActiveMenu(route: string): boolean {
@@ -101,9 +110,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 
   setLoginDisplay() {
-    
-    
-    
+
+
+
   }
 
   isUserAuthorized(): boolean {
@@ -196,7 +205,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   navigateToChatSystem() {
-    
+
   }
 
   getUserNameInitials(): string {
@@ -225,7 +234,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([NavigationURLs.CHANGE_PASSWORD]);
   }
 
-  
+
 
   fetchAllSystemNotifications() {
     this.notificationService
@@ -252,7 +261,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.notificationTotalUnreadCount =
             notifications.data.unreadNotificationCount;
 
-          
+
           this.notificationService.updateUnreadNotificationCount(
             this.notificationTotalUnreadCount
           );
@@ -284,13 +293,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   markSystemNotificationAsRead(notification: SystemNotifications) {
     if (notification.hasRead || notification.isLoading) {
-      return; 
+      return;
     }
 
     notification.isLoading = true;
     this.notificationService.markAsRead(notification.notificationId).subscribe({
       next: () => {
-        this.fetchAllSystemNotifications(); 
+        this.fetchAllSystemNotifications();
         notification.isLoading = false;
       },
       error: (err) => {
