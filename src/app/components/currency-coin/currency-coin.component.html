@@ -13,6 +13,7 @@
     <button (click)="setView('grid')" class="btn btn-primary rounded-button">Data</button>
     <button (click)="setView('gallery')" class="btn btn-primary rounded-button">Gallery</button>
     <button (click)="setView('summary')" class="btn btn-primary rounded-button">Summary</button>
+    <button (click)="setView('owner')" class="btn btn-primary rounded-button">Artcle in news</button>
   </div>
   <div class="row pb-2">
     <div class="col-5 col-sm-4 col-md-3 col-lg-2">
@@ -88,15 +89,49 @@
     </div>
   </div>
 
-    <div class="row mt-4" *ngIf="viewMode === 'owner'">
-    <div class="gallery-grid">
-      <div class="gallery-item note"
-        <img src="basePath + coin.imagePath" alt="image missing" />
-        <div class="gallery-caption">
-          <h3>coinNoteName</h3>
-          <p>description</p>
-          <small>currencyCoinType</small>
-        </div>
+  <div class="row mt-4" *ngIf="viewMode === 'owner'">
+    <div class="gallery-item p-4" >
+      <img [src]="basePath + '/news/newssakal22feb16.png'" alt="image missing" />
+      <div class="gallery-caption">
+        <h3>coinNoteName</h3>
+        <p>description</p>
+        <small>currencyCoinType</small>
+      </div>
+    </div>
+
+    <div class="gallery-item p-4">
+      <img [src]="basePath + '/news/newsdeshonnati11apr17.png'" alt="image missing" />
+      <div class="gallery-caption">
+        <h3>coinNoteName</h3>
+        <p>description</p>
+        <small>currencyCoinType</small>
+      </div>
+    </div>
+
+    <div class="gallery-item p-4">
+      <img [src]="basePath + '/news/newsDivyamarathi10apr17.png'" alt="image missing" />
+      <div class="gallery-caption">
+        <h3>coinNoteName</h3>
+        <p>description</p>
+        <small>currencyCoinType</small>
+      </div>
+    </div>
+
+    <div class="gallery-item p-4">
+      <img [src]="basePath + '/news/newssakal10feb17.png'" alt="image missing" />
+      <div class="gallery-caption">
+        <h3>coinNoteName</h3>
+        <p>description</p>
+        <small>currencyCoinType</small>
+      </div>
+    </div>
+
+    <div class="gallery-item p-4">
+      <img [src]="basePath + '/news/newsVruttakesari11apr17.png'" alt="image missing" />
+      <div class="gallery-caption">
+        <h3>coinNoteName</h3>
+        <p>description</p>
+        <small>currencyCoinType</small>
       </div>
     </div>
   </div>
