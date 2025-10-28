@@ -353,7 +353,7 @@ export class DayComponent implements OnInit {
     const checked = (event.target as HTMLInputElement).checked;
 
     this.selectedOccasionType = checked
-      ? this.occasionTypeList.map((m: any) => m.listItemDescription)
+      ? this.occasionTypeList.map((m: any) => m.description)
       : [];
 
     this.getOccasionTypeDropdownLabel();
@@ -372,6 +372,7 @@ export class DayComponent implements OnInit {
   }
 
   getOccasionTypeDropdownLabel() {
+    debugger;
     if (this.selectedOccasionType.length === 0) {
       this.lableForOccasionTypeDropDown = "";
     } else if (this.selectedOccasionType.length === this.occasionTypeList.length) {
@@ -387,7 +388,7 @@ export class DayComponent implements OnInit {
     const checked = (event.target as HTMLInputElement).checked;
 
     this.selectedRelationType = checked
-      ? this.relationList.map((m: any) => m.listItemDescription)
+      ? this.relationList.map((m: any) => m.description)
       : [];
 
     this.getRelationTypeDropdownLabel();

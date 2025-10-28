@@ -1296,13 +1296,6 @@ input {
   border-left: none;
 }
 
-.banner-text {
-  text-align: left;
-  font-size: 20px;
-  letter-spacing: 1px;
-  color: #fff
-}
-
 .banner-lower-text {
   text-align: left;
   font: normal normal normal 12px/16px;
@@ -1584,6 +1577,10 @@ select option {
   outline: none;
 }
 
+.main-body {
+  padding: 10px;
+}
+
 .scrollable-button {
     display: block;
     width: 100%;
@@ -1597,7 +1594,7 @@ select option {
 
  .dropdown-menu {
     max-height: 300px;
-    padding: 10px;
+    /* padding: 10px; */
     overflow-y: auto;
 }
 

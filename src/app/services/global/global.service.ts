@@ -186,7 +186,18 @@ export class GlobalService {
     if (columnValue) {
       return '<span class="status-active">Active</span>';
     } else {
-      return '<span class="status-disabled">Disabled</span>';
+      return '<span class="status-disabled">Inactive</span>';
+    }
+  }
+
+  isLockedFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const userData = cell.getRow().getData();
+    const columnValue = userData[columnName];
+    if (columnValue) {
+      return '<span class="status-disabled">Locked</span>';
+    } else {
+      return '<span class="status-active">Active</span>';
     }
   }
 

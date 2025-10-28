@@ -71,6 +71,13 @@ export class CurrencyCoinComponent implements OnInit {
     }, 2000);
     this.globalService.reloadGrid$.subscribe(() => { });
     this.globalService.refreshList$.subscribe(() => { });
+    this.improvePerformance();
+  }
+
+  improvePerformance() {
+    this.selectedCountry.push('India');
+    this.lableForCountryDropDown = 'India';
+    this.applyFilters();
   }
 
   columnConfiguration() {
@@ -417,11 +424,13 @@ export class CurrencyCoinComponent implements OnInit {
 
   toggleAllCountryCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-
-    this.selectedCountry = checked
-      ? this.countryList.map((m: any) => m.listItemDescription)
-      : [];
-
+    if (checked) {
+      this.selectedCountry = this.countryList.map((m: any) => m.country);
+      this.selectedCountryCode = this.countryList.map((m: any) => m.code);
+    } else {
+      this.selectedCountry = [];
+      this.selectedCountryCode = [];
+    }
     this.getCountryDropdownLabel();
     this.applyFilters();
   }
@@ -450,6 +459,7 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   setView(mode: 'grid' | 'gallery' | 'summary' | 'owner') {
+    this.improvePerformance();
     this.viewMode = mode;
   }
 

@@ -9,7 +9,7 @@ import {
   ApplicationModules,
   ApplicationTableConstants,
   DdlConfig,
-  NavigationURLs,
+  NavigationURLs
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
@@ -98,7 +98,6 @@ export class TransactionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.ClearFilter();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
         this.LoadGrid();
@@ -749,6 +748,10 @@ export class TransactionComponent implements OnInit {
   }
 
   ClearFilter() {
+    this.cacheService.clear(NavigationURLs.EXPENSE_LIST);
+    this.cacheService.clear(NavigationURLs.EXPENSE_SUMMARY_LIST);
+    this.cacheService.clear(NavigationURLs.EXPENSE_BALANCE_LIST);
+    this.cacheService.clear(NavigationURLs.EXPENSE_REPORT);
     this.sourceOrReason = "";
     this.minAmount = 0;
     this.maxAmount = 0;
