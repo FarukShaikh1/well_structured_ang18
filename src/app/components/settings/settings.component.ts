@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, UIStrings, UserConfig } from "../../../utils/application-constants";
+import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, UIStrings, UserConfig } from "../../../utils/application-constants";
 import { CacheService } from "../../services/cache/cache.service";
 import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { GlobalService } from '../../services/global/global.service';
@@ -46,7 +46,7 @@ export class SettingsComponent {
   filteredAccountTableData: Record<string, unknown>[] = [];
   filteredRelationTableData: Record<string, unknown>[] = [];
   filteredOccasionTypeTableData: Record<string, unknown>[] = [];
-
+  ActionConstant = ActionConstant;
   userTableData: Record<string, unknown>[] = [];
   accountTableData: Record<string, unknown>[] = [];
   relationTableData: Record<string, unknown>[] = [];
@@ -423,8 +423,8 @@ export class SettingsComponent {
           this.toaster.showMessage(res.message, res.success ? "success" : "error");
           this.loaderService.hideLoader();
           if (res.success) {
-          localStorage.removeItem(this.selectedConfig);
-          this.loadConfigGrid(this.selectedUserId, this.selectedConfig);
+            localStorage.removeItem(this.selectedConfig);
+            this.loadConfigGrid(this.selectedUserId, this.selectedConfig);
           }
         },
         error: (error: any) => {

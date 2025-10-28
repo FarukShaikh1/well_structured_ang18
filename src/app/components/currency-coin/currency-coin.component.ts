@@ -45,7 +45,7 @@ export class CurrencyCoinComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  public viewMode: 'grid' | 'gallery' | 'summary' = 'grid';
+  public viewMode: 'grid' | 'gallery' | 'summary' | 'owner' = 'grid';
 
   constructor(
     private currencyCoinService: CurrencyCoinService,
@@ -449,7 +449,7 @@ export class CurrencyCoinComponent implements OnInit {
     }
   }
 
-  setView(mode: 'grid' | 'gallery' | 'summary') {
+  setView(mode: 'grid' | 'gallery' | 'summary' | 'owner') {
     this.viewMode = mode;
   }
 

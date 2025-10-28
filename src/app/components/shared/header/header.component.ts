@@ -19,6 +19,8 @@ import {
   ApplicationModules,
   ApplicationRoles,
   NavigationURLs,
+  RoutePath,
+  RoutePathTitles,
 } from "../../../../utils/application-constants";
 import { ModuleResponse } from "../../../interfaces/module-response";
 import { SystemNotifications } from "../../../interfaces/system-notifications";
@@ -88,6 +90,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   getModuleList() {
     this.moduleList = this.localStorageService.getLoggedInUserPermissions();
+    this.moduleList = this.moduleList.filter((module: any) => {
+      if (module.moduleName === RoutePathTitles.EXPENSES) {
+        // For Expenses: view must be true AND add must be true
+        return module.view === true && module.add === true;
+      }
+      // For all others: only view must be true
+      return module.view === true;
+    });
   }
 
   isActiveMenu(route: string): boolean {
