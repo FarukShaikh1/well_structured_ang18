@@ -5,9 +5,9 @@ const apiPrefix = environment.apiPrefix;
 
 export const API_URL = {
   
-  ATTACHMENT: "../../../assets/ProjectAttatchments", 
-  COLLECTIONCOINS: "Collection_Coins",
-  BIRTHDAYPERSONPIC: "Birthday_Person_Pic",
+  ATTACHMENT: "../../../assets/projectattatchments", 
+  COLLECTIONCOINS: "collection_coins",
+  BIRTHDAYPERSONPIC: "birthday_person_pic",
 
   GET_ASSET_DETAILS: `${serverUrl}${apiPrefix}/asset/getAssetDetails`,
   UPLOAD_IMAGE: `${serverUrl}${apiPrefix}/asset/UploadAndSaveFile?userId=`,
