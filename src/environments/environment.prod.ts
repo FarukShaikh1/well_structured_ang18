@@ -1,7 +1,9 @@
 export const environment = {
   production: false,
   
-  serverUrl: 'http://localhost:85/',
+  // serverUrl: 'http://localhost:85/',
+  // serverUrl: 'http://farukshaikh-001-site1.ltempurl.com/',
+  serverUrl:'https://fmscollectionapi-cafuhmb0gbg6hhew.centralindia-01.azurewebsites.net/',
   apiPrefix: 'api',
   msalConfig: {
     auth: {

@@ -5,9 +5,9 @@ const apiPrefix = environment.apiPrefix;
 
 export const API_URL = {
   
-  ATTACHMENT: "../../../assets/ProjectAttatchments", 
-  COLLECTIONCOINS: "Collection_Coins",
-  BIRTHDAYPERSONPIC: "Birthday_Person_Pic",
+  ATTACHMENT: "../../../assets/projectattatchments", 
+  COLLECTIONCOINS: "collection_coins",
+  BIRTHDAYPERSONPIC: "birthday_person_pic",
 
   GET_ASSET_DETAILS: `${serverUrl}${apiPrefix}/asset/getAssetDetails`,
   UPLOAD_IMAGE: `${serverUrl}${apiPrefix}/asset/UploadAndSaveFile?userId=`,
@@ -55,7 +55,8 @@ export const API_URL = {
   GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetUserPermission?userId=`,
   GET_DEFAULT_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetDefaultPermission`,
   GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,
-  UPDATE_USER_PERMISSION: `${serverUrl}${apiPrefix}/user/updaterolemodulemapping`,
+  UPDATE_USER_PERMISSION: `${serverUrl}${apiPrefix}/user/updateUserPermission?userId=`,
+  CHANGE_PASSWORD: `${serverUrl}${apiPrefix}/user/changepassword`,
 
   GET_ALL_USERS: `${serverUrl}${apiPrefix}/user/GetList`,
   GET_LOGGED_IN_USER_DETAILS: `${serverUrl}${apiPrefix}/auth/getloggedinuserdetails`,
@@ -73,7 +74,6 @@ export const API_URL = {
   REGISTER_USER: `${serverUrl}${apiPrefix}/auth/register`,
   UPDATE_USER: `${serverUrl}${apiPrefix}/user/updateUserDetails?userId=`,
   RESET_PASSWORD: `${serverUrl}${apiPrefix}/auth/resetpassword`,
-  CHANGE_PASSWORD: `${serverUrl}${apiPrefix}/auth/changepassword`,
   FORGOT_PASSWORD: `${serverUrl}${apiPrefix}/auth/forgotpassword`,
   VERIFY_OTP: `${serverUrl}${apiPrefix}/otp/verify`,
   SEND_OTP: `${serverUrl}${apiPrefix}/otp/send`,

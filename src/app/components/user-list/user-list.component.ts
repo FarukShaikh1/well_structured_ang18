@@ -114,10 +114,10 @@ export class UserListComponent implements OnInit {
       },
       { title: 'Role', field: 'roleName', sorter: 'string' },
       {
-        title: 'Statussss',
+        title: 'Status',
         field: 'isLocked',
         sorter: 'string',
-        formatter: this.globalService.statusFormatter.bind(this),
+        formatter: this.globalService.isLockedFormatter.bind(this),
       },
       {
         title: "",

@@ -13,8 +13,18 @@
                     placeholder="Enter Password" required="" />
             </div>
             <div class="col-12 mt-4">
-                <button class="btn btn-primary rounded-button mt-4" id="BtnLogin">Login</button>
+                <button type="submit" class="btn btn-primary rounded-button " id="BtnLogin">Login</button>
+                <button type="button" class="btn btn-primary rounded-button"
+                    (click)="navigate(NavigationURLs.CURRENCY_LIST)">Continue Without Login</button>
+            </div>
+            <div class="text-center mt-3">
+                <button type="button" class="btn text-link back-btn"
+                    (click)="navigate(NavigationURLs.FORGOT_PASSWORD)">Forgot Password</button>
+                    | 
+                <button type="button" class="btn text-link back-btn"
+                    (click)="navigate(NavigationURLs.SIGNUP)">New Here, Sign Up</button>
             </div>
         </div>
     </form>
 </div>
+<app-toaster></app-toaster>

@@ -24,6 +24,7 @@
           <th class="permission">Delete</th>
           <th class="permission">Download</th>
           <th class="permission">Upload</th>
+          <th class="permission"></th>
         </tr>
       </thead>
       <tbody>
@@ -50,16 +51,22 @@
           <td class="permission">
             <input type="checkbox" [(ngModel)]="role.upload" [disabled]="!editable || disableUpdate" />
           </td>
+          <td class="permission">
+            <button type="button" [disabled]="!editable || disableUpdate" (click)="updateRoleModulePermission(role)">
+              Update 
+            </button>
+          </td>
+
         </tr>
         }
       </tbody>
     </table>
   </div>
   <div class="text-end">
-    <button type="button" [disabled]="disableUpdate" class="btn btn-primary btn-md"
+    <!-- <button type="button" [disabled]="disableUpdate" class="btn btn-primary btn-md"
       (click)="updateRoleModulePermission()">
       Update
-    </button>
+    </button> -->
   </div>
 </div>
 <app-toaster></app-toaster>

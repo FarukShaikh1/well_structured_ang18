@@ -186,24 +186,29 @@ export class GlobalService {
     if (columnValue) {
       return '<span class="status-active">Active</span>';
     } else {
-      return '<span class="status-disabled">Disabled</span>';
+      return '<span class="status-disabled">Inactive</span>';
+    }
+  }
+
+  isLockedFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const userData = cell.getRow().getData();
+    const columnValue = userData[columnName];
+    if (columnValue) {
+      return '<span class="status-disabled">Locked</span>';
+    } else {
+      return '<span class="status-active">Active</span>';
     }
   }
 
   showGlobalDropdownMenu(button: HTMLElement, menuOptions: any) {
-
-
     const oldMenu = document.getElementById('globalDropdownMenu');
     if (oldMenu) oldMenu.remove();
-
-
     const menu = document.createElement('ul');
     menu.className = 'dropdown-menu show options-menu';
     menu.id = 'globalDropdownMenu';
     menu.style.position = 'absolute';
     menu.style.zIndex = '9999';
-
-
     menuOptions.forEach((option: any) => {
       const menuItem = document.createElement('li');
       menuItem.innerHTML = `<a class="dropdown-item" href="#">${option.label}</a>`;
@@ -214,13 +219,9 @@ export class GlobalService {
       });
       menu.appendChild(menuItem);
     });
-
-
     const rect = button.getBoundingClientRect();
     menu.style.top = `${rect.bottom + window.scrollY}px`;
     menu.style.left = `${rect.left + window.scrollX - 70}px`;
-
-
     document.body.appendChild(menu);
   }
 

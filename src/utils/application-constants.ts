@@ -5,7 +5,7 @@ export const ApplicationConstants = {
     PATTERN_REQUIRED_CHARS_IN_USERNAME:
         '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
 
-    MIN_LENGTH_PASSWORD: 12,
+    MIN_LENGTH_PASSWORD: 8,
     MAX_LENGTH_PASSWORD: 15,
     PATTERN_REQUIRED_CHARS_IN_PASSWORD:
         '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*. ]{8,}$',
@@ -113,6 +113,7 @@ export const ApplicationConstantHtml = {
 }
 export const NavigationURLs = {
     LOGIN: '/login',
+    SIGNUP: '/sign-up',
     ERROR_PAGE: '/home/unauthorised',
     UNAUTHORIZED_PAGE: '/unauthorised',
     LOGOUT: '/logout',
@@ -135,6 +136,47 @@ export const NavigationURLs = {
     CURRENCY_SUMMARY: '/home/currency-summary',
     CURRENCY_GALLERY: '/home/currency-gallery',
     ALL_NOTIFICATIONS: '/home/notifications',
+    OTP_VERIFICATION: '/otp-verification',
+};
+
+export const RoutePath = {
+    HOME: 'home',
+    CURRENCY_LIST: 'currency-coin',
+    EXPENSES: 'expenses',
+    DAY_LIST: 'day',
+    USER_LIST: 'manage-users',
+    USER_PERMISSIONS: 'user-permission',
+    SETTINGS: 'settings',
+    DOCUMENT: 'documents',
+    CHANGE_PASSWORD: 'change-password',
+    RESET_PASSWORD: 'reset-password',
+    FORGOT_PASSWORD: 'forgot-password',
+    LOGIN: 'login',
+    SIGNUP: 'sign-up',
+    LOGOUT: 'logout',
+    OTP_VERIFICATION: 'otp-verification',
+    NOTIFICATIONS: 'notifications',
+    UNAUTHORIZED: 'unauthorised',
+};
+
+export const RoutePathTitles = {
+    HOME: 'Home',
+    CURRENCY_LIST: 'Currency Coin',
+    EXPENSES: 'Expenses',
+    DAY_LIST: 'Special Occasion Days',
+    USER_LIST: 'Manage Users',
+    USER_PERMISSIONS: 'User Permission',
+    SETTINGS: 'Settings',
+    DOCUMENT: 'Documents',
+    CHANGE_PASSWORD: 'Change Password',
+    RESET_PASSWORD: 'Reset Password',
+    FORGOT_PASSWORD: 'Forgot Password',
+    LOGIN: 'Login',
+    SIGNUP: 'SignUp',
+    LOGOUT: 'Logout',
+    OTP_VERIFICATION: 'Verify OTP',
+    NOTIFICATIONS: 'Notifications',
+    UNAUTHORIZED: 'Unauthorised',
 };
 
 

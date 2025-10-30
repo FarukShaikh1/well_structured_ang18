@@ -7,7 +7,6 @@ import {
   ApplicationModules,
   ApplicationTableConstants,
   DdlConfig,
-  LocalStorageConstants,
   NavigationURLs
 } from "../../../utils/application-constants";
 import { CacheService } from "../../services/cache/cache.service";
@@ -148,6 +147,7 @@ export class DayComponent implements OnInit {
         title: "Date",
         field: "specialOccasionDate",
         sorter: "alphanum",
+        minWidth: 60,
         maxWidth: 100,
         formatter: this.dateFormatter.bind(this),
       },
@@ -161,44 +161,51 @@ export class DayComponent implements OnInit {
             </div>
           `;
         },
-
         field: "personName",
         sorter: "string",
+        minWidth: 150,
       },
-
       {
         title: "Relation",
-        field: "relationShipName"
+        field: "relationShipName",
+        minWidth: 120,
       },
       {
         title: "Email Id",
         field: "emailId",
         sorter: "alphanum",
+        minWidth: 200,
       },
       {
         title: "Mobile Number",
         field: "mobileNumber",
         sorter: "alphanum",
+        minWidth: 120,
       },
       {
         title: "Address",
         field: "address",
         sorter: "alphanum",
+        minWidth: 200,
       },
       {
         title: "Day Type",
         field: "dayType",
         sorter: "alphanum",
+        minWidth: 120,
       },
       {
         title: "Pic",
         field: "thumbnailPath",
         formatter: this.globalService.thumbnailFormatter.bind(this),
+        minWidth: 70,
+        maxWidth: 100,
       },
       {
         title: "",
         field: "",
-        maxWidth: 70,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const birthdayId = cell.getRow().getData()["id"];
@@ -215,16 +222,14 @@ export class DayComponent implements OnInit {
       this.columnConfig.push({
         title: "",
         field: "option",
-        maxWidth: 70,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
       });
     }
   }
-
-
-
 
   dateFormatter(cell: CellComponent) {
     const columnName = cell.getColumn().getField();
@@ -348,7 +353,7 @@ export class DayComponent implements OnInit {
     const checked = (event.target as HTMLInputElement).checked;
 
     this.selectedOccasionType = checked
-      ? this.occasionTypeList.map((m: any) => m.listItemDescription)
+      ? this.occasionTypeList.map((m: any) => m.description)
       : [];
 
     this.getOccasionTypeDropdownLabel();
@@ -367,6 +372,7 @@ export class DayComponent implements OnInit {
   }
 
   getOccasionTypeDropdownLabel() {
+    debugger;
     if (this.selectedOccasionType.length === 0) {
       this.lableForOccasionTypeDropDown = "";
     } else if (this.selectedOccasionType.length === this.occasionTypeList.length) {
@@ -382,7 +388,7 @@ export class DayComponent implements OnInit {
     const checked = (event.target as HTMLInputElement).checked;
 
     this.selectedRelationType = checked
-      ? this.relationList.map((m: any) => m.listItemDescription)
+      ? this.relationList.map((m: any) => m.description)
       : [];
 
     this.getRelationTypeDropdownLabel();

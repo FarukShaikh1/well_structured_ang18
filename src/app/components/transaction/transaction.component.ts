@@ -9,7 +9,7 @@ import {
   ApplicationModules,
   ApplicationTableConstants,
   DdlConfig,
-  NavigationURLs,
+  NavigationURLs
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
@@ -98,10 +98,8 @@ export class TransactionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.ClearFilter();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
-        debugger;
         this.LoadGrid();
       }
     });
@@ -141,23 +139,26 @@ export class TransactionComponent implements OnInit {
         field: "transactionDate",
         sorter: "alphanum",
         formatter: this.dateFormatter.bind(this),
+        minWidth: 120,
       },
       {
         title: "Source/Reason",
         field: "sourceOrReason",
         sorter: "alphanum",
         formatter: this.getColorForText.bind(this),
+        minWidth: 200,
       },
       {
         title: "Description",
         field: "description",
         sorter: "alphanum",
-        width: 400,
+        minWidth: 400,
       },
       {
         title: "Transaction Mode",
         field: "accountName",
         sorter: "alphanum",
+        minWidth: 150,
       },
       {
         title: "Debit",
@@ -167,6 +168,7 @@ export class TransactionComponent implements OnInit {
         bottomCalc: "sum",
         bottomCalcFormatter: this.debitAmountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        minWidth: 120,
       },
       {
         title: "Credit",
@@ -176,6 +178,7 @@ export class TransactionComponent implements OnInit {
         bottomCalc: "sum",
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        minWidth: 120,
       },
       {
         title: "",
@@ -188,6 +191,7 @@ export class TransactionComponent implements OnInit {
         },
         hozAlign: "center",
         headerSort: false,
+        minWidth: 70,
       },
     ];
     if (
@@ -197,10 +201,11 @@ export class TransactionComponent implements OnInit {
       this.columnConfig.push({
         title: "",
         field: "option",
-        maxWidth: 70,
         formatter: this.globalService.optionDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
+        minWidth: 70,
+        maxWidth: 70,
       });
     }
   }
@@ -211,20 +216,21 @@ export class TransactionComponent implements OnInit {
         title: "Transaction Date",
         field: "transactionDate",
         sorter: "alphanum",
-
         formatter: this.dateFormatter.bind(this),
+        minWidth: 120,
       },
       {
         title: "Source/Reason",
         field: "sourceOrReason",
-
         sorter: "alphanum",
+        formatter: this.getColorForText.bind(this),
+        minWidth: 150,
       },
       {
         title: "Description",
         field: "description",
-
         sorter: "alphanum",
+        minWidth: 200,
       },
     ];
 
@@ -240,7 +246,6 @@ export class TransactionComponent implements OnInit {
             this.columnConfig.push({
               title: key,
               field: `accountData.${key}`,
-
               formatter: this.summaryAmountColorFormatter.bind(this),
               hozAlign: "center",
               headerHozAlign: "center",
@@ -248,7 +253,7 @@ export class TransactionComponent implements OnInit {
               bottomCalc: "sum",
               bottomCalcFormatter: this.amountColorFormatter.bind(this),
               bottomCalcFormatterParams: { symbol: "", precision: 2 },
-
+              minWidth: 120,
             });
           }
         }
@@ -257,7 +262,8 @@ export class TransactionComponent implements OnInit {
     this.columnConfig.push({
       title: "",
       field: "",
-      maxWidth: 70,
+      minWidth: 70,
+      maxWidth: 100,
       formatter: this.globalService.hidebuttonFormatter.bind(this),
       cellClick: (e, cell) => {
         const transactionGroupId = cell.getRow().getData()["transactionGroupId"];
@@ -272,7 +278,8 @@ export class TransactionComponent implements OnInit {
       this.columnConfig.push({
         title: "",
         field: "option",
-        maxWidth: 70,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: this.globalService.optionDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
@@ -286,8 +293,8 @@ export class TransactionComponent implements OnInit {
         title: "Transaction Date",
         field: "transactionDate",
         sorter: "alphanum",
-
         formatter: this.dateFormatter.bind(this),
+        minWidth: 120,
       },
     ];
 
@@ -302,7 +309,6 @@ export class TransactionComponent implements OnInit {
             this.columnConfig.push({
               title: key,
               field: `accountData.${key}`,
-
               formatter: this.summaryAmountColorFormatter.bind(this),
               hozAlign: "center",
               headerHozAlign: "center",
@@ -310,7 +316,7 @@ export class TransactionComponent implements OnInit {
               bottomCalc: "sum",
               bottomCalcFormatter: this.amountColorFormatter.bind(this),
               bottomCalcFormatterParams: { symbol: "", precision: 2 },
-
+              minWidth: 120,
             });
           }
         }
@@ -335,27 +341,27 @@ export class TransactionComponent implements OnInit {
         title: "FirstDate",
         field: "firstDate",
         sorter: "alphanum",
-        width: 100,
+        minWidth: 100,
         formatter: this.dateFormatter.bind(this),
       },
       {
         title: "LastDate",
         field: "lastDate",
         sorter: "alphanum",
-        width: 100,
+        minWidth: 100,
         formatter: this.dateFormatter.bind(this),
       },
       {
         title: "Source/Reason",
         field: "sourceOrReason",
         sorter: "alphanum",
-        width: 150,
+        minWidth: 150,
       },
       {
         title: "Description",
         field: "description",
         sorter: "alphanum",
-        width: 600,
+        minWidth: 600,
         formatter: (cell) => {
           const value = cell.getValue() || "";
           return `<div class="text-wrap">${value}</div>`;
@@ -373,6 +379,7 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
+        minWidth: 120,
       },
       {
         title: "GivenAmount",
@@ -385,6 +392,7 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
+        minWidth: 120,
       },
       {
         title: "TotalAmount",
@@ -397,11 +405,13 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
+        minWidth: 120,
       },
       {
         title: "",
         field: "",
-        maxWidth: 70,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const sourceOrReason = cell.getRow().getData()["sourceOrReason"];
@@ -412,7 +422,8 @@ export class TransactionComponent implements OnInit {
       {
         title: "",
         field: "",
-        maxWidth: 70,
+        minWidth: 70,
+        maxWidth: 100,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         clickMenu: [
@@ -737,6 +748,10 @@ export class TransactionComponent implements OnInit {
   }
 
   ClearFilter() {
+    this.cacheService.clear(NavigationURLs.EXPENSE_LIST);
+    this.cacheService.clear(NavigationURLs.EXPENSE_SUMMARY_LIST);
+    this.cacheService.clear(NavigationURLs.EXPENSE_BALANCE_LIST);
+    this.cacheService.clear(NavigationURLs.EXPENSE_REPORT);
     this.sourceOrReason = "";
     this.minAmount = 0;
     this.maxAmount = 0;
@@ -805,7 +820,6 @@ export class TransactionComponent implements OnInit {
             this.tableData = res.data;
             this.filteredTableData = res.data;
             this.cacheService.set(this.activeComponent, res.data);
-            debugger;
             this.lastTransactionDate = this.getLatestTransactionDate();
             this.columnConfiguration();
             this.loaderService.hideLoader();

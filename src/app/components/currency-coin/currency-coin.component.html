@@ -1,19 +1,26 @@
 <div class="main-body">
-  <div class="d-inline-flex gap-2 ms-2">
-    @if(globalService.isAccessible(ActionConstant.ADD)){
-    <button (click)="currencyCoinDetails('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
-      data-bs-target="#detailsPopup">
-      <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      </svg>
-      Add Collection Item
-    </button>
-    }
-    <button (click)="setView('grid')" class="btn btn-primary rounded-button">Data</button>
-    <button (click)="setView('gallery')" class="btn btn-primary rounded-button">Gallery</button>
-    <button (click)="setView('summary')" class="btn btn-primary rounded-button">Summary</button>
-  </div>
+  @if(globalService.isAccessible(ActionConstant.ADD)){
+  <button (click)="currencyCoinDetails('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
+    data-bs-target="#detailsPopup">
+    <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+    Add Collection Item
+  </button>
+  }
+  @if(viewMode!='grid'){
+  <button (click)="setView('grid')" class="btn btn-primary rounded-button">Data</button>
+  }
+  @if(viewMode!='gallery'){
+  <button (click)="setView('gallery')" class="btn btn-primary rounded-button">Gallery</button>
+  }
+  @if(viewMode!='summary'){
+  <button (click)="setView('summary')" class="btn btn-primary rounded-button">Summary</button>
+  }
+  @if(viewMode!='owner'){
+  <button (click)="setView('owner')" class="btn btn-primary rounded-button">Artcle in news</button>
+  }
   <div class="row pb-2">
     <div class="col-5 col-sm-4 col-md-3 col-lg-2">
       <div appearance="outline">
@@ -44,7 +51,7 @@
             <div class="form-check">
               <input type="checkbox" class="form-check-input" [id]="item.id"
                 [checked]="selectedCountry.includes(item.country)"
-                (change)="toggleCountryCheck($event, item.country,item.countryCode )" />
+                (change)="toggleCountryCheck($event, item.country,item.code )" />
               <label class="form-check-label" [for]="item.country">
                 {{ item.country}}
               </label>
@@ -84,6 +91,44 @@
           <p>{{ coin.description }}</p>
           <small>{{ coin.currencyCoinType }} - {{ coin.printedYear }}</small>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4" *ngIf="viewMode === 'owner'">
+    <div class="gallery-item p-4">
+      <img [src]="basePath + '/news/newssakal22feb16.png'" alt="image missing" />
+      <div class="gallery-caption">
+        <h3>मंगळवार, 23 February 2016, सकाळ Today अमरावती</h3>
+      </div>
+    </div>
+
+    <div class="gallery-item p-4">
+      <img [src]="basePath + '/news/newsdeshonnati11apr17.png'" alt="image missing" />
+      <div class="gallery-caption">
+        <h3>मंगळवार, 11 एप्रिल 2017, देशोन्नती जिल्हा Rdx अमरावती </h3>
+      </div>
+    </div>
+
+    <div class="gallery-item p-4">
+      <img [src]="basePath + '/news/newsDivyamarathi10apr17.png'" alt="image missing" />
+      <div class="gallery-caption">
+        <h3>सोमवार, 10 एप्रिल 2017, दैनिक दिव्य मराठी अमरावती, Page No.3</h3>
+      </div>
+    </div>
+
+    <div class="gallery-item p-4">
+      <img [src]="basePath + '/news/newssakal10feb17.png'" alt="image missing" />
+      <div class="gallery-caption">
+        <h3>सोमवार, 10 एप्रिल 2017, सकाळ Today अमरावती, Page No. 3</h3>
+      </div>
+    </div>
+
+    <div class="gallery-item p-4">
+      <img [src]="basePath + '/news/newsVruttakesari11apr17.png'" alt="image missing" />
+      <div class="gallery-caption">
+        <h3>वृत्त केसरी ग्रामीण, Page No.13</h3>
+        <p> मंगळवार, 11 एप्रिल 2017</p>
       </div>
     </div>
   </div>

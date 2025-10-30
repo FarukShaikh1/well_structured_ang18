@@ -3,13 +3,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActionConstant, Messages } from '../../../utils/application-constants';
 import { UserPermission } from '../../interfaces/user-permission';
+import { CacheService } from '../../services/cache/cache.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { RoleService } from '../../services/role/role.service';
+import { UserService } from '../../services/user/user.service';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { UserService } from '../../services/user/user.service';
-import { CacheService } from '../../services/cache/cache.service';
 @Component({
   selector: 'app-user-permission',
   standalone: true,
@@ -25,9 +25,9 @@ export class UserPermissionComponent implements OnInit {
   disableUpdate: boolean = false;
   editable: boolean = false;
   cacheKey: string = 'UserPermission';
-
-  constructor(private userService: UserService, private roleService: RoleService, private loaderService: LoaderService,    private cacheService: CacheService,
-   public globalService: GlobalService) { }
+  selectedUserId: string = '';
+  constructor(private userService: UserService, private roleService: RoleService, private loaderService: LoaderService, private cacheService: CacheService,
+    public globalService: GlobalService) { }
 
   ngOnInit() {
     this.loaderService.showLoader();
@@ -39,17 +39,19 @@ export class UserPermissionComponent implements OnInit {
 
   changeUser(event: Event) {
     const select = event.target as HTMLSelectElement;
-    const selectedId = select.value;
-    if (!selectedId) {
+    this.selectedUserId = select.value;
+    localStorage.removeItem(this.cacheKey);
+
+    if (!this.selectedUserId || this.selectedUserId === 'select') {
       this.disableUpdate = true;
       this.getPermission("c3d0a1d1-78f3-4128-8c22-c394ad7f55e5");
     }
     else {
       this.disableUpdate = false;
-      this.getPermission(selectedId);
+      this.getPermission(this.selectedUserId);
     }
 
-    const selectedRole = this.userList.find((role: any) => role.id == selectedId);
+    const selectedRole = this.userList.find((role: any) => role.id == this.selectedUserId);
     if (selectedRole) {
     }
   }
@@ -78,9 +80,9 @@ export class UserPermissionComponent implements OnInit {
     this.roleService.getPermission(userId).subscribe({
       next: (result: any) => {
 
-        
+
         this.rolePageMappingData = result.data;
-          this.cacheService.set(this.cacheKey, result.data);
+        this.cacheService.set(this.cacheKey, result.data);
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -91,18 +93,31 @@ export class UserPermissionComponent implements OnInit {
     });
   }
 
-  updateRoleModulePermission() {
-    const updatedData: UserPermission[] = this.rolePageMappingData.map(
-      (mapping: UserPermission) => ({
-        ...mapping,
-        view: mapping.view || false,
-        add: mapping.add || false,
-        edit: mapping.edit || false,
-        delete: mapping.delete || false,
-        download: mapping.download || false,
-        upload: mapping.upload || false,
-      })
-    );
+  // updateRoleModulePermission() {
+  //   const updatedData: UserPermission[] = this.rolePageMappingData.map(
+  //     (mapping: UserPermission) => ({
+  //       ...mapping,
+  //       view: mapping.view || false,
+  //       add: mapping.add || false,
+  //       edit: mapping.edit || false,
+  //       delete: mapping.delete || false,
+  //       download: mapping.download || false,
+  //       upload: mapping.upload || false,
+  //     })
+  //   );
+
+  updateRoleModulePermission(role: UserPermission) {
+    const updatedData: UserPermission = {
+      userId: this.selectedUserId,
+      moduleId: role.moduleId,
+      moduleName: role.moduleName,
+      view: role.view,
+      add: role.add,
+      edit: role.edit,
+      delete: role.delete,
+      download: role.download,
+      upload: role.upload,
+    };
 
     this.roleService.updateUserPermission(updatedData).subscribe(
       () => {

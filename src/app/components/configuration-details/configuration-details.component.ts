@@ -9,6 +9,7 @@ import {
 import * as forms from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
+  ActionConstant,
   ApplicationModules,
   Messages
 } from '../../../utils/application-constants';
@@ -29,6 +30,7 @@ export class ConfigurationDetailsComponent {
   @ViewChild("btnCloseConfigPopup") btnCloseConfigPopup!: ElementRef;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @Input() tableData: Record<string, unknown>[] | undefined;
+  @Input() selectedUserId: string = '';
   configForm!: FormGroup;
   roleList: any;
   roleListoriginal: any;
@@ -38,8 +40,10 @@ export class ConfigurationDetailsComponent {
     configurationName: '',
     description: '',
     displayOrder: 0,
+    selectedUserId: ''
   };
   currentConfig: string = '';
+  ActionConstant = ActionConstant;
 
   constructor(
     private fb: FormBuilder,
@@ -59,7 +63,9 @@ export class ConfigurationDetailsComponent {
 
   openDetailsPopup(id: string, config: string) {
     this.currentConfig = config;
-    this.getConfigDetailsById(id, config);
+    if (id) {
+      this.getConfigDetailsById(id, config);
+    }
     const model = document.getElementById('configDetailsPopup');
     if (model !== null) {
       model.style.display = 'block';
@@ -89,6 +95,7 @@ export class ConfigurationDetailsComponent {
       configurationName: this.configForm.value.configurationName,
       description: this.configForm.value.configurationDescription,
       displayOrder: this.configForm.value.displaySequence,
+      selectedUserId: this.selectedUserId,
     };
     this.loaderService.showLoader();
     if (this.configurationRequest.id) {
@@ -102,14 +109,17 @@ export class ConfigurationDetailsComponent {
 
   addConfigDetails(request: ConfigurationRequest, config: string) {
     this.configurationService.addConfiguration(request, config).subscribe({
-      next: () => {
-        this.toaster.showMessage("Record Added Successfully.", "success");
+      next: (res: any) => {
+
+        this.toaster.showMessage(res?.message, res.success ? "success" : "error");
         this.loaderService.hideLoader();
-        this.renderer
-          .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
-          .click();
-        localStorage.removeItem(config);
-        this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
+        if (res.success) {
+          localStorage.removeItem(config);
+          this.renderer
+            .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
+            .click();
+          this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
+        }
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
@@ -121,14 +131,16 @@ export class ConfigurationDetailsComponent {
 
   updateConfigDetails(request: ConfigurationRequest, config: string) {
     this.configurationService.updateConfiguration(request, config).subscribe({
-      next: () => {
-        this.toaster.showMessage("Record Updated Successfully.", "success");
+      next: (res: any) => {
+        this.toaster.showMessage(res.message, res.success ? "success" : "error");
         this.loaderService.hideLoader();
-        this.renderer
-          .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
-          .click();
-        localStorage.removeItem(config);
-        this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
+        if (res.success) {
+          localStorage.removeItem(config);
+          this.renderer
+            .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
+            .click();
+          this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
+        }
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
@@ -166,10 +178,10 @@ export class ConfigurationDetailsComponent {
       next: (result: any) => {
         this.loaderService.showLoader();
         this.configForm.patchValue({
-          id: result.id,
-          configurationName: result.configurationName,
-          configurationDescription: result.description,
-          displaySequence: result.displayOrder,
+          id: result.data.id,
+          configurationName: result.data.configurationName,
+          configurationDescription: result.data.description,
+          displaySequence: result.data.displayOrder,
         });
         this.loaderService.hideLoader();
       },

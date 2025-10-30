@@ -1,5 +1,5 @@
 export interface UserPermission {
-    id: number;
+    userId: string;
     moduleId: string;
     moduleName: string;
     view: boolean;
