@@ -38,7 +38,7 @@ export class LoginComponent {
     }
   }
   loginForm: FormGroup;
-
+hideNewPassword:boolean = true;
   userList: any;
   constructor(
     private fb: FormBuilder,
@@ -50,7 +50,7 @@ export class LoginComponent {
     private localStorageService: LocalStorageService
   ) {
     this.loginForm = this.fb.group({
-      userName: "farukshaikh908@gmail.com",
+      userName: "",
       password: "Faruk",
     });
   }

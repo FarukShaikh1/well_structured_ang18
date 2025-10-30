@@ -166,7 +166,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   getAssetDetails(assetId: string) {
     this._assetService.getAssetDetails(assetId).subscribe({
       next: (res: any) => {
-        this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
+        this.selectedImage = res.data.originalPath;
+        // this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {

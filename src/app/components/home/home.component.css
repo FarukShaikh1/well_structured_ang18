@@ -1,5 +1,5 @@
 app-header {
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   left: 0;
   width: 100%;
@@ -10,5 +10,5 @@ app-header {
 
 /* Add top padding to avoid content hiding behind header */
 .home-container {
-  padding-top: 50px; /* adjust according to your header height */
+  padding-top: 0px; /* adjust according to your header height */
 }

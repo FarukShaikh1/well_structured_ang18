@@ -5,7 +5,7 @@ const apiPrefix = environment.apiPrefix;
 
 export const API_URL = {
   
-  ATTACHMENT: "../../../assets/projectattatchments", 
+  ATTACHMENT: "../../../assets/projectattatchments/", 
   COLLECTIONCOINS: "collection_coins",
   BIRTHDAYPERSONPIC: "birthday_person_pic",
 
