@@ -98,6 +98,7 @@ export class TransactionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.LoadGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
         this.LoadGrid();
@@ -708,21 +709,12 @@ export class TransactionComponent implements OnInit {
           (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) >= this.minAmount) ||
           (item.other !== null && item.other !== 0 && Math.abs(item.other) >= this.minAmount);
 
-
-
-
-
         const maxAmountCondition =
           this.maxAmount == 0 ||
           (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) <= this.maxAmount) ||
           (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) <= this.maxAmount) ||
           (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) <= this.maxAmount) ||
           (item.other !== null && item.other !== 0 && Math.abs(item.other) <= this.maxAmount);
-
-
-
-
-
 
         return searchText && minAmountCondition && maxAmountCondition;
       });
