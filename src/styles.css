@@ -1776,7 +1776,7 @@ img{
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
   .gallery-item.note {
-    grid-column: span 1; 
+    grid-column: span 2; 
   }
 
   

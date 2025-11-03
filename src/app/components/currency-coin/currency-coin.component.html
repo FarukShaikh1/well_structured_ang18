@@ -86,6 +86,7 @@
       <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'"
         *ngFor="let coin of filteredCoinList">
         <img [src]="basePath + coin.imagePath" [alt]="coin.coinNoteName" />
+        <!-- <img [src]="coin.imagePath" [alt]="coin.coinNoteName" /> -->
         <div class="gallery-caption">
           <h3>{{ coin.coinNoteName }}</h3>
           <p>{{ coin.description }}</p>

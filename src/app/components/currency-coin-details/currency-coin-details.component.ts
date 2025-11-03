@@ -166,8 +166,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   getAssetDetails(assetId: string) {
     this._assetService.getAssetDetails(assetId).subscribe({
       next: (res: any) => {
-        this.selectedImage = res.data.originalPath;
-        // this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
+        this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
+        // this.selectedImage = res.data.originalPath;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -284,7 +284,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         },
         error: (error: any) => {
           this.loaderService.hideLoader();
-          this.toaster.showMessage("Some issue is in Update the data.", "error");
+          this.toaster.showMessage(error?.message, "error");
           return;
         },
       });
@@ -303,7 +303,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
-        this.toaster.showMessage("Some issue is in Update the data.", "error");
+          this.toaster.showMessage(error?.message, "error");
         return;
       },
     });
