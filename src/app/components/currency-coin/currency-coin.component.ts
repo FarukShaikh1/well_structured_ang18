@@ -66,12 +66,13 @@ export class CurrencyCoinComponent implements OnInit {
       });
     }
     this.LoadGrid();
+    this.improvePerformance();
     setTimeout(() => {
       this.LoadSummaryGrid();
-    }, 2000);
+      this.improvePerformance();
+    }, 100);
     this.globalService.reloadGrid$.subscribe(() => { });
     this.globalService.refreshList$.subscribe(() => { });
-    this.improvePerformance();
   }
 
   improvePerformance() {
