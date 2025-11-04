@@ -1,4 +1,5 @@
-<header class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm">
+<header
+  class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm position-sticky top-0 z-3">
   <div class="d-flex align-items-center flex-shrink-0">
     @if(alreadyLoggedIn){
     <div>
@@ -10,99 +11,93 @@
     Welcome to FMS Collection
     }
   </div>
-  <div class="d-flex align-items-center flex-grow-1 justify-content-end">
+  <div class="d-flex align-items-center flex-grow-1 justify-content-end flex-wrap">
+    <!-- Mobile Menu Toggle -->
     <button class="btn btn-light d-md-none ms-2" type="button" (click)="toggleMenu()">
-      <i class="bi" [ngClass]="isMenuOpen ? 'bi-x-lg' : 'bi-list'" aria-hidden="true"></i>
+      <i class="bi" [ngClass]="isMenuOpen ? 'bi-x-lg' : 'bi-list'"></i>
       <span class="visually-hidden">Toggle navigation</span>
-    </button> &nbsp;
-    <div class="d-flex align-items-center position-relative me-3 flex-shrink-0">
-      <div class="d-none d-md-flex align-items-center">
-        @for(mod of moduleList;track $index){
+    </button>
+    <!-- Header right-side icons and modules -->
+    <div class="d-flex align-items-center me-3 flex-shrink-0">
+      <div class="d-none d-md-flex align-items-center flex-wrap">
+        @for(mod of moduleList; track $index){
         <button (click)="navigate(mod.route)" class="font-weight-bold p-2 txt-btn"
           [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
           {{ mod.moduleName }}
         </button>
-        &nbsp;
         }
       </div>
 
       @if(showNotificationIcon()) {
-<!-- Notification Dropdown -->
-<div class="dropdown me-3">
-  <button
-    class="btn p-0 position-relative"
-    type="button"
-    id="notificationDropdown"
-    data-bs-toggle="dropdown"
-    aria-expanded="false"
-  >
-    <i class="bi bi-bell"></i>
-    @if (notificationTotalUnreadCount > 0) {
-      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-        {{ notificationTotalUnreadCount }}
-      </span>
-    }
-  </button>
-
-  <ul
-    class="dropdown-menu dropdown-menu-end shadow-lg mt-2"
-    aria-labelledby="notificationDropdown"
-    style="min-width: 320px; max-height: 400px; overflow-y: auto"
-  >
-    <li class="dropdown-header d-flex justify-content-between align-items-center">
-      <strong>Notifications</strong>
-      <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemNotificationList()"></button>
-    </li>
-
-    <li><hr class="dropdown-divider" /></li>
-
-    @if (notifications.length === 0) {
-      <li class="text-center p-2 text-muted">No notifications</li>
-    } @else {
-      @for (notification of notifications; track $index) {
-        <li>
-          <a
-            class="dropdown-item d-flex flex-column"
-            href="javascript:void(0)"
-            (click)="markSystemNotificationAsRead(notification)"
-          >
-            <div>{{ notification.notificationMessage }}</div>
-            <small class="text-muted">{{ getRelativeTime(notification.createdOn) }}</small>
-          </a>
-        </li>
-      }
-      <li><hr class="dropdown-divider" /></li>
-      <li class="text-center">
-        <button
-          class="dropdown-item text-primary fw-semibold"
-          (click)="viewAllSystemNotifications()"
-        >
-          View All
+      <!-- Notification Dropdown -->
+      <div class="dropdown me-2 ms-2">
+        <button class="btn p-0 position-relative" type="button" id="notificationDropdown" data-bs-toggle="dropdown"
+          aria-expanded="false" data-bs-auto-close="outside">
+          <i class="bi bi-bell fs-5"></i>
+          @if (notificationTotalUnreadCount > 0) {
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ notificationTotalUnreadCount }}
+          </span>
+          }
         </button>
-      </li>
-    }
-  </ul>
-</div>
+
+        <!-- Use position-absolute on small screens -->
+        <ul class="dropdown-menu dropdown-menu-end shadow-lg mt-2 w-auto w-md-auto"
+          aria-labelledby="notificationDropdown"
+          style="min-width: 320px; max-height: 400px; overflow-y: auto; right: 0; left: auto;">
+          <li class="dropdown-header d-flex justify-content-between align-items-center sticky-top bg-white">
+            <strong>Notifications</strong>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemNotificationList()"></button>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+
+          @if (notifications.length === 0) {
+          <li class="text-center p-2 text-muted">No notifications</li>
+          } @else {
+          @for (notification of notifications; track $index) {
+          <li>
+            <a class="dropdown-item d-flex flex-column" href="javascript:void(0)"
+              (click)="markSystemNotificationAsRead(notification)">
+              <div>{{ notification.notificationMessage }}</div>
+              <small class="text-muted">{{ getRelativeTime(notification.createdOn) }}</small>
+            </a>
+          </li>
+          }
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+          <li class="text-center">
+            <button class="dropdown-item text-primary fw-semibold" (click)="viewAllSystemNotifications()">
+              View All
+            </button>
+          </li>
+          }
+        </ul>
+      </div>
       }
     </div>
+
     @if(alreadyLoggedIn){
-    <div class="dropdown flex-shrink-0 me-4">
-      <button class="btn p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+    <!-- Profile Dropdown -->
+    <div class="dropdown flex-shrink-0 me-2">
+      <button class="btn p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-bs-auto-close="true">
         <div class="profile-circle">
           <span title="{{ loggedInUserName }}">{{ userNameInitials }}</span>
         </div>
       </button>
 
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li class="top-dropdown-item">
-          <a class="dropdown-item logout-btn" (click)="goToChangePasswordPage()">
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+        <li>
+          <a class="dropdown-item" (click)="goToChangePasswordPage()">
             <i class="bi bi-pencil-square"></i>
             &nbsp;Change Password
           </a>
         </li>
-
-        <li class="top-dropdown-item">
-          <a class="dropdown-item logout-btn" (click)="logout()" data-bs-toggle="modal" data-bs-target="#confirmBox">
+        <li>
+          <a class="dropdown-item" (click)="logout()" data-bs-toggle="modal" data-bs-target="#confirmBox">
             <i class="bi bi-box-arrow-right"></i>
             &nbsp;Log Out
           </a>
@@ -111,7 +106,7 @@
     </div>
     }
     @else{
-    <div class="me-4">
+    <div class="me-2">
       <button class="btn btn-primary rounded-button" (click)="navigate(NavigationURLs.LOGIN)">Login</button>
     </div>
     }
@@ -121,7 +116,7 @@
 <div class="public-page-bg d-md-none" [class.d-none]="!isMenuOpen">
   <div class="container-fluid py-2">
     <div class="d-flex flex-column gap-1">
-      @for(mod of moduleList;track $index){
+      @for(mod of moduleList; track $index){
       <button (click)="navigate(mod.route); toggleMenu()" class="btn btn-link text-start txt-btn px-2"
         [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
         {{ mod.moduleName }}

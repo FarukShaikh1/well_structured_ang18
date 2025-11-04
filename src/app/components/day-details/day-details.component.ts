@@ -177,8 +177,8 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
   getAssetDetails(assetId: string) {
     this.subscriptions.add(this._assetService.getAssetDetails(assetId).pipe(
       tap((res: any) => {
-        this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
-        // this.selectedImage =  res.data.originalPath;
+        // this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
+        this.selectedImage =  res.data.originalPath;
         this.loaderService.hideLoader();
       }),
       catchError((error: any) => {

@@ -66,11 +66,9 @@ export class CurrencyCoinComponent implements OnInit {
       });
     }
     this.LoadGrid();
-    this.improvePerformance();
     setTimeout(() => {
       this.LoadSummaryGrid();
-      this.improvePerformance();
-    }, 100);
+    }, 2000);
     this.globalService.reloadGrid$.subscribe(() => { });
     this.globalService.refreshList$.subscribe(() => { });
   }
@@ -248,6 +246,7 @@ export class CurrencyCoinComponent implements OnInit {
         if (globalMenu) globalMenu.remove();
       }
     });
+    this.improvePerformance();
   }
   generateOptionsMenu(rowData: Record<string, any>) {
 

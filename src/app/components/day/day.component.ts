@@ -197,7 +197,7 @@ export class DayComponent implements OnInit {
       {
         title: "Pic",
         field: "thumbnailPath",
-        formatter: this.globalService.thumbnailFormatter.bind(this),
+        formatter: this.globalService.blobThumbnailFormatter.bind(this),
         minWidth: 70,
         maxWidth: 100,
       },
