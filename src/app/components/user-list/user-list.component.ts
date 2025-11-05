@@ -25,6 +25,7 @@ import { UserDetailsComponent } from '../user-details/user-details.component';
   imports: [
     forms.ReactiveFormsModule,
     ToasterComponent,
+    UserDetailsComponent,
     DayDetailsComponent,
     TabulatorGridComponent,
     ConfirmationDialogComponent,
@@ -48,6 +49,7 @@ export class UserListComponent implements OnInit {
   isGridLoading: boolean = false;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(UserDetailsComponent) userDetailsComponent!: UserDetailsComponent;
+  @ViewChild(DayDetailsComponent) dayDetailsComponent!: DayDetailsComponent;
   @ViewChild(ConfirmationDialogComponent)
   confirmModalComponent!: ConfirmationDialogComponent;
   Modules = ApplicationModules;
@@ -64,10 +66,10 @@ export class UserListComponent implements OnInit {
     private router: Router
   ) { }
 
-    refreshData() {
-      localStorage.removeItem(NavigationURLs.USER_LIST);
-    }
-  
+  refreshData() {
+    localStorage.removeItem(NavigationURLs.USER_LIST);
+  }
+
   ngOnInit() {
     this.columnConfiguration();
 
@@ -180,12 +182,6 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  editUser(id: string) {
-    if (id) {
-      this.openUserDetailsPopup(id);
-    }
-  }
-
   deactivateUser(id: string, isdeactivate: boolean) {
     if (id) {
 
@@ -275,7 +271,25 @@ export class UserListComponent implements OnInit {
   }
 
   openUserDetailsPopup(id: string) {
+    debugger;
     this.userDetailsComponent.openUserDetailsPopup(id);
+    setTimeout(() => {
+      const btn = document.querySelector('#openUserDetailsButton') as HTMLElement | null;
+      if (btn) btn.click();
+      else console.error('userDetailsPopup not found');
+    }, 120);
+
+  }
+
+  openDayDetailsPopup(id: string) {
+    debugger;
+    this.dayDetailsComponent.openDetailsPopup(id);
+    setTimeout(() => {
+      const btn = document.querySelector('#openDayDetailsButton') as HTMLElement | null;
+      if (btn) btn.click();
+      else console.error('openDetailsButton not found');
+    }, 120);
+
   }
 
   filterGridBySearch(data: any) {

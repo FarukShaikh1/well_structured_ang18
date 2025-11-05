@@ -263,35 +263,38 @@ export class GlobalService {
     let thumbnailPath = rowData["thumbnailPath"];
     if (thumbnailPath) {
       thumbnailPath = API_URL.ATTACHMENT + thumbnailPath;
-
-      const html = `<img src="${thumbnailPath}" style="width: 40px; height: 40px; object-fit: cover;" />`;
-      return html;
+      return `
+      <div class="thumbnail-wrapper">
+        <img src="${thumbnailPath}" class="thumbnail-img" />
+      </div>`;
     }
     const imagePath = rowData["imagePath"];
     if (imagePath) {
-      const html = `<i class="bi bi-person-circle fs-3" style="color: var(--theme-primary);"></i>`;
-      return html;
+      return `
+      <div class="thumbnail-wrapper">
+        <i class="bi bi-person-circle fs-3" style="color: var(--theme-primary);"></i>
+      </div>`;
     }
-    const html = "";
-    return html;
+    return "";
   }
 
   blobThumbnailFormatter(cell: CellComponent) {
     const rowData = cell.getRow().getData();
     let thumbnailPath = rowData["thumbnailPath"];
     if (thumbnailPath) {
-      // thumbnailPath = API_URL.ATTACHMENT + thumbnailPath;
-
-      const html = `<img src="${thumbnailPath}" style="width: 40px; height: 40px; object-fit: cover;" />`;
-      return html;
+      return `
+      <div class="thumbnail-wrapper">
+        <img src="${thumbnailPath}" class="thumbnail-img" />
+      </div>`;
     }
     const imagePath = rowData["imagePath"];
     if (imagePath) {
-      const html = `<i class="bi bi-person-circle fs-3" style="color: var(--theme-primary);"></i>`;
-      return html;
+      return `
+      <div class="thumbnail-wrapper">
+        <i class="bi bi-person-circle fs-3" style="color: var(--theme-primary);"></i>
+      </div>`;
     }
-    const html = "";
-    return html;
+    return "";
   }
   isValidGuid(value: string) {
     const guidPattern =

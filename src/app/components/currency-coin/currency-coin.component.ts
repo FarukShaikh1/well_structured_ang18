@@ -135,7 +135,8 @@ export class CurrencyCoinComponent implements OnInit {
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
           this.currencyCoinDetails(collectionCoinId);
-        }, minWidth: 70,
+        },
+        minWidth: 70,
         maxWidth: 100,
       },
       {

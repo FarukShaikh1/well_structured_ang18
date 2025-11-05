@@ -203,6 +203,10 @@ export class DayComponent implements OnInit {
         title: "Pic",
         field: "thumbnailPath",
         formatter: this.globalService.blobThumbnailFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const birthdayId = cell.getRow().getData()["id"];
+          this.openDetailsPopup(birthdayId);
+        },
         minWidth: 70,
         maxWidth: 100,
       },
@@ -423,6 +427,11 @@ export class DayComponent implements OnInit {
 
   openDetailsPopup(dayId: any) {
     this.dayDetailsComponent.openDetailsPopup(dayId);
+    setTimeout(() => {
+      const btn = document.querySelector('#openDetailsButton') as HTMLElement | null;
+      if (btn) btn.click();
+      else console.error('openDetailsButton not found');
+    }, 120);
   }
 
   hideDay(dayId: string) {

@@ -1,7 +1,6 @@
 <div class="main-body">
   @if(globalService.isAccessible(ActionConstant.ADD)){
-  <button (click)="openDetailsPopup('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
-    data-bs-target="#detailsPopup">
+  <button (click)="openDetailsPopup('')" class="btn btn-primary rounded-button">
     <i class="fa fa-plus"></i>
     Add Day
   </button>
@@ -132,3 +131,4 @@
 
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
 <app-toaster></app-toaster>
+<button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup" style="display:none"></button>

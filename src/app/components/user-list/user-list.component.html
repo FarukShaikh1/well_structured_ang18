@@ -1,7 +1,6 @@
 <div class="main-body">
   @if(globalService.isAccessible(ActionConstant.ADD)){
-  <button class="btn btn-primary rounded-button" (click)="openUserDetailsPopup('')" data-bs-toggle="modal"
-    data-bs-target="#detailsPopup">
+  <button class="btn btn-primary rounded-button" (click)="openDayDetailsPopup('')">
     <i class="fa fa-plus"></i>
     Add User
   </button>
@@ -31,4 +30,7 @@
 </div>
 <app-toaster></app-toaster>
 <app-day-details></app-day-details>
+<app-user-details></app-user-details>
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
+<button id="openDayDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup" style="display:none"></button>
+<!-- <button id="openUserDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#userDetailsPopup" style="display:none"></button> -->
