@@ -209,8 +209,8 @@ export class DayComponent implements OnInit {
       {
         title: "",
         field: "",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const birthdayId = cell.getRow().getData()["id"];
@@ -227,8 +227,8 @@ export class DayComponent implements OnInit {
       this.columnConfig.push({
         title: "",
         field: "option",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
@@ -377,7 +377,6 @@ export class DayComponent implements OnInit {
   }
 
   getOccasionTypeDropdownLabel() {
-    debugger;
     if (this.selectedOccasionType.length === 0) {
       this.lableForOccasionTypeDropDown = "";
     } else if (this.selectedOccasionType.length === this.occasionTypeList.length) {

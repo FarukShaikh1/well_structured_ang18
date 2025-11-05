@@ -5,14 +5,19 @@
     <i class="fa fa-plus"></i>
     Add User
   </button>
+
+  <button (click)="refreshData()" class="btn btn-primary rounded-button">
+    <i class="fa fa-refresh"></i> Refresh data
+  </button>
+
   }
-  <div class="row pb-2 pt-2">
+  <div class="row pb-2 pt-2 ">
     <div class="col-6 col-sm-4 col-lg-2 col-xl-2">
       Search
       <input class="form-control form-control-lg text-dark bg-transparent" type="text" placeholder="Search Something"
         aria-label="Search Something" #searchInput (keyup)="filterGridBySearch($event)" />
-      <div></div>
     </div>
+
   </div>
 
   <div class="row">
@@ -25,5 +30,5 @@
   </div>
 </div>
 <app-toaster></app-toaster>
-<app-user-details></app-user-details>
+<app-day-details></app-day-details>
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>

@@ -135,19 +135,14 @@ export class CurrencyCoinComponent implements OnInit {
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
           this.currencyCoinDetails(collectionCoinId);
-          setTimeout(() => {
-            const btn = document.querySelector('#openDetailsButton') as HTMLElement | null;
-            if (btn) btn.click();
-            else console.error('openDetailsButton not found');
-          }, 120);
         }, minWidth: 70,
         maxWidth: 100,
       },
       {
         title: "",
         field: "",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
@@ -163,8 +158,8 @@ export class CurrencyCoinComponent implements OnInit {
       this.columnConfig.push({
         title: "",
         field: "option",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
@@ -219,8 +214,8 @@ export class CurrencyCoinComponent implements OnInit {
       {
         title: "",
         field: "",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
@@ -231,8 +226,8 @@ export class CurrencyCoinComponent implements OnInit {
       {
         title: "",
         field: "",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         hozAlign: "left",
@@ -378,6 +373,12 @@ export class CurrencyCoinComponent implements OnInit {
 
   currencyCoinDetails(data: any) {
     this.currencyCoinDetailsComponent.openDetailsPopup(data);
+    setTimeout(() => {
+      const btn = document.querySelector('#openDetailsButton') as HTMLElement | null;
+      if (btn) btn.click();
+      else console.error('openDetailsButton not found');
+    }, 120);
+
   }
 
   deleteCurrencyCoin(currencyCoinId: string) {

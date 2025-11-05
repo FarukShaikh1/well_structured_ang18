@@ -1,7 +1,6 @@
 <div class="main-body">
   @if(globalService.isAccessible(ActionConstant.ADD)){
-  <button (click)="currencyCoinDetails('')" class="btn btn-primary rounded-button" data-bs-toggle="modal"
-    data-bs-target="#detailsPopup">
+  <button (click)="currencyCoinDetails('')" class="btn btn-primary rounded-button">
     <i class="fa fa-plus"></i>
     Add Collection Item
   </button>
@@ -117,8 +116,7 @@
           <h3>{{ coin.currencyCoinType }} - {{ coin.printedYear }}</h3>
           <p>{{ coin.coinNoteName }}</p>
           <small>{{ coin.description }}</small>
-          <button (click)="currencyCoinDetails(coin.id)" class="btn btn-primary rounded-button" data-bs-toggle="modal"
-            data-bs-target="#detailsPopup">
+          <button (click)="currencyCoinDetails(coin.id)" class="btn btn-primary rounded-button">
             <i class="fa fa-eye"></i> Zoom
           </button>
 

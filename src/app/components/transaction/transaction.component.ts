@@ -263,8 +263,8 @@ export class TransactionComponent implements OnInit {
     this.columnConfig.push({
       title: "",
       field: "",
-      minWidth: 70,
-      maxWidth: 100,
+      minWidth: 50,
+      maxWidth: 70,
       formatter: this.globalService.hidebuttonFormatter.bind(this),
       cellClick: (e, cell) => {
         const transactionGroupId = cell.getRow().getData()["transactionGroupId"];
@@ -279,8 +279,8 @@ export class TransactionComponent implements OnInit {
       this.columnConfig.push({
         title: "",
         field: "option",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.optionDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
@@ -411,8 +411,8 @@ export class TransactionComponent implements OnInit {
       {
         title: "",
         field: "",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const sourceOrReason = cell.getRow().getData()["sourceOrReason"];
@@ -423,8 +423,8 @@ export class TransactionComponent implements OnInit {
       {
         title: "",
         field: "",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         clickMenu: [
