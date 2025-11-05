@@ -388,6 +388,12 @@ export class SettingsComponent {
     });
   }
 
+  refreshData() {
+    localStorage.removeItem(UserConfig.ACCOUNT);
+    localStorage.removeItem(UserConfig.OCCASION_TYPE);
+    localStorage.removeItem(UserConfig.RELATION);
+  }
+
   unlockUser(userId: number) {
 
   }

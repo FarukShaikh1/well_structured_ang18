@@ -141,6 +141,11 @@ export class DayComponent implements OnInit {
     this.cacheService.clear(this.cacheKey);
   }
 
+  refreshData() {
+    localStorage.removeItem(NavigationURLs.DAY_LIST);
+    localStorage.removeItem(NavigationURLs.USER_LIST);
+  }
+
   columnConfiguration() {
     this.columnConfig = [
       {

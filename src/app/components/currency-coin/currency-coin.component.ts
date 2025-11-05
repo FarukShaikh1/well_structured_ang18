@@ -79,6 +79,16 @@ export class CurrencyCoinComponent implements OnInit {
     this.applyFilters();
   }
 
+  refreshData() {
+    localStorage.removeItem(NavigationURLs.CURRENCY_LIST);
+    localStorage.removeItem(NavigationURLs.CURRENCY_SUMMARY);
+    localStorage.removeItem(NavigationURLs.CURRENCY_GALLERY);
+    this.LoadGrid();
+    this.LoadSummaryGrid();
+    setTimeout(() => {
+      this.improvePerformance();
+    }, 1000);
+  }
   columnConfiguration() {
     this.columnConfig = [
       {
@@ -122,7 +132,15 @@ export class CurrencyCoinComponent implements OnInit {
         title: UIStrings.COLUMN_TITLES.PIC,
         field: "thumbnailPath",
         formatter: this.globalService.thumbnailFormatter.bind(this),
-        minWidth: 70,
+        cellClick: (e, cell) => {
+          const collectionCoinId = cell.getRow().getData()["id"];
+          this.currencyCoinDetails(collectionCoinId);
+          setTimeout(() => {
+            const btn = document.querySelector('#openDetailsButton') as HTMLElement | null;
+            if (btn) btn.click();
+            else console.error('openDetailsButton not found');
+          }, 120);
+        }, minWidth: 70,
         maxWidth: 100,
       },
       {

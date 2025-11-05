@@ -169,20 +169,20 @@ export class GlobalService {
   }
 
   validateAmount(event: KeyboardEvent) {
-  const allowedKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
-  const input = event.key;
+    const allowedKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
+    const input = event.key;
 
-  // Allow control/navigation keys
-  if (allowedKeys.includes(input)) {
-    return;
-  }
+    // Allow control/navigation keys
+    if (allowedKeys.includes(input)) {
+      return;
+    }
 
-  // Allow digits and one dot
-  const currentValue = (event.target as HTMLInputElement).value;
-  if (!/^[0-9.]$/.test(input) || (input === '.' && currentValue.includes('.'))) {
-    event.preventDefault();
+    // Allow digits and one dot
+    const currentValue = (event.target as HTMLInputElement).value;
+    if (!/^[0-9.]$/.test(input) || (input === '.' && currentValue.includes('.'))) {
+      event.preventDefault();
+    }
   }
-}
 
   hidebuttonFormatter(cell: CellComponent) {
     return `<button class="action-buttons" title="Hide"><i class="bi bi-dash-lg btn-link"></i></button>`;

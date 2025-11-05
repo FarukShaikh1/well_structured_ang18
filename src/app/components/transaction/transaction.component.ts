@@ -785,6 +785,14 @@ export class TransactionComponent implements OnInit {
     this.LoadGrid();
   }
 
+  refreshData() {
+    localStorage.removeItem(NavigationURLs.EXPENSE_LIST);
+    localStorage.removeItem(NavigationURLs.EXPENSE_SUMMARY_LIST);
+    localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
+    localStorage.removeItem(NavigationURLs.EXPENSE_REPORT);
+    this.LoadGrid();
+  }
+
   LoadGrid() {
     this.loaderService.showLoader('Loading transactions...');
     const cachedData = this.cacheService.get<any[]>(this.activeComponent, 720); // 30 minutes cache
