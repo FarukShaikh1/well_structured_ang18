@@ -42,8 +42,13 @@ export class CurrencyCoinService {
     }
   }
   getCurrencyCoinDetails(collectionCoinId: string) {
+    if (localStorage.getItem(LocalStorageConstants.USERID) !== null) {
+      const params = new HttpParams()
+        .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
+        .set('coinNoteCollectionId', collectionCoinId)
+      return this.http.get(API_URL.GET_COLLECTION_COIN_DETAILS, { params: params })
+    }
     const params = new HttpParams()
-      .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
       .set('coinNoteCollectionId', collectionCoinId)
     return this.http.get(API_URL.GET_COLLECTION_COIN_DETAILS, { params: params })
 
