@@ -110,8 +110,8 @@
     <div class="gallery-grid">
       <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'"
         *ngFor="let coin of filteredCoinList">
-        <img [src]="basePath + coin.thumbnailPath" [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" />
-        <!-- <img [src]="coin.imagePath" [alt]="coin.coinNoteName" /> -->
+        <img [src]="coin.thumbnailPath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)" [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" />
+        <!-- <img [src]="coin.imagePath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)" [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" /> -->
         <div class="gallery-caption">
           <h3>{{ coin.currencyCoinType }} - {{ coin.printedYear }}</h3>
           <p style="margin-bottom: 0;">{{ coin.coinNoteName }}</p>
