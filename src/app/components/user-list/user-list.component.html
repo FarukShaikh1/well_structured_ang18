@@ -1,21 +1,22 @@
 <div class="main-body">
-   @if(globalService.isAccessible(ActionConstant.ADD)){
-  <button class="btn btn-primary rounded-button" (click)="openUserDetailsPopup('')"
-    data-bs-toggle="modal" data-bs-target="#detailsPopup">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-    </svg>
+  @if(globalService.isAccessible(ActionConstant.ADD)){
+  <button class="btn btn-primary rounded-button" (click)="openDayDetailsPopup('')">
+    <i class="fa fa-plus"></i>
     Add User
   </button>
-     }
-       <div class="row pb-2 pt-2">
+
+  <button (click)="refreshData()" class="btn btn-primary rounded-button">
+    <i class="fa fa-refresh"></i> Refresh data
+  </button>
+
+  }
+  <div class="row pb-2 pt-2 ">
     <div class="col-6 col-sm-4 col-lg-2 col-xl-2">
       Search
       <input class="form-control form-control-lg text-dark bg-transparent" type="text" placeholder="Search Something"
         aria-label="Search Something" #searchInput (keyup)="filterGridBySearch($event)" />
-      <div></div>
     </div>
+
   </div>
 
   <div class="row">
@@ -28,5 +29,8 @@
   </div>
 </div>
 <app-toaster></app-toaster>
+<app-day-details></app-day-details>
 <app-user-details></app-user-details>
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
+<button id="openDayDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup" style="display:none"></button>
+<button id="openUserDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#userDetailsPopup" style="display:none"></button>

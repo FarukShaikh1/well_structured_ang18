@@ -45,8 +45,8 @@ export class CurrencyCoinComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  public viewMode: 'grid' | 'gallery' | 'summary' | 'owner' = 'grid';
-
+  public viewMode: 'grid' | 'gallery' | 'summary' | 'owner' = 'gallery';
+loading = true;
   constructor(
     private currencyCoinService: CurrencyCoinService,
     private localStorageService: LocalStorageService,
@@ -71,15 +71,27 @@ export class CurrencyCoinComponent implements OnInit {
     }, 2000);
     this.globalService.reloadGrid$.subscribe(() => { });
     this.globalService.refreshList$.subscribe(() => { });
-    this.improvePerformance();
   }
-
+removeBlur(event: Event) {
+  const img = event.target as HTMLImageElement;
+  img.classList.remove('blur-load');
+}
   improvePerformance() {
     this.selectedCountry.push('India');
     this.lableForCountryDropDown = 'India';
     this.applyFilters();
   }
 
+  refreshData() {
+    localStorage.removeItem(NavigationURLs.CURRENCY_LIST);
+    localStorage.removeItem(NavigationURLs.CURRENCY_SUMMARY);
+    localStorage.removeItem(NavigationURLs.CURRENCY_GALLERY);
+    this.LoadGrid();
+    this.LoadSummaryGrid();
+    setTimeout(() => {
+      this.improvePerformance();
+    }, 1000);
+  }
   columnConfiguration() {
     this.columnConfig = [
       {
@@ -123,14 +135,18 @@ export class CurrencyCoinComponent implements OnInit {
         title: UIStrings.COLUMN_TITLES.PIC,
         field: "thumbnailPath",
         formatter: this.globalService.thumbnailFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const collectionCoinId = cell.getRow().getData()["id"];
+          this.currencyCoinDetails(collectionCoinId);
+        },
         minWidth: 70,
         maxWidth: 100,
       },
       {
         title: "",
         field: "",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
@@ -146,8 +162,8 @@ export class CurrencyCoinComponent implements OnInit {
       this.columnConfig.push({
         title: "",
         field: "option",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
@@ -202,8 +218,8 @@ export class CurrencyCoinComponent implements OnInit {
       {
         title: "",
         field: "",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
@@ -214,8 +230,8 @@ export class CurrencyCoinComponent implements OnInit {
       {
         title: "",
         field: "",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: (_cell) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         hozAlign: "left",
@@ -247,6 +263,7 @@ export class CurrencyCoinComponent implements OnInit {
         if (globalMenu) globalMenu.remove();
       }
     });
+    this.improvePerformance();
   }
   generateOptionsMenu(rowData: Record<string, any>) {
 
@@ -299,6 +316,7 @@ export class CurrencyCoinComponent implements OnInit {
         this.filteredTableData = res.data;
         this.filteredCoinList = res.data;
         this.cacheService.set(cacheKey, res.data);
+this.loading = false;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -360,6 +378,12 @@ export class CurrencyCoinComponent implements OnInit {
 
   currencyCoinDetails(data: any) {
     this.currencyCoinDetailsComponent.openDetailsPopup(data);
+    setTimeout(() => {
+      const btn = document.querySelector('#openDetailsButton') as HTMLElement | null;
+      if (btn) btn.click();
+      else console.error('openDetailsButton not found');
+    }, 120);
+
   }
 
   deleteCurrencyCoin(currencyCoinId: string) {

@@ -54,7 +54,7 @@
                 filteredSourceOrReasonList != null && focusInSource){
                 <ul class="list-group suggestion-list">
                   @for(option of filteredSourceOrReasonList;track $index){
-                  <li class="list-group-item list-group-item-action" (click)="selectSourceOrReason(option)">
+                  <li class="list-group-item list-group-item-action" (pointerdown)="selectSourceOrReason(option)">
                     {{ option }}
                   </li>
                   }
@@ -101,7 +101,7 @@
                 <ul class="list-group position-absolute w-50 mt-0 overflow-auto maxh-300"
                   >
                   @for(option of filteredPurposeList;track $index){
-                  <li class="list-group-item list-group-item-action" (click)="selectPurpose(option)">
+                  <li class="list-group-item list-group-item-action" (pointerdown)="selectPurpose(option)">
                     {{ option }}
                   </li>
                   }
@@ -118,7 +118,7 @@
                 <ul class="list-group position-absolute w-50 mt-0 overflow-auto maxh-300"
                   >
                   @for(option of filteredDescriptionList;track $index){
-                  <li class="list-group-item list-group-item-action" (click)="selectDescription(option)">
+                  <li class="list-group-item list-group-item-action" (pointerdown)="selectDescription(option)">
                     {{ option }}
                   </li>
                   }

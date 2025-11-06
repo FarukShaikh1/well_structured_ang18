@@ -16,6 +16,15 @@
           </div>
 
           <div class="row">
+            <div class="col-12 col-lg-6 image-container">
+              <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+                <div id="image">
+                  <img [src]="selectedImage" />
+                </div>
+              </div>
+              <input type="file" (change)="onFileSelected($event)" accept="image/*" formControlName="picture" />
+            </div>
+            <hr class="d-lg-none my-4" />
             <div class="col-12 col-lg-6">
               <div class="row">
                 <div class="col-6">
@@ -42,8 +51,7 @@
                 <div class="col">
                   <label>Coin Type</label>
                   <select formControlName="collectionCoinType"
-                    class="form-select form-control form-control-lg text-dark bg-transparent styled-select "
-                    [ngClass]="{
+                    class="form-select form-control form-control-lg text-dark bg-transparent styled-select " [ngClass]="{
                       'error-border':
                         currencyCoinDetailsForm.get('collectionCoinType')
                           ?.touched &&
@@ -131,14 +139,6 @@
               <div class="mt-3">
                 <label>Description</label>
                 <textarea formControlName="description" rows="3" class="form-control bg-transparent"></textarea>
-              </div>
-            </div>
-            <div class="col-12 col-lg-6 image-container">
-              <input type="file" (change)="onFileSelected($event)" accept="image/*" formControlName="picture" />
-              <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
-                <div id="image">
-                  <img [src]="selectedImage" />
-                </div>
               </div>
             </div>
             <div class="row mt-4">

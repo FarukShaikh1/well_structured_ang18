@@ -1,22 +1,24 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as forms from '@angular/forms';
 import { Router } from '@angular/router';
-import { CellComponent, ColumnDefinition } from 'tabulator-tables';
+import { ColumnDefinition } from 'tabulator-tables';
 import {
   ActionConstant,
   ApplicationConstantHtml,
   ApplicationModules,
   ApplicationTableConstants,
   Messages,
+  NavigationURLs,
 } from '../../../utils/application-constants';
+import { CacheService } from '../../services/cache/cache.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { UserService } from '../../services/user/user.service';
+import { DayDetailsComponent } from '../day-details/day-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { UserDetailsComponent } from '../user-details/user-details.component';
-import { CacheService } from '../../services/cache/cache.service';
 @Component({
   selector: 'app-user-list',
   standalone: true,
@@ -24,6 +26,7 @@ import { CacheService } from '../../services/cache/cache.service';
     forms.ReactiveFormsModule,
     ToasterComponent,
     UserDetailsComponent,
+    DayDetailsComponent,
     TabulatorGridComponent,
     ConfirmationDialogComponent,
   ],
@@ -46,6 +49,7 @@ export class UserListComponent implements OnInit {
   isGridLoading: boolean = false;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(UserDetailsComponent) userDetailsComponent!: UserDetailsComponent;
+  @ViewChild(DayDetailsComponent) dayDetailsComponent!: DayDetailsComponent;
   @ViewChild(ConfirmationDialogComponent)
   confirmModalComponent!: ConfirmationDialogComponent;
   Modules = ApplicationModules;
@@ -61,6 +65,10 @@ export class UserListComponent implements OnInit {
     private cacheService: CacheService,
     private router: Router
   ) { }
+
+  refreshData() {
+    localStorage.removeItem(NavigationURLs.USER_LIST);
+  }
 
   ngOnInit() {
     this.columnConfiguration();
@@ -153,7 +161,7 @@ export class UserListComponent implements OnInit {
       menu.push({
         label: ApplicationConstantHtml.EDIT_LABLE,
         action: () => {
-          this.openUserDetailsPopup(rowData['id']);
+          this.openDayDetailsPopup(rowData['id']);
         },
       });
     }
@@ -171,12 +179,6 @@ export class UserListComponent implements OnInit {
   viewUserProfile(id: string | null | undefined) {
     if (id) {
       this.router.navigate(['home/user-profile']);
-    }
-  }
-
-  editUser(id: string) {
-    if (id) {
-      this.openUserDetailsPopup(id);
     }
   }
 
@@ -269,7 +271,25 @@ export class UserListComponent implements OnInit {
   }
 
   openUserDetailsPopup(id: string) {
+    debugger;
     this.userDetailsComponent.openUserDetailsPopup(id);
+    setTimeout(() => {
+      const btn = document.querySelector('#openUserDetailsButton') as HTMLElement | null;
+      if (btn) btn.click();
+      else console.error('userDetailsPopup not found');
+    }, 120);
+
+  }
+
+  openDayDetailsPopup(id: string) {
+    debugger;
+    this.dayDetailsComponent.openDetailsPopup(id);
+    setTimeout(() => {
+      const btn = document.querySelector('#openDayDetailsButton') as HTMLElement | null;
+      if (btn) btn.click();
+      else console.error('openDetailsButton not found');
+    }, 120);
+
   }
 
   filterGridBySearch(data: any) {

@@ -141,6 +141,11 @@ export class DayComponent implements OnInit {
     this.cacheService.clear(this.cacheKey);
   }
 
+  refreshData() {
+    localStorage.removeItem(NavigationURLs.DAY_LIST);
+    localStorage.removeItem(NavigationURLs.USER_LIST);
+  }
+
   columnConfiguration() {
     this.columnConfig = [
       {
@@ -197,15 +202,19 @@ export class DayComponent implements OnInit {
       {
         title: "Pic",
         field: "thumbnailPath",
-        formatter: this.globalService.thumbnailFormatter.bind(this),
+        formatter: this.globalService.blobThumbnailFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const birthdayId = cell.getRow().getData()["id"];
+          this.openDetailsPopup(birthdayId);
+        },
         minWidth: 70,
         maxWidth: 100,
       },
       {
         title: "",
         field: "",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
           const birthdayId = cell.getRow().getData()["id"];
@@ -222,8 +231,8 @@ export class DayComponent implements OnInit {
       this.columnConfig.push({
         title: "",
         field: "option",
-        minWidth: 70,
-        maxWidth: 100,
+        minWidth: 50,
+        maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
@@ -372,7 +381,6 @@ export class DayComponent implements OnInit {
   }
 
   getOccasionTypeDropdownLabel() {
-    debugger;
     if (this.selectedOccasionType.length === 0) {
       this.lableForOccasionTypeDropDown = "";
     } else if (this.selectedOccasionType.length === this.occasionTypeList.length) {
@@ -419,6 +427,11 @@ export class DayComponent implements OnInit {
 
   openDetailsPopup(dayId: any) {
     this.dayDetailsComponent.openDetailsPopup(dayId);
+    setTimeout(() => {
+      const btn = document.querySelector('#openDetailsButton') as HTMLElement | null;
+      if (btn) btn.click();
+      else console.error('openDetailsButton not found');
+    }, 120);
   }
 
   hideDay(dayId: string) {

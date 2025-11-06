@@ -15,6 +15,7 @@ import { LogoutService } from '../../services/logout/logout.service';
 import { UserService } from '../../services/user/user.service';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { SiteUnderDevelopmentComponent } from '../shared/site-under-development/site-under-development.component';
 
 @Component({
   selector: 'app-forgot-password',
@@ -24,6 +25,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
     forms.ReactiveFormsModule,
     ToasterComponent,
     LoaderComponent,
+    SiteUnderDevelopmentComponent,
     NgbCarouselModule
   ],
   templateUrl: './forgot-password.component.html',
