@@ -46,7 +46,7 @@ export class CurrencyCoinComponent implements OnInit {
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
   public viewMode: 'grid' | 'gallery' | 'summary' | 'owner' = 'gallery';
-
+loading = true;
   constructor(
     private currencyCoinService: CurrencyCoinService,
     private localStorageService: LocalStorageService,
@@ -72,7 +72,10 @@ export class CurrencyCoinComponent implements OnInit {
     this.globalService.reloadGrid$.subscribe(() => { });
     this.globalService.refreshList$.subscribe(() => { });
   }
-
+removeBlur(event: Event) {
+  const img = event.target as HTMLImageElement;
+  img.classList.remove('blur-load');
+}
   improvePerformance() {
     this.selectedCountry.push('India');
     this.lableForCountryDropDown = 'India';
@@ -313,6 +316,7 @@ export class CurrencyCoinComponent implements OnInit {
         this.filteredTableData = res.data;
         this.filteredCoinList = res.data;
         this.cacheService.set(cacheKey, res.data);
+this.loading = false;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
