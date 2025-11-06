@@ -161,7 +161,7 @@ export class UserListComponent implements OnInit {
       menu.push({
         label: ApplicationConstantHtml.EDIT_LABLE,
         action: () => {
-          this.openUserDetailsPopup(rowData['id']);
+          this.openDayDetailsPopup(rowData['id']);
         },
       });
     }
