@@ -43,10 +43,11 @@
     Artcle in news
   </button>
   }
-  <button (click)="refreshData()" class="btn btn-primary rounded-button">
+  <button (click)="refreshData()" class="btn btn-primary rounded-button"  *ngIf="viewMode !== 'owner'">
     <i class="fa fa-refresh"></i> Refresh data
   </button>
-  <div class="row pb-2">
+  
+  <div class="row pb-2" *ngIf="viewMode !== 'owner'">
     <div class="col-5 col-sm-4 col-md-3 col-lg-2">
       <div appearance="outline">
         <label>Search</label>
