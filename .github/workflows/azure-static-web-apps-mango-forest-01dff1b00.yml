@@ -28,7 +28,7 @@ jobs:
  
       - name: Build Angular App
 
-        run: npm run build -- --configuration production
+        run: npm run build -- --configuration prod
  
       - name: Deploy to Azure Static Web Apps
 
@@ -49,3 +49,4 @@ jobs:
           output_location: "dist/fmscollection/browser"
 
  
+
