@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+  # pull_request:
+  #   types: [opened, synchronize, reopened, closed]
+  #   branches:
+  #     - main
 
 jobs:
   build_and_deploy_job:
@@ -26,6 +26,10 @@ jobs:
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
+    # ✅ Add this new step
+      - name: Fix Rollup Native Module Issue
+        run: npm install rollup --force
+  
       - name: Build Angular App
         run: npm run build -- --configuration prod
 
@@ -51,4 +55,5 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_FOREST_01DFF1B00 }}
           action: "close"
+
 
