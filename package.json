@@ -16,7 +16,7 @@
     "watch": "ng build --watch --configuration=dev",
     "test": "ng test",
     "test:cov": "ng test --code-coverage",
-    "lint": "eslint . --ext .ts,.html",
+    "lint": "eslint . --ext .ts, .html",
     "lint:fix": "eslint . --ext .ts,.html --fix",
     "docs": "npx compodoc -p tsconfig.json",
     "docs:serve": "npx compodoc -s"
