@@ -183,7 +183,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
           columnHeaders: false,
         },
 
-        selectableRangeMode: "click", 
+        // selectableRangeMode: "click", 
         clipboard: true, 
         clipboardCopyRowRange: "range",
         
