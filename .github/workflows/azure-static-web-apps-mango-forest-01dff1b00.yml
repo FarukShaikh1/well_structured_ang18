@@ -48,8 +48,10 @@ jobs:
       
           output_location: "dist/fmscollection/browser"
       
-          skip_app_build: true  # 🚀 Prevent Azure from re-running npm install/build
+         # skip_app_build: true  # 🚀 Prevent Azure from re-running npm install/build
+          app_build_command: "npm install --force && npm run build"
 
  
+
 
 
