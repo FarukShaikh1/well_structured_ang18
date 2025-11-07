@@ -42,16 +42,20 @@ jobs:
       
           action: "upload"
       
-          app_location: "/"
+          #app_location: "/"
       
           api_location: ""
       
-          output_location: "dist/fmscollection/browser"
+          #output_location: "dist/fmscollection/browser"
       
          # skip_app_build: true  # 🚀 Prevent Azure from re-running npm install/build
-          app_build_command: "npm install --force && npm run build"
+          
+          app_location: "dist/fmscollection/browser"
+          output_location: ""
+          skip_app_build: true
 
  
+
 
 
 
