@@ -177,9 +177,6 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         selectableRangeRows: false, 
         selectableRangeClearCells: true,
 
-        
-        
-
         clipboardCopyStyled: false,
         clipboardCopyConfig: {
           rowHeaders: false,
@@ -189,12 +186,6 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         selectableRangeMode: "click", 
         clipboard: true, 
         clipboardCopyRowRange: "range",
-        
-        
-
-        
-        
-
         
         columnDefaults: {
           headerHozAlign: "left",

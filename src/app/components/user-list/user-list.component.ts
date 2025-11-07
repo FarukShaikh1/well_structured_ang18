@@ -160,7 +160,7 @@ export class UserListComponent implements OnInit {
     if (this.globalService.isAccessible(ActionConstant.EDIT)) {
       menu.push({
         label: ApplicationConstantHtml.EDIT_LABLE,
-        action: () => {
+        action: () => { 
           this.openDayDetailsPopup(rowData['id']);
         },
       });
