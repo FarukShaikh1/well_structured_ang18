@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
-import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
+import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, DBConstants, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
 import { CacheService } from '../../services/cache/cache.service';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { GlobalService } from '../../services/global/global.service';
@@ -69,6 +69,12 @@ export class CurrencyCoinComponent implements OnInit {
       });
     }
     this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
+    if (!this.typeList || this.typeList.length == 0) {
+      this.globalService.getCommonListItems(DBConstants.COINTYPE).subscribe((res: any) => {
+        this.typeList = res.data;
+        this.localStorageService.setCommonListItems(DdlConfig.COIN_TYPES, this.typeList);
+      });
+    }
     this.loadGrid();
     setTimeout(() => {
       this.LoadSummaryGrid();
@@ -326,6 +332,7 @@ export class CurrencyCoinComponent implements OnInit {
         this.filteredCoinList = res.data;
         this.cacheService.set(cacheKey, res.data);
         this.loading = false;
+        this.improvePerformance();
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -447,7 +454,7 @@ export class CurrencyCoinComponent implements OnInit {
     // Case 3: India + Other countries → Show ALL types
     if (containsIndia && selectedCountries.length > 1) {
       this.filteredTypeList = this.typeList;
-      return
+      return;
     }
 
     // Case 4: No India present → Show only NON-India types

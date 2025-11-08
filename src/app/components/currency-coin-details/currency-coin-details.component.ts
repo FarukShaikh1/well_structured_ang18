@@ -323,8 +323,10 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       this._assetService.uploadImage(this.currencyCoinDetailsForm.value["assetId"], API_URL.COLLECTIONCOINS, this.formData)
         .subscribe({
           next: (res: any) => {
+            if(this.currencyCoinDetailsForm.value["assetId"] == null || this.currencyCoinDetailsForm.value["assetId"] == undefined){
             this.currencyCoinDetailsForm.value["assetId"] = res.data;
             this.coinNoteCollectionRequest.assetId = res.data;
+            }
             this.addOrUpdateCurrencyCoinDetails();
             this.loaderService.hideLoader();
           },
