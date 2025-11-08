@@ -98,10 +98,10 @@ export class TransactionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.LoadGrid();
+    this.loadGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
-        this.LoadGrid();
+        this.loadGrid();
       }
     });
     this.globalService.refreshList$.subscribe((listName: string) => {
@@ -440,7 +440,7 @@ export class TransactionComponent implements OnInit {
               this.reportLastDate = DateUtils.formatStringDate(
                 transactionData["lastDate"]
               );
-              this.LoadGrid();
+              this.loadGrid();
             },
           },
           {
@@ -756,7 +756,7 @@ export class TransactionComponent implements OnInit {
     if (this.maxInput) {
       this.maxInput.nativeElement.value = "";
     }
-    this.LoadGrid();
+    this.loadGrid();
   }
 
   getLatestTransactionDate(): any {
@@ -768,21 +768,21 @@ export class TransactionComponent implements OnInit {
 
   goToTransactionList() {
     this.activeComponent = NavigationURLs.EXPENSE_LIST;
-    this.LoadGrid();
+    this.loadGrid();
   }
 
   goToTransactionSummary() {
     this.activeComponent = NavigationURLs.EXPENSE_SUMMARY_LIST;
-    this.LoadGrid();
+    this.loadGrid();
   }
   goToBalanceSummary() {
     this.activeComponent = NavigationURLs.EXPENSE_BALANCE_LIST;
-    this.LoadGrid();
+    this.loadGrid();
   }
 
   goToTransactionReport() {
     this.activeComponent = NavigationURLs.EXPENSE_REPORT;
-    this.LoadGrid();
+    this.loadGrid();
   }
 
   refreshData() {
@@ -790,10 +790,10 @@ export class TransactionComponent implements OnInit {
     localStorage.removeItem(NavigationURLs.EXPENSE_SUMMARY_LIST);
     localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
     localStorage.removeItem(NavigationURLs.EXPENSE_REPORT);
-    this.LoadGrid();
+    this.loadGrid();
   }
 
-  LoadGrid() {
+  loadGrid() {
     this.loaderService.showLoader('Loading transactions...');
     const cachedData = this.cacheService.get<any[]>(this.activeComponent, 720); // 30 minutes cache
     if (cachedData) {
@@ -926,13 +926,13 @@ export class TransactionComponent implements OnInit {
   filterGridByFromDate(date: any) {
     this.fromDate = DateUtils.CorrectedDate(date);
     this.removeGridFromLocalStorage();
-    this.LoadGrid();
+    this.loadGrid();
   }
 
   filterGridByToDate(date: any) {
     this.toDate = DateUtils.CorrectedDate(date);
     this.removeGridFromLocalStorage();
-    this.LoadGrid();
+    this.loadGrid();
   }
 
   filterGridByMaxAmount(data: any) {
@@ -943,7 +943,7 @@ export class TransactionComponent implements OnInit {
     if (this.sourceOrReason || this.minAmount || this.maxAmount) {
       this.applyFilters();
     } else {
-      this.LoadGrid();
+      this.loadGrid();
     }
   }
 
@@ -955,7 +955,7 @@ export class TransactionComponent implements OnInit {
     if (this.sourceOrReason || this.minAmount || this.maxAmount) {
       this.applyFilters();
     } else {
-      this.LoadGrid();
+      this.loadGrid();
     }
   }
 
@@ -967,7 +967,7 @@ export class TransactionComponent implements OnInit {
     if (this.sourceOrReason || this.minAmount || this.maxAmount) {
       this.applyFilters();
     } else {
-      this.LoadGrid();
+      this.loadGrid();
     }
   }
 

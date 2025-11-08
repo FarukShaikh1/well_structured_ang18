@@ -5,7 +5,8 @@
     Add Collection Item
   </button>
   }
-<button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup" style="display:none"></button>
+  <button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup"
+    style="display:none"></button>
   @if(viewMode!='grid'){
   <button (click)="setView('grid')" class="btn btn-primary rounded-button">
     <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -48,13 +49,6 @@
   </button>
   <div class="row pb-2">
     <div class="col-5 col-sm-4 col-md-3 col-lg-2">
-      <div appearance="outline">
-        <label>Search</label>
-        <input #searchInput (input)="filterGridSearchText($event)"
-          class="form-control form-control-lg text-dark bg-transparent" />
-      </div>
-    </div>
-    <div class="col-5 col-sm-4 col-md-3 col-lg-2">
       <div appearance="outline" class="form-field">
         <label>Select Country</label>
         <button
@@ -76,7 +70,7 @@
             <div class="form-check">
               <input type="checkbox" class="form-check-input" [id]="item.id"
                 [checked]="selectedCountry.includes(item.country)"
-                (change)="toggleCountryCheck($event, item.country,item.code )" />
+                (change)="toggleCountryCheck($event, item.country)" />
               <label class="form-check-label" [for]="item.country">
                 {{ item.country}}
               </label>
@@ -84,6 +78,44 @@
           </li>
           }
         </ul>
+      </div>
+    </div>
+    <div class="col-5 col-sm-4 col-md-3 col-lg-2">
+      <div appearance="outline" class="form-field">
+        <label>Select Type</label>
+        <button
+          class="form-select form-control form-control-lg text-dark bg-transparent styled-select  scrollable-button text-start"
+          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          {{ lableForTypeDropDown }}
+        </button>
+        <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllTypeCheck($event)"
+                [checked]="selectedType.length === typeList?.length" />
+              <label class="form-check-label" for="selectAll">All</label>
+            </div>
+          </li>
+          @for(item of filteredTypeList; track $index){
+          <li>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" [id]="item.id"
+                [checked]="selectedType.includes(item.listItemName)"
+                (change)="toggleTypeCheck($event, item.listItemName)" />
+              <label class="form-check-label" [for]="item.listItemName">
+                {{ item.listItemDescription }}
+              </label>
+            </div>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="col-5 col-sm-4 col-md-3 col-lg-2">
+      <div appearance="outline">
+        <label>Search</label>
+        <input #searchInput (input)="filterGridSearchText($event)"
+          class="form-control form-control-lg text-dark bg-transparent" />
       </div>
     </div>
 
@@ -110,7 +142,8 @@
     <div class="gallery-grid">
       <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'"
         *ngFor="let coin of filteredCoinList">
-        <img [src]="coin.thumbnailPath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)" [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" />
+        <img [src]="coin.thumbnailPath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)"
+          [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" />
         <!-- <img [src]="coin.imagePath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)" [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" /> -->
         <div class="gallery-caption">
           <h3>{{ coin.currencyCoinType }} - {{ coin.printedYear }}</h3>

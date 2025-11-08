@@ -1344,7 +1344,8 @@ input {
 }
 
 .dropdown-menu {
-  --bs-dropdown-padding-y: 0;
+  /* --bs-dropdown-padding-y: 0; */
+  padding: 0 10px 0 10px;
   overflow: hidden;
 }
 

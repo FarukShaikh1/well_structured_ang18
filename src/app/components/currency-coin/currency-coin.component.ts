@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
-import { ActionConstant, ApplicationConstantHtml, ApplicationTableConstants, NavigationURLs, UIStrings } from '../../../utils/application-constants';
+import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
 import { CacheService } from '../../services/cache/cache.service';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { GlobalService } from '../../services/global/global.service';
@@ -22,9 +22,12 @@ import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.
 
 export class CurrencyCoinComponent implements OnInit {
   selectedCountry: string[] = [];
-  selectedCountryCode: string[] = [];
+  selectedType: string[] = [];
   countryList: any;
+  typeList: any;
+  filteredTypeList: any;
   lableForCountryDropDown: string = '';
+  lableForTypeDropDown: string = '';
   ActionConstant = ActionConstant;
   @ViewChild(CurrencyCoinDetailsComponent)
   currencyCoinDetailsComponent!: CurrencyCoinDetailsComponent;
@@ -46,7 +49,7 @@ export class CurrencyCoinComponent implements OnInit {
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
   public viewMode: 'grid' | 'gallery' | 'summary' | 'owner' = 'gallery';
-loading = true;
+  loading = true;
   constructor(
     private currencyCoinService: CurrencyCoinService,
     private localStorageService: LocalStorageService,
@@ -65,17 +68,24 @@ loading = true;
         this.localStorageService.setCountryList(this.countryList);
       });
     }
-    this.LoadGrid();
+    this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
+    this.loadGrid();
     setTimeout(() => {
       this.LoadSummaryGrid();
-    }, 2000);
-    this.globalService.reloadGrid$.subscribe(() => { });
+      this.improvePerformance();
+      this.filteredTypes();
+    }, 100);
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.COIN_NOTE_COLLECTION) {
+        this.loadGrid();
+      }
+    });
     this.globalService.refreshList$.subscribe(() => { });
   }
-removeBlur(event: Event) {
-  const img = event.target as HTMLImageElement;
-  img.classList.remove('blur-load');
-}
+  removeBlur(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.classList.remove('blur-load');
+  }
   improvePerformance() {
     this.selectedCountry.push('India');
     this.lableForCountryDropDown = 'India';
@@ -86,7 +96,7 @@ removeBlur(event: Event) {
     localStorage.removeItem(NavigationURLs.CURRENCY_LIST);
     localStorage.removeItem(NavigationURLs.CURRENCY_SUMMARY);
     localStorage.removeItem(NavigationURLs.CURRENCY_GALLERY);
-    this.LoadGrid();
+    this.loadGrid();
     this.LoadSummaryGrid();
     setTimeout(() => {
       this.improvePerformance();
@@ -263,7 +273,6 @@ removeBlur(event: Event) {
         if (globalMenu) globalMenu.remove();
       }
     });
-    this.improvePerformance();
   }
   generateOptionsMenu(rowData: Record<string, any>) {
 
@@ -298,7 +307,7 @@ removeBlur(event: Event) {
     });
   }
 
-  LoadGrid() {
+  loadGrid() {
     // ✅ 1. Check cache first
     const cacheKey = NavigationURLs.CURRENCY_LIST;
     const cachedData = this.cacheService.get<any[]>(cacheKey, 30); // 30 minutes cache
@@ -316,7 +325,7 @@ removeBlur(event: Event) {
         this.filteredTableData = res.data;
         this.filteredCoinList = res.data;
         this.cacheService.set(cacheKey, res.data);
-this.loading = false;
+        this.loading = false;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -401,7 +410,7 @@ this.loading = false;
 
       this.currencyCoinService.deleteCurrencyCoin(this.currencyCoinId).subscribe({
         next: (res: any) => {
-          this.LoadGrid();
+          this.loadGrid();
         },
         error: (error: any) => {
           this.loaderService.hideLoader();
@@ -410,10 +419,46 @@ this.loading = false;
     }
   }
 
+  filteredTypes() {
+    const raw = this.lableForCountryDropDown?.toLowerCase() ?? '';
+
+    // Convert to array of clean country names
+    const selectedCountries = raw
+      .split(',')
+      .map(x => x.trim())
+      .filter(x => x !== '');
+
+    const allSelected = selectedCountries.length === 0 || selectedCountries.includes('all');
+
+    // Case 1: Nothing OR All selected → Show all
+    if (allSelected) {
+      this.filteredTypeList = this.typeList;
+      return;
+    }
+
+    const containsIndia = selectedCountries.includes('india');
+
+    // Case 2: Only India selected → Show types starting with "Indian"
+    if (containsIndia && selectedCountries.length === 1) {
+      this.filteredTypeList = this.typeList.filter((t: any) => t.listItemName.startsWith('Indian'));
+      return;
+    }
+
+    // Case 3: India + Other countries → Show ALL types
+    if (containsIndia && selectedCountries.length > 1) {
+      this.filteredTypeList = this.typeList;
+      return
+    }
+
+    // Case 4: No India present → Show only NON-India types
+    this.filteredTypeList = this.typeList.filter((t: any) => t.listItemName.startsWith('Non'));
+  }
+
   applyFilters() {
     const filtered = this.tableData.filter((item: any) => {
       const matchesCoinName = item.coinNoteName?.toLowerCase().includes(this.searchText);
       const matchesCountryName = item.countryName?.toLowerCase().includes(this.searchText);
+      const matchesCurrencyType = item.currencyCoinType?.toLowerCase().includes(this.searchText);
       const matchesActulaValue = item.actualValue?.toString()?.toLowerCase().includes(this.searchText);
       const matchesIndianValue = item.indianValue?.toString()?.toLowerCase().includes(this.searchText);
       const matchesDescription = item.description?.toLowerCase().includes(this.searchText);
@@ -422,7 +467,11 @@ this.loading = false;
         this.selectedCountry.length === 0 ||
         this.selectedCountry.includes(item.countryName);
 
-      return (matchesCoinName || matchesCountryName || matchesActulaValue || matchesIndianValue || matchesDescription) && matchesCountry;
+      const matchesType =
+        this.selectedType.length === 0 ||
+        this.selectedType.includes(item.currencyCoinType);
+
+      return (matchesCoinName || matchesCountryName || matchesActulaValue || matchesIndianValue || matchesDescription || matchesCurrencyType) && matchesCountry && matchesType;
     });
     this.filteredTableData = filtered;
     this.filteredCoinList = filtered as any[];
@@ -450,23 +499,19 @@ this.loading = false;
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedCountry = this.countryList.map((m: any) => m.country);
-      this.selectedCountryCode = this.countryList.map((m: any) => m.code);
     } else {
       this.selectedCountry = [];
-      this.selectedCountryCode = [];
     }
     this.getCountryDropdownLabel();
     this.applyFilters();
   }
 
-  toggleCountryCheck(event: Event, countryName: string, code: string) {
+  toggleCountryCheck(event: Event, countryName: string) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedCountry.push(countryName);
-      this.selectedCountryCode.push(code);
     } else {
       this.selectedCountry = this.selectedCountry.filter((m) => m !== countryName);
-      this.selectedCountryCode = this.selectedCountryCode.filter((m) => m !== code);
     }
     this.getCountryDropdownLabel();
     this.applyFilters();
@@ -478,7 +523,40 @@ this.loading = false;
     } else if (this.selectedCountry.length === this.countryList.length) {
       this.lableForCountryDropDown = "All";
     } else {
-      this.lableForCountryDropDown = this.selectedCountryCode.join(", ");
+      this.lableForCountryDropDown = this.selectedCountry.join(", ");
+    }
+    this.filteredTypes();
+  }
+
+  toggleAllTypeCheck(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.selectedType = this.typeList.map((m: any) => m.type);
+    } else {
+      this.selectedType = [];
+    }
+    this.getTypeDropdownLabel();
+    this.applyFilters();
+  }
+
+  toggleTypeCheck(event: Event, typeName: string) {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.selectedType.push(typeName);
+    } else {
+      this.selectedType = this.selectedType.filter((m) => m !== typeName);
+    }
+    this.getTypeDropdownLabel();
+    this.applyFilters();
+  }
+
+  getTypeDropdownLabel() {
+    if (this.selectedType.length === 0) {
+      this.lableForTypeDropDown = "";
+    } else if (this.selectedType.length === this.typeList.length) {
+      this.lableForTypeDropDown = "All";
+    } else {
+      this.lableForTypeDropDown = this.selectedType.join(", ");
     }
   }
 
