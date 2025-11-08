@@ -144,7 +144,7 @@ export class CurrencyCoinComponent implements OnInit {
       {
         title: UIStrings.COLUMN_TITLES.PIC,
         field: "thumbnailPath",
-        formatter: this.globalService.thumbnailFormatter.bind(this),
+        formatter: this.globalService.blobThumbnailFormatter.bind(this),
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
           this.currencyCoinDetails(collectionCoinId);
