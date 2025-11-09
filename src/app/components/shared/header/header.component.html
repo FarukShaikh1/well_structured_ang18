@@ -14,10 +14,31 @@
   <div class="d-flex align-items-center flex-grow-1 justify-content-end flex-wrap">
     <!-- Mobile Menu Toggle -->
     @if(alreadyLoggedIn){
-    <button class="btn btn-light d-md-none ms-2" type="button" (click)="toggleMenu()">
-      <i class="bi" [ngClass]="isMenuOpen ? 'bi-x-lg' : 'bi-list'"></i>
-      <span class="visually-hidden">Toggle navigation</span>
-    </button>
+<button
+  class="btn border shadow-sm d-md-none ms-2"
+  type="button"
+  (click)="toggleMenu()"
+  aria-label="Toggle navigation"
+>
+ <svg
+    *ngIf="!isMenuOpen"
+    width="22" height="22" viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+  >
+    <path d="M2 4h12M2 8h12M2 12h12" />
+  </svg>
+
+  <!-- Close icon -->
+  <svg
+    *ngIf="isMenuOpen"
+    width="22" height="22" viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+  >
+    <path d="M3 3l10 10M13 3L3 13" />
+  </svg>
+</button>
     <!-- Header right-side icons and modules -->
     <div class="d-flex align-items-center me-3 flex-shrink-0">
       <div class="d-none d-md-flex align-items-center flex-wrap">

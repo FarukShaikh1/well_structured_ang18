@@ -44,10 +44,10 @@
     Artcle in news
   </button>
   }
-  <button (click)="refreshData()" class="btn btn-primary rounded-button"  *ngIf="viewMode !== 'owner'">
+  <button (click)="reloadData()" class="btn btn-primary rounded-button" *ngIf="viewMode !== 'owner'">
     <i class="fa fa-refresh"></i> Refresh data
   </button>
-  
+
   <div class="row pb-2" *ngIf="viewMode !== 'owner'">
     <div class="col-5 col-sm-4 col-md-3 col-lg-2">
       <div appearance="outline" class="form-field">
@@ -119,7 +119,11 @@
           class="form-control form-control-lg text-dark bg-transparent" />
       </div>
     </div>
-
+    <div class="col-7 col-sm-12 col-md-3 col-lg-6 d-flex align-items-end justify-content-end">
+      <div class="btn btn-primary">
+        {{ filteredCoinList.length }} items found
+      </div>
+    </div>
   </div>
   <div class="row pb-2" *ngIf="viewMode === 'grid'">
     <div class="mb-2">
@@ -139,7 +143,7 @@
     </div>
   </div>
 
-  <div class="row mt-4" *ngIf="viewMode === 'gallery'">
+  <div class="row " *ngIf="viewMode === 'gallery'">
     <div class="gallery-grid">
       <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'"
         *ngFor="let coin of filteredCoinList">
@@ -197,4 +201,5 @@
   </div>
 
   <app-currency-details></app-currency-details>
+  <app-toaster></app-toaster>
   <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>

@@ -11,16 +11,18 @@ import { LocalStorageService } from '../../services/local-storage/local-storage.
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
+import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 @Component({
   selector: 'app-currency-coin',
   standalone: true,
   templateUrl: './currency-coin.component.html',
-  imports: [CommonModule, TabulatorGridComponent, ConfirmationDialogComponent, CurrencyCoinDetailsComponent],
+  imports: [CommonModule, TabulatorGridComponent, ToasterComponent, ConfirmationDialogComponent, CurrencyCoinDetailsComponent],
   styleUrls: ['./currency-coin.component.scss']
 })
 
 export class CurrencyCoinComponent implements OnInit {
+  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   selectedCountry: string[] = [];
   selectedType: string[] = [];
   countryList: any;
@@ -78,7 +80,7 @@ export class CurrencyCoinComponent implements OnInit {
     this.loadGrid();
     setTimeout(() => {
       this.LoadSummaryGrid();
-      this.improvePerformance();
+      this.selectDefaultIndia();
       this.filteredTypes();
     }, 100);
     this.globalService.reloadGrid$.subscribe((listName: string) => {
@@ -92,20 +94,20 @@ export class CurrencyCoinComponent implements OnInit {
     const img = event.target as HTMLImageElement;
     img.classList.remove('blur-load');
   }
-  improvePerformance() {
+  selectDefaultIndia() {
     this.selectedCountry.push('India');
     this.lableForCountryDropDown = 'India';
     this.applyFilters();
   }
 
-  refreshData() {
+  reloadData() {
     localStorage.removeItem(NavigationURLs.CURRENCY_LIST);
     localStorage.removeItem(NavigationURLs.CURRENCY_SUMMARY);
     localStorage.removeItem(NavigationURLs.CURRENCY_GALLERY);
     this.loadGrid();
     this.LoadSummaryGrid();
     setTimeout(() => {
-      this.improvePerformance();
+      this.selectDefaultIndia();
     }, 1000);
   }
   columnConfiguration() {
@@ -332,7 +334,7 @@ export class CurrencyCoinComponent implements OnInit {
         this.filteredCoinList = res.data;
         this.cacheService.set(cacheKey, res.data);
         this.loading = false;
-        this.improvePerformance();
+        this.selectDefaultIndia();
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -417,7 +419,8 @@ export class CurrencyCoinComponent implements OnInit {
 
       this.currencyCoinService.deleteCurrencyCoin(this.currencyCoinId).subscribe({
         next: (res: any) => {
-          this.loadGrid();
+          this.toaster.showMessage("Record Deleted Successfully.", "success");
+          this.reloadData();
         },
         error: (error: any) => {
           this.loaderService.hideLoader();
@@ -568,7 +571,7 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   setView(mode: 'grid' | 'gallery' | 'summary' | 'owner') {
-    this.improvePerformance();
+    this.selectDefaultIndia();
     this.viewMode = mode;
   }
 
