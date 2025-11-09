@@ -326,8 +326,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
             if(this.currencyCoinDetailsForm.value["assetId"] == null || this.currencyCoinDetailsForm.value["assetId"] == undefined){
             this.currencyCoinDetailsForm.value["assetId"] = res.data;
             this.coinNoteCollectionRequest.assetId = res.data;
-            }
             this.addOrUpdateCurrencyCoinDetails();
+            }
             this.loaderService.hideLoader();
           },
           error: (error: any) => {
