@@ -38,6 +38,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   formData: FormData = new FormData();
   currencyCoinDetails: any;
   assetDetails: any;
+  isSaving: boolean = false;
   coinNoteCollectionRequest: CoinNoteCollectionRequest = {
   }
   ActionConstant = ActionConstant;
@@ -234,6 +235,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   }
 
   submitCurrencyCoinDetails() {
+    this.isSaving = true;
     this.loaderService.showLoader();
     this.globalService.trimAllFields(this.currencyCoinDetailsForm);
     this.coinNoteCollectionRequest = {
@@ -255,6 +257,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     };
 
     if (!this.currencyCoinDetailsForm.valid) {
+      this.isSaving = false;
       this.loaderService.hideLoader();
       this.toaster.showMessage("Please fill all required fields.", "error");
       return;
@@ -264,8 +267,9 @@ export class CurrencyCoinDetailsComponent implements OnInit {
           this.uploadImageAndSaveData();
         }
       } catch (error) {
-      this.loaderService.hideLoader();
-      this.toaster.showMessage("Error in adding data.", "error");
+        this.isSaving = false;
+        this.loaderService.hideLoader();
+        this.toaster.showMessage("Error in adding data.", "error");
         console.error("Error in adding data : ", error);
       }
     }
@@ -277,6 +281,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           this.toaster.showMessage("Record Updated Successfully.", "success");
+          this.isSaving = false;
           this.loaderService.hideLoader();
           this.renderer
             .selectRootElement(this.btnCloseDayPopup?.nativeElement)
@@ -286,6 +291,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
           this.globalService.triggerGridReload(ApplicationModules.COIN_NOTE_COLLECTION);
         },
         error: (error: any) => {
+          this.isSaving = false;
           this.loaderService.hideLoader();
           this.toaster.showMessage(error?.message, "error");
           return;
@@ -297,6 +303,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       next: (res: any) => {
         this.toaster.showMessage("Record Updated Successfully.", "success");
         this.loaderService.hideLoader();
+        this.isSaving = false;
         this.renderer
           .selectRootElement(this.btnCloseDayPopup?.nativeElement)
           .click();
@@ -305,6 +312,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         this.globalService.triggerGridReload(ApplicationModules.COIN_NOTE_COLLECTION);
       },
       error: (error: any) => {
+        this.isSaving = false;
         this.loaderService.hideLoader();
         this.toaster.showMessage(error?.message, "error");
         return;
@@ -334,6 +342,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
             this.loaderService.hideLoader();
           },
           error: (error: any) => {
+            this.isSaving = false;
+            this.toaster.showMessage(error?.message, "error");
             this.loaderService.hideLoader();
           },
         });

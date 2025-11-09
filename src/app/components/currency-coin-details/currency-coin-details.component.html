@@ -151,7 +151,7 @@
                   @if(globalService.isAccessible(ActionConstant.ADD) ||
                   globalService.isAccessible(ActionConstant.EDIT)){
                   <button class="btn btn-primary rounded-button" type="submit"
-                    [disabled]="currencyCoinDetailsForm.invalid">
+                    [disabled]="currencyCoinDetailsForm.invalid || isSaving">
                     Save
                   </button>
                   }
