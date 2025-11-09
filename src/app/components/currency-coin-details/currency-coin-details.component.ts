@@ -234,7 +234,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   }
 
   submitCurrencyCoinDetails() {
-
+    this.loaderService.showLoader();
     this.globalService.trimAllFields(this.currencyCoinDetailsForm);
     this.coinNoteCollectionRequest = {
       id: this.currencyCoinDetailsForm.value["collectionCoinId"],
@@ -255,7 +255,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     };
 
     if (!this.currencyCoinDetailsForm.valid) {
-
+      this.loaderService.hideLoader();
+      this.toaster.showMessage("Please fill all required fields.", "error");
       return;
     } else {
       try {
@@ -263,6 +264,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
           this.uploadImageAndSaveData();
         }
       } catch (error) {
+      this.loaderService.hideLoader();
+      this.toaster.showMessage("Error in adding data.", "error");
         console.error("Error in adding data : ", error);
       }
     }
@@ -303,7 +306,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
-          this.toaster.showMessage(error?.message, "error");
+        this.toaster.showMessage(error?.message, "error");
         return;
       },
     });
@@ -323,10 +326,10 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       this._assetService.uploadImage(this.currencyCoinDetailsForm.value["assetId"], API_URL.COLLECTIONCOINS, this.formData)
         .subscribe({
           next: (res: any) => {
-            if(this.currencyCoinDetailsForm.value["assetId"] == null || this.currencyCoinDetailsForm.value["assetId"] == undefined){
-            this.currencyCoinDetailsForm.value["assetId"] = res.data;
-            this.coinNoteCollectionRequest.assetId = res.data;
-            this.addOrUpdateCurrencyCoinDetails();
+            if (this.currencyCoinDetailsForm.value["assetId"] == null || this.currencyCoinDetailsForm.value["assetId"] == undefined) {
+              this.currencyCoinDetailsForm.value["assetId"] = res.data;
+              this.coinNoteCollectionRequest.assetId = res.data;
+              this.addOrUpdateCurrencyCoinDetails();
             }
             this.loaderService.hideLoader();
           },
