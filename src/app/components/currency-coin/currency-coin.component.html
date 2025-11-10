@@ -151,9 +151,22 @@
           [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" />
         <!-- <img [src]="coin.imagePath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)" [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" /> -->
         <div class="gallery-caption">
-          <h3>{{ coin.currencyCoinType }} - {{ coin.printedYear }}</h3>
-          <p style="margin-bottom: 0;">{{ coin.coinNoteName }}</p>
-          <p style="margin-bottom: 0;">{{ coin.description }}</p>
+          <h3>
+            @if(coin.currencyCoinType=='Indian Rare Coin'){
+            {{ coin.coinNoteName }}
+            }
+            @else{
+            {{ coin.currencyCoinType }}
+            }
+            {{ coin.printedYear ? '-' + coin.printedYear : '' }}</h3>
+          <p style="margin-bottom: 0;"> @if(coin.currencyCoinType=='Indian Rare Coin'){
+            {{ coin.currencyCoinType }}
+            }
+            @else{
+            {{ coin.coinNoteName }}
+            }
+          </p>
+          <p style="margin-bottom: 0;">{{ coin.description|truncate:25 }}</p>
           <button (click)="currencyCoinDetails(coin.id)" class="btn btn-primary rounded-button">
             <i class="fa fa-eye"></i> Zoom
           </button>

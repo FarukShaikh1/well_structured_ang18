@@ -12,12 +12,13 @@ import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { TruncatePipe } from '../../common/truncate.pipe';
 
 @Component({
   selector: 'app-currency-coin',
   standalone: true,
   templateUrl: './currency-coin.component.html',
-  imports: [CommonModule, TabulatorGridComponent, ToasterComponent, ConfirmationDialogComponent, CurrencyCoinDetailsComponent],
+  imports: [CommonModule, TabulatorGridComponent, ToasterComponent, ConfirmationDialogComponent, CurrencyCoinDetailsComponent, TruncatePipe],
   styleUrls: ['./currency-coin.component.scss']
 })
 
