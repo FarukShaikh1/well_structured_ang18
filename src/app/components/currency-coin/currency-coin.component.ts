@@ -83,7 +83,7 @@ export class CurrencyCoinComponent implements OnInit {
       this.LoadSummaryGrid();
       this.selectDefaultRareCoins();
       this.filteredTypes();
-    }, 100);
+    }, 1000);
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.COIN_NOTE_COLLECTION) {
         this.loadGrid();
@@ -387,9 +387,9 @@ export class CurrencyCoinComponent implements OnInit {
 
 
   filterGridSearchText(event: any) {
-    setTimeout(() => {
-      this.searchInput.nativeElement.focus();
-    }, 0);
+    // setTimeout(() => {
+    //   this.searchInput.nativeElement.focus();
+    // }, 0);
 
     this.searchText = event.target.value.toLowerCase();
     this.applyFilters();
