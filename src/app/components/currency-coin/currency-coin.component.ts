@@ -81,7 +81,7 @@ export class CurrencyCoinComponent implements OnInit {
     this.loadGrid();
     setTimeout(() => {
       this.LoadSummaryGrid();
-      this.selectDefaultIndia();
+      this.selectDefaultRareCoins();
       this.filteredTypes();
     }, 100);
     this.globalService.reloadGrid$.subscribe((listName: string) => {
@@ -95,9 +95,9 @@ export class CurrencyCoinComponent implements OnInit {
     const img = event.target as HTMLImageElement;
     img.classList.remove('blur-load');
   }
-  selectDefaultIndia() {
-    this.selectedCountry.push('India');
-    this.lableForCountryDropDown = 'India';
+  selectDefaultRareCoins() {
+    this.selectedType.push('Indian Rare Coin');
+    this.lableForTypeDropDown = 'Indian Rare Coin';
     this.applyFilters();
   }
 
@@ -108,7 +108,7 @@ export class CurrencyCoinComponent implements OnInit {
     this.loadGrid();
     this.LoadSummaryGrid();
     setTimeout(() => {
-      this.selectDefaultIndia();
+      this.selectDefaultRareCoins();
     }, 1000);
   }
   columnConfiguration() {
@@ -335,7 +335,7 @@ export class CurrencyCoinComponent implements OnInit {
         this.filteredCoinList = res.data;
         this.cacheService.set(cacheKey, res.data);
         this.loading = false;
-        this.selectDefaultIndia();
+        // this.selectDefaultIndia();
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
@@ -572,7 +572,7 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   setView(mode: 'grid' | 'gallery' | 'summary' | 'owner') {
-    this.selectDefaultIndia();
+    // this.selectDefaultIndia();
     this.viewMode = mode;
   }
 
