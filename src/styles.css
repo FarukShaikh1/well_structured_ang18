@@ -1602,14 +1602,14 @@ select option {
 .note-image,
 .coin-image {
   height: auto; 
-  max-height: 400px;
+  /* max-height: 400px; */
   overflow: hidden;
 }
 
 .note-image img,
 .coin-image img {
   height: auto; 
-  max-height: 400px;
+  /* max-height: 400px; */
   width: 100%; 
   object-fit: contain;
 }

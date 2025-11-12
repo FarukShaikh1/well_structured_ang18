@@ -80,8 +80,8 @@ export class CurrencyCoinComponent implements OnInit {
     }
     this.loadGrid();
     setTimeout(() => {
-      this.LoadSummaryGrid();
       this.selectDefaultRareCoins();
+      this.LoadSummaryGrid();
       this.filteredTypes();
     }, 1000);
     this.globalService.reloadGrid$.subscribe((listName: string) => {
