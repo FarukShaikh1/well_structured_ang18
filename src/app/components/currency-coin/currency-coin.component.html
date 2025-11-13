@@ -151,9 +151,10 @@
           [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" />
         <!-- <img [src]="coin.imagePath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)" [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" /> -->
         <div class="gallery-caption">
-          <h3>
-            {{ coin.coinNoteName }}
-            {{ coin.printedYear ? '-' + coin.printedYear : '' }}</h3>
+          <h5>
+            {{ coin.coinNoteName }} - 
+            {{ coin.countryName }}
+            {{ coin.printedYear ? '-' + coin.printedYear : '' }}</h5>
           <p style="margin-bottom: 0;">{{ coin.description|truncate:70 }}</p>
           <button (click)="currencyCoinDetails(coin.id)" class="btn btn-primary rounded-button">
             <i class="fa fa-eye"></i> Zoom

@@ -106,8 +106,23 @@ body {
   opacity: 1;
 }
 
-.h4, h4, h4 strong, .h3, h3 {
+.h1, h1, h1 strong {
+  font-size: 24px;
+}
+.h2, h2, h2 strong {
+  font-size: 22px;
+}
+.h3, h3, h3 strong {
+  font-size: 20px;
+}
+.h4, h4, h4 strong {
   font-size: 18px;
+}
+.h5, h5, h5 strong {
+  font-size: 16px;
+}
+.h6, h6, h6 strong {
+  font-size: 14px;
 }
 
 h4.modal-title, h2.section-header {
