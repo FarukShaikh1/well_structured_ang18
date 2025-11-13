@@ -540,7 +540,6 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   toggleAllTypeCheck(event: Event) {
-    debugger;
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedType = this.typeList.map((m: any) => m.listItemName);
