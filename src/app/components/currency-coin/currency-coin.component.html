@@ -38,17 +38,21 @@
     Summary
   </button>
   }
-  @if(viewMode!='owner'){
-  <button (click)="setView('owner')" class="btn btn-primary rounded-button">
+  @if(viewMode!='news'){
+  <button (click)="setView('news')" class="btn btn-primary rounded-button">
     <i class="bi bi-newspaper"></i>
     Artcle in news
   </button>
   }
-  <button (click)="reloadData()" class="btn btn-primary rounded-button" *ngIf="viewMode !== 'owner'">
+  <button (click)="reloadData()" class="btn btn-primary rounded-button" *ngIf="viewMode !== 'news'">
     <i class="fa fa-refresh"></i> Refresh data
   </button>
 
-  <div class="row pb-2" *ngIf="viewMode !== 'owner'">
+    <button (click)="setView('owner')" class="btn btn-primary rounded-button" *ngIf="viewMode !== 'owner'">
+    <i class="fa fa-info-circle"></i> About Owner
+  </button>
+
+  <div class="row pb-2" *ngIf="viewMode !== 'news'">
     <!-- <div class="col-5 col-sm-4 col-md-3 col-lg-2">
       <div appearance="outline" class="form-field">
         <label>Select Country</label>
@@ -152,7 +156,7 @@
         <!-- <img [src]="coin.imagePath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)" [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" /> -->
         <div class="gallery-caption">
           <h5>
-            {{ coin.coinNoteName }} - 
+            {{ coin.coinNoteName }} -
             {{ coin.countryName }}
             {{ coin.printedYear ? '-' + coin.printedYear : '' }}</h5>
           <p style="margin-bottom: 0;">{{ coin.description|truncate:70 }}</p>
@@ -165,7 +169,7 @@
     </div>
   </div>
 
-  <div class="row mt-4" *ngIf="viewMode === 'owner'">
+  <div class="row mt-4" *ngIf="viewMode === 'news'">
     <div class="gallery-item p-4">
       <img [src]="basePath + 'news/newssakal22feb16.png'" alt="image missing" />
       <div class="gallery-caption">
@@ -200,6 +204,10 @@
         <h3>मंगळवार, 11 एप्रिल 2017, वृत्त केसरी ग्रामीण, Page No.13</h3>
       </div>
     </div>
+  </div>
+
+  <div class="row mt-4" *ngIf="viewMode === 'owner'">
+    <app-my-profile></app-my-profile>
   </div>
 
   <app-currency-details></app-currency-details>

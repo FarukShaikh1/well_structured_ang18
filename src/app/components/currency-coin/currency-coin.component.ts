@@ -13,12 +13,13 @@ import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confi
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { TruncatePipe } from '../../common/truncate.pipe';
+import { MyProfileComponent } from '../my-profile/my-profile.component';
 
 @Component({
   selector: 'app-currency-coin',
   standalone: true,
   templateUrl: './currency-coin.component.html',
-  imports: [CommonModule, TabulatorGridComponent, ToasterComponent, ConfirmationDialogComponent, CurrencyCoinDetailsComponent, TruncatePipe],
+  imports: [CommonModule, TabulatorGridComponent, ToasterComponent, ConfirmationDialogComponent, CurrencyCoinDetailsComponent, TruncatePipe, MyProfileComponent],
   styleUrls: ['./currency-coin.component.scss']
 })
 
@@ -51,7 +52,7 @@ export class CurrencyCoinComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  public viewMode: 'grid' | 'gallery' | 'summary' | 'owner' = 'gallery';
+  public viewMode: 'grid' | 'gallery' | 'summary' | 'news' | 'owner' = 'gallery';
   loading = true;
   constructor(
     private currencyCoinService: CurrencyCoinService,
@@ -61,7 +62,7 @@ export class CurrencyCoinComponent implements OnInit {
     private loaderService: LoaderService) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
     this.columnConfiguration();
     this.countryList = this.localStorageService.getCountryList();
@@ -78,39 +79,36 @@ export class CurrencyCoinComponent implements OnInit {
         this.localStorageService.setCommonListItems(DdlConfig.COIN_TYPES, this.typeList);
       });
     }
-    this.loadGrid();
-    setTimeout(() => {
-      this.selectDefaultRareCoins();
-      this.LoadSummaryGrid();
-      this.filteredTypes();
-    }, 1000);
+    this.LoadSummaryGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.COIN_NOTE_COLLECTION) {
         this.loadGrid();
       }
     });
     this.globalService.refreshList$.subscribe(() => { });
+    await this.loadGrid();
+    this.selectDefaultRareCoins();
   }
   removeBlur(event: Event) {
     const img = event.target as HTMLImageElement;
     img.classList.remove('blur-load');
   }
   selectDefaultRareCoins() {
+    this.selectedType = [];
     this.selectedType.push('Indian Rare Coin');
     this.lableForTypeDropDown = 'Indian Rare Coin';
     this.applyFilters();
   }
 
-  reloadData() {
+  async reloadData() {
     localStorage.removeItem(NavigationURLs.CURRENCY_LIST);
     localStorage.removeItem(NavigationURLs.CURRENCY_SUMMARY);
     localStorage.removeItem(NavigationURLs.CURRENCY_GALLERY);
-    this.loadGrid();
     this.LoadSummaryGrid();
-    setTimeout(() => {
-      this.selectDefaultRareCoins();
-    }, 1000);
+    await this.loadGrid();
+    this.selectDefaultRareCoins();
   }
+
   columnConfiguration() {
     this.columnConfig = [
       {
@@ -203,7 +201,7 @@ export class CurrencyCoinComponent implements OnInit {
         sorter: "alphanum",
         formatter: (cell) => {
           const data = cell.getRow().getData();
-          return `${data['currencyName']} (${data['currencyCode']}) (${data['currencySymbol']})`;
+          return `${data['currencyCode']} (${data['currencySymbol']}) - ${data['currencyName']}`;
         },
         minWidth: 180,
       },
@@ -316,33 +314,40 @@ export class CurrencyCoinComponent implements OnInit {
     });
   }
 
-  loadGrid() {
-    // ✅ 1. Check cache first
-    const cacheKey = NavigationURLs.CURRENCY_LIST;
-    const cachedData = this.cacheService.get<any[]>(cacheKey, 30); // 30 minutes cache
-    if (cachedData) {
-      this.tableData = cachedData;
-      this.filteredTableData = cachedData;
-      this.filteredCoinList = cachedData;
-      this.loaderService.hideLoader();
-      return;
-    }
+  async loadGrid(): Promise<void> {
+    return new Promise((resolve, reject) => {
 
-    this.currencyCoinService.getCurrencyCoinRecords().subscribe({
-      next: (res: any) => {
-        this.tableData = res.data;
-        this.filteredTableData = res.data;
-        this.filteredCoinList = res.data;
-        this.cacheService.set(cacheKey, res.data);
-        this.loading = false;
-        // this.selectDefaultIndia();
+      // Check cache
+      const cacheKey = NavigationURLs.CURRENCY_LIST;
+      const cachedData = this.cacheService.get<any[]>(cacheKey, 30);
+
+      if (cachedData) {
+        this.tableData = cachedData;
+        this.filteredTableData = cachedData;
+        this.filteredCoinList = cachedData;
         this.loaderService.hideLoader();
-      },
-      error: (error: any) => {
-        this.loaderService.hideLoader();
-      },
-    },
-    )
+        resolve();   // IMPORTANT
+        return;
+      }
+
+      this.currencyCoinService.getCurrencyCoinRecords().subscribe({
+        next: (res: any) => {
+          this.tableData = res.data;
+          this.filteredTableData = res.data;
+          this.filteredCoinList = res.data;
+
+          this.cacheService.set(cacheKey, res.data);
+          this.loading = false;
+          this.loaderService.hideLoader();
+
+          resolve(); // IMPORTANT — marks completion
+        },
+        error: (err: any) => {
+          this.loaderService.hideLoader();
+          reject(err); // IMPORTANT — in case of error
+        }
+      });
+    });
   }
 
   LoadSummaryGrid() {
@@ -571,7 +576,7 @@ export class CurrencyCoinComponent implements OnInit {
     }
   }
 
-  setView(mode: 'grid' | 'gallery' | 'summary' | 'owner') {
+  setView(mode: 'grid' | 'gallery' | 'summary' | 'news' | 'owner') {
     // this.selectDefaultIndia();
     this.viewMode = mode;
   }

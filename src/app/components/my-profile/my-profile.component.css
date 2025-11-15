@@ -1,0 +1,88 @@
+.profile-container {
+width: 100%;
+height: 100%;
+font-family: Arial, sans-serif;
+display: flex;
+flex-direction: column;
+align-items: center;
+background: #f3f2ef;
+}
+
+
+.banner {
+width: 100%;
+height: 180px;
+background: linear-gradient(to right, #0073b1, #0a66c2);
+}
+
+
+.profile-card {
+background: #fff;
+border-radius: 10px;
+margin-top: -60px;
+width: 60%;
+padding: 20px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+text-align: center;
+}
+
+
+.avatar {
+width: 120px;
+height: 120px;
+border-radius: 50%;
+border: 4px solid #fff;
+margin-top: -60px;
+}
+
+
+.title {
+font-size: 18px;
+color: #444;
+}
+
+
+.location {
+color: #777;
+}
+
+
+.section {
+text-align: left;
+margin-top: 20px;
+}
+
+
+.skills {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+}
+
+
+.skill {
+background: #e1f5fe;
+padding: 6px 12px;
+border-radius: 20px;
+font-size: 14px;
+}
+
+
+.experience-card {
+padding: 15px;
+background: #fafafa;
+margin-top: 15px;
+border-left: 4px solid #0a66c2;
+}
+
+
+.company {
+font-weight: bold;
+color: #444;
+}
+
+
+.duration {
+font-size: 13px;
+color: #777;
+}

@@ -1,0 +1,41 @@
+<!-- profile-page.component.html -->
+<div class="profile-container">
+    <div class="banner"></div>
+
+
+    <div class="profile-card">
+        <img class="avatar" src="https://via.placeholder.com/120" />
+
+
+        <h2>{{ user.name }}</h2>
+        <p class="title">{{ user.title }}</p>
+        <p class="location">{{ user.location }}</p>
+
+
+        <div class="section">
+            <h3>About</h3>
+            <p>{{ user.about }}</p>
+        </div>
+
+
+        <div class="section">
+            <h3>Skills</h3>
+            <div class="skills">
+                <span class="skill" *ngFor="let skill of user.skills">{{ skill }}</span>
+            </div>
+        </div>
+
+
+        <div class="section">
+            <h3>Experience</h3>
+
+
+            <div class="experience-card" *ngFor="let exp of user.experience">
+                <h4>{{ exp.role }}</h4>
+                <p class="company">{{ exp.company }}</p>
+                <p class="duration">{{ exp.duration }}</p>
+                <p class="desc">{{ exp.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
