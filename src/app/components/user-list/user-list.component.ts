@@ -271,7 +271,6 @@ export class UserListComponent implements OnInit {
   }
 
   openUserDetailsPopup(id: string) {
-    debugger;
     this.userDetailsComponent.openUserDetailsPopup(id);
     setTimeout(() => {
       const btn = document.querySelector('#openUserDetailsButton') as HTMLElement | null;
@@ -282,7 +281,6 @@ export class UserListComponent implements OnInit {
   }
 
   openDayDetailsPopup(id: string) {
-    debugger;
     this.dayDetailsComponent.openDetailsPopup(id);
     setTimeout(() => {
       const btn = document.querySelector('#openDayDetailsButton') as HTMLElement | null;

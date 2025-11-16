@@ -435,41 +435,6 @@ export class CurrencyCoinComponent implements OnInit {
     }
   }
 
-  filteredTypes() {
-    const raw = this.lableForCountryDropDown?.toLowerCase() ?? '';
-
-    // Convert to array of clean country names
-    const selectedCountries = raw
-      .split(',')
-      .map(x => x.trim())
-      .filter(x => x !== '');
-
-    const allSelected = selectedCountries.length === 0 || selectedCountries.includes('all');
-
-    // Case 1: Nothing OR All selected → Show all
-    if (allSelected) {
-      this.filteredTypeList = this.typeList;
-      return;
-    }
-
-    const containsIndia = selectedCountries.includes('india');
-
-    // Case 2: Only India selected → Show types starting with "Indian"
-    if (containsIndia && selectedCountries.length === 1) {
-      this.filteredTypeList = this.typeList.filter((t: any) => t.listItemName.startsWith('Indian'));
-      return;
-    }
-
-    // Case 3: India + Other countries → Show ALL types
-    if (containsIndia && selectedCountries.length > 1) {
-      this.filteredTypeList = this.typeList;
-      return;
-    }
-
-    // Case 4: No India present → Show only NON-India types
-    this.filteredTypeList = this.typeList.filter((t: any) => t.listItemName.startsWith('Non'));
-  }
-
   applyFilters() {
     const filtered = this.tableData.filter((item: any) => {
       const matchesCoinName = item.coinNoteName?.toLowerCase().includes(this.searchText);
@@ -511,38 +476,38 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
 
-  toggleAllCountryCheck(event: Event) {
-    const checked = (event.target as HTMLInputElement).checked;
-    if (checked) {
-      this.selectedCountry = this.countryList.map((m: any) => m.country);
-    } else {
-      this.selectedCountry = [];
-    }
-    this.getCountryDropdownLabel();
-    this.applyFilters();
-  }
+  // toggleAllCountryCheck(event: Event) {
+  //   const checked = (event.target as HTMLInputElement).checked;
+  //   if (checked) {
+  //     this.selectedCountry = this.countryList.map((m: any) => m.country);
+  //   } else {
+  //     this.selectedCountry = [];
+  //   }
+  //   this.getCountryDropdownLabel();
+  //   this.applyFilters();
+  // }
 
-  toggleCountryCheck(event: Event, countryName: string) {
-    const checked = (event.target as HTMLInputElement).checked;
-    if (checked) {
-      this.selectedCountry.push(countryName);
-    } else {
-      this.selectedCountry = this.selectedCountry.filter((m) => m !== countryName);
-    }
-    this.getCountryDropdownLabel();
-    this.applyFilters();
-  }
+  // toggleCountryCheck(event: Event, countryName: string) {
+  //   const checked = (event.target as HTMLInputElement).checked;
+  //   if (checked) {
+  //     this.selectedCountry.push(countryName);
+  //   } else {
+  //     this.selectedCountry = this.selectedCountry.filter((m) => m !== countryName);
+  //   }
+  //   this.getCountryDropdownLabel();
+  //   this.applyFilters();
+  // }
 
-  getCountryDropdownLabel() {
-    if (this.selectedCountry.length === 0) {
-      this.lableForCountryDropDown = "";
-    } else if (this.selectedCountry.length === this.countryList.length) {
-      this.lableForCountryDropDown = "All";
-    } else {
-      this.lableForCountryDropDown = this.selectedCountry.join(", ");
-    }
-    this.filteredTypes();
-  }
+  // getCountryDropdownLabel() {
+  //   if (this.selectedCountry.length === 0) {
+  //     this.lableForCountryDropDown = "";
+  //   } else if (this.selectedCountry.length === this.countryList.length) {
+  //     this.lableForCountryDropDown = "All";
+  //   } else {
+  //     this.lableForCountryDropDown = this.selectedCountry.join(", ");
+  //   }
+  //   this.filteredTypes();
+  // }
 
   toggleAllTypeCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;

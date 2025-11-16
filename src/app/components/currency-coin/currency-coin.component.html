@@ -53,38 +53,6 @@
   </button>
 
   <div class="row pb-2" *ngIf="viewMode !== 'news'">
-    <!-- <div class="col-5 col-sm-4 col-md-3 col-lg-2">
-      <div appearance="outline" class="form-field">
-        <label>Select Country</label>
-        <button
-          class="form-select form-control form-control-lg text-dark bg-transparent styled-select  scrollable-button text-start"
-          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          {{ lableForCountryDropDown }}
-        </button>
-
-        <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
-          <li>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllCountryCheck($event)"
-                [checked]="selectedCountry.length === countryList?.length" />
-              <label class="form-check-label" for="selectAll">All</label>
-            </div>
-          </li>
-          @for(item of countryList;track $index){
-          <li>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" [id]="item.id"
-                [checked]="selectedCountry.includes(item.country)"
-                (change)="toggleCountryCheck($event, item.country)" />
-              <label class="form-check-label" [for]="item.country">
-                {{ item.country}}
-              </label>
-            </div>
-          </li>
-          }
-        </ul>
-      </div>
-    </div> -->
     <div class="col-4 col-sm-4 col-md-3 col-lg-2">
       <div appearance="outline" class="form-field">
         <label>Select Type</label>
@@ -101,7 +69,7 @@
               <label class="form-check-label" for="selectAll">All</label>
             </div>
           </li>
-          @for(item of filteredTypeList; track $index){
+          @for(item of typeList; track $index){
           <li>
             <div class="form-check">
               <input type="checkbox" class="form-check-input" [id]="item.id"
