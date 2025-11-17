@@ -5,7 +5,7 @@
     <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
         <div class="row">
             <div class="col-12 mt-4">
-                <input type="text" formControlName="userName" class="form-input form-control"
+                <input tabindex="1" type="text" formControlName="userName" class="form-input form-control"
                     placeholder="Enter Registered Email Id" required="required">
             </div>
             <div class="col-12 mt-4">
@@ -16,21 +16,21 @@
                     <input tabindex="2" [type]="hideNewPassword ? 'password' : 'text'" id="newPassword"
                         formControlName="password" class="form-control btn-middle"
                         placeholder="Enter Password" />
-                    <button type="button" class="btn-right" (click)="hideNewPassword = !hideNewPassword">
+                    <button tabindex="3" type="button" class="btn-right" (click)="hideNewPassword = !hideNewPassword">
                         <i [class]="hideNewPassword ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
                     </button>
                 </div>
             </div>
             <div class="col-12 mt-4">
-                <button type="submit" class="btn btn-primary rounded-button " id="BtnLogin">Login</button>
-                <button type="button" class="btn btn-primary rounded-button"
+                <button tabindex="4" type="submit" class="btn btn-primary rounded-button " id="BtnLogin">Login</button>
+                <button tabindex="5" type="button" class="btn btn-primary rounded-button"
                     (click)="navigate(NavigationURLs.CURRENCY_LIST)">Continue Without Login</button>
             </div>
             <div class="text-center mt-3">
-                <button type="button" class="btn text-link back-btn"
+                <button tabindex="6" type="button" class="btn text-link back-btn"
                     (click)="navigate(NavigationURLs.FORGOT_PASSWORD)">Forgot Password</button>
                 |
-                <button type="button" class="btn text-link back-btn" (click)="navigate(NavigationURLs.SIGNUP)">New Here,
+                <button tabindex="7" type="button" class="btn text-link back-btn" (click)="navigate(NavigationURLs.SIGNUP)">New Here,
                     Sign Up</button>
             </div>
         </div>

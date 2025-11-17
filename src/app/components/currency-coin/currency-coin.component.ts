@@ -42,6 +42,8 @@ export class CurrencyCoinComponent implements OnInit {
   basePath: string = API_URL.ATTACHMENT;
   searchText: string = '';
   currencyCoinId: string = '';
+  fullscreenImage: string = "";
+  
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
   public filteredCoinList: any[] = [];
@@ -93,6 +95,16 @@ export class CurrencyCoinComponent implements OnInit {
     const img = event.target as HTMLImageElement;
     img.classList.remove('blur-load');
   }
+
+  openFullscreenImage(imgUrl: string) {
+    this.fullscreenImage = imgUrl;
+
+    const modal = new (window as any).bootstrap.Modal(
+      document.getElementById("imageViewerModal")
+    );
+    modal.show();
+  }
+
   selectDefaultRareCoins() {
     this.selectedType = [];
     this.selectedType.push('Indian Rare Coin');
@@ -315,8 +327,8 @@ export class CurrencyCoinComponent implements OnInit {
 
   async loadGrid(): Promise<void> {
     return new Promise((resolve, reject) => {
-          this.loading = true;
-this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
+      this.loading = true;
+      this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
       // Check cache
       const cacheKey = NavigationURLs.CURRENCY_LIST;
       const cachedData = this.cacheService.get<any[]>(cacheKey, 30);

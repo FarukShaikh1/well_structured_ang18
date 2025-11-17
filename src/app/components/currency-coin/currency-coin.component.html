@@ -75,7 +75,7 @@
               <input type="checkbox" class="form-check-input" [id]="item.id"
                 [checked]="selectedType.includes(item.listItemName)"
                 (change)="toggleTypeCheck($event, item.listItemName)" />
-              <label class="form-check-label" [for]="item.listItemName">
+              <label class="form-check-label" [for]="item.id">
                 {{ item.listItemDescription }}
               </label>
             </div>
@@ -119,9 +119,7 @@
     <div class="gallery-grid">
       <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'"
         *ngFor="let coin of filteredCoinList">
-        <img [src]="coin.thumbnailPath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)"
-          [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" />
-        <!-- <img [src]="coin.imagePath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)" [alt]="coin.coinNoteName" (click)="currencyCoinDetails(coin.id)" /> -->
+        <img [src]="coin.thumbnailPath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)" [alt]="coin.coinNoteName" (click)="openFullscreenImage(coin.imagePath)" />
         <div class="gallery-caption">
           <h5>
             {{ coin.coinNoteName }} -
@@ -129,7 +127,7 @@
             {{ coin.printedYear ? '-' + coin.printedYear : '' }}</h5>
           <p style="margin-bottom: 0;">{{ coin.description|truncate:70 }}</p>
           <button (click)="currencyCoinDetails(coin.id)" class="btn btn-primary rounded-button">
-            <i class="fa fa-eye"></i> Zoom
+            <i class="fa fa-eye"></i> Details
           </button>
 
         </div>
@@ -181,3 +179,21 @@
   <app-currency-details></app-currency-details>
   <app-toaster></app-toaster>
   <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
+
+  <!-- Fullscreen Image Viewer Modal -->
+<div class="modal fade" id="imageViewerModal" tabindex="-1">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content fullscreen-modal-bg">
+
+      <!-- Close Button -->
+      <button type="button" class="close-btn" data-bs-dismiss="modal">
+        ✕
+      </button>
+
+      <div class="modal-body p-0 d-flex justify-content-center align-items-center">
+        <img [src]="fullscreenImage" class="fullscreen-img" alt="Preview Image">
+      </div>
+
+    </div>
+  </div>
+</div>

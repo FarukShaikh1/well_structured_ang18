@@ -1,29 +1,31 @@
 <div class="main-body">
-    <div class="d-flex">
+    <div class="d-flex justify-content-start mb-3">
         @if(isSuperAdmin)
         {
-        <select id="roleSelect" class="form-select form-control-lg text-dark bg-transparent" style="max-width: 200px;"
-            (change)="changeUser($event)">
-            <option value="">Select User</option>
-            @for(item of userList;track $index){
-            <option value="{{ item.id }}">{{ item.firstName + ' ' +item.lastName }}</option>
-            }
-        </select>
+        <div class="col-5 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
+            <select id="roleSelect" class="form-select form-control-lg text-dark bg-transparent"
+                (change)="changeUser($event)">
+                <option value="">Select User</option>
+                @for(item of userList;track $index){
+                <option value="{{ item.id }}">{{ item.firstName + ' ' +item.lastName }}</option>
+                }
+            </select>
+        </div>
         }
         <button (click)="refreshData()" class="btn btn-primary rounded-button">
             <i class="fa fa-refresh"></i> Refresh data
         </button>
         @if(globalService.isAccessible(ActionConstant.ADD) ||
         globalService.isAccessible(ActionConstant.EDIT)){
-
         <button class="btn btn-primary rounded-button" type="button" (click)="openDetailPopup('',UserConfig.ACCOUNT)"
             data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
             <i class="fa fa-plus"></i>
             Add Account
         </button>
         }
-
     </div>
+
+
     @if (filteredAccountTableData.length > 0) {
     <app-tabulator-grid [tableData]="filteredAccountTableData" [columnConfig]="accountColumnConfig" [height]="'320px'"
         [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
