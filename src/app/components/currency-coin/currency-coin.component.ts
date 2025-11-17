@@ -137,18 +137,18 @@ export class CurrencyCoinComponent implements OnInit {
 
   /********* ZOOM *********/
   zoomIn() {
-    this.scale += 0.25;
+    this.scale += 0.1;
     this.transformStyle = `scale(${this.scale})`;
   }
 
   zoomOut() {
-    if (this.scale > 0.50) this.scale -= 0.25;
+    if (this.scale > 0.2) this.scale -= 0.1;
     this.transformStyle = `scale(${this.scale})`;
   }
 
   resetZoom() {
-    this.scale = 1;
-    this.transformStyle = "scale(1)";
+    this.scale = 0.8;
+    this.transformStyle = "scale(0.8)";
   }
 
   /********* MOBILE SWIPE *********/
