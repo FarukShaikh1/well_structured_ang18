@@ -237,16 +237,6 @@ textarea {
   border: 2px solid var(--theme-accent-orange);
 }
 
-.form-control:focus+.rounded-button-left,
-.input-group:focus-within .rounded-button-left {
-  border-color: var(--theme-accent-orange);
-  border-right: none;
-}
-
-.input-group:focus-within .rounded-button-right {
-  border-color: var(--theme-accent-orange);
-  border-left: none;
-}
 
 .form-control:disabled,
 .form-control:read-only,
@@ -779,13 +769,7 @@ h4 strong {
   font-weight: 500;
 }
 
-.input-group:focus-within .rounded-button-left,
-.input-group:focus-within .rounded-button-right {
-  border-width: 1px solid #ccc;
-}
-
-.input-group .rounded-button-left,
-input.form-control.rounded-button.rounded-button-right.rounded-button-small {
+input.form-control.rounded-button {
   background-color: #f1f2f4;
 }
 
@@ -842,11 +826,11 @@ body.dark-mode .tabulator .tabulator-row.tabulator-odd { background-color: #1118
   border-radius: 0;
 }
 
-.search-holder span.rounded-button-small {
+.search-holder span.rounded-button {
   padding-right: 0 !important;
 }
 
-.search-holder input[type="text"].rounded-button-small {
+.search-holder input[type="text"].rounded-button {
   padding-left: 5px !important;
 }
 
@@ -1193,6 +1177,8 @@ input {
 }
 
 .rounded-button {
+  height: 42px !important;       /* Fixed consistent height */
+  min-height: 42px !important;   /* Prevent shrinking on small screens */ 
   border: 1px solid #ced4da;
   box-shadow: none;
   border-radius: 20px;
@@ -1201,27 +1187,12 @@ input {
   margin: 5px;
 }
 
-.rounded-button-small {
-  vertical-align: super;
-  padding: 8px 20px !important;
-  height: auto;
-  border-radius: 20px;
-  max-height: 40px;
-}
 
-.rounded-button-left {
-  padding: 3px 0px 0px 15px;
-  border-right: none;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-}
-
-.rounded-button-right {
-  padding: 0px 0px 0px 15px;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-  border-radius: 30px;
-  border-left: none;
+.rounded-button i,
+.rounded-button svg {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
 }
 
 .error-border-tb {

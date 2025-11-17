@@ -53,7 +53,7 @@ export class CurrencyCoinComponent implements OnInit {
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
   public viewMode: 'grid' | 'gallery' | 'summary' | 'news' | 'owner' = 'gallery';
-  loading = true;
+  loading = false;
   constructor(
     private currencyCoinService: CurrencyCoinService,
     private localStorageService: LocalStorageService,
@@ -315,7 +315,8 @@ export class CurrencyCoinComponent implements OnInit {
 
   async loadGrid(): Promise<void> {
     return new Promise((resolve, reject) => {
-
+          this.loading = true;
+this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
       // Check cache
       const cacheKey = NavigationURLs.CURRENCY_LIST;
       const cachedData = this.cacheService.get<any[]>(cacheKey, 30);
