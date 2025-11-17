@@ -106,7 +106,6 @@ export class CurrencyCoinComponent implements OnInit {
     localStorage.removeItem(NavigationURLs.CURRENCY_GALLERY);
     this.LoadSummaryGrid();
     await this.loadGrid();
-    this.selectDefaultRareCoins();
   }
 
   columnConfiguration() {
