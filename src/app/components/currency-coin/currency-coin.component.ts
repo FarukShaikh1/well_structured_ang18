@@ -43,7 +43,7 @@ export class CurrencyCoinComponent implements OnInit {
   searchText: string = '';
   currencyCoinId: string = '';
   fullscreenImage: string = "";
-  
+
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
   public filteredCoinList: any[] = [];
@@ -96,13 +96,30 @@ export class CurrencyCoinComponent implements OnInit {
     img.classList.remove('blur-load');
   }
 
-  openFullscreenImage(imgUrl: string) {
-    this.fullscreenImage = imgUrl;
+  currentIndex: number = 0;
+
+  openFullscreenImage(imageUrl: string) {
+    // Find index of clicked image
+    this.currentIndex = this.filteredCoinList.findIndex(
+      x => x.imagePath === imageUrl
+    );
+
+    if (this.currentIndex === -1) this.currentIndex = 0;
 
     const modal = new (window as any).bootstrap.Modal(
       document.getElementById("imageViewerModal")
     );
     modal.show();
+  }
+
+  nextImage() {
+    this.currentIndex = (this.currentIndex + 1) % this.filteredCoinList.length;
+  }
+
+  prevImage() {
+    this.currentIndex =
+      (this.currentIndex - 1 + this.filteredCoinList.length) %
+      this.filteredCoinList.length;
   }
 
   selectDefaultRareCoins() {

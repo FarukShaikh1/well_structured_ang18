@@ -1647,7 +1647,6 @@ img{
 /* Fullscreen Modal Background */
 .fullscreen-modal-bg {
   background: var(--disabled-bg);
-  border: none;
   position: relative;
 }
 
@@ -1656,6 +1655,35 @@ img{
   max-width: 100%;
   max-height: 100vh;
   object-fit: contain;
+}
+
+
+/* Navigation arrows */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--theme-text);
+  border: none;
+  font-size: 28px;
+  padding: 14px 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: 0.2s ease;
+}
+.nav-arrow:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.left-arrow {
+  left: 20px;
+}
+
+.right-arrow {
+  right: 20px;
 }
 
 /* Close Button */
