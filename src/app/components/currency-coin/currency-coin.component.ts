@@ -56,6 +56,12 @@ export class CurrencyCoinComponent implements OnInit {
   public filterColumns: ColumnDefinition[] = [];
   public viewMode: 'grid' | 'gallery' | 'summary' | 'news' | 'owner' = 'gallery';
   loading = false;
+  currentIndex = 0;
+  scale = 1;
+  transformStyle = "scale(1)";
+  slideInterval: any;
+  touchStartX = 0;
+  touchEndX = 0;
   constructor(
     private currencyCoinService: CurrencyCoinService,
     private localStorageService: LocalStorageService,
@@ -96,8 +102,6 @@ export class CurrencyCoinComponent implements OnInit {
     img.classList.remove('blur-load');
   }
 
-  currentIndex: number = 0;
-
   openFullscreenImage(imageUrl: string) {
     // Find index of clicked image
     this.currentIndex = this.filteredCoinList.findIndex(
@@ -109,19 +113,75 @@ export class CurrencyCoinComponent implements OnInit {
     const modal = new (window as any).bootstrap.Modal(
       document.getElementById("imageViewerModal")
     );
+    this.resetZoom();
     modal.show();
+    this.enableKeyboard();
   }
 
   nextImage() {
     this.currentIndex = (this.currentIndex + 1) % this.filteredCoinList.length;
+    this.resetZoom();
   }
 
   prevImage() {
     this.currentIndex =
       (this.currentIndex - 1 + this.filteredCoinList.length) %
       this.filteredCoinList.length;
+    this.resetZoom();
   }
 
+  jumpTo(index: number) {
+    this.currentIndex = index;
+    this.resetZoom();
+  }
+
+  /********* ZOOM *********/
+  zoomIn() {
+    this.scale += 0.25;
+    this.transformStyle = `scale(${this.scale})`;
+  }
+
+  zoomOut() {
+    if (this.scale > 0.50) this.scale -= 0.25;
+    this.transformStyle = `scale(${this.scale})`;
+  }
+
+  resetZoom() {
+    this.scale = 1;
+    this.transformStyle = "scale(1)";
+  }
+
+  /********* MOBILE SWIPE *********/
+  touchStart(event: any) {
+    this.touchStartX = event.changedTouches[0].screenX;
+  }
+
+  touchMove(event: any) {
+    this.touchEndX = event.changedTouches[0].screenX;
+  }
+
+  touchEnd() {
+    if (this.touchEndX < this.touchStartX - 50) this.nextImage();
+    if (this.touchEndX > this.touchStartX + 50) this.prevImage();
+  }
+
+  /********* KEYBOARD SUPPORT *********/
+  enableKeyboard() {
+    document.onkeydown = (e: any) => {
+      if (e.key === "ArrowRight") this.nextImage();
+      if (e.key === "ArrowLeft") this.prevImage();
+      if (e.key === "Escape") document.getElementById("imageViewerModal")?.click();
+    };
+  }
+
+  /********* OPTIONAL AUTO-SLIDE *********/
+  startSlideshow() {
+    this.slideInterval = setInterval(() => this.nextImage(), 3000);
+  }
+
+  stopSlideshow() {
+    clearInterval(this.slideInterval);
+  }
   selectDefaultRareCoins() {
     this.selectedType = [];
     this.selectedType.push('Indian Rare Coin');

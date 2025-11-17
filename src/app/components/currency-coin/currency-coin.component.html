@@ -192,16 +192,28 @@
         </button>
 
         <!-- Left Arrow -->
-          <button class="nav-arrow left-arrow" (click)="prevImage()">
-            <i class="fa fa-chevron-left"></i>
-          </button>
-          <!-- Right Arrow -->
-          <button class="nav-arrow right-arrow" (click)="nextImage()">
-            <i class="fa fa-chevron-right"></i>
-          </button>
-          <div class="modal-body p-0 d-flex justify-content-center align-items-center">
-            <img [src]="filteredCoinList[currentIndex]?.imagePath" class="fullscreen-img" alt="Preview Image">
-          </div>
+        <button class="nav-arrow left-arrow" (click)="prevImage()">
+          <i class="fa fa-chevron-left"></i>
+        </button>
+        <!-- Right Arrow -->
+        <button class="nav-arrow right-arrow" (click)="nextImage()">
+          <i class="fa fa-chevron-right"></i>
+        </button>
+        <!-- Zoom Buttons -->
+        <div class="zoom-controls">
+          <button (click)="zoomIn()"><i class="fa fa-search-plus"></i></button>
+          <button (click)="zoomOut()"><i class="fa fa-search-minus"></i></button>
+          <button (click)="resetZoom()"><i class="fa fa-compress"></i></button>
+        </div>
+        <div #imageContainer (touchstart)="touchStart($event)" (touchmove)="touchMove($event)" (touchend)="touchEnd()"
+          class="modal-body p-0 d-flex justify-content-center align-items-center">
+          <img [src]="filteredCoinList[currentIndex]?.imagePath" class="fullscreen-img" alt="Preview Image" [style.transform]="transformStyle">
+        </div>
+        <!-- Thumbnail Strip -->
+        <div class="thumbnail-strip">
+          <img *ngFor="let item of filteredCoinList; index as i" [src]="item.thumbnailPath"
+            [class.active-thumb]="currentIndex === i" (click)="jumpTo(i)">
+        </div>
       </div>
     </div>
   </div>
