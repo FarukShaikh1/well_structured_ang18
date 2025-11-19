@@ -236,7 +236,7 @@ export class TransactionComponent implements OnInit {
     ];
 
     if (this.tableData.length > 0) {
-      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList, 720); // 30 minutes cache
+      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList, 720);
       if (accountColumnList) {
 
         for (const key of Object.keys(accountColumnList)) {
@@ -434,12 +434,6 @@ export class TransactionComponent implements OnInit {
               const transactionData = cell.getRow().getData();
               this.activeComponent = NavigationURLs.EXPENSE_LIST;
               this.sourceOrReason = transactionData["sourceOrReason"];
-              this.reportFirstDate = DateUtils.formatStringDate(
-                transactionData["firstDate"]
-              );
-              this.reportLastDate = DateUtils.formatStringDate(
-                transactionData["lastDate"]
-              );
               this.loadGrid();
             },
           },
@@ -689,34 +683,60 @@ export class TransactionComponent implements OnInit {
           item.description?.toLowerCase().includes(this.sourceOrReason);
         const minAmountCondition =
           this.minAmount == 0 ||
-          (item.debit !== 0 && Math.abs(item.debit) >= this.minAmount) ||
-          (item.credit !== 0 && Math.abs(item.credit) >= this.minAmount);
+          (item.expense !== 0 && Math.abs(item.expense) >= this.minAmount) ||
+          (item.income !== 0 && Math.abs(item.income) >= this.minAmount);
         const maxAmountCondition =
           this.maxAmount == 0 ||
-          (item.debit !== 0 && Math.abs(item.debit) <= this.maxAmount) ||
-          (item.credit !== 0 && Math.abs(item.credit) <= this.maxAmount);
+          (item.expense !== 0 && Math.abs(item.expense) <= this.maxAmount) ||
+          (item.income !== 0 && Math.abs(item.income) <= this.maxAmount);
         return searchText && minAmountCondition && maxAmountCondition;
       });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
+      const searchValue = this.sourceOrReason?.toLowerCase() || "";
+
       this.filteredTableData = this.tableData.filter((item: any) => {
+
+        // 🔎 TEXT SEARCH
         const searchText =
-          item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
-          item.description?.toLowerCase().includes(this.sourceOrReason);
+          item.sourceOrReason?.toLowerCase().includes(searchValue) ||
+          item.description?.toLowerCase().includes(searchValue);
+
+        // 🧮 DYNAMIC ACCOUNT AMOUNTS
+        const accountValues: number[] = item.accountData
+          ? Object.values(item.accountData).map((val: any) => Number(val))
+          : [];
+
+        // 🔽 MIN AMOUNT FILTER
         const minAmountCondition =
           this.minAmount == 0 ||
-          (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) >= this.minAmount) ||
-          (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) >= this.minAmount) ||
-          (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) >= this.minAmount) ||
-          (item.other !== null && item.other !== 0 && Math.abs(item.other) >= this.minAmount);
+          accountValues.some(v => v !== 0 && Math.abs(v) >= this.minAmount);
 
+        // 🔼 MAX AMOUNT FILTER
         const maxAmountCondition =
           this.maxAmount == 0 ||
-          (item.sbiAccount !== null && item.sbiAccount !== 0 && Math.abs(item.sbiAccount) <= this.maxAmount) ||
-          (item.cbiAccount !== null && item.cbiAccount !== 0 && Math.abs(item.cbiAccount) <= this.maxAmount) ||
-          (item.cash !== null && item.cash !== 0 && Math.abs(item.cash) <= this.maxAmount) ||
-          (item.other !== null && item.other !== 0 && Math.abs(item.other) <= this.maxAmount);
+          accountValues.some(v => v !== 0 && Math.abs(v) <= this.maxAmount);
 
         return searchText && minAmountCondition && maxAmountCondition;
+      });
+    } else if (this.activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST) {
+
+      this.filteredTableData = this.tableData.filter((item: any) => {
+        // 🧮 DYNAMIC ACCOUNT AMOUNTS
+        const accountValues: number[] = item.accountData
+          ? Object.values(item.accountData).map((val: any) => Number(val))
+          : [];
+
+        // 🔽 MIN AMOUNT FILTER
+        const minAmountCondition =
+          this.minAmount == 0 ||
+          accountValues.some(v => v !== 0 && Math.abs(v) >= this.minAmount);
+
+        // 🔼 MAX AMOUNT FILTER
+        const maxAmountCondition =
+          this.maxAmount == 0 ||
+          accountValues.some(v => v !== 0 && Math.abs(v) <= this.maxAmount);
+
+        return minAmountCondition && maxAmountCondition;
       });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
       this.filteredTableData = this.tableData.filter((item: any) => {
@@ -769,20 +789,24 @@ export class TransactionComponent implements OnInit {
   goToTransactionList() {
     this.activeComponent = NavigationURLs.EXPENSE_LIST;
     this.loadGrid();
+    this.applyFilters();
   }
 
   goToTransactionSummary() {
     this.activeComponent = NavigationURLs.EXPENSE_SUMMARY_LIST;
     this.loadGrid();
+    this.applyFilters();
   }
   goToBalanceSummary() {
     this.activeComponent = NavigationURLs.EXPENSE_BALANCE_LIST;
     this.loadGrid();
+    this.applyFilters();
   }
 
   goToTransactionReport() {
     this.activeComponent = NavigationURLs.EXPENSE_REPORT;
     this.loadGrid();
+    this.applyFilters();
   }
 
   refreshData() {
@@ -802,6 +826,7 @@ export class TransactionComponent implements OnInit {
       this.transactionReports = cachedData;
       this.columnConfiguration();
       this.loaderService.hideLoader();
+      this.applyFilters();        
       return;
     }
 
