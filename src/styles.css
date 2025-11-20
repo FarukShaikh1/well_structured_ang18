@@ -1728,6 +1728,15 @@ img{
     text-align: center;
 }
 
+.drop-container {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    min-height: 400px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
 .form-container {
     flex: 1 1 60%; 
     padding: 10px;
