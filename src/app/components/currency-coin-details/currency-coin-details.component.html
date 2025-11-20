@@ -17,8 +17,10 @@
 
           <div class="row">
             <div class="col-12 col-lg-6 image-container">
-              <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)" (click)="triggerFileInput()" >
-                <div class="text-center" style="margin-top: 170px;" *ngIf="!selectedImage || (!showPreview && !selectedImage)">
+              <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)"
+                (click)="triggerFileInput()">
+                <div class="text-center" style="margin-top: 170px;"
+                  *ngIf="!selectedImage || (!showPreview && !selectedImage)">
                   Drag & Drop Image Here <br /> or Click to Select
                 </div>
                 <!-- Show Cropper image -->
@@ -41,8 +43,8 @@
                 </button>
 
                 <!-- EDIT -->
-                <button type="button" class="btn btn-icon btn-warning" *ngIf="showPreview" (click)="editImage()"
-                  title="Edit">
+                <button type="button" class="btn btn-icon btn-warning" *ngIf="selectedImage && !showPreview"
+                  (click)="editImage()" title="Edit">
                   <i class="bi bi-pencil-square"></i>
                 </button>
 

@@ -13,6 +13,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
+import Cropper from 'cropperjs';
 import flatpickr from "flatpickr";
 import { of, Subscription } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -23,8 +24,7 @@ import {
   ApplicationModules,
   DdlConfig,
   LocalStorageConstants,
-  NavigationURLs,
-  UserConfig
+  NavigationURLs
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
 import { SpecialOccasionRequest } from "../../interfaces/special-occasion-request";
@@ -46,6 +46,14 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
 export class DayDetailsComponent implements OnInit, OnDestroy {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild("btnCloseDetailsPopup") btnCloseDayPopup!: ElementRef;
+
+  @ViewChild('cropImage') imageElement!: ElementRef<HTMLImageElement>;
+  @ViewChild('dropFileInput') dropFileInput!: any;
+  cropper!: Cropper;
+  croppedImage: any = null;
+  showPreview: boolean = false;
+  originalImageData: any = null; // Save original to re-edit
+
   startDate = new Date();
   dayDetailsForm: FormGroup;
   user: any;
@@ -75,6 +83,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
     assetId: ''
   }
   ActionConstant = ActionConstant;
+
   private subscriptions = new Subscription();
   constructor(
     private _details: FormBuilder,
@@ -113,42 +122,15 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDragOver(event: any) {
-    event.preventDefault();
-  }
-  onDrop(event: any) {
-    event.preventDefault();
-    this.handleImageDrop(event.dataTransfer.files);
-  }
-  onFileSelected(event: any) {
-    const inputElement = event.target as HTMLInputElement;
-    this.handleImageDrop(inputElement.files);
-  }
-
-  private handleImageDrop(files: FileList | null): void {
-    if (files && files.length > 0) {
-      const file = files[0];
-      this.selectedImageFile = files[0];
-      if (file.type.startsWith("image/")) {
-        this.formData.set("file", file);
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.selectedImage = reader.result;
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Please select a valid image file.");
-      }
-    }
-  }
-
   ngOnInit(): void {
     this.dayDetailsForm.controls["specialOccasionDate"].patchValue(this.datepipe.transform(this.startDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT));
   }
+
   ngOnDestroy(): void {
+    if (this.cropper) this.cropper.destroy();
     this.subscriptions.unsubscribe();
   }
+
   ngAfterViewInit() {
     flatpickr("#specialOccasionDate", {
       dateFormat: "d/m/Y",
@@ -174,14 +156,17 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       })
     ).subscribe());
   }
+
   getAssetDetails(assetId: string) {
     this.subscriptions.add(this._assetService.getAssetDetails(assetId).pipe(
       tap((res: any) => {
-        // this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
-        this.selectedImage =  res.data.originalPath;
+        this.selectedImage = res.data.originalPath;
+        this.croppedImage = res.data.originalPath;
+        this.showPreview = true;
         this.loaderService.hideLoader();
       }),
       catchError((error: any) => {
+        this.showPreview = false;
         this.showError("Error fetching asset details.");
         return of(null);
       })
@@ -245,6 +230,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
   loadOccasionTypeList() {
     this.occasionTypeList = this.globalService.getConfigList(DdlConfig.OCCASION_TYPES);
   }
+
   loadRelationList() {
     this.relationList = this.globalService.getConfigList(DdlConfig.RELATIONS);
   }
@@ -263,6 +249,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       this.getDayDetails(specialOccasionId);
     }
   }
+
   closePopup() {
     const model = document.getElementById("detailsPopup");
     if (model) {
@@ -272,6 +259,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
     this.selectedImage = null;
     this.selectedImageFile = null;
     this.formData = new FormData();
+    if (this.cropper) this.cropper.destroy();
   }
 
   addDayDetails() {
@@ -289,6 +277,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       })
     ).subscribe());
   }
+
   updateDayDetails() {
     this.subscriptions.add(this._dayService.updateDay(this.specialOccasionRequest).pipe(
       tap(() => {
@@ -316,6 +305,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
     }
     this.formData = new FormData();
   }
+
   uploadImageAndSaveData() {
     const assetId = this.dayDetailsForm.value["assetId"];
     this.subscriptions.add(this._assetService.uploadImage(assetId, API_URL.BIRTHDAYPERSONPIC, this.formData).pipe(
@@ -329,6 +319,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       })
     ).subscribe());
   }
+
   private showError(message: string): void {
     this.loaderService.hideLoader();
     this.toaster.showMessage(message, "error");
@@ -337,5 +328,111 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
   private showSuccess(message: string): void {
     this.loaderService.hideLoader();
     this.toaster.showMessage(message, "success");
+  }
+
+  onDragOver(event: any) {
+    event.preventDefault();
+  }
+
+  onDrop(event: any) {
+    event.preventDefault();
+    this.handleImageDrop(event.dataTransfer.files);
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => this.handleImageLoad(reader.result);
+    reader.readAsDataURL(file);
+  }
+
+  private initCropper() {
+    if (this.cropper) this.cropper.destroy();
+
+    const image = this.imageElement.nativeElement;
+
+    this.cropper = new Cropper(image, {
+      viewMode: 1,
+      autoCropArea: 1,
+      movable: true,
+      zoomable: true,
+      scalable: true,
+      responsive: true
+    });
+  }
+
+  DownloadImage() {
+    console.log('this.selectedImage : ', this.selectedImage);
+    const link = document.createElement('a');
+    link.href = this.selectedImage?.toString() || '';
+    link.download = "image.png";
+    link.click();
+  }
+
+  private handleImageDrop(files: FileList | null): void {
+    if (files && files.length > 0) {
+      const file = files[0];
+      this.selectedImageFile = files[0];
+      if (file.type.startsWith("image/")) {
+        this.formData.append("file", file);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.selectedImage = reader.result;
+          // Wait for image render, initialize cropper
+          setTimeout(() => this.initCropper(), 200);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("Please select a valid image file.");
+      }
+    }
+  }
+
+  triggerFileInput() {
+    if (!this.selectedImage) {
+      this.dropFileInput.nativeElement.click();
+    }
+  }
+
+  private handleImageLoad(base64: any) {
+    this.selectedImage = base64;
+    this.originalImageData = base64; // Save original before cropping
+    this.showPreview = false;
+
+    setTimeout(() => this.initCropper(), 200);
+  }
+
+  onCropDone() {
+    if (!this.cropper) {
+      console.error("Cropper not initialized");
+      return;
+    }
+
+    // ⭐ Get cropped canvas BEFORE destroying cropper
+    const canvas = this.cropper.getCroppedCanvas({});
+
+    if (!canvas) {
+      console.error("Canvas not generated — image may not be loaded");
+      return;
+    }
+
+    // Generate preview output
+    this.croppedImage = canvas.toDataURL("image/png");
+    this.selectedImage = this.croppedImage;
+    this.showPreview = true;
+
+    // Now safe to destroy
+    this.cropper.destroy();
+    // this.cropper = null;
+  }
+
+  editImage() {
+    debugger;
+    this.selectedImage = this.originalImageData;
+    this.showPreview = false;
+    setTimeout(() => this.initCropper(), 200);
   }
 }

@@ -28,14 +28,20 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
 export class CurrencyCoinDetailsComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild("btnCloseDetailsPopup") btnCloseDayPopup!: ElementRef;
+
   @ViewChild('cropImage') imageElement!: ElementRef<HTMLImageElement>;
   @ViewChild('dropFileInput') dropFileInput!: any;
+  selectedImage!: string | ArrayBuffer | null;
+  cropper!: Cropper;
+  croppedImage: any = null;
+  showPreview: boolean = false;
+  originalImageData: any = null; // Save original to re-edit
+
   currencyCoinDetailsForm: FormGroup;
   user: any;
   countryList: any;
   currencyTypeList: any;
   collectionCoinId: string = "";
-  selectedImage!: string | ArrayBuffer | null;
   selectedImageFile: File | null = null;
   fil: File | null = null;
   formData: FormData = new FormData();
@@ -45,10 +51,6 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   coinNoteCollectionRequest: CoinNoteCollectionRequest = {
   }
   ActionConstant = ActionConstant;
-  cropper!: Cropper;
-  croppedImage: any = null;
-  showPreview: boolean = false;
-  originalImageData: any = null; // Save original to re-edit
   constructor(
     private _details: FormBuilder,
     private _currencyCoinService: CurrencyCoinService,
@@ -83,128 +85,6 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       isEditable: [false],
     });
   }
-  ngOnDestroy(): void {
-    if (this.cropper) this.cropper.destroy();
-  }
-
-  onDragOver(event: any) {
-    event.preventDefault();
-  }
-  onDrop(event: any) {
-    event.preventDefault();
-    this.handleImageDrop(event.dataTransfer.files);
-  }
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => this.handleImageLoad(reader.result);
-    reader.readAsDataURL(file);
-  }
-
-  private initCropper() {
-    if (this.cropper) this.cropper.destroy();
-
-    const image = this.imageElement.nativeElement;
-
-    this.cropper = new Cropper(image, {
-      viewMode: 1,
-      autoCropArea: 1,
-      movable: true,
-      zoomable: true,
-      scalable: true,
-      responsive: true
-    });
-  }
-
-  downloadCroppedImage() {
-    const canvas = this.cropper.getCroppedCanvas({});
-
-    canvas.toBlob((blob: any) => {
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = "cropped.png";
-      link.click();
-
-      URL.revokeObjectURL(url);
-    }, "image/png");
-  }
-
-  DownloadImage() {
-    console.log('this.selectedImage : ', this.selectedImage);
-    const link = document.createElement('a');
-    link.href = this.selectedImage?.toString() || '';
-    link.download = "image.png";
-    link.click();
-  }
-
-  private handleImageDrop(files: FileList | null): void {
-    if (files && files.length > 0) {
-      const file = files[0];
-      this.selectedImageFile = files[0];
-      if (file.type.startsWith("image/")) {
-        this.formData.append("file", file);
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.selectedImage = reader.result;
-          // Wait for image render, initialize cropper
-          setTimeout(() => this.initCropper(), 200);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Please select a valid image file.");
-      }
-    }
-  }
-  triggerFileInput() {
-  if (!this.selectedImage) {
-    this.dropFileInput.nativeElement.click();
-  }
-}
-
-  private handleImageLoad(base64: any) {
-    this.selectedImage = base64;
-    this.originalImageData = base64; // Save original before cropping
-    this.showPreview = false;
-
-    setTimeout(() => this.initCropper(), 200);
-  }
-
-
-  onCropDone() {
-    if (!this.cropper) {
-      console.error("Cropper not initialized");
-      return;
-    }
-
-    // ⭐ Get cropped canvas BEFORE destroying cropper
-    const canvas = this.cropper.getCroppedCanvas({});
-
-    if (!canvas) {
-      console.error("Canvas not generated — image may not be loaded");
-      return;
-    }
-
-    // Generate preview output
-    this.croppedImage = canvas.toDataURL("image/png");
-    this.selectedImage = this.croppedImage;
-    this.showPreview = true;
-
-    // Now safe to destroy
-    this.cropper.destroy();
-    // this.cropper = null;
-  }
-  editImage() {
-    debugger;
-    this.selectedImage = this.originalImageData;
-    this.showPreview = false;
-    setTimeout(() => this.initCropper(), 200);
-  }
-
 
   ngOnInit(): void { }
 
@@ -244,8 +124,6 @@ export class CurrencyCoinDetailsComponent implements OnInit {
 
   }
 
-
-
   getCurrencyCoinDetails(collectionCoinId: string) {
     this._currencyCoinService
       .getCurrencyCoinDetails(collectionCoinId)
@@ -265,10 +143,10 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         }
       });
   }
+
   getAssetDetails(assetId: string) {
     this._assetService.getAssetDetails(assetId).subscribe({
       next: (res: any) => {
-        // this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
         this.selectedImage = res.data.originalPath;
         this.croppedImage = res.data.originalPath;
         this.showPreview = true;
@@ -459,4 +337,115 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       this.addOrUpdateCurrencyCoinDetails();
     }
   }
+
+  onDragOver(event: any) {
+    event.preventDefault();
+  }
+
+  onDrop(event: any) {
+    event.preventDefault();
+    this.handleImageDrop(event.dataTransfer.files);
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => this.handleImageLoad(reader.result);
+    reader.readAsDataURL(file);
+  }
+
+  private initCropper() {
+    if (this.cropper) this.cropper.destroy();
+
+    const image = this.imageElement.nativeElement;
+
+    this.cropper = new Cropper(image, {
+      viewMode: 1,
+      autoCropArea: 1,
+      movable: true,
+      zoomable: true,
+      scalable: true,
+      responsive: true
+    });
+  }
+
+  DownloadImage() {
+    console.log('this.selectedImage : ', this.selectedImage);
+    const link = document.createElement('a');
+    link.href = this.selectedImage?.toString() || '';
+    link.download = "image.png";
+    link.click();
+  }
+
+  private handleImageDrop(files: FileList | null): void {
+    if (files && files.length > 0) {
+      const file = files[0];
+      this.selectedImageFile = files[0];
+      if (file.type.startsWith("image/")) {
+        this.formData.append("file", file);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.selectedImage = reader.result;
+          // Wait for image render, initialize cropper
+          setTimeout(() => this.initCropper(), 200);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("Please select a valid image file.");
+      }
+    }
+  }
+
+  triggerFileInput() {
+    if (!this.selectedImage) {
+      this.dropFileInput.nativeElement.click();
+    }
+  }
+
+  private handleImageLoad(base64: any) {
+    this.selectedImage = base64;
+    this.originalImageData = base64; // Save original before cropping
+    this.showPreview = false;
+
+    setTimeout(() => this.initCropper(), 200);
+  }
+
+  onCropDone() {
+    if (!this.cropper) {
+      console.error("Cropper not initialized");
+      return;
+    }
+
+    // ⭐ Get cropped canvas BEFORE destroying cropper
+    const canvas = this.cropper.getCroppedCanvas({});
+
+    if (!canvas) {
+      console.error("Canvas not generated — image may not be loaded");
+      return;
+    }
+
+    // Generate preview output
+    this.croppedImage = canvas.toDataURL("image/png");
+    this.selectedImage = this.croppedImage;
+    this.showPreview = true;
+
+    // Now safe to destroy
+    this.cropper.destroy();
+    // this.cropper = null;
+  }
+
+  editImage() {
+    debugger;
+    this.selectedImage = this.originalImageData;
+    this.showPreview = false;
+    setTimeout(() => this.initCropper(), 200);
+  }
+
+  ngOnDestroy(): void {
+    if (this.cropper) this.cropper.destroy();
+  }
+
 }

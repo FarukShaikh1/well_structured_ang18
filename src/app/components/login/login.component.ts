@@ -38,7 +38,7 @@ export class LoginComponent {
     }
   }
   loginForm: FormGroup;
-hideNewPassword:boolean = true;
+  hideNewPassword: boolean = true;
   userList: any;
   constructor(
     private fb: FormBuilder,

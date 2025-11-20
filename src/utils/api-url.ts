@@ -4,8 +4,8 @@ const serverUrl = environment.serverUrl;
 const apiPrefix = environment.apiPrefix;
 
 export const API_URL = {
-  
-  ATTACHMENT: "../../../assets/project-attachments/", 
+
+  ATTACHMENT: "../../../assets/project-attachments/",
   COLLECTIONCOINS: "collection_coins",
   BIRTHDAYPERSONPIC: "birthday_person_pic",
 
@@ -35,7 +35,7 @@ export const API_URL = {
   UPDATE_EXPENSE: `${serverUrl}${apiPrefix}/expense/update?userId=`,
   DELETE_EXPENSE: `${serverUrl}${apiPrefix}/expense/delete?expenseId=`,
   GET_EXPENSE_SUGGESTION_LIST: `${serverUrl}${apiPrefix}/expense/GetExpenseSuggestionList`,
-  
+
 
   GET_TRANSACTION_DETAILS: `${serverUrl}${apiPrefix}/transaction/GetDetails`,
   GET_TRANSACTION_SUMMARY_LIST: `${serverUrl}${apiPrefix}/transaction/GetSummary`,
@@ -70,7 +70,7 @@ export const API_URL = {
   GET_CONFIG_DELETE: `${serverUrl}${apiPrefix}/settings/DeleteConfig`,
   GET_CONFIG_DEACTIVATE: `${serverUrl}${apiPrefix}/settings/DeactiveConfig`,
 
-  
+
   REGISTER_USER: `${serverUrl}${apiPrefix}/auth/register`,
   UPDATE_USER: `${serverUrl}${apiPrefix}/user/updateUserDetails?userId=`,
   RESET_PASSWORD: `${serverUrl}${apiPrefix}/auth/resetpassword`,
