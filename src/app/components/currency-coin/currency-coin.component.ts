@@ -91,6 +91,7 @@ export class CurrencyCoinComponent implements OnInit {
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.COIN_NOTE_COLLECTION) {
         this.loadGrid();
+        this.applyFilters();
       }
     });
     this.globalService.refreshList$.subscribe(() => { });
@@ -195,6 +196,7 @@ export class CurrencyCoinComponent implements OnInit {
     localStorage.removeItem(NavigationURLs.CURRENCY_GALLERY);
     this.LoadSummaryGrid();
     await this.loadGrid();
+    this.applyFilters();
   }
 
   columnConfiguration() {
