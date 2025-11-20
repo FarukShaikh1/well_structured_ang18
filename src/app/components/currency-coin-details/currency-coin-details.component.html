@@ -19,10 +19,21 @@
             <div class="col-12 col-lg-6 image-container">
               <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
                 <div id="image">
-                  <img [src]="selectedImage" />
+                  <img #cropImage [src]="selectedImage" class="crop-image" *ngIf="selectedImage" />
+                  @if(!selectedImage){
+                  <div class="placeholder-text">
+                    Drag & Drop Image Here or Click to Select
+                    </div>
+                  }
+                  @else{
+                    <button type="button" (click)="DownloadImage()">Download</button>
+                  }
                 </div>
               </div>
-              <input type="file" (change)="onFileSelected($event)" accept="image/*" formControlName="picture" />
+              <button type="button" class="btn-done" (click)="onCropDone()">
+                Done
+              </button>
+              <input type="file" accept="image/*" (change)="onFileSelected($event)" />
             </div>
             <hr class="d-lg-none my-4" />
             <div class="col-12 col-lg-6">

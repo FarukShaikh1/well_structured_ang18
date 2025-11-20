@@ -1,4 +1,5 @@
 import { CommonModule } from "@angular/common";
+import Cropper from 'cropperjs';
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from "@angular/core";
 import {
   FormBuilder,
@@ -28,6 +29,7 @@ import { set } from "date-fns";
 export class CurrencyCoinDetailsComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild("btnCloseDetailsPopup") btnCloseDayPopup!: ElementRef;
+  @ViewChild('cropImage') imageElement!: ElementRef<HTMLImageElement>;
   currencyCoinDetailsForm: FormGroup;
   user: any;
   countryList: any;
@@ -43,6 +45,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   coinNoteCollectionRequest: CoinNoteCollectionRequest = {
   }
   ActionConstant = ActionConstant;
+  cropper!: Cropper;
+  croppedImage: any = null;
 
   constructor(
     private _details: FormBuilder,
@@ -78,6 +82,10 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       isEditable: [false],
     });
   }
+  ngOnDestroy(): void {
+    if (this.cropper) this.cropper.destroy();
+  }
+
   onDragOver(event: any) {
     event.preventDefault();
   }
@@ -89,7 +97,41 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     this.handleImageDrop(inputElement.files);
   }
+  private initCropper() {
+    if (!this.imageElement) return;
 
+    if (this.cropper) {
+      this.cropper.destroy();
+    }
+
+    this.cropper = new Cropper(this.imageElement.nativeElement, {
+      // aspectRatio: 1,
+      viewMode: 1,
+      autoCropArea: 1,
+      movable: true,
+      zoomable: true,
+      scalable: true,
+      responsive: true
+    });
+  }
+
+  downloadCroppedImage() {
+    const canvas = this.cropper.getCroppedCanvas({});
+
+    canvas.toBlob((blob: any) => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "cropped.png";
+      link.click();
+
+      URL.revokeObjectURL(url);
+    }, "image/png");
+  }
+
+  DownloadImage() {
+    this.downloadCroppedImage();
+  }
   private handleImageDrop(files: FileList | null): void {
     if (files && files.length > 0) {
       const file = files[0];
@@ -100,6 +142,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = () => {
           this.selectedImage = reader.result;
+          // Wait for image render, initialize cropper
+          setTimeout(() => this.initCropper(), 200);
         };
         reader.readAsDataURL(file);
       } else {
@@ -107,10 +151,21 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       }
     }
   }
+  onCropDone() {
+    if (!this.cropper) return;
+    const canvas = this.cropper.getCroppedCanvas({});
+
+    this.croppedImage = canvas.toDataURL("image/png");
+
+    // OPTIONAL: hide crop section once done
+    // this.selectedImage = null;
+  }
+
 
   ngOnInit(): void { }
 
   openDetailsPopup(currencyCoinId: string) {
+
     this.loaderService.showLoader();
     this.currencyTypeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
 
@@ -141,6 +196,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     this.renderer
       .selectRootElement(this.btnCloseDayPopup?.nativeElement)
       .click();
+    if (this.cropper) this.cropper.destroy();
 
   }
 
