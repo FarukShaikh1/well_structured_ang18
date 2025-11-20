@@ -17,23 +17,49 @@
 
           <div class="row">
             <div class="col-12 col-lg-6 image-container">
-              <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
-                <div id="image">
-                  <img #cropImage [src]="selectedImage" class="crop-image" *ngIf="selectedImage" />
-                  @if(!selectedImage){
-                  <div class="placeholder-text">
-                    Drag & Drop Image Here or Click to Select
-                    </div>
-                  }
-                  @else{
-                    <button type="button" (click)="DownloadImage()">Download</button>
-                  }
+              <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)" (click)="triggerFileInput()" >
+                <div class="text-center" style="margin-top: 170px;" *ngIf="!selectedImage || (!showPreview && !selectedImage)">
+                  Drag & Drop Image Here <br /> or Click to Select
                 </div>
+                <!-- Show Cropper image -->
+                <img #cropImage id="cropImage" [src]="selectedImage" class="crop-image"
+                  *ngIf="selectedImage && !showPreview" />
+
+                <!-- Show Cropped Image Preview -->
+                <img [src]="croppedImage" class="crop-image preview-image" *ngIf="showPreview" />
+
               </div>
-              <button type="button" class="btn-done" (click)="onCropDone()">
-                Done
-              </button>
-              <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+              @if(globalService.isAccessible(ActionConstant.ADD) ||
+              globalService.isAccessible(ActionConstant.EDIT)){
+              <!-- Action Buttons -->
+              <div class="mt-3 d-flex justify-content-center gap-2 action-buttons">
+
+                <!-- DONE (Crop) -->
+                <button type="button" class="btn btn-icon btn-primary" *ngIf="selectedImage && !showPreview"
+                  (click)="onCropDone()" title="Done">
+                  <i class="bi bi-check-circle"></i>
+                </button>
+
+                <!-- EDIT -->
+                <button type="button" class="btn btn-icon btn-warning" *ngIf="showPreview" (click)="editImage()"
+                  title="Edit">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+
+                <!-- DOWNLOAD -->
+                <button type="button" class="btn btn-icon btn-success" *ngIf="selectedImage && showPreview"
+                  (click)="DownloadImage()" title="Download">
+                  <i class="bi bi-download"></i>
+                </button>
+
+                <!-- FILE UPLOAD -->
+                <label class="btn btn-icon btn-secondary upload-btn" title="Upload new Image">
+                  <i class="bi bi-upload"></i>
+                  <input type="file" #dropFileInput accept="image/*" (change)="onFileSelected($event)" hidden />
+                </label>
+
+              </div>
+              }
             </div>
             <hr class="d-lg-none my-4" />
             <div class="col-12 col-lg-6">

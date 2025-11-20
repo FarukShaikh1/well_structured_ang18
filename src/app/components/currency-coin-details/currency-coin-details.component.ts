@@ -1,5 +1,4 @@
 import { CommonModule } from "@angular/common";
-import Cropper from 'cropperjs';
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from "@angular/core";
 import {
   FormBuilder,
@@ -7,8 +6,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
+import Cropper from 'cropperjs';
 import { API_URL } from "../../../utils/api-url";
-import { ActionConstant, ApplicationModules, DdlConfig, LocalStorageConstants, NavigationURLs } from "../../../utils/application-constants";
+import { ActionConstant, ApplicationModules, DdlConfig, NavigationURLs } from "../../../utils/application-constants";
 import { CoinNoteCollectionRequest } from "../../interfaces/coin-note-collection-request";
 import { AssetService } from "../../services/asset/asset.service";
 import { CurrencyCoinService } from "../../services/currency-coin/currency-coin.service";
@@ -16,7 +16,6 @@ import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
 import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { set } from "date-fns";
 
 
 @Component({
@@ -30,6 +29,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild("btnCloseDetailsPopup") btnCloseDayPopup!: ElementRef;
   @ViewChild('cropImage') imageElement!: ElementRef<HTMLImageElement>;
+  @ViewChild('dropFileInput') dropFileInput!: any;
   currencyCoinDetailsForm: FormGroup;
   user: any;
   countryList: any;
@@ -47,7 +47,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   ActionConstant = ActionConstant;
   cropper!: Cropper;
   croppedImage: any = null;
-
+  showPreview: boolean = false;
+  originalImageData: any = null; // Save original to re-edit
   constructor(
     private _details: FormBuilder,
     private _currencyCoinService: CurrencyCoinService,
@@ -93,19 +94,22 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     event.preventDefault();
     this.handleImageDrop(event.dataTransfer.files);
   }
+
   onFileSelected(event: any) {
-    const inputElement = event.target as HTMLInputElement;
-    this.handleImageDrop(inputElement.files);
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => this.handleImageLoad(reader.result);
+    reader.readAsDataURL(file);
   }
+
   private initCropper() {
-    if (!this.imageElement) return;
+    if (this.cropper) this.cropper.destroy();
 
-    if (this.cropper) {
-      this.cropper.destroy();
-    }
+    const image = this.imageElement.nativeElement;
 
-    this.cropper = new Cropper(this.imageElement.nativeElement, {
-      // aspectRatio: 1,
+    this.cropper = new Cropper(image, {
       viewMode: 1,
       autoCropArea: 1,
       movable: true,
@@ -130,8 +134,13 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   }
 
   DownloadImage() {
-    this.downloadCroppedImage();
+    console.log('this.selectedImage : ', this.selectedImage);
+    const link = document.createElement('a');
+    link.href = this.selectedImage?.toString() || '';
+    link.download = "image.png";
+    link.click();
   }
+
   private handleImageDrop(files: FileList | null): void {
     if (files && files.length > 0) {
       const file = files[0];
@@ -151,14 +160,49 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       }
     }
   }
+  triggerFileInput() {
+  if (!this.selectedImage) {
+    this.dropFileInput.nativeElement.click();
+  }
+}
+
+  private handleImageLoad(base64: any) {
+    this.selectedImage = base64;
+    this.originalImageData = base64; // Save original before cropping
+    this.showPreview = false;
+
+    setTimeout(() => this.initCropper(), 200);
+  }
+
+
   onCropDone() {
-    if (!this.cropper) return;
+    if (!this.cropper) {
+      console.error("Cropper not initialized");
+      return;
+    }
+
+    // ⭐ Get cropped canvas BEFORE destroying cropper
     const canvas = this.cropper.getCroppedCanvas({});
 
-    this.croppedImage = canvas.toDataURL("image/png");
+    if (!canvas) {
+      console.error("Canvas not generated — image may not be loaded");
+      return;
+    }
 
-    // OPTIONAL: hide crop section once done
-    // this.selectedImage = null;
+    // Generate preview output
+    this.croppedImage = canvas.toDataURL("image/png");
+    this.selectedImage = this.croppedImage;
+    this.showPreview = true;
+
+    // Now safe to destroy
+    this.cropper.destroy();
+    // this.cropper = null;
+  }
+  editImage() {
+    debugger;
+    this.selectedImage = this.originalImageData;
+    this.showPreview = false;
+    setTimeout(() => this.initCropper(), 200);
   }
 
 
@@ -226,9 +270,12 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       next: (res: any) => {
         // this.selectedImage = API_URL.ATTACHMENT + res.data.originalPath;
         this.selectedImage = res.data.originalPath;
+        this.croppedImage = res.data.originalPath;
+        this.showPreview = true;
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
+        this.showPreview = false;
         this.loaderService.hideLoader();
       },
     });
