@@ -826,16 +826,16 @@ export class TransactionComponent implements OnInit {
       this.transactionReports = cachedData;
       this.columnConfiguration();
       this.loaderService.hideLoader();
-      this.applyFilters();        
+      this.applyFilters();
       return;
     }
 
     this.transactionfilterRequest = {
       fromDate: this.fromDate,
       toDate: this.toDate,
-      minAmount: this.minAmount,
-      maxAmount: this.maxAmount,
-      sourceOrReason: this.sourceOrReason,
+      minAmount: this.minAmount ?? 0,
+      maxAmount: this.maxAmount ?? 0,
+      sourceOrReason: this.sourceOrReason ?? ''
     };
     if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
       this.transactionService
