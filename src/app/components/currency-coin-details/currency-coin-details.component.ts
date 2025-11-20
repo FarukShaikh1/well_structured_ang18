@@ -15,6 +15,7 @@ import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
 import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { set } from "date-fns";
 
 
 @Component({
@@ -337,7 +338,11 @@ export class CurrencyCoinDetailsComponent implements OnInit {
             if (this.currencyCoinDetailsForm.value["assetId"] == null || this.currencyCoinDetailsForm.value["assetId"] == undefined) {
               this.currencyCoinDetailsForm.value["assetId"] = res.data;
               this.coinNoteCollectionRequest.assetId = res.data;
+
               this.addOrUpdateCurrencyCoinDetails();
+            }
+            else {
+              this.isSaving = false;
             }
             this.loaderService.hideLoader();
           },
