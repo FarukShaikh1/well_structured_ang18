@@ -40,7 +40,7 @@
     "@okta/okta-angular": "^6.4.0",
     "@okta/okta-auth-js": "^7.4.3",
     "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.3",
+    "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.11.3",
     "chart.js": "^4.4.1",
     "chartjs-plugin-datalabels": "^2.2.0",

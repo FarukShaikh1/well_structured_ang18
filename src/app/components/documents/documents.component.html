@@ -1,1 +1,53 @@
-<app-site-under-development></app-site-under-development>
+<div class="doc-list-root">
+    <div class="toolbar">
+        <div class="title">My Documents</div>
+        <div class="controls">
+            <input [(ngModel)]="searchText" (keyup.enter)="onSearchEnter()" placeholder="Search documents..."
+                aria-label="Search" />
+            <button (click)="loadDocuments()">Search</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload New</button>
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
+
+
+    <div class="grid" *ngIf="!loading && documents?.length">
+        <div class="card" *ngFor="let doc of documents">
+            <div class="card-body">
+                <div class="meta">
+                    <div class="name" (click)="openPreview(doc)" role="button" tabindex="0">{{ doc.fileName }} File Name</div>
+                    <div class="small">{{ doc.contentType }} • {{ humanSize(doc.sizeBytes) }} contentType sizeBytes</div>
+                </div>
+                <div class="actions">
+                    <button (click)="openPreview(doc)">Open</button>
+                    <button (click)="download(doc)">Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="empty" *ngIf="!loading && (!documents || documents.length === 0)">No documents found.</div>
+
+
+    <!-- Preview Modal -->
+    <div class="modal" *ngIf="showPreview">
+        <div class="modal-backdrop" (click)="closePreview()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>{{ previewFileName }}</div>
+                <button (click)="closePreview()">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- If PDF, use iframe for good UX; images and other files will be opened in an iframe as well if supported by browser -->
+                <iframe *ngIf="previewUrl" [src]="previewUrl | safeUrl" frameborder="0"></iframe>
+            </div>
+            <div class="modal-footer">
+                <!-- <button (click)="download({ id: previewFileName, fileName: previewFileName } as any)">Download</button> -->
+                <!-- <button (click)="closePreview()">Close</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+<app-documents-upload></app-documents-upload>
