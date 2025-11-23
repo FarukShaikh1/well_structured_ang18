@@ -25,8 +25,10 @@ export class DocumentService {
 * Backend endpoint that returns a short-lived SAS URL or redirect URL for direct access to blob.
 * Using SAS makes preview and download fast and does not stream through backend.
 */
-  getSasUrl(documentId: string): Observable<{ url: string }> {
-    return this.http.get<{ url: string }>(`${API_URL.GET_DOCUMENT_SAS_URL}${documentId}`);
+  getDownloadUrl(documentId: string, fileName:string): Observable<{ url: string }> {
+    return this.http.get<{ url: string }>(
+      `${API_URL.GET_DOCUMENT_DOWNLOAD_SAS_URL}${documentId}&fileName=${encodeURIComponent(fileName)}`
+    );
   }
 
   addDocument(specialOccasionRequest: SpecialOccasionRequest): Observable<any> {
@@ -44,10 +46,10 @@ export class DocumentService {
     return this.http.post(API_URL.UPDATE_SPECIAL_OCCASION + String(localStorage.getItem(LocalStorageConstants.USERID)), specialOccasionRequest);
   }
 
-  deleteDocument(dayId: string): Observable<any> {
+  deleteDocument(docId: string): Observable<any> {
     return this.http.get(
-      API_URL.DELETE_SPECIAL_OCCASION +
-      dayId +
+      API_URL.DELETE_DOCUMENT +
+      docId +
       "&userId=" +
       String(localStorage.getItem(LocalStorageConstants.USERID))
     );

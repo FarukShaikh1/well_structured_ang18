@@ -81,8 +81,8 @@ export const API_URL = {
 
   
   GET_DOCUMENT_List: `${serverUrl}${apiPrefix}/document/getList`,
-  GET_DOCUMENT_SAS_URL: `${serverUrl}${apiPrefix}/document/getSasUrl?documentId=`,
-  UPLOAD_DOCUMENT: `${serverUrl}${apiPrefix}/document/upload?userId=`,
+  GET_DOCUMENT_DOWNLOAD_SAS_URL: `${serverUrl}${apiPrefix}/document/GetDownloadUrl?blobPath=`,
+  UPLOAD_DOCUMENT: `${serverUrl}${apiPrefix}/document/UploadDocument?userId=`,
   DELETE_DOCUMENT: `${serverUrl}${apiPrefix}/document/delete?dayId=`,
 
 };

@@ -1,53 +1,63 @@
-<div class="doc-list-root">
-    <div class="toolbar">
-        <div class="title">My Documents</div>
-        <div class="controls">
-            <input [(ngModel)]="searchText" (keyup.enter)="onSearchEnter()" placeholder="Search documents..."
-                aria-label="Search" />
-            <button (click)="loadDocuments()">Search</button>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload New</button>
-        </div>
+<div class="main-body">
+    <button id="openUploadDocumentButton" type="button" data-bs-toggle="modal" data-bs-target="#uploadModal"
+        style="display:none">
+    </button>
+    <button class="btn btn-primary rounded-button" data-bs-toggle="modal" data-bs-target="#uploadModal">
+        <i class="fa fa-plus"></i>
+        Upload New
+    </button>
+    <div appearance="outline">
+        <label>Search</label>
+        <input #searchInput [(ngModel)]="searchText" (keyup)="applyFilter()"
+            placeholder="Enter text to find the document" style="width: 40%;"
+            class="form-control form-control-lg text-dark bg-transparent" />
     </div>
-
     <div *ngIf="loading" class="loading">Loading...</div>
 
 
-    <div class="grid" *ngIf="!loading && documents?.length">
-        <div class="card" *ngFor="let doc of documents">
-            <div class="card-body">
-                <div class="meta">
-                    <div class="name" (click)="openPreview(doc)" role="button" tabindex="0">{{ doc.fileName }} File Name</div>
-                    <div class="small">{{ doc.contentType }} • {{ humanSize(doc.sizeBytes) }} contentType sizeBytes</div>
+    <div class="grid" *ngIf="!loading && filteredDocumentList?.length">
+        <div class="gallery-grid">
+            <div class="gallery-item coin" *ngFor="let doc of filteredDocumentList">
+                <img [src]="doc.thumbnailPathSasUrl" loading="lazy" class="gallery-img blur-load"
+                    (load)="removeBlur($event)" [alt]="doc.uploadedFileName" />
+
+                <div class="gallery-caption">
+                    <h5 [title]="doc.uploadedFileName">{{ doc.uploadedFileName | truncate:20 }}
+                    </h5>
+                    <p style="margin-bottom: 0;" [title]="doc.documentName">{{ doc.documentName|truncate:20 }}</p>
+                    <button (click)="download(doc)" class="btn btn-primary rounded-button">
+                        <i class="fa fa-download"></i>
+                    </button>
+
+                    <button (click)="deleteDocument(doc.id)" class="btn btn-primary rounded-button">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <!-- TODO : Need to work on open preview in full screen mode
+                    <button class="btn btn-primary" (click)="openPreview(doc)">Open</button> -->
                 </div>
-                <div class="actions">
-                    <button (click)="openPreview(doc)">Open</button>
-                    <button (click)="download(doc)">Download</button>
+            </div>
+            <div class="empty" *ngIf="!loading && (!documents || documents.length === 0)">No documents found.</div>
+            <!-- Preview Modal -->
+            <div class="modal" *ngIf="showPreview">
+                <div class="modal-backdrop" (click)="closePreview()"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div>{{ previewFileName }}</div>
+                        <button (click)="closePreview()">✕</button>
+                    </div>
+                    <div class="preview-body">
+                        <iframe *ngIf="previewUrl" [src]="previewUrl | safeUrl" class="preview-iframe"></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button (click)="download({ id: previewFileName, fileName: previewFileName } as any)">Download</button> -->
+                        <!-- <button (click)="closePreview()">Close</button> -->
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="empty" *ngIf="!loading && (!documents || documents.length === 0)">No documents found.</div>
-
-
-    <!-- Preview Modal -->
-    <div class="modal" *ngIf="showPreview">
-        <div class="modal-backdrop" (click)="closePreview()"></div>
-        <div class="modal-content">
-            <div class="modal-header">
-                <div>{{ previewFileName }}</div>
-                <button (click)="closePreview()">✕</button>
-            </div>
-            <div class="modal-body">
-                <!-- If PDF, use iframe for good UX; images and other files will be opened in an iframe as well if supported by browser -->
-                <iframe *ngIf="previewUrl" [src]="previewUrl | safeUrl" frameborder="0"></iframe>
-            </div>
-            <div class="modal-footer">
-                <!-- <button (click)="download({ id: previewFileName, fileName: previewFileName } as any)">Download</button> -->
-                <!-- <button (click)="closePreview()">Close</button> -->
             </div>
         </div>
     </div>
 </div>
+<!-- <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog> -->
+
 <app-documents-upload></app-documents-upload>
+<app-toaster></app-toaster>

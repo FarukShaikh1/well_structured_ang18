@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { SafeUrlPipe } from '../../common/safe-url.pipe';
 import { DocumentItem } from '../../interfaces/document-item';
 import { DocumentService } from '../../services/document/document.service';
+import { ApplicationModules } from '../../../utils/application-constants';
+import { GlobalService } from '../../services/global/global.service';
 
 @Component({
   selector: 'app-documents-upload',
@@ -15,7 +17,7 @@ import { DocumentService } from '../../services/document/document.service';
 
 export class DocumentsUploadComponent {
   constructor(private documentService: DocumentService,
-    private renderer: Renderer2,
+    private renderer: Renderer2, private globalService: GlobalService
 
   ) { }
 
@@ -25,6 +27,8 @@ export class DocumentsUploadComponent {
   searchText = '';
   loading = false;
   selectedFile: File | null = null;
+  documentName: string = '';
+  keywords: string = '';
 
   // preview
   previewUrl: string | null = null; // blob or SAS url
@@ -50,7 +54,8 @@ export class DocumentsUploadComponent {
     const formData = new FormData();
     formData.append('file', this.selectedFile);
     formData.append('userId', this.userId);
-
+    formData.append('documentName', this.documentName);
+    formData.append('keywords', this.keywords);
 
     await this.documentService.upload(formData).toPromise();
 
@@ -58,13 +63,15 @@ export class DocumentsUploadComponent {
     this.selectedFile = null;
     const modalEl = document.getElementById('uploadModal');
     if (modalEl) (window as any).bootstrap.Modal.getInstance(modalEl)?.hide();
+    this.globalService.triggerGridReload(ApplicationModules.DOCUMENT);
+
   }
 
   // Open preview using SAS URL (preferred)
   async openPreview(doc: DocumentItem) {
     this.previewFileName = doc.fileName;
     this.previewContentType = doc.contentType;
-    const resp = await this.documentService.getSasUrl(doc.id).toPromise();
+    // const resp = await this.documentService.getDocumentU(doc.id).toPromise();
     // this.previewUrl = resp.url;
     this.showPreview = true;
   }

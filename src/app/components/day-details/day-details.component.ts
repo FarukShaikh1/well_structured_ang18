@@ -430,7 +430,6 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
   }
 
   editImage() {
-    debugger;
     this.selectedImage = this.originalImageData;
     this.showPreview = false;
     setTimeout(() => this.initCropper(), 200);

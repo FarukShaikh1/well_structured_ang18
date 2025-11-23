@@ -1,18 +1,52 @@
-    <!-- Upload Modal -->
-    <div class="modal fade" style="margin: 2px;" id="uploadModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload Document</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="file" (change)="onFileSelected($event)" class="form-control" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success" (click)="uploadFile()">Upload</button>
-                </div>
-            </div>
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Upload Document</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <!-- File Upload -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Select File</label>
+          <input type="file" (change)="onFileSelected($event)" class="form-control" />
         </div>
+
+        <!-- Document Name -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Document Name</label>
+          <input type="text" [(ngModel)]="documentName" class="form-control" placeholder="Enter document name" />
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Keywords for easy search</label>
+          <textarea [(ngModel)]="keywords"
+            class="form-control"
+            rows="3"
+            placeholder="Enter keywords separated by spaces or commas">
+          </textarea>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+
+        <button type="button" class="btn btn-success" (click)="uploadFile()">
+          Upload
+        </button>
+      </div>
+
     </div>
+  </div>
+</div>
