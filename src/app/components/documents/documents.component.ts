@@ -5,7 +5,7 @@ import { SafeUrlPipe } from '../../common/safe-url.pipe';
 import { DocumentItem } from '../../interfaces/document-item';
 import { DocumentService } from '../../services/document/document.service';
 import { DocumentsUploadComponent } from '../document-upload/documents-upload.component';
-import { ApplicationModules } from '../../../utils/application-constants';
+import { ActionConstant, ApplicationModules } from '../../../utils/application-constants';
 import { GlobalService } from '../../services/global/global.service';
 import { TruncatePipe } from '../../common/truncate.pipe';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
@@ -27,7 +27,7 @@ export class DocumentsComponent {
   confirmationDialog!: ConfirmationDialogComponent;
   docId: any;
   constructor(private documentService: DocumentService,
-    private globalService: GlobalService
+    public globalService: GlobalService
   ) { }
 
 
@@ -38,7 +38,7 @@ export class DocumentsComponent {
   searchText = '';
   loading = false;
   selectedFile: File | null = null;
-
+  ActionConstant = ActionConstant;
   // preview
   previewUrl: string | null = null; // blob or SAS url
   previewFileName = '';

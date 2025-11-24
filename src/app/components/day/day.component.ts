@@ -144,6 +144,7 @@ export class DayComponent implements OnInit {
   refreshData() {
     localStorage.removeItem(NavigationURLs.DAY_LIST);
     localStorage.removeItem(NavigationURLs.USER_LIST);
+    this.loadGrid();
   }
 
   columnConfiguration() {

@@ -280,7 +280,7 @@ export class GlobalService {
 
   blobThumbnailFormatter(cell: CellComponent) {
     const rowData = cell.getRow().getData();
-    let thumbnailPath = rowData["thumbnailPath"];
+    let thumbnailPath = rowData["thumbnailPathSasUrl"];
     if (thumbnailPath) {
       return `
       <div class="thumbnail-wrapper">

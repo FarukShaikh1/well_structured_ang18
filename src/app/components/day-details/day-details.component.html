@@ -83,6 +83,17 @@
                 </div>
                 <div class="col">
                   <label>Day Type<span class="required"></span></label>
+                  @if(!occasionTypeList || occasionTypeList.length===0){
+                  <div class="col-12 mt-4">
+                    <div class="alert alert-info text-center" role="alert">
+                      <strong>Accounts not configured.</strong><br />
+                      Please add accounts to manage your expenses and income.
+                      <br>
+                      You can configure your account list from settings page.
+                    </div>
+                  </div>
+                  }
+                  @else{
                   <select formControlName="occasionTypeId"
                     class="form-select form-control form-control-lg text-dark bg-transparent styled-select " [ngClass]="{
                       'error-border':
@@ -93,6 +104,8 @@
                     <option [value]="item.id">
                       {{ item.configurationName }}
                     </option>
+                    }@empty{
+                    <option value="">No Occasion Type found, please configure from settings page</option>
                     }
                   </select>
                   @if(dayDetailsForm.get('occasionTypeId')?.touched &&
@@ -101,6 +114,7 @@
                     @if(dayDetailsForm.get('occasionTypeId')?.errors?.['required']){
                     Date is required }
                   </div>
+                  }
                   }
                 </div>
               </div>
@@ -125,7 +139,18 @@
                   }
                 </div>
                 <div class="col">
-                  <label>Relation with Admin</label>
+                  <label>Relation </label>
+                  @if(!relationList || relationList.length===0){
+                  <div class="col-12 mt-4">
+                    <div class="alert alert-info text-center" role="alert">
+                      <strong>Relations not configured.</strong><br />
+                      Relations helps you to link contacts when you add Birthdays or anniversaries.
+                      <br>
+                      You can configure your relation types from settings page.
+                    </div>
+                  </div>
+                  }
+                  @else{
                   <select formControlName="relationId"
                     class="form-select form-control form-control-lg text-dark bg-transparent styled-select " [ngClass]="{
                       'error-border':
@@ -138,6 +163,7 @@
                     </option>
                     }
                   </select>
+                  }
                 </div>
               </div>
 
@@ -266,7 +292,7 @@
 
                   @if(globalService.isAccessible(ActionConstant.ADD) ||
                   globalService.isAccessible(ActionConstant.EDIT)){
-                  <button class="btn btn-primary rounded-button" type="submit" [disabled]="dayDetailsForm.invalid">
+                  <button class="btn btn-primary rounded-button" type="submit" [disabled]="dayDetailsForm.invalid || !relationList || relationList.length===0 || !occasionTypeList || occasionTypeList.length===0">
                     Save
                   </button>
                   }

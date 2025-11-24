@@ -2,10 +2,14 @@
     <button id="openUploadDocumentButton" type="button" data-bs-toggle="modal" data-bs-target="#uploadModal"
         style="display:none">
     </button>
+    @if (
+    this.globalService.isAccessible(ActionConstant.ADD)
+    ){
     <button class="btn btn-primary rounded-button" data-bs-toggle="modal" data-bs-target="#uploadModal">
         <i class="fa fa-plus"></i>
         Upload New
     </button>
+    }
     <div appearance="outline">
         <label>Search</label>
         <input #searchInput [(ngModel)]="searchText" (keyup)="applyFilter()"

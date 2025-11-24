@@ -138,35 +138,35 @@
 
   <div class="row mt-4" *ngIf="viewMode === 'news'">
     <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newssakal22feb16.png'" alt="image missing" />
+      <img [src]="basePath + 'news/newssakal22feb16.png'" alt="image missing" class="blur-load" (load)="removeBlur($event)" />
       <div class="gallery-caption">
         <h3>मंगळवार, 23 February 2016, सकाळ Today अमरावती</h3>
       </div>
     </div>
 
     <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newsdeshonnati11apr17.png'" alt="image missing" />
+      <img [src]="basePath + 'news/newsdeshonnati11apr17.png'" alt="image missing" class="blur-load" (load)="removeBlur($event)"/>
       <div class="gallery-caption">
         <h3>मंगळवार, 11 एप्रिल 2017, देशोन्नती जिल्हा Rdx अमरावती </h3>
       </div>
     </div>
 
     <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newsDivyamarathi10apr17.png'" alt="image missing" />
+      <img [src]="basePath + 'news/newsDivyamarathi10apr17.png'" alt="image missing" class="blur-load" (load)="removeBlur($event)"/>
       <div class="gallery-caption">
         <h3>सोमवार, 10 एप्रिल 2017, दैनिक दिव्य मराठी अमरावती, Page No.3</h3>
       </div>
     </div>
 
     <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newssakal10feb17.png'" alt="image missing" />
+      <img [src]="basePath + 'news/newssakal10feb17.png'" alt="image missing" class="blur-load" (load)="removeBlur($event)"/>
       <div class="gallery-caption">
         <h3>सोमवार, 10 एप्रिल 2017, सकाळ Today अमरावती, Page No. 3</h3>
       </div>
     </div>
 
     <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newsVruttakesari11apr17.png'" alt="image missing" />
+      <img [src]="basePath + 'news/newsVruttakesari11apr17.png'" alt="image missing" class="blur-load" (load)="removeBlur($event)"/>
       <div class="gallery-caption">
         <h3>मंगळवार, 11 एप्रिल 2017, वृत्त केसरी ग्रामीण, Page No.13</h3>
       </div>

@@ -89,6 +89,16 @@
                   (keydown)="globalService.validateAmount($event)" />
               </div>
               }
+              @empty{
+              <div class="col-12 mt-4">
+                <div class="alert alert-info text-center" role="alert">
+                  <strong>Accounts not configured.</strong><br />
+                  Please add accounts to manage your expenses and income.
+                  <br>
+                  You can configure your account list from settings page.
+                </div>
+              </div>
+              }
             </div>
             <div class="row mt-4">
               <div class="col-6">
@@ -98,8 +108,7 @@
                   (focusout)="focusOutPurpose()" />
                 @if(filteredPurposeList!==undefined && filteredPurposeList !=
                 null && focusInPurpose){
-                <ul class="list-group position-absolute w-50 mt-0 overflow-auto maxh-300"
-                  >
+                <ul class="list-group position-absolute w-50 mt-0 overflow-auto maxh-300">
                   @for(option of filteredPurposeList;track $index){
                   <li class="list-group-item list-group-item-action" (pointerdown)="selectPurpose(option)">
                     {{ option }}
@@ -115,8 +124,7 @@
                   class="form-control form-control-lg text-dark bg-transparent"></textarea>
                 @if(filteredDescriptionList!==undefined &&
                 filteredDescriptionList != null && focusInDescription){
-                <ul class="list-group position-absolute w-50 mt-0 overflow-auto maxh-300"
-                  >
+                <ul class="list-group position-absolute w-50 mt-0 overflow-auto maxh-300">
                   @for(option of filteredDescriptionList;track $index){
                   <li class="list-group-item list-group-item-action" (pointerdown)="selectDescription(option)">
                     {{ option }}
@@ -133,11 +141,8 @@
                     data-bs-dismiss="modal">
                     Cancel
                   </button>
-                  <button class="btn btn-danger rounded-button" type="reset">
-                    Reset
-                  </button>
                   <button class="btn btn-primary rounded-button" type="submit"
-                    [disabled]="transactionDetailsForm.invalid">
+                    [disabled]="transactionDetailsForm.invalid || accountList===null || accountList.length===0">
                     Save
                   </button>
                 </div>
