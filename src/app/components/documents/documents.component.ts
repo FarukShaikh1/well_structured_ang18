@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SafeUrlPipe } from '../../common/safe-url.pipe';
-import { DocumentItem } from '../../interfaces/document-item';
-import { DocumentService } from '../../services/document/document.service';
-import { DocumentsUploadComponent } from '../document-upload/documents-upload.component';
 import { ActionConstant, ApplicationModules } from '../../../utils/application-constants';
-import { GlobalService } from '../../services/global/global.service';
+import { SafeUrlPipe } from '../../common/safe-url.pipe';
 import { TruncatePipe } from '../../common/truncate.pipe';
+import { DocumentService } from '../../services/document/document.service';
+import { GlobalService } from '../../services/global/global.service';
+import { DocumentsUploadComponent } from '../document-upload/documents-upload.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 
@@ -34,7 +33,7 @@ export class DocumentsComponent {
   userId = ''; // populate from authentication token or parent component
   documentList: any;
   filteredDocumentList: any;
-  documents: DocumentItem[] = [];
+  // documents: DocumentItem[] = [];
   searchText = '';
   loading = false;
   selectedFile: File | null = null;

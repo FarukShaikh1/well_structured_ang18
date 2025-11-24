@@ -10,18 +10,22 @@
         Upload New
     </button>
     }
-    <div appearance="outline">
-        <label>Search</label>
-        <input #searchInput [(ngModel)]="searchText" (keyup)="applyFilter()"
-            placeholder="Enter text to find the document" style="width: 40%;"
-            class="form-control form-control-lg text-dark bg-transparent" />
+    <div class="row">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-5 mb-3">
+            <label>Search</label>
+            <input #searchInput [(ngModel)]="searchText" (keyup)="applyFilter()"
+                placeholder="Enter text to find the document"
+                class="form-control form-control-lg text-dark bg-transparent" />
+        </div>
     </div>
     <div *ngIf="loading" class="loading">Loading...</div>
 
 
-    <div class="grid" *ngIf="!loading && filteredDocumentList?.length">
+    <div class="grid">
+        @if(filteredDocumentList && filteredDocumentList.length > 0){
         <div class="gallery-grid">
-            <div class="gallery-item coin" *ngFor="let doc of filteredDocumentList">
+            @for(doc of filteredDocumentList;track $index){
+            <div class="gallery-item">
                 <img [src]="doc.thumbnailPathSasUrl" loading="lazy" class="gallery-img blur-load"
                     (load)="removeBlur($event)" [alt]="doc.uploadedFileName" />
 
@@ -40,23 +44,32 @@
                     <button class="btn btn-primary" (click)="openPreview(doc)">Open</button> -->
                 </div>
             </div>
-            <div class="empty" *ngIf="!loading && (!documents || documents.length === 0)">No documents found.</div>
-            <!-- Preview Modal -->
-            <div class="modal" *ngIf="showPreview">
-                <div class="modal-backdrop" (click)="closePreview()"></div>
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div>{{ previewFileName }}</div>
-                        <button (click)="closePreview()">✕</button>
-                    </div>
-                    <div class="preview-body">
-                        <iframe *ngIf="previewUrl" [src]="previewUrl | safeUrl" class="preview-iframe"></iframe>
-                    </div>
-                    <div class="modal-footer">
-                        <!-- <button (click)="download({ id: previewFileName, fileName: previewFileName } as any)">Download</button> -->
-                        <!-- <button (click)="closePreview()">Close</button> -->
-                    </div>
-                </div>
+            }
+        </div>
+        } @else {
+        <div class="col-12 mt-4">
+            <div class="alert alert-info text-center" role="alert">
+                <strong>You have not uploaded any document yet.</strong><br />
+                You can upload documents to make it available for future reference.
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" *ngIf="showPreview">
+        <div class="modal-backdrop" (click)="closePreview()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>{{ previewFileName }}</div>
+                <button (click)="closePreview()">✕</button>
+            </div>
+            <div class="preview-body">
+                <iframe *ngIf="previewUrl" [src]="previewUrl | safeUrl" class="preview-iframe"></iframe>
+            </div>
+            <div class="modal-footer">
+                <!-- <button (click)="download({ id: previewFileName, fileName: previewFileName } as any)">Download</button> -->
+                <!-- <button (click)="closePreview()">Close</button> -->
             </div>
         </div>
     </div>
