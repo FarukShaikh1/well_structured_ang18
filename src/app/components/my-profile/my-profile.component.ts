@@ -113,8 +113,8 @@ export class MyProfileComponent {
     education: [
       'Master of Computer Applications (MCA), SPPU, Pune - 2020 | 63.90%',
       'B.Sc. (Computer Science), SGBAU Amravati - 2017 | 68%',
-      'H.S.C. Maharashtra State Board - 2014 | 52.31%',
-      'S.S.C. Maharashtra State Board - 2012 | 74.18%',
+      // 'H.S.C. Maharashtra State Board - 2014 | 52.31%',
+      // 'S.S.C. Maharashtra State Board - 2012 | 74.18%',
     ]
   };
 }
