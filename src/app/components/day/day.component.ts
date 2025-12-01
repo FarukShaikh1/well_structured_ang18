@@ -73,6 +73,7 @@ export class DayComponent implements OnInit {
   selectedOccasionType: string[] = [];
   selectedRelationType: string[] = [];
   id: string = '';
+  showTodaysOccasion: boolean = false;
   constructor(
     private _dayService: DayService,
 
@@ -528,9 +529,6 @@ export class DayComponent implements OnInit {
       const matchesMonth =
         this.selectedMonths.length === 0 ||
         (month !== null && this.selectedMonthsIds.includes(month));
-
-
-
 
       const matchesOccasionType =
         this.selectedOccasionType.length === 0 ||
