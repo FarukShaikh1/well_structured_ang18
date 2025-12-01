@@ -48,7 +48,7 @@
     <i class="fa fa-refresh"></i> Refresh data
   </button>
 
-  <button (click)="setView('owner')" class="btn btn-primary rounded-button" *ngIf="viewMode !== 'owner'">
+  <button (click)="redirectToOwnersProfile()" class="btn btn-primary rounded-button">
     <i class="fa fa-info-circle"></i> About Owner
   </button>
 
@@ -171,10 +171,6 @@
         <h3>मंगळवार, 11 एप्रिल 2017, वृत्त केसरी ग्रामीण, Page No.13</h3>
       </div>
     </div>
-  </div>
-
-  <div class="row mt-4" *ngIf="viewMode === 'owner'">
-    <app-my-profile></app-my-profile>
   </div>
 
   <app-currency-details></app-currency-details>

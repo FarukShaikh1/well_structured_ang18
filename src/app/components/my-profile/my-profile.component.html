@@ -1,41 +1,122 @@
-<!-- profile-page.component.html -->
-<div class="profile-container">
-    <div class="banner"></div>
-
-
-    <div class="profile-card">
-        <img class="avatar" src="https://via.placeholder.com/120" />
-
-
-        <h2>{{ user.name }}</h2>
-        <p class="title">{{ user.title }}</p>
-        <p class="location">{{ user.location }}</p>
-
-
-        <div class="section">
-            <h3>About</h3>
-            <p>{{ user.about }}</p>
-        </div>
-
-
-        <div class="section">
-            <h3>Skills</h3>
-            <div class="skills">
-                <span class="skill" *ngFor="let skill of user.skills">{{ skill }}</span>
-            </div>
-        </div>
-
-
-        <div class="section">
-            <h3>Experience</h3>
-
-
-            <div class="experience-card" *ngFor="let exp of user.experience">
-                <h4>{{ exp.role }}</h4>
-                <p class="company">{{ exp.company }}</p>
-                <p class="duration">{{ exp.duration }}</p>
-                <p class="desc">{{ exp.description }}</p>
-            </div>
+<!-- Top header (flat) -->
+<header class="resume-header">
+    <div class="name-row">
+        <h1 class="name">{{ profile.name }}</h1>
+        <div class="title-block">
+            <div class="main-title">{{ profile.title }}</div>
         </div>
     </div>
-</div>
+
+    <div class="contact-row contact-links">
+
+        <!-- Location (opens Google Maps) -->
+        <a class="contact-item" target="_blank" rel="noopener noreferrer"
+            [href]="'https://www.google.com/maps/search/?api=1&query=' + profile.contact.location">
+            📍 {{ profile.contact.address }}
+        </a>
+
+        <!-- Mobile: click to call -->
+        <a class="contact-item" [href]="'tel:' + profile.contact.mobile">
+            📞 {{ profile.contact.mobile }}
+        </a>
+
+        <!-- WhatsApp -->
+        <a class="contact-item" target="_blank" rel="noopener noreferrer"
+            [href]="'https://wa.me/' + profile.contact.whatsapp">
+            🟢 WhatsApp
+        </a>
+
+        <!-- Email: Pre-filled template -->
+        <a class="contact-item"
+            [href]="'mailto:' + profile.contact.email + '?subject=Regarding Your Profile&body=Hi Faruk,%0D%0A%0D%0AI would like to connect with you regarding...%0D%0A%0D%0AThanks,'">
+            ✉️ {{ profile.contact.email }}
+        </a>
+
+        <!-- LinkedIn -->
+        <a class="contact-item" target="_blank" rel="noopener noreferrer" [href]="profile.contact.linkedin">
+            🔗 LinkedIn
+        </a>
+
+    </div>
+</header>
+
+<!-- thin divider -->
+<hr class="divider" />
+
+<!-- Summary -->
+<section class="section">
+    <h2 class="section-heading">PROFESSIONAL SUMMARY</h2>
+    <p class="section-paragraph">{{ profile.professionalSummary }}</p>
+</section>
+<hr class="divider" />
+
+<!-- Skills two-column small table like -->
+<section class="section">
+    <h2 class="section-heading">CORE TECHNICAL SKILLS</h2>
+    <div class="skills-table">
+        <div class="skill-row" *ngFor="let s of profile.coreTechSkills">
+            <div class="skill-label">{{ s.label }}:</div>
+            <div class="skill-value">{{ s.value }}</div>
+        </div>
+    </div>
+</section>
+<hr class="divider" />
+<!-- Career Highlights -->
+<section class="section">
+    <h2 class="section-heading">CAREER HIGHLIGHTS & STRENGTHS</h2>
+    <ul class="bulleted-list">
+        <li *ngFor="let h of profile.careerHighlights">{{ h }}</li>
+    </ul>
+</section>
+
+<hr class="divider" />
+
+<!-- Experience -->
+<section class="section">
+    <h2 class="section-heading">PROFESSIONAL EXPERIENCE</h2>
+
+    <div class="experience pb-2" *ngFor="let e of profile.experience">
+        <div class="exp-top">
+            <div class="company">{{ e.company }}</div>
+            <div class="meta">{{ e.role }} &nbsp;|&nbsp; {{ e.duration }} &nbsp;|&nbsp; {{ e.location }}</div>
+        </div>
+        <ul class="bulleted-list">
+            <li *ngFor="let b of e.bullets">{{ b }}</li>
+        </ul>
+    </div>
+</section>
+
+<hr class="divider" />
+
+<!-- Key Projects -->
+<section class="section">
+    <h2 class="section-heading">KEY PROJECTS</h2>
+
+    <div class="project  pb-2" *ngFor="let p of profile.keyProjects">
+        <div class="project-top">
+            <div class="project-title">{{ p.title }}</div>
+            <div class="project-meta">{{ p.role }} &nbsp;|&nbsp; {{ p.duration }}</div>
+        </div>
+        <div class="project-tech">{{ p.tech }}</div>
+        <ul class="bulleted-list">
+            <li *ngFor="let pt of p.bullets">{{ pt }}</li>
+        </ul>
+    </div>
+
+    <div class="additional">
+        <div class="subheading">ADDITIONAL PROJECT EXPERIENCE</div>
+        <ul class="bulleted-list">
+            <li *ngFor="let ap of profile.additionalProjects">{{ ap }}</li>
+        </ul>
+    </div>
+</section>
+
+<hr class="divider" />
+
+<!-- Education -->
+<section class="section section-education">
+    <h2 class="section-heading">EDUCATION</h2>
+    <ul class="bulleted-list">
+        <li *ngFor="let ed of profile.education">{{ ed }}</li>
+    </ul>
+</section>

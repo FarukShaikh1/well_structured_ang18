@@ -13,6 +13,7 @@ import { ToasterComponent } from "./components/shared/toaster/toaster.component"
 export class AppComponent {
   title = 'MyCollection';
   isDarkMode: boolean = false;
+  showThemeButton = true;
 
   ngOnInit() {
     this.initializeThemeFromStorage();
@@ -45,4 +46,8 @@ export class AppComponent {
     }
   }
 
+
+  hideThemeButton() {
+    this.showThemeButton = false;
+  }
 }

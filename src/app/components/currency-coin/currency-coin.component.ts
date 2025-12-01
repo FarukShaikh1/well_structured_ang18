@@ -3,17 +3,17 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
 import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, DBConstants, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
+import { TruncatePipe } from '../../common/truncate.pipe';
 import { CacheService } from '../../services/cache/cache.service';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component';
+import { MyProfileComponent } from '../my-profile/my-profile.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { TruncatePipe } from '../../common/truncate.pipe';
-import { MyProfileComponent } from '../my-profile/my-profile.component';
 
 @Component({
   selector: 'app-currency-coin',
@@ -54,7 +54,7 @@ export class CurrencyCoinComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = false;
   public filterColumns: ColumnDefinition[] = [];
-  public viewMode: 'grid' | 'gallery' | 'summary' | 'news' | 'owner' = 'gallery';
+  public viewMode: 'grid' | 'gallery' | 'summary' | 'news' = 'gallery';
   loading = false;
   currentIndex = 0;
   scale = 1;
@@ -632,11 +632,13 @@ export class CurrencyCoinComponent implements OnInit {
     }
   }
 
-  setView(mode: 'grid' | 'gallery' | 'summary' | 'news' | 'owner') {
+  setView(mode: 'grid' | 'gallery' | 'summary' | 'news') {
     // this.selectDefaultIndia();
     this.viewMode = mode;
   }
-
+  redirectToOwnersProfile() {
+    window.open(NavigationURLs.OWNER_PROFILE, '_blank');
+  }
 }
 
 

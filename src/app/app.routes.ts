@@ -2,11 +2,12 @@ import { Routes } from "@angular/router";
 import { ApplicationModules, RoutePath, RoutePathTitles } from "../utils/application-constants";
 import { CurrencyCoinComponent } from "./components/currency-coin/currency-coin.component";
 import { DayComponent } from "./components/day/day.component";
+import { DocumentsComponent } from "./components/documents/documents.component";
+import { MyProfileComponent } from "./components/my-profile/my-profile.component";
 import { SettingsComponent } from "./components/settings/settings.component";
 import { TransactionComponent } from "./components/transaction/transaction.component";
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
-import { DocumentsComponent } from "./components/documents/documents.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -22,6 +23,11 @@ export const routes: Routes = [
         component: CurrencyCoinComponent,
       },
     ],
+  },
+  {
+    path: RoutePath.OWNER_PROFILE,
+    title: RoutePathTitles.OWNER_PROFILE,
+    component: MyProfileComponent,
   },
 
   {
@@ -105,6 +111,12 @@ export const routes: Routes = [
             (m) => m.NotificationListComponent
           ),
       },
+      {
+        path: RoutePath.OWNER_PROFILE,
+        title: RoutePathTitles.OWNER_PROFILE,
+        component: MyProfileComponent,
+      },
+
     ],
   },
   {

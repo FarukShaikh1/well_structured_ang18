@@ -128,6 +128,7 @@ export const NavigationURLs = {
     CHANGE_PASSWORD: '/home/change-password',
     NAV_CHAT_PANEL: '/home/nav-chat-panel',
     EXPENSE_LIST: '/home/expenses',
+    OWNER_PROFILE: '/profile',
     EXPENSE_SUMMARY_LIST: '/home/expense-summary',
     EXPENSE_BALANCE_LIST: '/home/expense-balance',
     EXPENSE_REPORT: '/home/expense-report',
@@ -142,6 +143,7 @@ export const NavigationURLs = {
 export const RoutePath = {
     HOME: 'home',
     CURRENCY_LIST: 'currency-coin',
+    OWNER_PROFILE: 'profile',
     EXPENSES: 'expenses',
     DAY_LIST: 'day',
     USER_LIST: 'manage-users',
@@ -162,6 +164,7 @@ export const RoutePath = {
 export const RoutePathTitles = {
     HOME: 'Home',
     CURRENCY_LIST: 'Currency Coin',
+    OWNER_PROFILE: 'Owner Profile',
     EXPENSES: 'Expenses',
     DAY_LIST: 'Special Occasion Days',
     USER_LIST: 'Manage Users',

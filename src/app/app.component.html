@@ -3,11 +3,14 @@
 <app-toaster></app-toaster>
 
 <!-- Floating Toggle Button -->
-<button
-  class="floating-btn"
-  (click)="toggleTheme()"
-  aria-label="Close"
-  [title]="!isDarkMode ? 'Switch to Dark Mode' : 'Switch to Light Mode'"
->
+
+@if(showThemeButton){
+<button class="floating-btn" (click)="toggleTheme()" aria-label="Close"
+  [title]="!isDarkMode ? 'Switch to Dark Mode' : 'Switch to Light Mode'">
   {{!isDarkMode ? '🌙' : '☀️'}}
-</button>   
+</button>
+<!-- Close (X) Button -->
+<button class="floating-close-btn" (click)="hideThemeButton()" title="Hide Theme Button">
+  ✕
+</button>
+}
