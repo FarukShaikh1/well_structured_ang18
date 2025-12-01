@@ -68,9 +68,9 @@ export const LoaderConfigs = {
 };
 
 export const UserConfig = {
-    OCCASION_TYPE: 'OccasionType',
-    RELATION: 'Relation',
-    ACCOUNT: 'Account',
+    OCCASION_TYPE: 'OccasionTypes',
+    RELATION: 'Relations',
+    ACCOUNT: 'Accounts',
 };
 
 export const DdlConfig = {

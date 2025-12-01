@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActionConstant, ApplicationModules } from '../../../utils/application-constants';
+import { DateUtils } from '../../../utils/date-utils';
 import { SafeUrlPipe } from '../../common/safe-url.pipe';
 import { TruncatePipe } from '../../common/truncate.pipe';
 import { DocumentService } from '../../services/document/document.service';
@@ -43,7 +44,7 @@ export class DocumentsComponent {
   previewFileName = '';
   previewContentType = '';
   showPreview = false;
-
+  DateUtils = DateUtils;
 
   async ngOnInit() {
     // set userId from your auth service or localStorage
