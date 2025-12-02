@@ -114,24 +114,47 @@
         </ul>
       </div>
     </div>
-
-    <!-- <div class="col-6 col-sm-4 col-md-6 col-lg-5">
+    <div class="col-4 col-md-3 col-lg-2 col-xl-2 pt-2">
       <section class="checbox-section">
         <div class="form-check form-check-inline pt-4">
-          <input class="form-check-input" type="checkbox" id="showTodaysOccasionCheckbox" (change)="toggleShowTodaysOccasion($event)"
-            [checked]="showTodaysOccasion" />
-          <label class="form-check-label" for="showTodaysOccasionCheckbox">Show Todays Special</label>
+          <div class="date-filters">
+            <div class="task-container">
+
+              <!-- Parent Checkbox -->
+              <label>
+                <input type="checkbox" [(ngModel)]="task.completed" (change)="toggleAll()">
+                {{ task.name }}
+              </label> &nbsp;
+              @if(!displayDay){
+              <i class="fa fa-plus" (click)="displayDay=true"></i>
+              }
+              @else{
+              <i class="fa fa-minus" (click)="displayDay=false"></i>
+              }
+              @if(displayDay){
+              <!-- Subtasks -->
+              <div class="subtasks">
+                <div *ngFor="let sub of task.subtasks; let i = index">
+                  <label>
+                    <input type="checkbox" [(ngModel)]="sub.completed" (change)="onSubtaskChange()">
+                    {{ sub.name }}
+                  </label>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
         </div>
       </section>
-    </div> -->
+    </div>
   </div>
 </div>
 @if(filteredTableData.length === 0){
-    <div class="alert alert-info text-center mt-3" role="alert">
-        <strong>No special occasion found.</strong><br />
-        You can add your relatives'/friends'/colligues' etc. birthdays/Anniversaries etc.<br>
-        Click Add Occasion to add new special occasion.
-    </div>
+<div class="alert alert-info text-center mt-3" role="alert">
+  <strong>No special occasion found.</strong><br />
+  You can add your relatives'/friends'/colligues' etc. birthdays/Anniversaries etc.<br>
+  Click Add Occasion to add new special occasion.
+</div>
 }
 @else{
 <div class="mb-2">

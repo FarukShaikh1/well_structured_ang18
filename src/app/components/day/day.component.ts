@@ -1,5 +1,6 @@
 import { CommonModule, DatePipe } from "@angular/common";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
 import {
   ActionConstant,
@@ -19,6 +20,7 @@ import { DayDetailsComponent } from "../day-details/day-details.component";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { DateUtils } from "../../../utils/date-utils";
 
 export interface Task {
   name: string;
@@ -31,7 +33,7 @@ export interface Task {
   standalone: true,
   templateUrl: "./day.component.html",
   styleUrls: ["./day.component.scss"],
-  imports: [TabulatorGridComponent, CommonModule, DayDetailsComponent, ConfirmationDialogComponent, ToasterComponent],
+  imports: [TabulatorGridComponent, FormsModule, CommonModule, DayDetailsComponent, ConfirmationDialogComponent, ToasterComponent],
   providers: [DatePipe],
 })
 export class DayComponent implements OnInit {
@@ -74,6 +76,7 @@ export class DayComponent implements OnInit {
   selectedRelationType: string[] = [];
   id: string = '';
   showTodaysOccasion: boolean = false;
+  displayDay=false;
   constructor(
     private _dayService: DayService,
 
@@ -141,6 +144,24 @@ export class DayComponent implements OnInit {
   clearGridCache(): void {
     this.cacheService.clear(this.cacheKey);
   }
+
+  clearTaskFilters() {
+    this.task.completed = false;
+    if (this.task.subtasks) {
+      this.task.subtasks.forEach(t => t.completed = false);
+    }
+
+    this.isToday = false;
+    this.isYesterday = false;
+    this.isTomorrow = false;
+  }
+
+  clearMonthFilters() {
+    this.selectedMonths = [];
+    this.selectedMonthsIds = []; // If you are storing IDs
+    this.getMonthDropdownLabel();
+  }
+
 
   refreshData() {
     localStorage.removeItem(NavigationURLs.DAY_LIST);
@@ -324,6 +345,7 @@ export class DayComponent implements OnInit {
 
 
   toggleAllMonthCheck(event: Event) {
+    this.clearTaskFilters();
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedMonths = this.monthList.map((m: any) => m.listItemName);
@@ -337,6 +359,7 @@ export class DayComponent implements OnInit {
   }
 
   toggleMonthCheck(event: Event, monthName: string, seqNum: number) {
+    this.clearTaskFilters();
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
       this.selectedMonths.push(monthName);
@@ -462,7 +485,7 @@ export class DayComponent implements OnInit {
   }
 
   task: Task = {
-    name: "Show all records",
+    name: "Custom",
     completed: false,
     subtasks: [
       { name: "Today", completed: false },
@@ -471,56 +494,38 @@ export class DayComponent implements OnInit {
     ],
   };
   allComplete: boolean = false;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  someComplete(): boolean {
-    this.isToday =
-      this.task.subtasks != null && this.task.subtasks[0].completed;
-    this.isTomorrow =
-      this.task.subtasks != null && this.task.subtasks[1].completed;
-    this.isYesterday =
-      this.task.subtasks != null && this.task.subtasks[2].completed;
-
-    if (this.task.subtasks == null) {
-      return false;
-    }
-    return (
-      this.task.subtasks.filter((t) => t.completed).length > 0 &&
-      !this.allComplete
-    );
+  someComplete(): void {
+    this.clearMonthFilters();
+    this.isToday = this.task.subtasks?.[0]?.completed ?? false;
+    this.isYesterday = this.task.subtasks?.[1]?.completed ?? false;
+    this.isTomorrow = this.task.subtasks?.[2]?.completed ?? false;
   }
+
+  toggleAll() {
+    if (!this.task.subtasks) return;
+
+    this.task.subtasks.forEach(t => t.completed = this.task.completed);
+    this.someComplete();
+    this.applyFilters();
+  }
+
+  onSubtaskChange() {
+    this.someComplete();
+
+    // optional: if all subtasks checked → check parent
+    this.task.completed = this.task.subtasks?.every(t => t.completed) ?? false;
+
+    this.applyFilters();
+  }
+
 
   applyFilters() {
     this.filteredTableData = this.tableData.filter((item: any) => {
-      const matchesName = item.personName
-        ?.toLowerCase()
-        .includes(this.searchText);
+      const matchesName = item.personName?.toLowerCase().includes(this.searchText);
       const email = item.emailId?.toLowerCase().includes(this.searchText);
       const address = item.address?.toLowerCase().includes(this.searchText);
-      const date = item.date?.toLowerCase().includes(this.searchText);
-      const mobileNumber = item.mobileNumber
-        ?.toLowerCase()
-        .includes(this.searchText);
+      const dateText = item.date?.toLowerCase().includes(this.searchText);
+      const mobileNumber = item.mobileNumber?.toLowerCase().includes(this.searchText);
 
       const month = item.specialOccasionDate
         ? new Date(item.specialOccasionDate).getMonth() + 1
@@ -533,15 +538,20 @@ export class DayComponent implements OnInit {
       const matchesOccasionType =
         this.selectedOccasionType.length === 0 ||
         this.selectedOccasionType.includes(item.dayType);
+
       const matchesRelationType =
         this.selectedRelationType.length === 0 ||
         this.selectedRelationType.includes(item.relationShipName);
+      const matchesDateFilter = DateUtils.checkDateFilter(item.specialOccasionDate, this.isToday, this.isYesterday, this.isTomorrow);
+
       return (
-        (matchesName || email || address || date || mobileNumber) &&
+        (matchesName || email || address || dateText || mobileNumber) &&
         matchesMonth &&
         matchesOccasionType &&
-        matchesRelationType
+        matchesRelationType &&
+        matchesDateFilter
       );
     });
   }
+
 }
