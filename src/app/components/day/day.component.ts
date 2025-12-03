@@ -129,15 +129,16 @@ export class DayComponent implements OnInit {
       )
       .subscribe({
         next: (res: any) => {
+          this.loaderService.hideLoader();
           this.tableData = res.data;
           this.filteredTableData = res.data;
           this.cacheService.set(this.cacheKey, res.data);
-          this.loaderService.hideLoader();
         },
         error: (error: any) => {
           this.loaderService.hideLoader();
         },
       });
+          this.loaderService.hideLoader();
   }
 
   // ✅ Method to clear cache for this grid only

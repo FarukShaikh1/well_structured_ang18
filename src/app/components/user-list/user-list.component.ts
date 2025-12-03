@@ -56,7 +56,7 @@ export class UserListComponent implements OnInit {
   ActionConstant = ActionConstant;
   sourceOrReason: any;
   id: string = '';
-  cacheKey: string = 'UserList';
+  cacheKey: string = NavigationURLs.USER_LIST;
 
   constructor(
     private userService: UserService,
@@ -68,6 +68,7 @@ export class UserListComponent implements OnInit {
 
   refreshData() {
     localStorage.removeItem(NavigationURLs.USER_LIST);
+    this.loadGrid();
   }
 
   ngOnInit() {

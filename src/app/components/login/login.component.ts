@@ -40,6 +40,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   hideNewPassword: boolean = true;
   userList: any;
+  isLoginClicked: boolean = false;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -59,6 +60,7 @@ export class LoginComponent {
   data: any;
 
   submitLogin() {
+    this.isLoginClicked = true;
     this.loaderService.showLoader('Checking details...');
 
     if (
@@ -66,14 +68,17 @@ export class LoginComponent {
       this.loginForm.value["userName"].length <= 0
     ) {
       this.loaderService.hideLoader();
+      this.isLoginClicked = false;
       return;
     }
     if (this.loginForm.value["password"].length <= 0) {
       this.loaderService.hideLoader();
+      this.isLoginClicked = false;
       return;
     }
     this.userService.getUser(this.loginForm.value).subscribe({
       next: (res: any) => {
+        this.isLoginClicked = false;
         if (res.success) {
           this.loaderService.showLoader('Please wait we are setting up some things for better performance...');
           this.data = res.data;
@@ -120,6 +125,7 @@ export class LoginComponent {
         }
       },
       error: (err: any) => {
+        this.isLoginClicked = false;
         this.loaderService.hideLoader();
       }
     });
