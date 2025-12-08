@@ -43,7 +43,7 @@
     <div class="d-flex align-items-center me-3 flex-shrink-0">
       <div class="d-none d-md-flex align-items-center flex-wrap">
         @for(mod of moduleList; track $index){
-        <button (click)="navigate(mod.route)" class="font-weight-bold p-2 txt-btn"
+        <button (click)="navigate(mod.route)" class="font-weight-bold p-2 txt-btn "
           [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
           {{ mod.moduleName }}
         </button>
@@ -69,7 +69,7 @@
           style="min-width: 320px; max-height: 400px; overflow-y: auto; right: 0; left: auto;">
           <li class="dropdown-header d-flex justify-content-between align-items-center sticky-top bg-white">
             <strong>Notifications</strong>
-            <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemNotificationList()"></button>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemNotificationList()">✕</button>
           </li>
 
           <li>

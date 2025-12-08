@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Add Day</h4>
-        <button #btnCloseDetailsPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal"></button>
+        <button #btnCloseDetailsPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal">✕</button>
       </div>
 
       <div class="modal-body">
@@ -14,7 +14,7 @@
             <input formControlName="assetId" />
           </div>
           <div class="row">
-            <div class="col-12 col-lg-6 image-container">
+            <div class="col-12 col-lg-6">
               <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)"
                 (click)="triggerFileInput()">
                 <div class="text-center" style="margin-top: 170px;"

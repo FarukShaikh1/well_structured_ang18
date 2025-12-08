@@ -101,6 +101,7 @@ export class TransactionComponent implements OnInit {
     this.loadGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
+        this.sourceOrReason = '';
         this.loadGrid();
       }
     });
