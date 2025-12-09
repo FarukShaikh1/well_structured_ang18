@@ -119,8 +119,8 @@
     <div class="gallery-grid">
       <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'"
         *ngFor="let coin of filteredCoinList">
-        <img [src]="coin.thumbnailPath" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)"
-          [alt]="coin.coinNoteName" (click)="openFullscreenImage(coin.imagePath)" />
+        <img [src]="coin.thumbnailPathSasUrl" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)"
+          [alt]="coin.coinNoteName" (click)="openFullscreenImage(coin.imagePathSasUrl)" />
         <div class="gallery-caption">
           <h5>
             {{ coin.coinNoteName }} -
@@ -203,11 +203,11 @@
         </div>
         <div #imageContainer (touchstart)="touchStart($event)" (touchmove)="touchMove($event)" (touchend)="touchEnd()"
           class="modal-body p-0 d-flex justify-content-center align-items-center">
-          <img [src]="filteredCoinList[currentIndex]?.imagePath" class="fullscreen-img" alt="Preview Image" [style.transform]="transformStyle">
+          <img [src]="filteredCoinList[currentIndex]?.imagePathSasUrl" class="fullscreen-img" alt="Preview Image" [style.transform]="transformStyle">
         </div>
         <!-- Thumbnail Strip -->
         <div class="thumbnail-strip">
-          <img *ngFor="let item of filteredCoinList; index as i" [src]="item.thumbnailPath"
+          <img *ngFor="let item of filteredCoinList; index as i" [src]="item.thumbnailPathSasUrl"
             [class.active-thumb]="currentIndex === i" (click)="jumpTo(i)">
         </div>
       </div>

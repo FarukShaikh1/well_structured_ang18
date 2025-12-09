@@ -106,7 +106,7 @@ export class CurrencyCoinComponent implements OnInit {
   openFullscreenImage(imageUrl: string) {
     // Find index of clicked image
     this.currentIndex = this.filteredCoinList.findIndex(
-      x => x.imagePath === imageUrl
+      x => x.imagePathSasUrl === imageUrl
     );
 
     if (this.currentIndex === -1) this.currentIndex = 0;
