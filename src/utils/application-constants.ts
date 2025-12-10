@@ -70,12 +70,14 @@ export const LoaderConfigs = {
 export const UserConfig = {
     OCCASION_TYPE: 'OccasionTypes',
     RELATION: 'Relations',
+    TRANSACTION_CATEGORY: 'TransactionCategories',
     ACCOUNT: 'Accounts',
 };
 
 export const DdlConfig = {
     OCCASION_TYPES: 'DdlOccasionTypes',
     RELATIONS: 'DdlRelations',
+    TRANSACTION_CATEGORY: 'DdlTransactionCategories',
     ACCOUNTS: 'DdlAccounts',
     COUNTRIES: 'DdlCountries',
     COMMON_SUGGESTIONS: 'DdlCommonSuggestions',
@@ -91,14 +93,12 @@ export const LocalStorageConstants = {
     USER_PERMISSIONS: 'UserPermissions',
     OTP_EXPIRES_ON: 'OtpExpiresOn',
     COMMON_SUGGESTION_LIST: 'commonSuggestionList',
+    TRANSACTION_CATEGORY: 'TransactionCategories',
 };
 
 export const DBConstants = {
-    OCCASION_TYPE: 'B37BB6EC-F172-4EEF-BB70-C0FD5C47FCEA',
-    RELATION: '4A920596-928E-40CD-AC1A-549E9A3B7427',
     COINTYPE: '899773F6-EC60-4B0B-95F6-5DB190C23F99',
     MONTH: '7E0F0170-7206-48C9-8679-82A111CA45B1',
-    MODEOFTRANSACTION: 'E1A5F08E-8FAD-4341-B4E6-A17C68FB4E47',
 }
 export const ApplicationConstantHtml = {
     DELETE_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#confirmationPopup"><i class="bi bi-trash"></i>&nbsp;Delete</a>`,
@@ -349,6 +349,7 @@ export const UIStrings = {
         DESCRIPTION: 'Description',
         DISPLAY_ORDER: 'Display Order',
         ACCOUNT_NAME: 'Account Name',
+        TRANSACTION_CATEGORY_NAME: 'Transaction Sub Category Name',
         OCCASION_TYPE_NAME: 'OccasionType Name',
         RELATION_TYPE_NAME: 'RelationType Name',
         COIN_NOTE_NAME: 'Coin/Note Name',

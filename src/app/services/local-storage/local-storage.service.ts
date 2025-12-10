@@ -39,9 +39,9 @@ export class LocalStorageService {
     const isUserLoggedIn = localStorage.getItem(LocalStorageConstants.USER) || null;
 
     return !!(
-      
+
       (
-        isUserLoggedIn !== null && 
+        isUserLoggedIn !== null &&
         userName
       )
     );
@@ -94,6 +94,10 @@ export class LocalStorageService {
   setTransactionSuggestions(data: any[]) {
     localStorage.setItem(DdlConfig.COMMON_SUGGESTIONS, JSON.stringify(data));
   }
+  setTransactionCategories(data: any[]) {
+    localStorage.setItem(DdlConfig.TRANSACTION_CATEGORY, JSON.stringify(data));
+  }
+
   isUserAuthorized(): boolean {
     const userPermissions = this.getUserPermission();
     if (

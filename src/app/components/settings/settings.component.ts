@@ -33,6 +33,7 @@ export class SettingsComponent {
   isAccountGridLoading: boolean = false;
   isOccasionTypeGridLoading: boolean = false;
   isRelationGridLoading: boolean = false;
+  isTransactionCategoryGridLoading: boolean = false;
   isUserGridLoading: boolean = false;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild(ConfirmationDialogComponent, { static: false })
@@ -41,16 +42,19 @@ export class SettingsComponent {
   accountColumnConfig: ColumnDefinition[] = [];
   occasionTypeColumnConfig: ColumnDefinition[] = [];
   relationColumnConfig: ColumnDefinition[] = [];
+  transactionCategoryColumnConfig: ColumnDefinition[] = [];
 
   filteredUserTableData: Record<string, unknown>[] = [];
   filteredAccountTableData: Record<string, unknown>[] = [];
-  filteredRelationTableData: Record<string, unknown>[] = [];
   filteredOccasionTypeTableData: Record<string, unknown>[] = [];
+  filteredRelationTableData: Record<string, unknown>[] = [];
+  filteredTransactionCategoryTableData: Record<string, unknown>[] = [];
   ActionConstant = ActionConstant;
   userTableData: Record<string, unknown>[] = [];
   accountTableData: Record<string, unknown>[] = [];
-  relationTableData: Record<string, unknown>[] = [];
   occasionTypeTableData: Record<string, unknown>[] = [];
+  relationTableData: Record<string, unknown>[] = [];
+  transactionCategoryTableData: Record<string, unknown>[] = [];
   UserConfig = UserConfig;
   isSuperAdmin = false;
   configOptionsMenu = [
@@ -100,6 +104,7 @@ export class SettingsComponent {
       this.isSuperAdmin = false;
     }
     this.loadConfigGrid(this.selectedUserId, UserConfig.ACCOUNT);
+    this.loadConfigGrid(this.selectedUserId, UserConfig.TRANSACTION_CATEGORY);
     this.loadConfigGrid(this.selectedUserId, UserConfig.OCCASION_TYPE);
     this.loadConfigGrid(this.selectedUserId, UserConfig.RELATION);
 
@@ -118,10 +123,15 @@ export class SettingsComponent {
         const rowId = button.getAttribute('data-row-id');
         if (rowId) {
           const accountRowData = this.accountTableData.find((row) => row['id'] == rowId);
+          const categoryRowData = this.transactionCategoryTableData.find((row) => row['id'] == rowId);
           const relationRowData = this.relationTableData.find((row) => row['id'] == rowId);
           const OccasionTypeRowData = this.occasionTypeTableData.find((row) => row['id'] == rowId);
           if (accountRowData) {
             const menuOptions = this.generateOptionsMenu(accountRowData, UserConfig.ACCOUNT);
+            this.globalService.showGlobalDropdownMenu(button, menuOptions);
+          }
+          else if (categoryRowData) {
+            const menuOptions = this.generateOptionsMenu(categoryRowData, UserConfig.TRANSACTION_CATEGORY);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           }
           else if (relationRowData) {
@@ -174,11 +184,14 @@ export class SettingsComponent {
 
   loadConfigGrid(userId: string, config: string) {
     this.accountColumnConfiguration();
+    this.transactionCategoryColumnConfiguration();
     this.relationColumnConfiguration();
     this.occasionTypeColumnConfiguration();
 
     if (config === UserConfig.ACCOUNT) {
       this.isAccountGridLoading = true;
+    } else if (config === UserConfig.TRANSACTION_CATEGORY) {
+      this.isTransactionCategoryGridLoading = true;
     } else if (config === UserConfig.RELATION) {
       this.isRelationGridLoading = true;
     } else if (config === UserConfig.OCCASION_TYPE) {
@@ -192,6 +205,11 @@ export class SettingsComponent {
         this.filteredAccountTableData = cachedData;
         this.accountTableData = cachedData;
         this.isAccountGridLoading = false;
+      }
+      else if (config === UserConfig.TRANSACTION_CATEGORY) {
+        this.filteredTransactionCategoryTableData = cachedData;
+        this.transactionCategoryTableData = cachedData;
+        this.isTransactionCategoryGridLoading = false;
       }
       else if (config === UserConfig.RELATION) {
         this.filteredRelationTableData = cachedData;
@@ -214,6 +232,11 @@ export class SettingsComponent {
           this.accountTableData = result.data;
           this.isAccountGridLoading = false;
         }
+        else if (config === UserConfig.TRANSACTION_CATEGORY) {
+          this.filteredTransactionCategoryTableData = result.data;
+          this.transactionCategoryTableData = result.data;
+          this.isTransactionCategoryGridLoading = false;
+        }
         else if (config === UserConfig.RELATION) {
           this.filteredRelationTableData = result.data;
           this.relationTableData = result.data;
@@ -228,6 +251,8 @@ export class SettingsComponent {
       error: (error: any) => {
         if (config === UserConfig.ACCOUNT) {
           this.isAccountGridLoading = false;
+        } else if (config === UserConfig.TRANSACTION_CATEGORY) {
+          this.isTransactionCategoryGridLoading = false;
         } else if (config === UserConfig.RELATION) {
           this.isRelationGridLoading = false;
         } else if (config === UserConfig.OCCASION_TYPE) {
@@ -264,6 +289,48 @@ export class SettingsComponent {
         cellClick: (e, cell) => {
           const id = cell.getRow().getData()["id"];
           this.hideAccount(id);
+        },
+        hozAlign: "center",
+        headerSort: false,
+      },
+      {
+        title: "",
+        field: "option",
+        maxWidth: 70,
+        formatter: this.globalService.threeDotsFormatter.bind(this),
+        hozAlign: "center",
+        headerSort: false,
+      }
+    ];
+  }
+
+  transactionCategoryColumnConfiguration() {
+    this.transactionCategoryColumnConfig = [
+      {
+        title: UIStrings.COLUMN_TITLES.TRANSACTION_CATEGORY_NAME,
+        field: 'configurationName',
+        sorter: 'string',
+      },
+      { title: UIStrings.COLUMN_TITLES.DESCRIPTION, field: 'description', sorter: 'string' },
+      {
+        title: UIStrings.COLUMN_TITLES.DISPLAY_ORDER,
+        field: "displayOrder",
+        sorter: "alphanum",
+      },
+      {
+        title: UIStrings.COLUMN_TITLES.STATUS,
+        field: 'isActive',
+        sorter: 'string',
+        formatter: this.globalService.statusFormatter.bind(this),
+      },
+      {
+        title: "",
+        field: "",
+        maxWidth: 70,
+        formatter: this.globalService.hidebuttonFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const id = cell.getRow().getData()["id"];
+          this.hideTransactionCategory(id);
         },
         hozAlign: "center",
         headerSort: false,
@@ -376,6 +443,12 @@ export class SettingsComponent {
     });
   }
 
+  hideTransactionCategory(userId: any) {
+    this.filteredTransactionCategoryTableData = this.filteredTransactionCategoryTableData.filter((item: any) => {
+      return item.id != userId;
+    });
+  }
+
   hideRelation(userId: any) {
     this.filteredRelationTableData = this.filteredRelationTableData.filter((item: any) => {
       return item.id != userId;
@@ -390,8 +463,13 @@ export class SettingsComponent {
 
   refreshData() {
     localStorage.removeItem(UserConfig.ACCOUNT);
+    localStorage.removeItem(UserConfig.TRANSACTION_CATEGORY);
     localStorage.removeItem(UserConfig.OCCASION_TYPE);
     localStorage.removeItem(UserConfig.RELATION);
+    this.loadConfigGrid(this.selectedUserId, UserConfig.ACCOUNT);
+    this.loadConfigGrid(this.selectedUserId, UserConfig.OCCASION_TYPE);
+    this.loadConfigGrid(this.selectedUserId, UserConfig.RELATION);
+    this.loadConfigGrid(this.selectedUserId, UserConfig.TRANSACTION_CATEGORY);
   }
 
   unlockUser(userId: number) {
@@ -449,6 +527,10 @@ export class SettingsComponent {
           this.filteredAccountTableData = result.data;
           this.accountTableData = result.data;
         }
+        else if (config === UserConfig.TRANSACTION_CATEGORY) {
+          this.filteredTransactionCategoryTableData = result.data;
+          this.transactionCategoryTableData = result.data;
+        }
         else if (config === UserConfig.RELATION) {
           this.filteredRelationTableData = result.data;
           this.relationTableData = result.data;
@@ -483,6 +565,7 @@ export class SettingsComponent {
 
   changeUser(event: Event) {
     localStorage.removeItem(UserConfig.ACCOUNT);
+    localStorage.removeItem(UserConfig.TRANSACTION_CATEGORY);
     localStorage.removeItem(UserConfig.OCCASION_TYPE);
     localStorage.removeItem(UserConfig.RELATION);
     const select = event.target as HTMLSelectElement;
@@ -491,6 +574,7 @@ export class SettingsComponent {
     }
     else {
       this.loadConfigGrid(this.selectedUserId, UserConfig.ACCOUNT);
+      this.loadConfigGrid(this.selectedUserId, UserConfig.TRANSACTION_CATEGORY);
       this.loadConfigGrid(this.selectedUserId, UserConfig.OCCASION_TYPE);
       this.loadConfigGrid(this.selectedUserId, UserConfig.RELATION);
     }

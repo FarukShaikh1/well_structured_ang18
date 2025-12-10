@@ -61,15 +61,18 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   commonSuggestionList: any[] = [];
   sourceOrReasonList: any[] = [];
+  transactionCategoryList: any[] = [];
   purposeList: any[] = [];
   descriptionList: any[] = [];
 
   filteredSourceOrReasonList: any[] = [];
   filteredPurposeList: any[] = [];
   filteredDescriptionList: any[] = [];
+  filteredTransactionCategoryList: any[] = [];
 
   focusInSource: boolean = false;
   focusInPurpose: boolean = false;
+  focusInCategory: boolean = false;
   focusInDescription: boolean = false;
   isValidAmount: boolean = false;
   transactionRequest: TransactionRequest = {
@@ -77,6 +80,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     transactionDate: DateUtils.GetDateBeforeDays(30),
     sourceOrReason: "",
     purpose: "",
+    transactionCategory: "",
     description: "",
     accountSplits: [],
   };
@@ -100,6 +104,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       sourceOrReason: ["", Validators.required],
       description: [""],
       purpose: [""],
+      transactionCategory: [""],
     });
   }
 
@@ -135,7 +140,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.loadAccountList();
     this.loadAccountFields();
     this.getTransactionSuggestionList();
-
+    this.getTransactionCategoryList();
     if (this.accountList.length && transactionGroupId) {
       this.getTransactionDetails(transactionGroupId);
     } else {
@@ -235,9 +240,18 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
           console.error("error : ", error);
         },
       });
+    }
+  }
+
+  getTransactionCategoryList() {
+    const cachedData = localStorage.getItem(DdlConfig.TRANSACTION_CATEGORY);
+    if (cachedData) {
+      // ✅ Load from local storage
+      this.transactionCategoryList = JSON.parse(cachedData);
+      this.filteredTransactionCategoryList = this.transactionCategoryList;
+      console.log('tihs.transactionCategoryList : ', this.transactionCategoryList);
 
     }
-    // this.commonSuggestionList = [];
   }
 
   getListValues() {
@@ -345,9 +359,23 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.filteredPurposeList = this.filterList(inputValue, "purpose");
   }
 
+  onCategoryChange(event: any) {
+    const inputValue = event.target.value.toLowerCase();
+
+    this.filteredTransactionCategoryList = this.transactionCategoryList.filter(
+      (option: any) => option?.configurationName.toLowerCase().includes(inputValue)
+    );
+    console.log('filteredTransactionCategoryList', this.filteredTransactionCategoryList);
+    
+  }
+
   selectPurpose(selectedValue: string) {
     this.transactionDetailsForm.controls["purpose"].patchValue(selectedValue);
     this.filteredPurposeList = [];
+  }
+
+  selectCategory(selectedValue: string) {
+    this.transactionDetailsForm.controls["transactionCategory"].patchValue(selectedValue);
   }
 
   getTransactionDetails(transactionGroupId: string) {
@@ -396,6 +424,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       ),
       sourceOrReason: res.sourceOrReason,
       purpose: res.purpose,
+      transactionCategory: res.purpose,
       description: res.description,
     });
     res.accountSplits?.forEach((split: any) => {
@@ -442,6 +471,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       ),
       sourceOrReason: this.transactionDetailsForm.value.sourceOrReason,
       purpose: this.transactionDetailsForm.value.purpose,
+      transactionCategory: this.transactionDetailsForm.value.transactionCategory,
       description: this.transactionDetailsForm.value.description,
       accountSplits: splits,
     };

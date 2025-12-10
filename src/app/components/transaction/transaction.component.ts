@@ -9,12 +9,14 @@ import {
   ApplicationModules,
   ApplicationTableConstants,
   DdlConfig,
-  NavigationURLs
+  NavigationURLs,
+  UserConfig
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
 import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
 import { CacheService } from "../../services/cache/cache.service";
+import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
 import { LocalStorageService } from "../../services/local-storage/local-storage.service";
@@ -90,6 +92,7 @@ export class TransactionComponent implements OnInit {
 
   constructor(
     private transactionService: TransactionService,
+    private configService: ConfigurationService,
     public datePipe: DatePipe,
     public globalService: GlobalService,
     private loaderService: LoaderService,
@@ -674,6 +677,7 @@ export class TransactionComponent implements OnInit {
       }
     });
     this.setTransactionSuggestions();
+    this.setTransactionCategories();
   }
 
   applyFilters() {
@@ -1006,6 +1010,22 @@ export class TransactionComponent implements OnInit {
     this.transactionService.getTransactionSuggestionList().subscribe({
       next: (res: any) => {
         this.localStorageService.setTransactionSuggestions(res.data);
+      },
+      error: (error: any) => {
+        console.error("error : ", error);
+      },
+    });
+  }
+
+  setTransactionCategories() {
+
+    const suggestions = this.cacheService.get<any[]>(DdlConfig.TRANSACTION_CATEGORY, 720); // 30 minutes cache
+    if (suggestions) {
+      return;
+    }
+    this.configService.getActiveConfigList('loggedInUserId',UserConfig.TRANSACTION_CATEGORY).subscribe({
+      next: (res: any) => {
+        this.localStorageService.setTransactionCategories(res.data);
       },
       error: (error: any) => {
         console.error("error : ", error);

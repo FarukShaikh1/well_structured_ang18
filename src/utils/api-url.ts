@@ -47,6 +47,7 @@ export const API_URL = {
   UPDATE_TRANSACTION: `${serverUrl}${apiPrefix}/transaction/update?userId=`,
   DELETE_TRANSACTION: `${serverUrl}${apiPrefix}/transaction/delete?transactionId=`,
   GET_TRANSACTION_SUGGESTION_LIST: `${serverUrl}${apiPrefix}/transaction/GetTransactionSuggestionList`,
+  GET_TRANSACTION_CATEGORY_LIST: `${serverUrl}${apiPrefix}/transaction/GetTransactionSuggestionList`,
   GET_AVAIL_AMOUNT: `${serverUrl}${apiPrefix}/transaction/getAvailAmount`,
 
 

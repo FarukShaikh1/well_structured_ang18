@@ -5,6 +5,7 @@ export interface TransactionRequest {
     transactionDate: string,
     sourceOrReason: string,
     purpose: string,
+    transactionCategory: string,
     description: string,
     accountSplits: TransactionAccountSplit[]; 
 }

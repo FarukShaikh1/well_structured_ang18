@@ -94,6 +94,33 @@
         </div>
     </div>
 
+        <div class="row">
+        <div class="col-12 pt-2">
+            @if (globalService.isAccessible(ActionConstant.ADD) || globalService.isAccessible(ActionConstant.EDIT)) {
+            <button class="btn btn-primary" type="button" (click)="openDetailPopup('',UserConfig.TRANSACTION_CATEGORY)"
+                data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
+                <i class="fa fa-plus"></i>
+                Add Transaction Sub Category
+            </button>
+            }
+        </div>
+        <div class="col-12 col-lg-12 pt-2">
+            @if (filteredTransactionCategoryTableData.length > 0) {
+            <app-tabulator-grid [tableData]="filteredTransactionCategoryTableData" [columnConfig]="transactionCategoryColumnConfig"
+                [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
+                [allowCSVExport]="allowCSVExport" [isLoading]="isTransactionCategoryGridLoading"
+                [loadingText]="'Loading transactionsubcategorys...'">
+            </app-tabulator-grid>
+            } @else {
+            <div class="alert alert-info text-center mt-3" role="alert">
+                <strong>No transactionsubcategory data found.</strong><br />
+                TransactionCategorys help you link contacts when you add Birthdays or anniversaries.
+                You can configure your Transaction Sub Category from here.
+            </div>
+            }
+        </div>
+    </div>
+
     <app-configuration-details [selectedUserId]="selectedUserId"></app-configuration-details>
     <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
     <app-toaster></app-toaster>

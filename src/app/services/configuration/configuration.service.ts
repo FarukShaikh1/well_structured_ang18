@@ -21,6 +21,7 @@ export class ConfigurationService {
   }
 
   getActiveConfigList(userId: string = '', config: string = '') {
+    userId = userId == 'loggedInUserId' ? this.loggedInUserId : userId;
     const params = new HttpParams()
       .set('userId', userId)
       .set('config', config);
