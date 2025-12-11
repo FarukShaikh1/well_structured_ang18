@@ -80,7 +80,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     transactionDate: DateUtils.GetDateBeforeDays(30),
     sourceOrReason: "",
     purpose: "",
-    transactionCategory: "",
+    transactionCategoryId: "",
     description: "",
     accountSplits: [],
   };
@@ -104,7 +104,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       sourceOrReason: ["", Validators.required],
       description: [""],
       purpose: [""],
-      transactionCategory: [""],
+      transactionCategory: [""],      // display name
+      transactionCategoryId: [""],    // store ID
     });
   }
 
@@ -359,6 +360,12 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.filteredPurposeList = this.filterList(inputValue, "purpose");
   }
 
+
+  selectPurpose(selectedValue: string) {
+    this.transactionDetailsForm.controls["purpose"].patchValue(selectedValue);
+    this.filteredPurposeList = [];
+  }
+
   onCategoryChange(event: any) {
     const inputValue = event.target.value.toLowerCase();
 
@@ -366,18 +373,15 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       (option: any) => option?.configurationName.toLowerCase().includes(inputValue)
     );
     console.log('filteredTransactionCategoryList', this.filteredTransactionCategoryList);
-    
   }
+  selectCategory(option: any) {
+    this.transactionDetailsForm.patchValue({
+      transactionCategory: option.configurationName, // show name in input
+      transactionCategoryId: option.id               // save ID
+    });
 
-  selectPurpose(selectedValue: string) {
-    this.transactionDetailsForm.controls["purpose"].patchValue(selectedValue);
-    this.filteredPurposeList = [];
+    this.focusInCategory = false; // close dropdown
   }
-
-  selectCategory(selectedValue: string) {
-    this.transactionDetailsForm.controls["transactionCategory"].patchValue(selectedValue);
-  }
-
   getTransactionDetails(transactionGroupId: string) {
     this.loaderService.showLoader();
     this.transactionService
@@ -471,7 +475,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       ),
       sourceOrReason: this.transactionDetailsForm.value.sourceOrReason,
       purpose: this.transactionDetailsForm.value.purpose,
-      transactionCategory: this.transactionDetailsForm.value.transactionCategory,
+      transactionCategoryId: this.transactionDetailsForm.value.transactionCategoryId,
       description: this.transactionDetailsForm.value.description,
       accountSplits: splits,
     };

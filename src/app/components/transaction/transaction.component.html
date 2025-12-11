@@ -52,6 +52,19 @@
     </svg>
     Transaction Report
   </button>
+
+  <button (click)="goToCategoryWiseReport()" class="btn btn-primary rounded-button">
+    <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+      <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
+        stroke="currentColor" stroke-width="2" fill="none" />
+
+      <rect x="8" y="14" width="2" height="4" fill="currentColor" />
+      <rect x="11" y="12" width="2" height="6" fill="currentColor" />
+      <rect x="14" y="10" width="2" height="8" fill="currentColor" />
+    </svg>
+    Category wise Report
+  </button>
   <button (click)="refreshData()" class="btn btn-primary rounded-button">
     <i class="fa fa-refresh"></i> Refresh data
   </button>
@@ -118,6 +131,19 @@
   <div class="row g-3 mb-4">
 
     @if(activeComponent === NavigationURLs.EXPENSE_REPORT){
+    <div class="col-12 col-xl-6 mb-4">
+      <div class="card pb-2 ps-2 pe-2">
+        <app-transaction-pie-chart [reportData]="transactionReports"></app-transaction-pie-chart>
+      </div>
+    </div>
+    <div class="col-12 col-xl-6 mb-4">
+      <div class="card pb-2 ps-2 pe-2">
+        <app-transaction-report-chart [reportData]="transactionReports"></app-transaction-report-chart>
+      </div>
+    </div>
+    }
+
+    @if(activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT){
     <div class="col-12 col-xl-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
         <app-transaction-pie-chart [reportData]="transactionReports"></app-transaction-pie-chart>

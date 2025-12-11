@@ -27,6 +27,7 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { TransactionDetailsComponent } from "../transaction-details/transaction-details.component";
 import { TransactionPieChartComponent } from "../transaction-pie-chart/transaction-pie-chart.component";
 import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
+import { CategoryWiseTransactionReportResponse } from "../../interfaces/category-wise-transaction-report-response";
 export interface Task {
   name: string;
   completed: boolean;
@@ -87,6 +88,7 @@ export class TransactionComponent implements OnInit {
   ActionConstant = ActionConstant;
   accountColumns: any;
   transactionReports: TransactionReportResponse[] = [];
+  categoryWiseReportResponse: CategoryWiseTransactionReportResponse[] = [];
   columnList: string = '_col';
   accountColumnList: string = '_AccountColumns';
 
@@ -122,6 +124,10 @@ export class TransactionComponent implements OnInit {
     }
     if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
       this.loadConfigForExpenseReportList();
+      return;
+    }
+    if (this.activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT) {
+      this.loadConfigForCategoryWiseReportList();
       return;
     }
 
@@ -459,6 +465,125 @@ export class TransactionComponent implements OnInit {
     ];
   }
 
+    loadConfigForCategoryWiseReportList() {
+    this.columnConfig = [
+      {
+        title: "FirstDate",
+        field: "firstDate",
+        sorter: "alphanum",
+        minWidth: 100,
+        formatter: this.dateFormatter.bind(this),
+      },
+      {
+        title: "LastDate",
+        field: "lastDate",
+        sorter: "alphanum",
+        minWidth: 100,
+        formatter: this.dateFormatter.bind(this),
+      },
+      {
+        title: "Category",
+        field: "categoryName",
+        sorter: "alphanum",
+        minWidth: 200,
+      },
+      {
+        sorter: "alphanum",
+        title: "Source/Reason",
+        field: "sourceOrReason",
+        minWidth: 600,
+        formatter: (cell) => {
+          const value = cell.getValue() || "";
+          return `<div class="text-wrap">${value}</div>`;
+        },
+        cssClass: "description-column",
+      },
+      {
+        title: "TakenAmount",
+        field: "takenAmount",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
+        minWidth: 120,
+      },
+      {
+        title: "GivenAmount",
+        field: "givenAmount",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
+        minWidth: 120,
+      },
+      {
+        title: "TotalAmount",
+        field: "totalAmount",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
+        minWidth: 120,
+      },
+      {
+        title: "",
+        field: "",
+        minWidth: 50,
+        maxWidth: 70,
+        formatter: this.globalService.hidebuttonFormatter.bind(this),
+        cellClick: (e, cell) => {
+          const sourceOrReason = cell.getRow().getData()["sourceOrReason"];
+          this.hideTransactionBySource(sourceOrReason);
+        },
+        headerSort: false,
+      },
+      {
+        title: "",
+        field: "",
+        minWidth: 50,
+        maxWidth: 70,
+        formatter: (_cell) =>
+          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+        clickMenu: [
+          {
+            label: ApplicationConstantHtml.VIEW_LABLE,
+            action: (_e: any, cell: CellComponent) => {
+              const transactionData = cell.getRow().getData();
+              this.activeComponent = NavigationURLs.EXPENSE_LIST;
+              this.sourceOrReason = transactionData["sourceOrReason"];
+              this.loadGrid();
+            },
+          },
+          {
+            separator: true,
+          },
+          {
+            label: ApplicationConstantHtml.DELETE_LABLE,
+            action: (_e: any, cell: CellComponent) => {
+              const transactionData = cell.getRow().getData();
+              const transactionGroupId = transactionData["transactionGroupId"];
+              this.deleteTransaction(transactionGroupId);
+            },
+          },
+        ],
+        hozAlign: "left",
+        headerSort: false,
+      },
+    ];
+  }
+
   generateOptionsMenu(rowData: Record<string, any>) {
     const menu = [];
     if (this.globalService.isAccessible(ActionConstant.EDIT)) {
@@ -505,6 +630,13 @@ export class TransactionComponent implements OnInit {
       return item.sourceOrReason != sourceOrReason;
     });
     this.transactionReports = this.filteredTableData;
+  }
+
+    hideTransactionByCategory(category: any) {
+    this.filteredTableData = this.filteredTableData.filter((item: any) => {
+      return item.category != category;
+    });
+    this.categoryWiseReportResponse = this.filteredTableData;
   }
 
   dateFormatter(cell: CellComponent) {
@@ -622,6 +754,9 @@ export class TransactionComponent implements OnInit {
 
     localStorage.removeItem(NavigationURLs.EXPENSE_REPORT);
     localStorage.removeItem(NavigationURLs.EXPENSE_REPORT + '_col');
+
+        localStorage.removeItem(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
+    localStorage.removeItem(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT + '_col');
 
     localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
     localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST + '_col');
@@ -761,6 +896,24 @@ export class TransactionComponent implements OnInit {
         return searchText && minAmountCondition && maxAmountCondition;
       });
       this.transactionReports = this.filteredTableData;
+    } else if (this.activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT) {
+      this.filteredTableData = this.tableData.filter((item: any) => {
+        const searchText =
+          item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
+          item.description?.toLowerCase().includes(this.sourceOrReason);
+        const minAmountCondition =
+          this.minAmount == 0 ||
+          (item.givenAmount !== null && item.givenAmount !== 0 && Math.abs(item.givenAmount) >= this.minAmount) ||
+          (item.totalAmount !== null && item.totalAmount !== 0 && Math.abs(item.totalAmount) >= this.minAmount) ||
+          (item.takenAmount !== null && item.takenAmount !== 0 && Math.abs(item.takenAmount) >= this.minAmount);
+        const maxAmountCondition =
+          this.maxAmount == 0 ||
+          (item.givenAmount !== null && item.givenAmount !== 0 && Math.abs(item.givenAmount) <= this.maxAmount) ||
+          (item.totalAmount !== null && item.totalAmount !== 0 && Math.abs(item.totalAmount) <= this.maxAmount) ||
+          (item.takenAmount !== null && item.takenAmount !== 0 && Math.abs(item.takenAmount) <= this.maxAmount);
+        return searchText && minAmountCondition && maxAmountCondition;
+      });
+      this.categoryWiseReportResponse = this.filteredTableData;
     }
   }
 
@@ -769,6 +922,7 @@ export class TransactionComponent implements OnInit {
     this.cacheService.clear(NavigationURLs.EXPENSE_SUMMARY_LIST);
     this.cacheService.clear(NavigationURLs.EXPENSE_BALANCE_LIST);
     this.cacheService.clear(NavigationURLs.EXPENSE_REPORT);
+    this.cacheService.clear(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
     this.sourceOrReason = "";
     this.minAmount = 0;
     this.maxAmount = 0;
@@ -814,11 +968,18 @@ export class TransactionComponent implements OnInit {
     this.applyFilters();
   }
 
+    goToCategoryWiseReport() {
+    this.activeComponent = NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT;
+    this.loadGrid();
+    this.applyFilters();
+  }
+
   refreshData() {
     localStorage.removeItem(NavigationURLs.EXPENSE_LIST);
     localStorage.removeItem(NavigationURLs.EXPENSE_SUMMARY_LIST);
     localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
     localStorage.removeItem(NavigationURLs.EXPENSE_REPORT);
+    localStorage.removeItem(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
     this.loadGrid();
   }
 
@@ -829,6 +990,7 @@ export class TransactionComponent implements OnInit {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;
       this.transactionReports = cachedData;
+      this.categoryWiseReportResponse = cachedData;
       this.columnConfiguration();
       this.loaderService.hideLoader();
       this.applyFilters();
@@ -902,6 +1064,24 @@ export class TransactionComponent implements OnInit {
         .subscribe({
           next: (res: any) => {
             this.transactionReports = res.data;
+            this.tableData = res.data;
+            this.filteredTableData = res.data;
+            this.lastTransactionDate = this.getLatestTransactionDate();
+            this.cacheService.set(this.activeComponent, res.data);
+            this.columnConfiguration();
+            this.loaderService.hideLoader();
+          },
+          error: (error: any) => {
+            console.error("error : ", error);
+            this.loaderService.hideLoader();
+          },
+        });
+    }else if (this.activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT) {
+      this.transactionService
+        .getCategoryWiseReportList(this.transactionfilterRequest)
+        .subscribe({
+          next: (res: any) => {
+            this.categoryWiseReportResponse = res.data;
             this.tableData = res.data;
             this.filteredTableData = res.data;
             this.lastTransactionDate = this.getLatestTransactionDate();

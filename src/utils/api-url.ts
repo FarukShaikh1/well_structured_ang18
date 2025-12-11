@@ -41,6 +41,7 @@ export const API_URL = {
   GET_TRANSACTION_SUMMARY_LIST: `${serverUrl}${apiPrefix}/transaction/GetSummary`,
   GET_BALANCE_LIST: `${serverUrl}${apiPrefix}/transaction/GetBalanceSummary`,
   GET_TRANSACTION_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/GetReport`,
+  GET_CATEGORY_WISE_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/GetCategoryWiseReport`,
   GET_TRANSACTION_LIST: `${serverUrl}${apiPrefix}/transaction/GetList`,
   ADD_TRANSACTION: `${serverUrl}${apiPrefix}/transaction/add?userId=`,
   TRANSACTION_ADJUSTMENT: `${serverUrl}${apiPrefix}/transaction/transactionAdjustment?userId=`,

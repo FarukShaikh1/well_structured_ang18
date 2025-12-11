@@ -38,8 +38,12 @@ export class TransactionService {
     return this.http.post(API_URL.GET_TRANSACTION_REPORT_LIST, filter, { params });
   }
 
-  getTransactionList(filter: ExpenseFilterRequest): Observable<any> {
+    getCategoryWiseReportList(filter: ExpenseFilterRequest): Observable<any> {
+    const params = new HttpParams().set("userid", this.loggedInUserId);
+    return this.http.post(API_URL.GET_CATEGORY_WISE_REPORT_LIST, filter, { params });
+  }
 
+  getTransactionList(filter: ExpenseFilterRequest): Observable<any> {
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.post(API_URL.GET_TRANSACTION_LIST, filter, { params });
   }

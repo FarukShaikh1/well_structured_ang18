@@ -132,6 +132,7 @@ export const NavigationURLs = {
     EXPENSE_SUMMARY_LIST: '/home/expense-summary',
     EXPENSE_BALANCE_LIST: '/home/expense-balance',
     EXPENSE_REPORT: '/home/expense-report',
+    CATEGORY_WISE_EXPENSE_REPORT: '/home/expense-report-by-category',
     REPORT_LIST: '/home/expenses/reports',
     CURRENCY_LIST: '/home/currency-coin',
     CURRENCY_SUMMARY: '/home/currency-summary',
