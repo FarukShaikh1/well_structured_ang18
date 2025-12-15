@@ -110,7 +110,7 @@ export class DayComponent implements OnInit {
 
   loadGrid() {
     // ✅ 1. Check cache first
-    const cachedData = this.cacheService.get<any[]>(this.cacheKey, 30); // 30 minutes cache
+    const cachedData = this.cacheService.get<any[]>(this.cacheKey); 
     if (cachedData) {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;

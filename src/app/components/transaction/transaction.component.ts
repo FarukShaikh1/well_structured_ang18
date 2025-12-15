@@ -132,11 +132,6 @@ export class TransactionComponent implements OnInit {
       return;
     }
 
-    // const cachedColumns = this.cacheService.get<any[]>(this.activeComponent + this.columnList, 720); // 30 minutes cache
-    // if (cachedColumns) {
-    //   this.columnConfig = cachedColumns;
-    //   return;
-    // }
     if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
       this.loadConfigForExpenseSummaryList();
     } else if (this.activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST) {
@@ -247,7 +242,7 @@ export class TransactionComponent implements OnInit {
     ];
 
     if (this.tableData.length > 0) {
-      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList, 720);
+      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList);
       if (accountColumnList) {
 
         for (const key of Object.keys(accountColumnList)) {
@@ -311,7 +306,7 @@ export class TransactionComponent implements OnInit {
     ];
 
     if (this.tableData.length > 0) {
-      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList, 720); // 30 minutes cache
+      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList); 
       if (accountColumnList) {
         for (const key of Object.keys(accountColumnList)) {
           const isAmount = key.toLowerCase().includes("amount");
@@ -988,7 +983,7 @@ export class TransactionComponent implements OnInit {
 
   loadGrid() {
     this.loaderService.showLoader('Loading transactions...');
-    const cachedData = this.cacheService.get<any[]>(this.activeComponent, 720); // 30 minutes cache
+    const cachedData = this.cacheService.get<any[]>(this.activeComponent); 
     if (cachedData) {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;
@@ -1186,7 +1181,7 @@ export class TransactionComponent implements OnInit {
 
   setTransactionSuggestions() {
 
-    const suggestions = this.cacheService.get<any[]>(DdlConfig.COMMON_SUGGESTIONS, 720); // 30 minutes cache
+    const suggestions = this.cacheService.get<any[]>(DdlConfig.COMMON_SUGGESTIONS); 
     if (suggestions) {
       return;
     }
@@ -1202,7 +1197,7 @@ export class TransactionComponent implements OnInit {
 
   setTransactionCategories() {
 
-    const suggestions = this.cacheService.get<any[]>(DdlConfig.TRANSACTION_CATEGORY, 720); // 30 minutes cache
+    const suggestions = this.cacheService.get<any[]>(DdlConfig.TRANSACTION_CATEGORY); 
     if (suggestions) {
       return;
     }

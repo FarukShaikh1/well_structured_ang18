@@ -410,7 +410,7 @@ export class CurrencyCoinComponent implements OnInit {
       this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
       // Check cache
       const cacheKey = NavigationURLs.CURRENCY_LIST;
-      const cachedData = this.cacheService.get<any[]>(cacheKey, 30);
+      const cachedData = this.cacheService.get<any[]>(cacheKey);
 
       if (cachedData) {
         this.tableData = cachedData;
@@ -443,7 +443,7 @@ export class CurrencyCoinComponent implements OnInit {
 
   LoadSummaryGrid() {
     const cacheKey = NavigationURLs.CURRENCY_SUMMARY;
-    const cachedData = this.cacheService.get<any[]>(cacheKey, 30); // 30 minutes cache
+    const cachedData = this.cacheService.get<any[]>(cacheKey);
     if (cachedData) {
       this.summaryTableData = cachedData;
       this.filteredSummaryTableData = cachedData;

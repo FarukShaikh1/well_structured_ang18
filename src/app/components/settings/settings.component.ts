@@ -199,7 +199,7 @@ export class SettingsComponent {
     }
 
     // ✅ 1. Check cache first
-    const cachedData = this.cacheService.get<any[]>(config, 30); // 30 minutes cache
+    const cachedData = this.cacheService.get<any[]>(config);
     if (cachedData) {
       if (config === UserConfig.ACCOUNT) {
         this.filteredAccountTableData = cachedData;

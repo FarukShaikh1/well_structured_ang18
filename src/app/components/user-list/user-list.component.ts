@@ -208,7 +208,7 @@ export class UserListComponent implements OnInit {
   }
 
   loadGrid() {
-    const cachedData = this.cacheService.get<any[]>(this.cacheKey, 30); // 30 minutes cache
+    const cachedData = this.cacheService.get<any[]>(this.cacheKey); 
     if (cachedData) {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;

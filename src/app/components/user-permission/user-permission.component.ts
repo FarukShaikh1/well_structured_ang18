@@ -71,7 +71,7 @@ export class UserPermissionComponent implements OnInit {
   }
   getPermission(userId: string) {
     // ✅ 1. Check cache first
-    const cachedData = this.cacheService.get<any[]>(this.cacheKey, 30); // 30 minutes cache
+    const cachedData = this.cacheService.get<any[]>(this.cacheKey); 
     if (cachedData) {
       this.rolePageMappingData = cachedData;
       return;
