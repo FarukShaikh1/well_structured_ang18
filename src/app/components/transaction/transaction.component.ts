@@ -91,6 +91,7 @@ export class TransactionComponent implements OnInit {
   categoryWiseReportResponse: CategoryWiseTransactionReportResponse[] = [];
   columnList: string = '_col';
   accountColumnList: string = '_AccountColumns';
+  reportType="sourceWise";
 
   constructor(
     private transactionService: TransactionService,
@@ -544,8 +545,8 @@ export class TransactionComponent implements OnInit {
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const sourceOrReason = cell.getRow().getData()["sourceOrReason"];
-          this.hideTransactionBySource(sourceOrReason);
+          const categoryName = cell.getRow().getData()["categoryName"];
+          this.hideTransactionByCategory(categoryName);
         },
         headerSort: false,
       },
@@ -634,7 +635,7 @@ export class TransactionComponent implements OnInit {
 
     hideTransactionByCategory(category: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.category != category;
+      return item.categoryName != category;
     });
     this.categoryWiseReportResponse = this.filteredTableData;
   }
@@ -963,12 +964,14 @@ export class TransactionComponent implements OnInit {
   }
 
   goToTransactionReport() {
+    this.reportType = ApplicationConstants.REPORT_TYPE_SOURCE_WISE;
     this.activeComponent = NavigationURLs.EXPENSE_REPORT;
     this.loadGrid();
     this.applyFilters();
   }
 
     goToCategoryWiseReport() {
+    this.reportType = ApplicationConstants.REPORT_TYPE_CATEGORY_WISE;
     this.activeComponent = NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT;
     this.loadGrid();
     this.applyFilters();

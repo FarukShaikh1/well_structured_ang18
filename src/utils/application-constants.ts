@@ -32,7 +32,11 @@ export const ApplicationConstants = {
 
     REGEX_DASH_DOT_UNDERSCORE_WITH_SPACE: /(?<=[a-zA-Z0-9])[-_.](?=[a-zA-Z0-9])/g,
     REGEX_CAPITALIZE_FIRST_LETTER: /\b\w/g,
-    APPLICATIONS_OWNER_EMAILID: 'farukshaikh908@gmail.com'
+    APPLICATIONS_OWNER_EMAILID: 'farukshaikh908@gmail.com',
+    REPORT_TYPE_SOURCE_WISE : 'SourceWise',
+    REPORT_TYPE_CATEGORY_WISE : 'CategoryWise',
+
+
 };
 
 export const ButtonLabels = {

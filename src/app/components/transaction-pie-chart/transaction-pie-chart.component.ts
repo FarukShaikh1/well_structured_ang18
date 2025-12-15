@@ -4,6 +4,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { NgChartsModule } from "ng2-charts";
 import { CommonModule } from "@angular/common";
+import { ApplicationConstants } from "../../../utils/application-constants";
 
 @Component({
   selector: 'app-transaction-pie-chart',
@@ -14,9 +15,9 @@ import { CommonModule } from "@angular/common";
 
 export class TransactionPieChartComponent implements OnChanges {
   @Input() reportData: TransactionReportResponse[] = [];
-
-  originalReportData: TransactionReportResponse[] = []; 
-  selectedType = 'expense'; 
+  @Input() reportType: string = 'sourceWise';
+  originalReportData: TransactionReportResponse[] = [];
+  selectedType = 'expense';
 
   pieChartData: any;
   pieChartOptions: ChartConfiguration<'pie'>['options'] = {
@@ -39,25 +40,30 @@ export class TransactionPieChartComponent implements OnChanges {
   ngOnChanges(): void {
     if (!this.reportData?.length) return;
 
-    
+
     this.originalReportData = JSON.parse(JSON.stringify(this.reportData));
 
     this.updateChart();
   }
 
   updateChart() {
+    debugger;
     const isIncome = this.selectedType === 'income';
 
     const filteredData = this.reportData.filter(item =>
       isIncome ? item.takenAmount !== 0 : item.givenAmount !== 0
     );
-
-    const labels = filteredData.map(item => item.sourceOrReason || 'Unknown');
+    var labels;
+    if (this.reportType === ApplicationConstants.REPORT_TYPE_CATEGORY_WISE) {
+      labels = filteredData.map(item => item.categoryName || 'Unknown');
+    } else {
+      labels = filteredData.map(item => item.sourceOrReason || 'Unknown');
+    }
     const amounts = isIncome
       ? filteredData.map(x => x.takenAmount || 0)
       : filteredData.map(x => x.givenAmount || 0);
 
-    this.colorIndex = 60000; 
+    this.colorIndex = 60000;
     const colors = labels.map(() => this.getSequentialColor());
 
     this.pieChartData = {
@@ -77,7 +83,7 @@ export class TransactionPieChartComponent implements OnChanges {
   toggleCategory(value: string) {
     if (this.selectedType !== value) {
       this.selectedType = value;
-      
+
       this.reportData = JSON.parse(JSON.stringify(this.originalReportData));
       this.updateChart();
     }

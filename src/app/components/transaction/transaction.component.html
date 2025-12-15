@@ -133,7 +133,7 @@
     @if(activeComponent === NavigationURLs.EXPENSE_REPORT){
     <div class="col-12 col-xl-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
-        <app-transaction-pie-chart [reportData]="transactionReports"></app-transaction-pie-chart>
+        <app-transaction-pie-chart [reportData]="transactionReports" [reportType]="reportType"></app-transaction-pie-chart>
       </div>
     </div>
     <div class="col-12 col-xl-6 mb-4">
@@ -146,12 +146,12 @@
     @if(activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT){
     <div class="col-12 col-xl-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
-        <app-transaction-pie-chart [reportData]="transactionReports"></app-transaction-pie-chart>
+        <app-transaction-pie-chart [reportData]="categoryWiseReportResponse" [reportType]="reportType"></app-transaction-pie-chart>
       </div>
     </div>
     <div class="col-12 col-xl-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
-        <app-transaction-report-chart [reportData]="transactionReports"></app-transaction-report-chart>
+        <app-transaction-report-chart [reportData]="categoryWiseReportResponse"></app-transaction-report-chart>
       </div>
     </div>
     }
