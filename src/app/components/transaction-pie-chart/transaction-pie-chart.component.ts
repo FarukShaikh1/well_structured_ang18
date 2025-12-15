@@ -1,10 +1,10 @@
-import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
-import { ChartConfiguration } from "chart.js";
+import { CommonModule } from "@angular/common";
 import { Component, Input, OnChanges } from '@angular/core';
 import { FormsModule } from "@angular/forms";
+import { ChartConfiguration } from "chart.js";
 import { NgChartsModule } from "ng2-charts";
-import { CommonModule } from "@angular/common";
 import { ApplicationConstants } from "../../../utils/application-constants";
+import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
 
 @Component({
   selector: 'app-transaction-pie-chart',

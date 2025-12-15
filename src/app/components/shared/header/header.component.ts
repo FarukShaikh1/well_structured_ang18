@@ -19,8 +19,7 @@ import {
   ApplicationModules,
   ApplicationRoles,
   NavigationURLs,
-  RoutePath,
-  RoutePathTitles,
+  RoutePathTitles
 } from "../../../../utils/application-constants";
 import { ModuleResponse } from "../../../interfaces/module-response";
 import { SystemNotifications } from "../../../interfaces/system-notifications";

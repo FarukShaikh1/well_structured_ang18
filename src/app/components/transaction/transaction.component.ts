@@ -13,6 +13,7 @@ import {
   UserConfig
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
+import { CategoryWiseTransactionReportResponse } from "../../interfaces/category-wise-transaction-report-response";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
 import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
 import { CacheService } from "../../services/cache/cache.service";
@@ -27,7 +28,6 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { TransactionDetailsComponent } from "../transaction-details/transaction-details.component";
 import { TransactionPieChartComponent } from "../transaction-pie-chart/transaction-pie-chart.component";
 import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
-import { CategoryWiseTransactionReportResponse } from "../../interfaces/category-wise-transaction-report-response";
 export interface Task {
   name: string;
   completed: boolean;

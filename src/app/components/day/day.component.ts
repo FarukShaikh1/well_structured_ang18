@@ -10,6 +10,7 @@ import {
   DdlConfig,
   NavigationURLs
 } from "../../../utils/application-constants";
+import { DateUtils } from "../../../utils/date-utils";
 import { CacheService } from "../../services/cache/cache.service";
 import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { DayService } from "../../services/day/day.service";
@@ -20,7 +21,6 @@ import { DayDetailsComponent } from "../day-details/day-details.component";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { DateUtils } from "../../../utils/date-utils";
 
 export interface Task {
   name: string;
