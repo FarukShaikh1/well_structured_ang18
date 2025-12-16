@@ -138,10 +138,10 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   openDetailsPopup(transactionGroupId: string) {
     this.loaderService.showLoader();
     this.loggedInUserId = localStorage.getItem("userId") || "";
+    this.getTransactionCategoryList();
     this.loadAccountList();
     this.loadAccountFields();
     this.getTransactionSuggestionList();
-    this.getTransactionCategoryList();
     if (this.accountList.length && transactionGroupId) {
       this.getTransactionDetails(transactionGroupId);
     } else {
@@ -420,6 +420,9 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   patchValues(res: any) {
+    const selectedCategory = this.transactionCategoryList
+    ?.find((x: any) => x.id === res.subCategoryId);
+
     this.transactionDetailsForm.patchValue({
       transactionGroupId: res.transactionGroupId,
       transactionDate: this.datepipe.transform(
@@ -428,7 +431,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       ),
       sourceOrReason: res.sourceOrReason,
       purpose: res.purpose,
-      transactionCategory: res.purpose,
+      transactionCategoryId: res.subCategoryId,
+      transactionCategory: this.getCategoryNameById(res.subCategoryId),
       description: res.description,
     });
     res.accountSplits?.forEach((split: any) => {
@@ -443,6 +447,11 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
+  getCategoryNameById(id: any): string {
+  return this.transactionCategoryList
+    ?.find((x: any) => x.id === id)
+    ?.configurationName || '';
+}
   submitTransactionDetails() {
     this.loaderService.showLoader();
     this.globalService.trimAllFields(this.transactionDetailsForm);

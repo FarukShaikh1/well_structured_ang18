@@ -306,19 +306,31 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
     this.formData = new FormData();
   }
 
-  uploadImageAndSaveData() {
-    const assetId = this.dayDetailsForm.value["assetId"];
-    this.subscriptions.add(this._assetService.uploadImage(assetId, API_URL.BIRTHDAYPERSONPIC, this.formData).pipe(
-      tap((res: any) => {
-        this.specialOccasionRequest.assetId = res.data;
-        this.addOrUpdateDayDetails();
-      }),
-      catchError((error) => {
-        this.showError("Error uploading image.");
-        return of(null);
-      })
-    ).subscribe());
+uploadImageAndSaveData() {
+  if (!this.selectedImageFile) {
+    this.addOrUpdateDayDetails();
+    return;
   }
+
+  const formData = new FormData();
+  formData.append('file', this.selectedImageFile);
+
+  const assetId = this.dayDetailsForm.value['assetId'];
+
+  this.subscriptions.add(
+    this._assetService.uploadImage(assetId, API_URL.BIRTHDAYPERSONPIC, formData)
+      .pipe(
+        tap((res: any) => {
+          this.specialOccasionRequest.assetId = res.data;
+          this.addOrUpdateDayDetails();
+        }),
+        catchError((error) => {
+          this.showError('Error uploading image. '+error);
+          return of(null);
+        })
+      ).subscribe()
+  );
+}
 
   private showError(message: string): void {
     this.loaderService.hideLoader();
@@ -339,14 +351,22 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
     this.handleImageDrop(event.dataTransfer.files);
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
+onFileSelected(event: any) {
+  const file: File = event.target.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
 
-    const reader = new FileReader();
-    reader.onload = () => this.handleImageLoad(reader.result);
-    reader.readAsDataURL(file);
-  }
+  this.selectedImageFile = file;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    this.selectedImage = reader.result;
+    this.originalImageData = reader.result;
+    this.showPreview = false;
+
+    setTimeout(() => this.initCropper(), 200);
+  };
+  reader.readAsDataURL(file);
+}
 
   private initCropper() {
     if (this.cropper) this.cropper.destroy();
@@ -371,25 +391,23 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
     link.click();
   }
 
-  private handleImageDrop(files: FileList | null): void {
-    if (files && files.length > 0) {
-      const file = files[0];
-      this.selectedImageFile = files[0];
-      if (file.type.startsWith("image/")) {
-        this.formData.append("file", file);
+private handleImageDrop(files: FileList | null): void {
+  if (!files || files.length === 0) return;
 
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.selectedImage = reader.result;
-          // Wait for image render, initialize cropper
-          setTimeout(() => this.initCropper(), 200);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Please select a valid image file.");
-      }
-    }
-  }
+  const file = files[0];
+  if (!file.type.startsWith('image/')) return;
+
+  this.selectedImageFile = file;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    this.selectedImage = reader.result;
+    this.originalImageData = reader.result;
+    this.showPreview = false;
+    setTimeout(() => this.initCropper(), 200);
+  };
+  reader.readAsDataURL(file);
+}
 
   triggerFileInput() {
     if (!this.selectedImage) {
@@ -405,29 +423,23 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
     setTimeout(() => this.initCropper(), 200);
   }
 
-  onCropDone() {
-    if (!this.cropper) {
-      console.error("Cropper not initialized");
-      return;
-    }
+onCropDone() {
+  const canvas = this.cropper.getCroppedCanvas();
+  if (!canvas) return;
 
-    // ⭐ Get cropped canvas BEFORE destroying cropper
-    const canvas = this.cropper.getCroppedCanvas({});
+  canvas.toBlob((blob) => {
+    if (!blob) return;
 
-    if (!canvas) {
-      console.error("Canvas not generated — image may not be loaded");
-      return;
-    }
+    const file = new File([blob], 'cropped-image.png', { type: 'image/png' });
+    this.selectedImageFile = file;
 
-    // Generate preview output
-    this.croppedImage = canvas.toDataURL("image/png");
+    this.croppedImage = URL.createObjectURL(blob);
     this.selectedImage = this.croppedImage;
     this.showPreview = true;
 
-    // Now safe to destroy
     this.cropper.destroy();
-    // this.cropper = null;
-  }
+  }, 'image/png');
+}
 
   editImage() {
     this.selectedImage = this.originalImageData;

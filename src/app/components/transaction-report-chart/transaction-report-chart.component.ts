@@ -3,6 +3,7 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { TransactionReportResponse } from '../../interfaces/transaction-report-response';
+import { ApplicationConstants } from '../../../utils/application-constants';
 
 @Component({
   selector: 'app-transaction-report-chart',
@@ -13,6 +14,7 @@ import { TransactionReportResponse } from '../../interfaces/transaction-report-r
 })
 export class TransactionReportChartComponent implements OnChanges {
   @Input() reportData: TransactionReportResponse[] = [];
+  @Input() reportType: string = 'sourceWise';
 private getTextColor(): string {
   const stored = localStorage.getItem('app-theme');
       const isDarkMode = stored === 'dark';
@@ -58,7 +60,13 @@ private getTextColor(): string {
   ngOnChanges(): void {
     if (!this.reportData?.length) return;
 
-    const labels = this.reportData.map(x => x.sourceOrReason || 'Unknown');
+    var labels;
+    if (this.reportType === ApplicationConstants.REPORT_TYPE_CATEGORY_WISE) {
+      labels = this.reportData.map(item => item.subCategoryName || 'Unknown');
+    } else {
+      labels = this.reportData.map(item => item.sourceOrReason || 'Unknown');
+    }
+    // const labels = this.reportData.map(x => x.sourceOrReason || 'Unknown');
     const takenAmounts = this.reportData.map(x => x.takenAmount || 0);
     const givenAmounts = this.reportData.map(x => x.givenAmount || 0);
 

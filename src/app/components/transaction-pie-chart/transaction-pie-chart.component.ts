@@ -16,7 +16,7 @@ import { TransactionReportResponse } from "../../interfaces/transaction-report-r
 export class TransactionPieChartComponent implements OnChanges {
   @Input() reportData: TransactionReportResponse[] = [];
   @Input() reportType: string = 'sourceWise';
-  originalReportData: TransactionReportResponse[] = [];
+  parsedReportData: TransactionReportResponse[] = [];
   selectedType = 'expense';
 
   pieChartData: any;
@@ -39,23 +39,19 @@ export class TransactionPieChartComponent implements OnChanges {
 
   ngOnChanges(): void {
     if (!this.reportData?.length) return;
-
-
-    this.originalReportData = JSON.parse(JSON.stringify(this.reportData));
-
+    this.parsedReportData = JSON.parse(JSON.stringify(this.reportData));
     this.updateChart();
   }
 
   updateChart() {
-    debugger;
     const isIncome = this.selectedType === 'income';
 
-    const filteredData = this.reportData.filter(item =>
-      isIncome ? item.takenAmount !== 0 : item.givenAmount !== 0
+    const filteredData = this.parsedReportData.filter(item =>
+      (isIncome ? item.takenAmount !== 0 : item.givenAmount !== 0) && (item.takenAmount !== item.givenAmount)
     );
     var labels;
     if (this.reportType === ApplicationConstants.REPORT_TYPE_CATEGORY_WISE) {
-      labels = filteredData.map(item => item.categoryName || 'Unknown');
+      labels = filteredData.map(item => item.subCategoryName || 'Unknown');
     } else {
       labels = filteredData.map(item => item.sourceOrReason || 'Unknown');
     }
@@ -84,39 +80,15 @@ export class TransactionPieChartComponent implements OnChanges {
     if (this.selectedType !== value) {
       this.selectedType = value;
 
-      this.reportData = JSON.parse(JSON.stringify(this.originalReportData));
+      this.parsedReportData = JSON.parse(JSON.stringify(this.reportData));
       this.updateChart();
     }
   }
 
-  mergeAsOther(selectedSourceOrReason: string) {
-    if (!selectedSourceOrReason) return;
-    const isIncome = this.selectedType === 'income';
-    let otherAmount = 0;
-
-    this.reportData = this.reportData.filter(item => {
-      if (item.sourceOrReason === selectedSourceOrReason) {
-        otherAmount += isIncome ? item.takenAmount || 0 : item.givenAmount || 0;
-        return false;
-      }
-      return true;
+  hideTransaction(label: any) {
+    this.reportData = this.reportData.filter((item: any) => {
+      return item.sourceOrReason != label;
     });
-
-    const existingOther = this.reportData.find(item => item.sourceOrReason === "Other");
-    if (existingOther) {
-      if (isIncome) {
-        existingOther.takenAmount = (existingOther.takenAmount || 0) + otherAmount;
-      } else {
-        existingOther.givenAmount = (existingOther.givenAmount || 0) + otherAmount;
-      }
-    } else {
-      this.reportData.push({
-        sourceOrReason: "Other",
-        takenAmount: isIncome ? otherAmount : 0,
-        givenAmount: !isIncome ? otherAmount : 0,
-      });
-    }
-
     this.updateChart();
   }
 }

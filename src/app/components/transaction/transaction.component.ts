@@ -91,7 +91,7 @@ export class TransactionComponent implements OnInit {
   categoryWiseReportResponse: CategoryWiseTransactionReportResponse[] = [];
   columnList: string = '_col';
   accountColumnList: string = '_AccountColumns';
-  reportType="sourceWise";
+  reportType = "sourceWise";
 
   constructor(
     private transactionService: TransactionService,
@@ -147,6 +147,12 @@ export class TransactionComponent implements OnInit {
         sorter: "alphanum",
         formatter: this.dateFormatter.bind(this),
         minWidth: 120,
+      },
+      {
+        title: "Category",
+        field: "subCategoryName",
+        sorter: "alphanum",
+        minWidth: 200,
       },
       {
         title: "Source/Reason",
@@ -225,6 +231,12 @@ export class TransactionComponent implements OnInit {
         sorter: "alphanum",
         formatter: this.dateFormatter.bind(this),
         minWidth: 120,
+      },
+      {
+        title: "Category",
+        field: "subCategoryName",
+        sorter: "alphanum",
+        minWidth: 200,
       },
       {
         title: "Source/Reason",
@@ -306,7 +318,7 @@ export class TransactionComponent implements OnInit {
     ];
 
     if (this.tableData.length > 0) {
-      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList); 
+      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList);
       if (accountColumnList) {
         for (const key of Object.keys(accountColumnList)) {
           const isAmount = key.toLowerCase().includes("amount");
@@ -358,6 +370,7 @@ export class TransactionComponent implements OnInit {
         minWidth: 100,
         formatter: this.dateFormatter.bind(this),
       },
+
       {
         title: "Source/Reason",
         field: "sourceOrReason",
@@ -374,6 +387,12 @@ export class TransactionComponent implements OnInit {
           return `<div class="text-wrap">${value}</div>`;
         },
         cssClass: "description-column",
+      },
+      {
+        title: "Category",
+        field: "subCategoryName",
+        sorter: "alphanum",
+        minWidth: 200,
       },
       {
         title: "TakenAmount",
@@ -461,7 +480,7 @@ export class TransactionComponent implements OnInit {
     ];
   }
 
-    loadConfigForCategoryWiseReportList() {
+  loadConfigForCategoryWiseReportList() {
     this.columnConfig = [
       {
         title: "FirstDate",
@@ -479,7 +498,7 @@ export class TransactionComponent implements OnInit {
       },
       {
         title: "Category",
-        field: "categoryName",
+        field: "subCategoryName",
         sorter: "alphanum",
         minWidth: 200,
       },
@@ -540,8 +559,8 @@ export class TransactionComponent implements OnInit {
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const categoryName = cell.getRow().getData()["categoryName"];
-          this.hideTransactionByCategory(categoryName);
+          const subCategoryName = cell.getRow().getData()["subCategoryName"];
+          this.hideTransactionByCategory(subCategoryName);
         },
         headerSort: false,
       },
@@ -628,9 +647,9 @@ export class TransactionComponent implements OnInit {
     this.transactionReports = this.filteredTableData;
   }
 
-    hideTransactionByCategory(category: any) {
+  hideTransactionByCategory(category: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.categoryName != category;
+      return item.subCategoryName != category;
     });
     this.categoryWiseReportResponse = this.filteredTableData;
   }
@@ -706,7 +725,6 @@ export class TransactionComponent implements OnInit {
       const categoryField = `${accountBase}_Category`;
       const category = transactionData['accountData'][categoryField];
 
-
       if (category === 'Income') {
         return `<span style="color: var(--success-color); font-weight:bold">${formattedValue}</span>`;
       } else if (category === 'Expense') {
@@ -751,7 +769,7 @@ export class TransactionComponent implements OnInit {
     localStorage.removeItem(NavigationURLs.EXPENSE_REPORT);
     localStorage.removeItem(NavigationURLs.EXPENSE_REPORT + '_col');
 
-        localStorage.removeItem(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
+    localStorage.removeItem(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
     localStorage.removeItem(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT + '_col');
 
     localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
@@ -965,7 +983,7 @@ export class TransactionComponent implements OnInit {
     this.applyFilters();
   }
 
-    goToCategoryWiseReport() {
+  goToCategoryWiseReport() {
     this.reportType = ApplicationConstants.REPORT_TYPE_CATEGORY_WISE;
     this.activeComponent = NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT;
     this.loadGrid();
@@ -983,7 +1001,7 @@ export class TransactionComponent implements OnInit {
 
   loadGrid() {
     this.loaderService.showLoader('Loading transactions...');
-    const cachedData = this.cacheService.get<any[]>(this.activeComponent); 
+    const cachedData = this.cacheService.get<any[]>(this.activeComponent);
     if (cachedData) {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;
@@ -1074,7 +1092,7 @@ export class TransactionComponent implements OnInit {
             this.loaderService.hideLoader();
           },
         });
-    }else if (this.activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT) {
+    } else if (this.activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT) {
       this.transactionService
         .getCategoryWiseReportList(this.transactionfilterRequest)
         .subscribe({
@@ -1181,7 +1199,7 @@ export class TransactionComponent implements OnInit {
 
   setTransactionSuggestions() {
 
-    const suggestions = this.cacheService.get<any[]>(DdlConfig.COMMON_SUGGESTIONS); 
+    const suggestions = this.cacheService.get<any[]>(DdlConfig.COMMON_SUGGESTIONS);
     if (suggestions) {
       return;
     }
@@ -1197,11 +1215,11 @@ export class TransactionComponent implements OnInit {
 
   setTransactionCategories() {
 
-    const suggestions = this.cacheService.get<any[]>(DdlConfig.TRANSACTION_CATEGORY); 
+    const suggestions = this.cacheService.get<any[]>(DdlConfig.TRANSACTION_CATEGORY);
     if (suggestions) {
       return;
     }
-    this.configService.getActiveConfigList('loggedInUserId',UserConfig.TRANSACTION_CATEGORY).subscribe({
+    this.configService.getActiveConfigList('loggedInUserId', UserConfig.TRANSACTION_CATEGORY).subscribe({
       next: (res: any) => {
         this.localStorageService.setTransactionCategories(res.data);
       },
