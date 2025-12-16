@@ -523,7 +523,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       category:
         this.transactionDetailsForm.value["category_" + acc.id] || "expense",
       amount: this.transactionDetailsForm.value[acc.id] || 0,
-    }));
+    })).filter((split: any) => split.amount && split.amount > 0);
 
   }
 
