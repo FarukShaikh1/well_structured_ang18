@@ -1162,9 +1162,6 @@ export class TransactionComponent implements OnInit {
   }
 
   filterGridByMaxAmount(data: any) {
-    setTimeout(() => {
-      this.maxInput.nativeElement.focus();
-    }, 0);
     this.maxAmount = data.target.value;
     if (this.sourceOrReason || this.minAmount || this.maxAmount) {
       this.applyFilters();
@@ -1174,9 +1171,6 @@ export class TransactionComponent implements OnInit {
   }
 
   filterGridByMinAmount(data: any) {
-    setTimeout(() => {
-      this.minInput.nativeElement.focus();
-    }, 0);
     this.minAmount = data.target.value;
     if (this.sourceOrReason || this.minAmount || this.maxAmount) {
       this.applyFilters();
@@ -1186,9 +1180,6 @@ export class TransactionComponent implements OnInit {
   }
 
   filterGridBySearch(data: any) {
-    setTimeout(() => {
-      this.searchInput.nativeElement.focus();
-    }, 0);
     this.sourceOrReason = data?.target?.value?.toLowerCase();
     if (this.sourceOrReason || this.minAmount || this.maxAmount) {
       this.applyFilters();

@@ -239,6 +239,19 @@ export class CurrencyCoinComponent implements OnInit {
         minWidth: 200,
       },
       {
+        title: 'ExtractedText',
+        field: "extractedText",
+        sorter: "alphanum",
+        minWidth: 200,
+      },
+      {
+        title: "GeneratedDescription",
+        field: "generatedDescription",
+        sorter: "alphanum",
+        minWidth: 200,
+      },
+
+      {
         title: UIStrings.COLUMN_TITLES.PIC,
         field: "thumbnailPath",
         formatter: this.globalService.blobThumbnailFormatter.bind(this),
@@ -483,10 +496,6 @@ export class CurrencyCoinComponent implements OnInit {
 
 
   filterGridSearchText(event: any) {
-    // setTimeout(() => {
-    //   this.searchInput.nativeElement.focus();
-    // }, 0);
-
     this.searchText = event.target.value.toLowerCase();
     this.applyFilters();
   }
@@ -534,6 +543,8 @@ export class CurrencyCoinComponent implements OnInit {
       const matchesActulaValue = item.actualValue?.toString()?.toLowerCase().includes(this.searchText);
       const matchesIndianValue = item.indianValue?.toString()?.toLowerCase().includes(this.searchText);
       const matchesDescription = item.description?.toLowerCase().includes(this.searchText);
+      const matchesGeneratedDescription = item.generatedDescription?.toLowerCase().includes(this.searchText);
+      const matchesExtractedText = item.extractedText?.toLowerCase().includes(this.searchText);
 
       const matchesCountry =
         this.selectedCountry.length === 0 ||
@@ -543,7 +554,7 @@ export class CurrencyCoinComponent implements OnInit {
         this.selectedType.length === 0 ||
         this.selectedType.includes(item.currencyCoinType);
 
-      return (matchesCoinName || matchesCountryName || matchesActulaValue || matchesIndianValue || matchesDescription || matchesCurrencyType) && matchesCountry && matchesType;
+      return (matchesCoinName || matchesCountryName || matchesActulaValue || matchesIndianValue || matchesDescription || matchesGeneratedDescription || matchesExtractedText || matchesCurrencyType) && matchesCountry && matchesType;
     });
     this.filteredTableData = filtered;
     this.filteredCoinList = filtered as any[];

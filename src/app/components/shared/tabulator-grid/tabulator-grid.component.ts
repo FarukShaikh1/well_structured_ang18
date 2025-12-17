@@ -172,7 +172,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         movableColumns: true, 
 
         
-        selectableRange: 1, 
+        // selectableRange: 1, 
         selectableRangeColumns: false, 
         selectableRangeRows: false, 
         selectableRangeClearCells: true,

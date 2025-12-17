@@ -477,10 +477,6 @@ export class DayComponent implements OnInit {
   approveDay() { }
 
   filterGridSearchText(event: any) {
-    setTimeout(() => {
-      this.searchInput.nativeElement.focus();
-    }, 0);
-
     this.searchText = event.target.value.toLowerCase();
     this.applyFilters();
   }

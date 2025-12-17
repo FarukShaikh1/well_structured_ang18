@@ -13,5 +13,7 @@ export interface CoinNoteCollectionRequest {
     lengthOfNote?: number;
     breadthOfNote?: number;
     description?: string;
+    extractedText?: string;
+    generatedDescription?: string;
     assetId?: string;
 }

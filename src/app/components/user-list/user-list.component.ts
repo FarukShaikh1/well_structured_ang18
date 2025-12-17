@@ -264,11 +264,6 @@ export class UserListComponent implements OnInit {
     if (this.filteredTableData && this.filteredTableData.length) {
       this.tabulatorGrid.clearEmptyCellSelection();
     }
-
-    setTimeout(() => {
-      this.searchInput.nativeElement.focus();
-    }, 0);
-
   }
 
   openUserDetailsPopup(id: string) {
@@ -292,9 +287,6 @@ export class UserListComponent implements OnInit {
   }
 
   filterGridBySearch(data: any) {
-    setTimeout(() => {
-      this.searchInput.nativeElement.focus();
-    }, 0);
     this.sourceOrReason = data?.target?.value?.toLowerCase();
     this.applyFilters();
   }

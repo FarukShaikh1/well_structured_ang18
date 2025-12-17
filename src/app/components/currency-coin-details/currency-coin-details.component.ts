@@ -81,6 +81,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       lengthOfNote: [0],
       breadthOfNote: [0],
       description: [""],
+      extractedText: [""],
+      generatedDescription: [""],
       metalsUsed: [""],
       isVerified: [false],
       isEditable: [false],
@@ -204,6 +206,13 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       this.currencyCoinDetailsForm.controls["description"].patchValue(
         res["description"]
       );
+      this.currencyCoinDetailsForm.controls["extractedText"].patchValue(
+        res["extractedText"]
+      );
+      this.currencyCoinDetailsForm.controls["generatedDescription"].patchValue(
+        res["generatedDescription"]
+      );
+
       this.currencyCoinDetailsForm.controls["metalsUsed"].patchValue(
         res["metalsUsed"]
       );
@@ -239,6 +248,8 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       lengthOfNote: this.currencyCoinDetailsForm.value["lengthOfNote"],
       breadthOfNote: this.currencyCoinDetailsForm.value["breadthOfNote"],
       description: this.currencyCoinDetailsForm.value["description"],
+      extractedText: this.currencyCoinDetailsForm.value["extractedText"],
+      generatedDescription: this.currencyCoinDetailsForm.value["generatedDescription"],
       assetId: this.currencyCoinDetailsForm.value["assetId"],
     };
 
