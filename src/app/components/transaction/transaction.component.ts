@@ -168,7 +168,7 @@ export class TransactionComponent implements OnInit {
         minWidth: 400,
       },
       {
-        title: "Transaction Mode",
+        title: "Transaction By",
         field: "accountName",
         sorter: "alphanum",
         minWidth: 150,
@@ -893,7 +893,7 @@ export class TransactionComponent implements OnInit {
         return minAmountCondition && maxAmountCondition;
       });
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
-      this.filteredTableData = this.tableData.filter((item: any) => {
+      this.filteredTableData = this.tableData?.filter((item: any) => {
         const searchText =
           item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
           item.description?.toLowerCase().includes(this.sourceOrReason);

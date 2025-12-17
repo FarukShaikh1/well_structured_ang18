@@ -41,7 +41,7 @@
                 </button>
 
                 <!-- EDIT -->
-                <button type="button" class="btn btn-icon btn-warning" *ngIf="selectedImage && !showPreview"
+                <button type="button" class="btn btn-icon btn-warning" *ngIf="selectedImage && editable"
                   (click)="editImage()" title="Edit">
                   <i class="bi bi-pencil-square"></i>
                 </button>
@@ -51,12 +51,11 @@
                   (click)="DownloadImage()" title="Download">
                   <i class="bi bi-download"></i>
                 </button>
-
                 <!-- FILE UPLOAD -->
                 <label class="btn btn-icon btn-secondary upload-btn" title="Upload new Image">
                   <i class="bi bi-upload"></i>
                   <input type="file" #dropFileInput accept="image/*" (change)="onFileSelected($event)" hidden />
-                </label>
+                </label><br>
 
               </div>
               }

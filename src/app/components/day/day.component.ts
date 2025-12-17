@@ -196,7 +196,7 @@ export class DayComponent implements OnInit {
       },
       {
         title: "Relation",
-        field: "relationShipName",
+        field: "relationName",
         minWidth: 120,
       },
       {

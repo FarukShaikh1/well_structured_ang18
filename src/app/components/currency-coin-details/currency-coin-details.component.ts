@@ -44,13 +44,14 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   collectionCoinId: string = "";
   selectedImageFile: File | null = null;
   fil: File | null = null;
-  formData: FormData = new FormData();
   currencyCoinDetails: any;
   assetDetails: any;
   isSaving: boolean = false;
   coinNoteCollectionRequest: CoinNoteCollectionRequest = {
   }
   ActionConstant = ActionConstant;
+  originalFileName: string = '';
+  editable: boolean = false;
   constructor(
     private _details: FormBuilder,
     private _currencyCoinService: CurrencyCoinService,
@@ -111,17 +112,20 @@ export class CurrencyCoinDetailsComponent implements OnInit {
 
   closePopup() {
     const model = document.getElementById("detailsPopup");
-    if (model !== null) {
-      model.style.display = "none";
+    if (model) {
+      this.renderer.setStyle(model, "display", "none");
     }
     this.currencyCoinDetailsForm.reset();
-    this.selectedImage = "";
+    if (this.cropper) this.cropper.destroy();
     this.selectedImageFile = null;
+    this.editable = false;
+    this.selectedImage = null;
+    this.croppedImage = null;
+    this.showPreview = false;
+    this.originalImageData = null;
     this.renderer
       .selectRootElement(this.btnCloseDayPopup?.nativeElement)
       .click();
-    if (this.cropper) this.cropper.destroy();
-
   }
 
   getCurrencyCoinDetails(collectionCoinId: string) {
@@ -245,7 +249,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       return;
     } else {
       try {
-        if (this.formData) {
+        if (this.selectedImageFile) {
           this.uploadImageAndSaveData();
         }
       } catch (error) {
@@ -305,15 +309,16 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   addOrUpdateCurrencyCoinDetails() {
     if (this.coinNoteCollectionRequest.id) {
       this.updateCurrencyCoinDetails();
-      this.formData = new FormData();
     } else {
       this.addCurrencyCoinDetails();
-      this.formData = new FormData();
     }
   }
   uploadImageAndSaveData() {
     if (this.selectedImageFile) {
-      this._assetService.uploadImage(this.currencyCoinDetailsForm.value["assetId"], API_URL.COLLECTIONCOINS, this.formData)
+      const formData = new FormData();
+      formData.append('file', this.selectedImageFile);
+
+      this._assetService.uploadImage(this.currencyCoinDetailsForm.value["assetId"], API_URL.COLLECTIONCOINS, formData)
         .subscribe({
           next: (res: any) => {
             if (this.currencyCoinDetailsForm.value["assetId"] == null || this.currencyCoinDetailsForm.value["assetId"] == undefined) {
@@ -338,21 +343,40 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     }
   }
 
-  onDragOver(event: any) {
-    event.preventDefault();
+  DownloadImage() {
+    console.log('this.selectedImage : ', this.selectedImage);
+    const link = document.createElement('a');
+    link.href = this.selectedImage?.toString() || '';
+    link.download = "image.png";
+    link.click();
   }
 
-  onDrop(event: any) {
-    event.preventDefault();
-    this.handleImageDrop(event.dataTransfer.files);
+  ngOnDestroy(): void {
+    if (this.cropper) this.cropper.destroy();
+  }
+
+  // following functions are used 
+  triggerFileInput() {
+    if (!this.selectedImage) {
+      this.dropFileInput.nativeElement.click();
+    }
   }
 
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
+    const file: File = event.target.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    this.editable = true;
+    this.originalFileName = file.name;   // ✅ store original name
+    this.selectedImageFile = file;
 
     const reader = new FileReader();
-    reader.onload = () => this.handleImageLoad(reader.result);
+    reader.onload = () => {
+      this.selectedImage = reader.result;
+      this.originalImageData = reader.result;
+      this.showPreview = false;
+
+      setTimeout(() => this.initCropper(), 200);
+    };
     reader.readAsDataURL(file);
   }
 
@@ -371,80 +395,53 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     });
   }
 
-  DownloadImage() {
-    console.log('this.selectedImage : ', this.selectedImage);
-    const link = document.createElement('a');
-    link.href = this.selectedImage?.toString() || '';
-    link.download = "image.png";
-    link.click();
+  onCropDone() {
+    const canvas = this.cropper.getCroppedCanvas();
+    if (!canvas) return;
+
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+
+      const file = new File([blob], this.originalFileName, { type: 'image/png' });
+      this.selectedImageFile = file;
+
+      this.croppedImage = URL.createObjectURL(blob);
+      this.selectedImage = this.croppedImage;
+      this.showPreview = true;
+      this.cropper.destroy();
+    }, 'image/png');
+  }
+  onDrop(event: any) {
+    event.preventDefault();
+    this.handleImageDrop(event.dataTransfer.files);
   }
 
   private handleImageDrop(files: FileList | null): void {
-    if (files && files.length > 0) {
-      const file = files[0];
-      this.selectedImageFile = files[0];
-      if (file.type.startsWith("image/")) {
-        this.formData.append("file", file);
+    if (!files || files.length === 0) return;
 
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.selectedImage = reader.result;
-          // Wait for image render, initialize cropper
-          setTimeout(() => this.initCropper(), 200);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("Please select a valid image file.");
-      }
-    }
+    const file = files[0];
+    if (!file.type.startsWith('image/')) return;
+
+    this.selectedImageFile = file;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.selectedImage = reader.result;
+      this.originalImageData = reader.result;
+      this.showPreview = false;
+      setTimeout(() => this.initCropper(), 200);
+    };
+    reader.readAsDataURL(file);
   }
 
-  triggerFileInput() {
-    if (!this.selectedImage) {
-      this.dropFileInput.nativeElement.click();
-    }
-  }
-
-  private handleImageLoad(base64: any) {
-    this.selectedImage = base64;
-    this.originalImageData = base64; // Save original before cropping
-    this.showPreview = false;
-
-    setTimeout(() => this.initCropper(), 200);
-  }
-
-  onCropDone() {
-    if (!this.cropper) {
-      console.error("Cropper not initialized");
-      return;
-    }
-
-    // ⭐ Get cropped canvas BEFORE destroying cropper
-    const canvas = this.cropper.getCroppedCanvas({});
-
-    if (!canvas) {
-      console.error("Canvas not generated — image may not be loaded");
-      return;
-    }
-
-    // Generate preview output
-    this.croppedImage = canvas.toDataURL("image/png");
-    this.selectedImage = this.croppedImage;
-    this.showPreview = true;
-
-    // Now safe to destroy
-    this.cropper.destroy();
-    // this.cropper = null;
+  onDragOver(event: any) {
+    event.preventDefault();
   }
 
   editImage() {
     this.selectedImage = this.originalImageData;
     this.showPreview = false;
     setTimeout(() => this.initCropper(), 200);
-  }
-
-  ngOnDestroy(): void {
-    if (this.cropper) this.cropper.destroy();
   }
 
 }
