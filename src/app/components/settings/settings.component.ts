@@ -523,22 +523,7 @@ export class SettingsComponent {
   deactivateItem(id: string, config: string) {
     this.configurationService.deactivateConfiguration(id, config).subscribe({
       next: (result: any) => {
-        if (config === UserConfig.ACCOUNT) {
-          this.filteredAccountTableData = result.data;
-          this.accountTableData = result.data;
-        }
-        else if (config === UserConfig.TRANSACTION_CATEGORY) {
-          this.filteredTransactionCategoryTableData = result.data;
-          this.transactionCategoryTableData = result.data;
-        }
-        else if (config === UserConfig.RELATION) {
-          this.filteredRelationTableData = result.data;
-          this.relationTableData = result.data;
-        }
-        else if (config === UserConfig.OCCASION_TYPE) {
-          this.filteredOccasionTypeTableData = result.data;
-          this.occasionTypeTableData = result.data;
-        }
+        this.loadConfigGrid(this.selectedUserId, config);
         this.toaster.showMessage("Record deativated successfully.", "success");
       },
       error: (error: any) => {

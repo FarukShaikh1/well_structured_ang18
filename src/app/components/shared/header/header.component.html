@@ -14,31 +14,19 @@
   <div class="d-flex align-items-center flex-grow-1 justify-content-end flex-wrap">
     <!-- Mobile Menu Toggle -->
     @if(alreadyLoggedIn){
-<button
-  class="btn border shadow-sm d-md-none ms-2"
-  type="button"
-  (click)="toggleMenu()"
-  aria-label="Toggle navigation"
->
- <svg
-    *ngIf="!isMenuOpen"
-    width="22" height="22" viewBox="0 0 16 16"
-    fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-  >
-    <path d="M2 4h12M2 8h12M2 12h12" />
-  </svg>
+    <button class="btn border shadow-sm d-md-none ms-2" type="button" (click)="toggleMenu()"
+      aria-label="Toggle navigation">
+      <svg *ngIf="!isMenuOpen" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round">
+        <path d="M2 4h12M2 8h12M2 12h12" />
+      </svg>
 
-  <!-- Close icon -->
-  <svg
-    *ngIf="isMenuOpen"
-    width="22" height="22" viewBox="0 0 16 16"
-    fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-  >
-    <path d="M3 3l10 10M13 3L3 13" />
-  </svg>
-</button>
+      <!-- Close icon -->
+      <svg *ngIf="isMenuOpen" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round">
+        <path d="M3 3l10 10M13 3L3 13" />
+      </svg>
+    </button>
     <!-- Header right-side icons and modules -->
     <div class="d-flex align-items-center me-3 flex-shrink-0">
       <div class="d-none d-md-flex align-items-center flex-wrap">
@@ -69,7 +57,8 @@
           style="min-width: 320px; max-height: 400px; overflow-y: auto; right: 0; left: auto;">
           <li class="dropdown-header d-flex justify-content-between align-items-center sticky-top bg-white">
             <strong>Notifications</strong>
-            <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemNotificationList()">✕</button>
+            <button type="button" class="btn-close" aria-label="Close"
+              (click)="closeSystemNotificationList()">✕</button>
           </li>
 
           <li>
@@ -106,7 +95,12 @@
     <div class="dropdown flex-shrink-0 me-2">
       <button class="btn p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-bs-auto-close="true">
         <div class="profile-circle">
+          @if(thumbnailUrl && thumbnailUrl.length > 0) {
+          <img [src]="thumbnailUrl" class="profile-circle" alt="Hello" [alt]="userNameInitials">
+          }
+          @else{
           <span title="{{ loggedInUserName }}">{{ userNameInitials }}</span>
+          }
         </div>
       </button>
 

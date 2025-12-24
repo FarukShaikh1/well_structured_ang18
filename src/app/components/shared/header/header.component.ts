@@ -60,6 +60,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userNameInitials: string = "";
   moduleList: ModuleResponse[] = [];
   isDarkMode: boolean = false;
+  thumbnailUrl: string = '';
+  ImageUrl: string = '';
 
 
   constructor(
@@ -84,6 +86,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.alreadyLoggedIn = this.localStorageService.isAuthenticated();
     this.loggedInUserName = this.getLoggedInUserName();
     this.userNameInitials = this.getUserNameInitials();
+    this.thumbnailUrl = this.localStorageService.getLoggedInUserData()?.thumbnailPathSasUrl || '';
+    this.ImageUrl = this.localStorageService.getLoggedInUserData()?.imagePathSasUrl || '';
     this.getModuleList();
   }
 
