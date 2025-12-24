@@ -47,7 +47,7 @@
     {{ filteredCoinList.length }} items found
   </div>
 
-  <div class="row pb-2">
+  <div class="row pb-2" *ngIf="viewMode !== 'news'">
     <div class="col-6 col-md-4 col-lg-4">
       <div appearance="outline" class="form-field">
         <label>Select Type</label>

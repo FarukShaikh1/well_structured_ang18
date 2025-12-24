@@ -342,19 +342,9 @@ export class CurrencyCoinComponent implements OnInit {
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const collectionCoinId = cell.getRow().getData()["collectionCoinId"];
-          this.hideCollectionCoin(collectionCoinId);
+          const countryName = cell.getRow().getData()["countryName"];
+          this.hideFromSummary(countryName);
         },
-        headerSort: false,
-      },
-      {
-        title: "",
-        field: "",
-        minWidth: 50,
-        maxWidth: 70,
-        formatter: (_cell) =>
-          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-        hozAlign: "left",
         headerSort: false,
       },
     ];
@@ -409,6 +399,12 @@ export class CurrencyCoinComponent implements OnInit {
     }
 
     return menu;
+  }
+
+  hideFromSummary(countryName: any) {
+    this.filteredTableData = this.filteredTableData.filter((item: any) => {
+      return item.countryName != countryName;
+    });
   }
 
   hideCollectionCoin(collectionCoinId: any) {
