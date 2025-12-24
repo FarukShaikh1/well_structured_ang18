@@ -402,7 +402,8 @@ export class CurrencyCoinComponent implements OnInit {
   }
 
   hideFromSummary(countryName: any) {
-    this.filteredTableData = this.filteredTableData.filter((item: any) => {
+    debugger;
+    this.filteredSummaryTableData = this.filteredSummaryTableData.filter((item: any) => {
       return item.countryName != countryName;
     });
   }
