@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URL } from '../../../utils/api-url';
-import { CoinNoteCollectionRequest } from '../../interfaces/coin-note-collection-request';
 import { LocalStorageConstants } from '../../../utils/application-constants';
+import { CoinNoteCollectionRequest } from '../../interfaces/coin-note-collection-request';
 @Injectable({
   providedIn: 'root'
 })

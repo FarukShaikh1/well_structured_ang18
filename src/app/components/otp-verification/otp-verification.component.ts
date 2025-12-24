@@ -322,17 +322,17 @@ export class OTPVerificationComponent
             'OTP verified successfully.',
             'success'
           );
-            localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN,'true');
+          localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'true');
           this.globalService.setValuesInLocalStorage();
           this.router.navigate([NavigationURLs.HOME]);
 
         }
         else {
-           this.toaster.showMessage(
-          'Error in verifying OTP, please try again later.',
-          'error'
-        );
-            localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN,'false');
+          this.toaster.showMessage(
+            'Error in verifying OTP, please try again later.',
+            'error'
+          );
+          localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
           if (result.data.otpTrialCounter >= OtpConfig.otpMaxTrial) {
 
             this.onBackToLogin();

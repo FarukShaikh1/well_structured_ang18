@@ -162,6 +162,9 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   loadAccountList() {
     this.accountList = this.globalService.getConfigList(DdlConfig.ACCOUNTS);
+    if (!this.accountList || this.accountList.length === 0) {
+      this.globalService.setValuesInLocalStorage();
+    }
   }
 
   loadAccountFields() {
@@ -421,7 +424,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   patchValues(res: any) {
     const selectedCategory = this.transactionCategoryList
-    ?.find((x: any) => x.id === res.subCategoryId);
+      ?.find((x: any) => x.id === res.subCategoryId);
 
     this.transactionDetailsForm.patchValue({
       transactionGroupId: res.transactionGroupId,
@@ -448,10 +451,10 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   getCategoryNameById(id: any): string {
-  return this.transactionCategoryList
-    ?.find((x: any) => x.id === id)
-    ?.configurationName || '';
-}
+    return this.transactionCategoryList
+      ?.find((x: any) => x.id === id)
+      ?.configurationName || '';
+  }
   submitTransactionDetails() {
     this.loaderService.showLoader();
     this.globalService.trimAllFields(this.transactionDetailsForm);

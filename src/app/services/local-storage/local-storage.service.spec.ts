@@ -7,12 +7,12 @@ describe('LocalStorageService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(LocalStorageService);
-    
+
     localStorage.clear();
   });
 
   afterEach(() => {
-    
+
     localStorage.clear();
   });
 

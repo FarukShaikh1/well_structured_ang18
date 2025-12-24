@@ -229,10 +229,16 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
 
   loadOccasionTypeList() {
     this.occasionTypeList = this.globalService.getConfigList(DdlConfig.OCCASION_TYPES);
+    if (!this.occasionTypeList || this.occasionTypeList.length === 0) {
+      this.globalService.setValuesInLocalStorage();
+    }
   }
 
   loadRelationList() {
     this.relationList = this.globalService.getConfigList(DdlConfig.RELATIONS);
+    if (!this.relationList || this.relationList.length === 0) {
+      this.globalService.setValuesInLocalStorage();
+    }
   }
 
   openDetailsPopup(specialOccasionId: any) {

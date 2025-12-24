@@ -316,18 +316,17 @@ export class GlobalService {
       user = JSON.parse(userString);
     }
     const userId = user?.id;
-    localStorage.setItem(LocalStorageConstants.USERID, user.id);
+    localStorage.setItem(LocalStorageConstants.USERID, userId);
     this.setConfigToLocalStorage(userId, UserConfig.ACCOUNT, DdlConfig.ACCOUNTS);
     this.setConfigToLocalStorage(userId, UserConfig.RELATION, DdlConfig.RELATIONS);
     this.setConfigToLocalStorage(userId, UserConfig.OCCASION_TYPE, DdlConfig.OCCASION_TYPES);
+    this.setConfigToLocalStorage(userId, UserConfig.TRANSACTION_CATEGORY, DdlConfig.TRANSACTION_CATEGORY);
     this.setCountryListToLocalStorage();
     this.setCommonListItemsToLocalStorage(DBConstants.COINTYPE, DdlConfig.COIN_TYPES);
     this.setCommonListItemsToLocalStorage(DBConstants.MONTH, DdlConfig.MONTHS);
-    // this.setLoggedInUserPermissionsToLocalStorage();
   }
 
   setConfigToLocalStorage(id: string, config: string, DdlConfig: string) {
-    // const id = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
     this.configurationService.getActiveConfigList(id, config).subscribe({
       next: (result: any) => {
         localStorage.setItem(DdlConfig, JSON.stringify(result.data));
@@ -336,7 +335,6 @@ export class GlobalService {
         console.error('Error fetching user list', error);
       },
     });
-
   }
 
   setCountryListToLocalStorage() {
@@ -361,17 +359,6 @@ export class GlobalService {
       },
     });
   }
-  // setLoggedInUserPermissionsToLocalStorage() {
-  //   this.roleService.getLoggedInUserPermissions().subscribe({
-  //     next: (result: any) => {
-  //       console.log('result : ', result);
-  //       this.localStorageService.setLoggedInUserPermissions(result.data);
-  //     },
-  //     error: (error: any) => {
-  //       console.error('Error fetching user list', error);
-  //     },
-  //   });
-  // }
 }
 
 

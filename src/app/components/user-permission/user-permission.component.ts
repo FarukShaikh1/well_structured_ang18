@@ -93,19 +93,6 @@ export class UserPermissionComponent implements OnInit {
     });
   }
 
-  // updateRoleModulePermission() {
-  //   const updatedData: UserPermission[] = this.rolePageMappingData.map(
-  //     (mapping: UserPermission) => ({
-  //       ...mapping,
-  //       view: mapping.view || false,
-  //       add: mapping.add || false,
-  //       edit: mapping.edit || false,
-  //       delete: mapping.delete || false,
-  //       download: mapping.download || false,
-  //       upload: mapping.upload || false,
-  //     })
-  //   );
-
   updateRoleModulePermission(role: UserPermission) {
     const updatedData: UserPermission = {
       userId: this.selectedUserId,
@@ -117,6 +104,7 @@ export class UserPermissionComponent implements OnInit {
       delete: role.delete,
       download: role.download,
       upload: role.upload,
+      approve: role.approve,
     };
 
     this.roleService.updateUserPermission(updatedData).subscribe(

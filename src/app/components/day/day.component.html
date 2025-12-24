@@ -73,7 +73,7 @@
                 [checked]="selectedOccasionType.includes(item.description)"
                 (change)="toggleOccasionTypeCheck($event, item.configurationName, item.id)" />
               <label class="form-check-label" [for]="item.description">
-                {{ item.description }}
+                {{ item.configurationName }}
               </label>
             </div>
           </li>
@@ -111,7 +111,7 @@
                 [checked]="selectedRelationType.includes(item.description)"
                 (change)="toggleRelationCheck($event, item.description, item.id)" />
               <label class="form-check-label" [for]="item.description">
-                {{ item.description }}
+                {{ item.configurationName }}
               </label>
             </div>
           </li>

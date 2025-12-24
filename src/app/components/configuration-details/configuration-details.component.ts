@@ -11,6 +11,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ActionConstant,
   ApplicationModules,
+  DdlConfig,
   Messages
 } from '../../../utils/application-constants';
 import { ConfigurationRequest } from '../../interfaces/configuration-request';
@@ -114,7 +115,7 @@ export class ConfigurationDetailsComponent {
         this.toaster.showMessage(res?.message, res.success ? "success" : "error");
         this.loaderService.hideLoader();
         if (res.success) {
-          localStorage.removeItem(config);
+          this.removeDdlConfigFromLocalStorage();
           this.renderer
             .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
             .click();
@@ -135,7 +136,7 @@ export class ConfigurationDetailsComponent {
         this.toaster.showMessage(res.message, res.success ? "success" : "error");
         this.loaderService.hideLoader();
         if (res.success) {
-          localStorage.removeItem(config);
+          this.removeDdlConfigFromLocalStorage();
           this.renderer
             .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
             .click();
@@ -150,6 +151,14 @@ export class ConfigurationDetailsComponent {
     });
   }
 
+  removeDdlConfigFromLocalStorage() {
+    localStorage.removeItem(this.currentConfig);
+    localStorage.removeItem(DdlConfig.OCCASION_TYPES);
+    localStorage.removeItem(DdlConfig.RELATIONS);
+    localStorage.removeItem(DdlConfig.TRANSACTION_CATEGORY);
+    localStorage.removeItem(DdlConfig.ACCOUNTS);
+
+  }
   handleApiResponse() {
     return {
       next: (result: any) => {

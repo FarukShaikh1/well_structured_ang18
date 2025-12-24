@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
-import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, DBConstants, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
+import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
 import { TruncatePipe } from '../../common/truncate.pipe';
 import { CacheService } from '../../services/cache/cache.service';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
@@ -75,17 +75,11 @@ export class CurrencyCoinComponent implements OnInit {
     this.columnConfiguration();
     this.countryList = this.localStorageService.getCountryList();
     if (!this.countryList || this.countryList.length == 0) {
-      this.globalService.getCountryList().subscribe((res: any) => {
-        this.countryList = res.data;
-        this.localStorageService.setCountryList(this.countryList);
-      });
+      this.globalService.setValuesInLocalStorage();
     }
     this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
     if (!this.typeList || this.typeList.length == 0) {
-      this.globalService.getCommonListItems(DBConstants.COINTYPE).subscribe((res: any) => {
-        this.typeList = res.data;
-        this.localStorageService.setCommonListItems(DdlConfig.COIN_TYPES, this.typeList);
-      });
+      this.globalService.setValuesInLocalStorage();
     }
     this.LoadSummaryGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
