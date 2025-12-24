@@ -7,8 +7,7 @@
   }
   <button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup"
     style="display:none"></button>
-  @if(viewMode!='grid'){
-  <button (click)="setView('grid')" class="btn btn-primary rounded-button">
+  <button (click)="setView('grid')" class="btn btn-primary rounded-button" [ngClass]="{'activeTab': viewMode ==='grid'}">
     <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M6 4H18C18.5523 4 19 4.44772 19 5V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V5C5 4.44772 5.44772 4 6 4Z"
@@ -21,14 +20,10 @@
     </svg>
     Data
   </button>
-  }
-  @if(viewMode!='gallery'){
-  <button (click)="setView('gallery')" class="btn btn-primary rounded-button">
+  <button (click)="setView('gallery')" class="btn btn-primary rounded-button" [ngClass]="{'activeTab': viewMode ==='gallery'}">
     <i class="bi bi-images"></i> Gallery
   </button>
-  }
-  @if(viewMode!='summary'){
-  <button (click)="setView('summary')" class="btn btn-primary rounded-button">
+  <button (click)="setView('summary')" class="btn btn-primary rounded-button" [ngClass]="{'activeTab': viewMode ==='summary'}">
     <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
       <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -37,23 +32,23 @@
     </svg>
     Summary
   </button>
-  }
-  @if(viewMode!='news'){
-  <button (click)="setView('news')" class="btn btn-primary rounded-button">
+  <button (click)="setView('news')" class="btn btn-primary rounded-button" [ngClass]="{'activeTab': viewMode ==='news'}">
     <i class="bi bi-newspaper"></i>
     Artcle in news
   </button>
-  }
   <button (click)="reloadData()" class="btn btn-primary rounded-button" *ngIf="viewMode !== 'news'">
     <i class="fa fa-refresh"></i> Refresh data
   </button>
 
-  <button (click)="redirectToOwnersProfile()" class="btn btn-primary rounded-button">
+  <button (click)="redirectToOwnersProfile()" class="btn btn-primary rounded-button" >
     <i class="fa fa-info-circle"></i> About Owner
   </button>
+  <div class="btn btn-primary rounded-button d-inline-flex d-md-none">
+    {{ filteredCoinList.length }} items found
+  </div>
 
-  <div class="row pb-2" *ngIf="viewMode !== 'news'">
-    <div class="col-4 col-sm-4 col-md-3 col-lg-2">
+  <div class="row pb-2">
+    <div class="col-6 col-md-4 col-lg-4">
       <div appearance="outline" class="form-field">
         <label>Select Type</label>
         <button
@@ -84,14 +79,14 @@
         </ul>
       </div>
     </div>
-    <div class="col-4 col-sm-4 col-md-3 col-lg-2">
+    <div class="col-6 col-md-4 col-lg-4">
       <div appearance="outline">
         <label>Search</label>
         <input #searchInput (input)="filterGridSearchText($event)"
           class="form-control form-control-lg text-dark bg-transparent" />
       </div>
     </div>
-    <div class="col-4 col-sm-4 col-md-6 col-lg-8 d-flex align-items-end justify-content-end">
+    <div class="col-4 col-sm-4 col-md-4 col-lg-4 d-md-inline-flex d-none align-items-end justify-content-end">
       <div class="btn btn-primary">
         {{ filteredCoinList.length }} items found
       </div>
@@ -138,35 +133,40 @@
 
   <div class="row mt-4" *ngIf="viewMode === 'news'">
     <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newssakal22feb16.png'" alt="image missing" class="blur-load" (load)="removeBlur($event)" />
+      <img [src]="basePath + 'news/newssakal22feb16.png'" alt="image missing" class="blur-load"
+        (load)="removeBlur($event)" />
       <div class="gallery-caption">
         <h3>मंगळवार, 23 February 2016, सकाळ Today अमरावती</h3>
       </div>
     </div>
 
     <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newsdeshonnati11apr17.png'" alt="image missing" class="blur-load" (load)="removeBlur($event)"/>
+      <img [src]="basePath + 'news/newsdeshonnati11apr17.png'" alt="image missing" class="blur-load"
+        (load)="removeBlur($event)" />
       <div class="gallery-caption">
         <h3>मंगळवार, 11 एप्रिल 2017, देशोन्नती जिल्हा Rdx अमरावती </h3>
       </div>
     </div>
 
     <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newsDivyamarathi10apr17.png'" alt="image missing" class="blur-load" (load)="removeBlur($event)"/>
+      <img [src]="basePath + 'news/newsDivyamarathi10apr17.png'" alt="image missing" class="blur-load"
+        (load)="removeBlur($event)" />
       <div class="gallery-caption">
         <h3>सोमवार, 10 एप्रिल 2017, दैनिक दिव्य मराठी अमरावती, Page No.3</h3>
       </div>
     </div>
 
     <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newssakal10feb17.png'" alt="image missing" class="blur-load" (load)="removeBlur($event)"/>
+      <img [src]="basePath + 'news/newssakal10feb17.png'" alt="image missing" class="blur-load"
+        (load)="removeBlur($event)" />
       <div class="gallery-caption">
         <h3>सोमवार, 10 एप्रिल 2017, सकाळ Today अमरावती, Page No. 3</h3>
       </div>
     </div>
 
     <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newsVruttakesari11apr17.png'" alt="image missing" class="blur-load" (load)="removeBlur($event)"/>
+      <img [src]="basePath + 'news/newsVruttakesari11apr17.png'" alt="image missing" class="blur-load"
+        (load)="removeBlur($event)" />
       <div class="gallery-caption">
         <h3>मंगळवार, 11 एप्रिल 2017, वृत्त केसरी ग्रामीण, Page No.13</h3>
       </div>
@@ -203,7 +203,8 @@
         </div>
         <div #imageContainer (touchstart)="touchStart($event)" (touchmove)="touchMove($event)" (touchend)="touchEnd()"
           class="modal-body p-0 d-flex justify-content-center align-items-center">
-          <img [src]="filteredCoinList[currentIndex]?.imagePathSasUrl" class="fullscreen-img" alt="Preview Image" [style.transform]="transformStyle">
+          <img [src]="filteredCoinList[currentIndex]?.imagePathSasUrl" class="fullscreen-img" alt="Preview Image"
+            [style.transform]="transformStyle">
         </div>
         <!-- Thumbnail Strip -->
         <div class="thumbnail-strip">

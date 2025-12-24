@@ -1444,6 +1444,12 @@ img{
   cursor: pointer;
   transition: 0.2s;
 }
+
+.activeTab {
+  transform: scale(1.1);
+  border-radius: 0%;
+}
+
 .container {
     display: flex;
     flex-wrap: wrap; 
