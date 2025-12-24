@@ -12,7 +12,7 @@
           <div class="form-group">
             <label for="configurationName">{{currentConfig}} Name</label>
             <input type="text" id="configurationName" class="form-control" formControlName="configurationName"
-              placeholder="Enter configuration name" />
+              [placeholder]="'Enter ' + currentConfig + ' name'" />
             <div *ngIf="configForm.get('configurationName')?.touched && configForm.get('configurationName')?.invalid"
               class="text-danger">
               <small *ngIf="configForm.get('configurationName')?.errors?.['required']">
@@ -28,7 +28,9 @@
           <div class="form-group pt-4">
             <label for="configurationDescription">{{currentConfig}} Description</label>
             <textarea id="configurationDescription" class="form-control" formControlName="configurationDescription"
-              placeholder="Enter configuration description"></textarea>
+              [placeholder]="'Enter ' + currentConfig + ' description'" 
+              rows="3"
+              ></textarea>
             <div
               *ngIf="configForm.get('configurationDescription')?.touched && configForm.get('configurationDescription')?.invalid"
               class="text-danger">

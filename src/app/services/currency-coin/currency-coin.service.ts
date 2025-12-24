@@ -65,4 +65,8 @@ export class CurrencyCoinService {
   deleteCurrencyCoin(dayId: string): Observable<any> {
     return this.http.get(API_URL.DELETE_COLLECTION_COIN + dayId + '&userId=' + String(localStorage.getItem(LocalStorageConstants.USERID)));
   }
+
+  approveCurrencyCoin(coinNoteCollectionId: string): Observable<any> {
+    return this.http.get(API_URL.APPROVE_COLLECTION_COIN + coinNoteCollectionId + '&userId=' + String(localStorage.getItem(LocalStorageConstants.USERID)));
+  }
 }

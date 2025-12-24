@@ -333,6 +333,7 @@ export const ActionConstant = {
     VIEW: 'VIEW',
     DOWNLOAD: 'DOWNLOAD',
     UPLOAD: 'UPLOAD',
+    APPROVE: 'APPROVE',
 };
 
 export const ApplicationRoles = {

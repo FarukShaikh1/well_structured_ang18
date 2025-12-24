@@ -96,7 +96,7 @@ export class CurrencyCoinComponent implements OnInit {
     });
     this.globalService.refreshList$.subscribe(() => { });
     await this.loadGrid();
-    this.selectDefaultRareCoins();
+    // this.selectDefaultRareCoins();
   }
   removeBlur(event: Event) {
     const img = event.target as HTMLImageElement;
@@ -397,6 +397,17 @@ export class CurrencyCoinComponent implements OnInit {
         },
       });
     }
+    if (
+      this.globalService.isAccessible(ActionConstant.DELETE) && !rowData['isVerified']
+    ) {
+      menu.push({
+        label: ApplicationConstantHtml.APPROVE_LABLE,
+        action: () => {
+          this.approveCurrencyCoin(rowData['id']);
+        },
+      });
+    }
+
 
     return menu;
   }
@@ -504,7 +515,18 @@ export class CurrencyCoinComponent implements OnInit {
       if (btn) btn.click();
       else console.error('openDetailsButton not found');
     }, 120);
+  }
 
+  approveCurrencyCoin(data: any) {
+    this.currencyCoinService.approveCurrencyCoin(data).subscribe({
+      next: (res: any) => {
+        this.toaster.showMessage("Record Approved Successfully.", "success");
+        this.reloadData();
+      },
+      error: (error: any) => {
+        this.loaderService.hideLoader();
+      },
+    });
   }
 
   deleteCurrencyCoin(currencyCoinId: string) {

@@ -18,6 +18,7 @@ export const API_URL = {
   ADD_COLLECTION_COIN: `${serverUrl}${apiPrefix}/coinNoteCollection/add?userId=`,
   UPDATE_COLLECTION_COIN: `${serverUrl}${apiPrefix}/coinNoteCollection/update?userId=`,
   DELETE_COLLECTION_COIN: `${serverUrl}${apiPrefix}/coinNoteCollection/delete?coinNoteCollectionId=`,
+  APPROVE_COLLECTION_COIN: `${serverUrl}${apiPrefix}/coinNoteCollection/approve?coinNoteCollectionId=`,
 
   GET_SPECIAL_OCCASION_DETAILS: `${serverUrl}${apiPrefix}/SpecialOccasion/GetDetails`,
   GET_SPECIAL_OCCASION_LIST: `${serverUrl}${apiPrefix}/SpecialOccasion/GetList`,
