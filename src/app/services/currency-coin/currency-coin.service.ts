@@ -21,7 +21,7 @@ export class CurrencyCoinService {
     return this.http.get(API_URL.GET_COLLECTION_COIN_GALLERY);
   }
   getCurrencyCoinRecords(countryId: number = 0): Observable<any> {
-    if (localStorage.getItem(LocalStorageConstants.USERID) !== null) {
+    if (localStorage.getItem(LocalStorageConstants.USERID) !== null && localStorage.getItem(LocalStorageConstants.USERID) !== undefined  && localStorage.getItem(LocalStorageConstants.USERID) !== 'undefined') {
       const params = new HttpParams()
         .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
         .set('countryId', String(countryId))
