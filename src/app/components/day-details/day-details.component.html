@@ -29,10 +29,10 @@
                 <img [src]="croppedImage" class="crop-image preview-image" *ngIf="showPreview" />
 
               </div>
-              @if(globalService.isAccessible(ActionConstant.ADD) ||
-              globalService.isAccessible(ActionConstant.EDIT)){
               <!-- Action Buttons -->
               <div class="mt-3 d-flex justify-content-center gap-2 action-buttons">
+                @if(globalService.isAccessible(ActionConstant.ADD) ||
+                globalService.isAccessible(ActionConstant.EDIT)){
 
                 <!-- DONE (Crop) -->
                 <button type="button" class="btn btn-icon btn-primary" *ngIf="selectedImage && !showPreview"
@@ -47,18 +47,18 @@
                 </button>
 
                 <!-- DOWNLOAD -->
-                <button type="button" class="btn btn-icon btn-success" *ngIf="selectedImage && showPreview"
-                  (click)="DownloadImage()" title="Download">
-                  <i class="bi bi-download"></i>
-                </button>
                 <!-- FILE UPLOAD -->
                 <label class="btn btn-icon btn-secondary upload-btn" title="Upload new Image">
                   <i class="bi bi-upload"></i>
                   <input type="file" #dropFileInput accept="image/*" (change)="onFileSelected($event)" hidden />
-                </label><br>
+                </label>
+                }
+                <button type="button" class="btn btn-icon btn-success" *ngIf="selectedImage && showPreview"
+                  (click)="DownloadImage()" title="Download">
+                  <i class="bi bi-download"></i>
+                </button><br />
 
               </div>
-              }
             </div>
             <div class="col-12 col-lg-6">
               <div class="row">

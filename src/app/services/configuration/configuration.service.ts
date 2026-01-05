@@ -6,7 +6,6 @@ import { LocalStorageConstants } from '../../../utils/application-constants';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {
-  private base = '/api/accounts';
 
   loggedInUserId: string;
   constructor(private http: HttpClient) {
@@ -21,7 +20,6 @@ export class ConfigurationService {
   }
 
   getActiveConfigList(userId: string = '', config: string = '') {
-    userId = userId == 'loggedInUserId' ? this.loggedInUserId : userId;
     const params = new HttpParams()
       .set('userId', userId)
       .set('config', config);
@@ -36,6 +34,8 @@ export class ConfigurationService {
   }
 
   addConfiguration(request: ConfigurationRequest, config: string) {
+    console.log('this.loggedInUserId : ', this.loggedInUserId);
+
     const params = new HttpParams()
       .set('userId', this.loggedInUserId)
       .set('config', config);
@@ -43,6 +43,7 @@ export class ConfigurationService {
   }
 
   updateConfiguration(request: ConfigurationRequest, config: string) {
+    console.log('this.loggedInUserId : ', this.loggedInUserId);
     const params = new HttpParams()
       .set('userId', this.loggedInUserId)
       .set('config', config);
@@ -50,6 +51,7 @@ export class ConfigurationService {
   }
 
   deleteConfiguration(id: string, config: string) {
+    console.log('this.loggedInUserId : ', this.loggedInUserId);
     const params = new HttpParams()
       .set('id', id)
       .set('userId', this.loggedInUserId)
@@ -58,6 +60,7 @@ export class ConfigurationService {
   }
 
   deactivateConfiguration(id: string, config: string) {
+    console.log('this.loggedInUserId : ', this.loggedInUserId);
     const params = new HttpParams()
       .set('id', id)
       .set('userId', this.loggedInUserId)

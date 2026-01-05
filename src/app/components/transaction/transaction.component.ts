@@ -9,6 +9,7 @@ import {
   ApplicationModules,
   ApplicationTableConstants,
   DdlConfig,
+  LocalStorageConstants,
   NavigationURLs,
   UserConfig
 } from "../../../utils/application-constants";
@@ -1210,7 +1211,7 @@ export class TransactionComponent implements OnInit {
     if (suggestions) {
       return;
     }
-    this.configService.getActiveConfigList('loggedInUserId', UserConfig.TRANSACTION_CATEGORY).subscribe({
+    this.configService.getActiveConfigList(String(localStorage.getItem(LocalStorageConstants.USERID)), UserConfig.TRANSACTION_CATEGORY).subscribe({
       next: (res: any) => {
         this.localStorageService.setTransactionCategories(res.data);
       },
