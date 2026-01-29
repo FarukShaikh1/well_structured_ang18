@@ -71,7 +71,9 @@
     Category wise Report
   </button>
 
-  <button (click)="monthlyBudget()" class="btn btn-primary rounded-button">
+  <button (click)="monthlyBudget()" class="btn btn-primary rounded-button"
+    [ngClass]="{'activeTab': activeComponent === NavigationURLs.BUDGET}"
+  >
     <i class="fa fa-report"></i> Monthly Budget
   </button>
 
@@ -170,12 +172,13 @@
       </div>
     </div>
     }
+    @if(activeComponent !== NavigationURLs.BUDGET){
     <div class="mb-2">
       <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
         [paginationSize]="1000" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
       </app-tabulator-grid>
     </div>
-
+    }
   </div>
 </div>
 <app-transaction-details [lastTransactionDate]="lastTransactionDate"></app-transaction-details>
