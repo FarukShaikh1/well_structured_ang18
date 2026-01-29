@@ -1,5 +1,26 @@
-
 <div class="budget-container">
+    <!-- FORM -->
+    <div class="form-grid">
+        <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo" style="background-color: #f8f9fa;">
+
+        <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose" style="background-color: #f8f9fa;">
+
+        <select [(ngModel)]="model.categoryId">
+            <option value="">Select Category</option>
+            <option *ngFor="let c of categories" [value]="c.id">
+                {{ c.configurationName }}
+            </option>
+        </select>
+
+        <input type="number" placeholder="Amount" [(ngModel)]="model.amount" style="background-color: #f8f9fa;">
+
+        <button (click)="save()">
+            {{ isEdit ? 'Update' : 'Add' }}
+        </button>
+
+        <button class="reset" (click)="reset()">Clear</button>
+    </div>
+
     <!-- TABLE -->
     <div class="row">
         <div class="col-12">
@@ -23,7 +44,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><strong>Total</strong></td>
+                        <td colspan="3"><strong>Total</strong></td>
                         <td class="amount"><strong>{{ getTotal() }}</strong></td>
                         <td></td>
                     </tr>
@@ -32,26 +53,5 @@
         </div>
     </div>
 
-        <!-- FORM -->
-    <div class="form-grid">
-        <input type="text" class="form-control-lg" placeholder="Pay To" [(ngModel)]="model.payTo">
-
-        <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose">
-
-        <select [(ngModel)]="model.categoryId">
-            <option value="">Select Category</option>
-            <option *ngFor="let c of categories" [value]="c.id">
-                {{ c.configurationName }}
-            </option>
-        </select>
-
-        <input type="number" placeholder="Amount" [(ngModel)]="model.amount">
-
-        <button (click)="save()">
-            {{ isEdit ? 'Update' : 'Add' }}
-        </button>
-
-        <button class="reset" (click)="reset()">Clear</button>
-    </div>
 
 </div>
