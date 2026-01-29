@@ -650,7 +650,7 @@ body.dark-mode .tabulator .tabulator-row.tabulator-odd { background-color: #1118
 }
 
 .table-container {
-  padding: 0 !important;
+  padding: 20px !important;
   border-radius: 8px !important;
   box-shadow: none !important;
   border: none !important;

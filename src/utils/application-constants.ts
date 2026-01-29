@@ -33,8 +33,8 @@ export const ApplicationConstants = {
     REGEX_DASH_DOT_UNDERSCORE_WITH_SPACE: /(?<=[a-zA-Z0-9])[-_.](?=[a-zA-Z0-9])/g,
     REGEX_CAPITALIZE_FIRST_LETTER: /\b\w/g,
     APPLICATIONS_OWNER_EMAILID: 'farukshaikh908@gmail.com',
-    REPORT_TYPE_SOURCE_WISE : 'SourceWise',
-    REPORT_TYPE_CATEGORY_WISE : 'CategoryWise',
+    REPORT_TYPE_SOURCE_WISE: 'SourceWise',
+    REPORT_TYPE_CATEGORY_WISE: 'CategoryWise',
 
 
 };
@@ -128,7 +128,11 @@ export const NavigationURLs = {
     DAY_LIST: '/home/day',
     FORGOT_PASSWORD: '/forgot-password',
     USER_LIST: '/home/manage-users',
-    USER_PROFILE: '/home/user-profile',
+    USER_PROFILE: '/home/my-profile',
+    ROUTINE: '/home/routine',
+    BUDGET: '/home/budget',
+    SETTINGS: '/home/settings',
+    DOCUMENT: '/home/documents',
     CHANGE_PASSWORD: '/home/change-password',
     NAV_CHAT_PANEL: '/home/nav-chat-panel',
     EXPENSE_LIST: '/home/expenses',
@@ -164,6 +168,9 @@ export const RoutePath = {
     OTP_VERIFICATION: 'otp-verification',
     NOTIFICATIONS: 'notifications',
     UNAUTHORIZED: 'unauthorised',
+    ROUTINE: 'routine',
+    BUDGET: 'budget',
+
 };
 
 export const RoutePathTitles = {
@@ -185,6 +192,9 @@ export const RoutePathTitles = {
     OTP_VERIFICATION: 'Verify OTP',
     NOTIFICATIONS: 'Notifications',
     UNAUTHORIZED: 'Unauthorised',
+    ROUTINE: 'Routine',
+    BUDGET: 'Budget',
+
 };
 
 

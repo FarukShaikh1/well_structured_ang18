@@ -8,7 +8,8 @@
     Add Transaction
   </button>
   }
-  <button (click)="goToTransactionList()" class="btn btn-primary rounded-button" [ngClass]="{'activeTab': activeComponent === NavigationURLs.EXPENSE_LIST}">
+  <button (click)="goToTransactionList()" class="btn btn-primary rounded-button"
+    [ngClass]="{'activeTab': activeComponent === NavigationURLs.EXPENSE_LIST}">
     <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M6 4H18C18.5523 4 19 4.44772 19 5V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V5C5 4.44772 5.44772 4 6 4Z"
@@ -22,7 +23,8 @@
 
     Transaction List
   </button>
-  <button (click)="goToTransactionSummary()" class="btn btn-primary rounded-button" [ngClass]="{'activeTab': activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST}">
+  <button (click)="goToTransactionSummary()" class="btn btn-primary rounded-button"
+    [ngClass]="{'activeTab': activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST}">
     <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
       <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -31,7 +33,8 @@
     </svg>
     Transaction Summary
   </button>
-  <button (click)="goToBalanceSummary()" class="btn btn-primary rounded-button" [ngClass]="{'activeTab': activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST}">
+  <button (click)="goToBalanceSummary()" class="btn btn-primary rounded-button"
+    [ngClass]="{'activeTab': activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST}">
     <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
       <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -40,7 +43,8 @@
     </svg>
     Balance Summary
   </button>
-  <button (click)="goToTransactionReport()" class="btn btn-primary rounded-button" [ngClass]="{'activeTab': activeComponent === NavigationURLs.EXPENSE_REPORT}">
+  <button (click)="goToTransactionReport()" class="btn btn-primary rounded-button"
+    [ngClass]="{'activeTab': activeComponent === NavigationURLs.EXPENSE_REPORT}">
     <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
       <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
@@ -53,7 +57,8 @@
     Transaction Report
   </button>
 
-  <button (click)="goToCategoryWiseReport()" class="btn btn-primary rounded-button" [ngClass]="{'activeTab': activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT}">
+  <button (click)="goToCategoryWiseReport()" class="btn btn-primary rounded-button"
+    [ngClass]="{'activeTab': activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT}">
     <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
       <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
@@ -65,6 +70,11 @@
     </svg>
     Category wise Report
   </button>
+
+  <button (click)="monthlyBudget()" class="btn btn-primary rounded-button">
+    <i class="fa fa-report"></i> Monthly Budget
+  </button>
+
   <button (click)="refreshData()" class="btn btn-primary rounded-button">
     <i class="fa fa-refresh"></i> Refresh data
   </button>
@@ -129,11 +139,15 @@
   </div>
 
   <div class="row g-3 mb-4">
+    @if(activeComponent === NavigationURLs.BUDGET){
+    <app-budget></app-budget>
+    }
 
-    @if(activeComponent === NavigationURLs.EXPENSE_REPORT){
+    @else if(activeComponent === NavigationURLs.EXPENSE_REPORT){
     <div class="col-12 col-xl-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
-        <app-transaction-pie-chart [reportData]="transactionReports" [reportType]="reportType"></app-transaction-pie-chart>
+        <app-transaction-pie-chart [reportData]="transactionReports"
+          [reportType]="reportType"></app-transaction-pie-chart>
       </div>
     </div>
     <div class="col-12 col-xl-6 mb-4">
@@ -142,24 +156,26 @@
       </div>
     </div>
     }
-
-    @if(activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT){
+    @else if(activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT){
     <div class="col-12 col-xl-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
-        <app-transaction-pie-chart [reportData]="categoryWiseReportResponse" [reportType]="reportType"></app-transaction-pie-chart>
+        <app-transaction-pie-chart [reportData]="categoryWiseReportResponse"
+          [reportType]="reportType"></app-transaction-pie-chart>
       </div>
     </div>
     <div class="col-12 col-xl-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
-        <app-transaction-report-chart [reportData]="categoryWiseReportResponse" [reportType]="reportType"></app-transaction-report-chart>
+        <app-transaction-report-chart [reportData]="categoryWiseReportResponse"
+          [reportType]="reportType"></app-transaction-report-chart>
       </div>
     </div>
     }
     <div class="mb-2">
       <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
+        [paginationSize]="1000" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
       </app-tabulator-grid>
     </div>
+
   </div>
 </div>
 <app-transaction-details [lastTransactionDate]="lastTransactionDate"></app-transaction-details>

@@ -38,9 +38,14 @@ export class TransactionService {
     return this.http.post(API_URL.GET_TRANSACTION_REPORT_LIST, filter, { params });
   }
 
-    getCategoryWiseReportList(filter: ExpenseFilterRequest): Observable<any> {
+  getCategoryWiseReportList(filter: ExpenseFilterRequest): Observable<any> {
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.post(API_URL.GET_CATEGORY_WISE_REPORT_LIST, filter, { params });
+  }
+
+  getBudgetWiseReportList(filter: ExpenseFilterRequest): Observable<any> {
+    const params = new HttpParams().set("userid", this.loggedInUserId);
+    return this.http.post(API_URL.GET_BUDGET_WISE_REPORT_LIST, filter, { params });
   }
 
   getTransactionList(filter: ExpenseFilterRequest): Observable<any> {
@@ -82,7 +87,7 @@ export class TransactionService {
     const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.get(API_URL.GET_TRANSACTION_SUGGESTION_LIST, {
       params: params,
-    }); 
+    });
   }
 
   getAvailAmount(
@@ -93,7 +98,7 @@ export class TransactionService {
       .set("userid", this.loggedInUserId)
       .set("onDate", onDate)
       .set("accountType", accountType);
-    return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params }); 
+    return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params });
   }
 
 }

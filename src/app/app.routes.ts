@@ -8,6 +8,8 @@ import { SettingsComponent } from "./components/settings/settings.component";
 import { TransactionComponent } from "./components/transaction/transaction.component";
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
+import { RoutineComponent } from "./components/routine/routine.component";
+import { BudgetComponent } from "./components/budget/budget.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -79,6 +81,20 @@ export const routes: Routes = [
         component: DocumentsComponent,
 
       },
+
+      {
+        path: RoutePath.ROUTINE,
+        title: RoutePathTitles.ROUTINE,
+        component: RoutineComponent,
+
+      },
+      {
+        path: RoutePath.BUDGET,
+        title: RoutePathTitles.BUDGET,
+        component: BudgetComponent,
+
+      },
+
       {
         path: RoutePath.CHANGE_PASSWORD,
         title: RoutePathTitles.CHANGE_PASSWORD,

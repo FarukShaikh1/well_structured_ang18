@@ -259,4 +259,15 @@ export class DateUtils {
     return isTodayMatch || isYesterdayMatch || isTomorrowMatch;
   }
 
+  static normalizeTime(value: string): string {
+    if (!value) return value;
+
+    // If already HH:mm:ss → return as is
+    if (value.length === 8) return value;
+
+    // Convert HH:mm → HH:mm:00
+    return `${value}:00`;
+  }
+
+
 }

@@ -1,0 +1,58 @@
+.budget-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  margin-bottom: 15px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+
+
+button {
+  padding: 8px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+button.edit {
+  background-color: #ffc107;
+}
+
+button.delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+button.reset {
+  background-color: #6c757d;
+  color: white;
+}
+
+button:not(.edit):not(.delete):not(.reset) {
+  background-color: #0d6efd;
+  color: white;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.amount {
+  text-align: right;
+}

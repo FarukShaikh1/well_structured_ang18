@@ -51,7 +51,7 @@ export class TransactionPieChartComponent implements OnChanges {
     );
     var labels;
     if (this.reportType === ApplicationConstants.REPORT_TYPE_CATEGORY_WISE) {
-      labels = filteredData.map(item => item.subCategoryName || 'Unknown');
+      labels = filteredData.map(item => item.categoryName || 'Unknown');
     } else {
       labels = filteredData.map(item => item.sourceOrReason || 'Unknown');
     }

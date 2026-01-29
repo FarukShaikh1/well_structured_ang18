@@ -237,6 +237,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate([NavigationURLs.CHANGE_PASSWORD]);
   }
 
+    goToRoutinePage() {
+    this.router.navigate([NavigationURLs.ROUTINE]);
+  }
+
+      goToBudgetPage() {
+    this.router.navigate([NavigationURLs.BUDGET]);
+  }
+
 
 
   fetchAllSystemNotifications() {

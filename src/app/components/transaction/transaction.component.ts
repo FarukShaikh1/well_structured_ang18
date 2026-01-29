@@ -29,6 +29,7 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { TransactionDetailsComponent } from "../transaction-details/transaction-details.component";
 import { TransactionPieChartComponent } from "../transaction-pie-chart/transaction-pie-chart.component";
 import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
+import { BudgetComponent } from "../budget/budget.component";
 export interface Task {
   name: string;
   completed: boolean;
@@ -44,7 +45,8 @@ export interface Task {
     TransactionDetailsComponent,
     ConfirmationDialogComponent,
     TransactionReportChartComponent,
-    TransactionPieChartComponent
+    TransactionPieChartComponent,
+    BudgetComponent
   ],
   templateUrl: "./transaction.component.html",
   providers: [DatePipe, DateUtils],
@@ -93,6 +95,10 @@ export class TransactionComponent implements OnInit {
   columnList: string = '_col';
   accountColumnList: string = '_AccountColumns';
   reportType = "sourceWise";
+  // reportColumnConfig: any;//({ title: string; field: string; sorter: string; minWidth: number; formatter: (cell: CellComponent) => string; cssClass?: undefined; headerHozAlign?: undefined; hozAlign?: undefined; bottomCalc?: undefined; bottomCalcFormatter?: undefined; bottomCalcFormatterParams?: undefined; maxWidth?: undefined; cellClick?: undefined; headerSort?: undefined; clickMenu?: undefined; } | { title: string; field: string; sorter: string; minWidth: number; formatter?: undefined; cssClass?: undefined; headerHozAlign?: undefined; hozAlign?: undefined; bottomCalc?: undefined; bottomCalcFormatter?: undefined; bottomCalcFormatterParams?: undefined; maxWidth?: undefined; cellClick?: undefined; headerSort?: undefined; clickMenu?: undefined; } | { sorter: string; title: string; field: string; minWidth: number; formatter: (cell: any) => string; cssClass: string; headerHozAlign?: undefined; hozAlign?: undefined; bottomCalc?: undefined; bottomCalcFormatter?: undefined; bottomCalcFormatterParams?: undefined; maxWidth?: undefined; cellClick?: undefined; headerSort?: undefined; clickMenu?: undefined; } | { title: string; field: string; sorter: string; formatter: (cell: CellComponent) => string; headerHozAlign: string; hozAlign: string; bottomCalc: string; bottomCalcFormatter: (cell: CellComponent) => string; bottomCalcFormatterParams: { symbol: string; precision: number; }; cssClass: string; minWidth: number; maxWidth?: undefined; cellClick?: undefined; headerSort?: undefined; clickMenu?: undefined; } | { title: string; field: string; minWidth: number; maxWidth: number; formatter: (cell: CellComponent) => string; cellClick: (e: any, cell: any) => void; headerSort: boolean; sorter?: undefined; cssClass?: undefined; headerHozAlign?: undefined; hozAlign?: undefined; bottomCalc?: undefined; bottomCalcFormatter?: undefined; bottomCalcFormatterParams?: undefined; clickMenu?: undefined; } | { title: string; field: string; minWidth: number; maxWidth: number; formatter: (_cell: any) => string; clickMenu: ({ label: string; action: (_e: any, cell: CellComponent) => void; separator?: undefined; } | { separator: boolean; label?: undefined; action?: undefined; })[]; hozAlign: string; headerSort: boolean; sorter?: undefined; cssClass?: undefined; headerHozAlign?: undefined; bottomCalc?: undefined; bottomCalcFormatter?: undefined; bottomCalcFormatterParams?: undefined; cellClick?: undefined; })[];
+  // reportTableData: any;
+  // reportFilteredTableData: any;
+  // reportActiveComponent: string = '';
 
   constructor(
     private transactionService: TransactionService,
@@ -482,6 +488,122 @@ export class TransactionComponent implements OnInit {
   }
 
   loadConfigForCategoryWiseReportList() {
+    // this.columnConfig = [
+    //   {
+    //     title: "FirstDate",
+    //     field: "firstDate",
+    //     sorter: "alphanum",
+    //     minWidth: 100,
+    //     formatter: this.dateFormatter.bind(this),
+    //   },
+    //   {
+    //     title: "LastDate",
+    //     field: "lastDate",
+    //     sorter: "alphanum",
+    //     minWidth: 100,
+    //     formatter: this.dateFormatter.bind(this),
+    //   },
+    //   {
+    //     title: "Category",
+    //     field: "subCategoryName",
+    //     sorter: "alphanum",
+    //     minWidth: 200,
+    //   },
+    //   {
+    //     sorter: "alphanum",
+    //     title: "Source/Reason",
+    //     field: "sourceOrReason",
+    //     minWidth: 600,
+    //     formatter: (cell) => {
+    //       const value = cell.getValue() || "";
+    //       return `<div class="text-wrap">${value}</div>`;
+    //     },
+    //     cssClass: "description-column",
+    //   },
+    //   {
+    //     title: "TakenAmount",
+    //     field: "takenAmount",
+    //     sorter: "alphanum",
+    //     formatter: this.amountColorFormatter.bind(this),
+    //     headerHozAlign: "right",
+    //     hozAlign: "right",
+    //     bottomCalc: "sum",
+    //     bottomCalcFormatter: this.amountColorFormatter.bind(this),
+    //     bottomCalcFormatterParams: { symbol: "", precision: 2 },
+    //     cssClass: "amount-column",
+    //     minWidth: 120,
+    //   },
+    //   {
+    //     title: "GivenAmount",
+    //     field: "givenAmount",
+    //     sorter: "alphanum",
+    //     formatter: this.amountColorFormatter.bind(this),
+    //     headerHozAlign: "right",
+    //     hozAlign: "right",
+    //     bottomCalc: "sum",
+    //     bottomCalcFormatter: this.amountColorFormatter.bind(this),
+    //     bottomCalcFormatterParams: { symbol: "", precision: 2 },
+    //     cssClass: "amount-column",
+    //     minWidth: 120,
+    //   },
+    //   {
+    //     title: "TotalAmount",
+    //     field: "totalAmount",
+    //     sorter: "alphanum",
+    //     formatter: this.amountColorFormatter.bind(this),
+    //     headerHozAlign: "right",
+    //     hozAlign: "right",
+    //     bottomCalc: "sum",
+    //     bottomCalcFormatter: this.amountColorFormatter.bind(this),
+    //     bottomCalcFormatterParams: { symbol: "", precision: 2 },
+    //     cssClass: "amount-column",
+    //     minWidth: 120,
+    //   },
+    //   {
+    //     title: "",
+    //     field: "",
+    //     minWidth: 50,
+    //     maxWidth: 70,
+    //     formatter: this.globalService.hidebuttonFormatter.bind(this),
+    //     cellClick: (e, cell) => {
+    //       const subCategoryName = cell.getRow().getData()["categoryName"];
+    //       this.hideTransactionByCategory(subCategoryName);
+    //     },
+    //     headerSort: false,
+    //   },
+    //   {
+    //     title: "",
+    //     field: "",
+    //     minWidth: 50,
+    //     maxWidth: 70,
+    //     formatter: (_cell) =>
+    //       '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
+    //     clickMenu: [
+    //       {
+    //         label: ApplicationConstantHtml.VIEW_LABLE,
+    //         action: (_e: any, cell: CellComponent) => {
+    //           const transactionData = cell.getRow().getData();
+    //           this.activeComponent = NavigationURLs.EXPENSE_LIST;
+    //           this.sourceOrReason = transactionData["sourceOrReason"];
+    //           this.loadGrid();
+    //         },
+    //       },
+    //       {
+    //         separator: true,
+    //       },
+    //       {
+    //         label: ApplicationConstantHtml.DELETE_LABLE,
+    //         action: (_e: any, cell: CellComponent) => {
+    //           const transactionData = cell.getRow().getData();
+    //           const transactionGroupId = transactionData["transactionGroupId"];
+    //           this.deleteTransaction(transactionGroupId);
+    //         },
+    //       },
+    //     ],
+    //     hozAlign: "left",
+    //     headerSort: false,
+    //   },
+    // ];
     this.columnConfig = [
       {
         title: "FirstDate",
@@ -499,16 +621,62 @@ export class TransactionComponent implements OnInit {
       },
       {
         title: "Category",
-        field: "subCategoryName",
+        field: "categoryName",
         sorter: "alphanum",
-        minWidth: 200,
+        minWidth: 250,
+      },
+      {
+        sorter: "alphanum",
+        title: "Budget Amount",
+        field: "budgetAmount",
+        minWidth: 150,
+        formatter: (cell: any) => {
+          const value = cell.getValue() || "";
+          return `<div class="text-wrap">${value}</div>`;
+        },
+      },
+      {
+        title: "Total Expense",
+        field: "totalExpense",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
+        minWidth: 150,
+      },
+      {
+        title: "Remaining Budget",
+        field: "remainingBudget",
+        sorter: "alphanum",
+        formatter: this.amountColorFormatter.bind(this),
+        headerHozAlign: "right",
+        hozAlign: "right",
+        bottomCalc: "sum",
+        bottomCalcFormatter: this.amountColorFormatter.bind(this),
+        bottomCalcFormatterParams: { symbol: "", precision: 2 },
+        cssClass: "amount-column",
+        minWidth: 150,
+      },
+      {
+        title: "Is Over Spent",
+        field: "isOverSpent",
+        sorter: "alphanum",
+        headerHozAlign: "center",
+        hozAlign: "center",
+        formatter: this.overSpentFormatter.bind(this),
+        cssClass: "amount-column",
+        minWidth: 150,
       },
       {
         sorter: "alphanum",
         title: "Source/Reason",
         field: "sourceOrReason",
         minWidth: 600,
-        formatter: (cell) => {
+        formatter: (cell: any) => {
           const value = cell.getValue() || "";
           return `<div class="text-wrap">${value}</div>`;
         },
@@ -525,7 +693,7 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
-        minWidth: 120,
+        minWidth: 200,
       },
       {
         title: "GivenAmount",
@@ -538,7 +706,7 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
-        minWidth: 120,
+        minWidth: 150,
       },
       {
         title: "TotalAmount",
@@ -551,7 +719,7 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
-        minWidth: 120,
+        minWidth: 150,
       },
       {
         title: "",
@@ -559,8 +727,8 @@ export class TransactionComponent implements OnInit {
         minWidth: 50,
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
-        cellClick: (e, cell) => {
-          const subCategoryName = cell.getRow().getData()["subCategoryName"];
+        cellClick: (e:any, cell:any) => {
+          const subCategoryName = cell.getRow().getData()["categoryName"];
           this.hideTransactionByCategory(subCategoryName);
         },
         headerSort: false,
@@ -570,7 +738,7 @@ export class TransactionComponent implements OnInit {
         field: "",
         minWidth: 50,
         maxWidth: 70,
-        formatter: (_cell) =>
+        formatter: (_cell:any) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         clickMenu: [
           {
@@ -684,6 +852,18 @@ export class TransactionComponent implements OnInit {
       return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
     }
     return `<span></span>`;
+  }
+
+  overSpentFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
+    const transactionData = cell.getRow().getData();
+    const columnValue = transactionData[columnName];
+    if (columnValue) {
+      return `<span style="color:#FF0000; font-weight:bold">Overspent</span>`;
+    }
+    else {
+      return `<span style="color:#129D0A; font-weight:bold">Available</span>`;
+    }
   }
 
   debitAmountColorFormatter(cell: CellComponent) {
@@ -984,6 +1164,14 @@ export class TransactionComponent implements OnInit {
     this.applyFilters();
   }
 
+  monthlyBudget() {
+    this.activeComponent = NavigationURLs.BUDGET;
+    // this.loadGrid();
+    // this.applyFilters();
+  }
+
+
+
   goToCategoryWiseReport() {
     this.reportType = ApplicationConstants.REPORT_TYPE_CATEGORY_WISE;
     this.activeComponent = NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT;
@@ -1003,15 +1191,17 @@ export class TransactionComponent implements OnInit {
   loadGrid() {
     this.loaderService.showLoader('Loading transactions...');
     const cachedData = this.cacheService.get<any[]>(this.activeComponent);
+    // const reportCachedData = this.cacheService.get<any[]>(this.reportActiveComponent);
     if (cachedData) {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;
       this.transactionReports = cachedData;
       this.categoryWiseReportResponse = cachedData;
+      // this.reportFilteredTableData = reportCachedData;
       this.columnConfiguration();
       this.loaderService.hideLoader();
       this.applyFilters();
-      return;
+        return;
     }
 
     this.transactionfilterRequest = {
@@ -1094,16 +1284,14 @@ export class TransactionComponent implements OnInit {
           },
         });
     } else if (this.activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT) {
+
       this.transactionService
-        .getCategoryWiseReportList(this.transactionfilterRequest)
+        .getBudgetWiseReportList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
-            this.categoryWiseReportResponse = res.data;
             this.tableData = res.data;
             this.filteredTableData = res.data;
-            this.lastTransactionDate = this.getLatestTransactionDate();
             this.cacheService.set(this.activeComponent, res.data);
-            this.columnConfiguration();
             this.loaderService.hideLoader();
           },
           error: (error: any) => {
@@ -1111,6 +1299,25 @@ export class TransactionComponent implements OnInit {
             this.loaderService.hideLoader();
           },
         });
+
+      // this.transactionService
+      //   .getCategoryWiseReportList(this.transactionfilterRequest)
+      //   .subscribe({
+      //     next: (res: any) => {
+      //       this.categoryWiseReportResponse = res.data;
+      //       this.tableData = res.data;
+      //       this.filteredTableData = res.data;
+      //       this.lastTransactionDate = this.getLatestTransactionDate();
+      //       this.cacheService.set(this.activeComponent, res.data);
+      //       this.columnConfiguration();
+      //       this.loaderService.hideLoader();
+      //     },
+      //     error: (error: any) => {
+      //       console.error("error : ", error);
+      //       this.loaderService.hideLoader();
+      //     },
+      //   });
+
     }
     else {
       this.loaderService.hideLoader();

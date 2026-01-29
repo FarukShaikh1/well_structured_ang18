@@ -37,9 +37,7 @@ export class HttpInterceptorService implements HttpInterceptor {
             this.router.navigate([NavigationURLs.UNAUTHORIZED_PAGE]);
           }
         }
-        console.error('Error Intercepted', error);
-        
-        
+        console.error('Error Intercepted', error);        
         return throwError(() => new Error(error.message));
       })
     );

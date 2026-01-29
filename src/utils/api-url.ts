@@ -43,6 +43,7 @@ export const API_URL = {
   GET_BALANCE_LIST: `${serverUrl}${apiPrefix}/transaction/GetBalanceSummary`,
   GET_TRANSACTION_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/GetReport`,
   GET_CATEGORY_WISE_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/GetCategoryWiseReport`,
+  GET_BUDGET_WISE_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/GetBudgetWiseReport`,
   GET_TRANSACTION_LIST: `${serverUrl}${apiPrefix}/transaction/GetList`,
   ADD_TRANSACTION: `${serverUrl}${apiPrefix}/transaction/add?userId=`,
   TRANSACTION_ADJUSTMENT: `${serverUrl}${apiPrefix}/transaction/transactionAdjustment?userId=`,
@@ -82,10 +83,21 @@ export const API_URL = {
   SEND_OTP: `${serverUrl}${apiPrefix}/otp/send`,
   LOGIN: `${serverUrl}${apiPrefix}/user/Login`,
 
-  
+
   GET_DOCUMENT_List: `${serverUrl}${apiPrefix}/document/getList`,
   GET_DOCUMENT_DOWNLOAD_SAS_URL: `${serverUrl}${apiPrefix}/document/GetDownloadUrl?blobPath=`,
   UPLOAD_DOCUMENT: `${serverUrl}${apiPrefix}/document/UploadDocument?userId=`,
   DELETE_DOCUMENT: `${serverUrl}${apiPrefix}/document/delete?dayId=`,
 
+  GET_ROUTINE: `${serverUrl}${apiPrefix}/routine`,
+  ADD_ROUTINE: `${serverUrl}${apiPrefix}/routine/`,
+  GET_ROUTINE_BY_USER: `${serverUrl}${apiPrefix}/routine/user/`,
+  GET_ROUTINE_DETAILS: `${serverUrl}${apiPrefix}/routine/`,
+  UPDATE_ROUTINE: `${serverUrl}${apiPrefix}/routine/`,
+
+  GET_BUDGET: `${serverUrl}${apiPrefix}/budget`,
+  ADD_BUDGET: `${serverUrl}${apiPrefix}/budget`,
+  GET_BUDGET_BY_USER: `${serverUrl}${apiPrefix}/budget/user/`,
+  GET_BUDGET_DETAILS: `${serverUrl}${apiPrefix}/budget/`,
+  UPDATE_BUDGET: `${serverUrl}${apiPrefix}/budget`,
 };

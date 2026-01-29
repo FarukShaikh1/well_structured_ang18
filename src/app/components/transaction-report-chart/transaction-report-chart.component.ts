@@ -62,7 +62,7 @@ private getTextColor(): string {
 
     var labels;
     if (this.reportType === ApplicationConstants.REPORT_TYPE_CATEGORY_WISE) {
-      labels = this.reportData.map(item => item.subCategoryName || 'Unknown');
+      labels = this.reportData.map(item => item.categoryName || 'Unknown');
     } else {
       labels = this.reportData.map(item => item.sourceOrReason || 'Unknown');
     }

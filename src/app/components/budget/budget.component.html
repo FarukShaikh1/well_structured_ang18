@@ -1,0 +1,60 @@
+
+<div class="budget-container">
+
+    <h2>Monthly Budget</h2>
+    
+    <!-- TABLE -->
+    <div class="row">
+        <div class="col-12">
+            <div class="table-container">
+                <table border="1" width="100%" style="border-collapse: collapse;">
+                    <tr>
+                        <th>Pay To</th>
+                        <th>Purpose</th>
+                        <th>Category</th>
+                        <th>Amount (₹)</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr *ngFor="let b of budgets">
+                        <td>{{ b.payTo }}</td>
+                        <td>{{ b.purpose }}</td>
+                        <td>{{ b.categoryName }}</td>
+                        <td class="amount">{{ b.amount }}</td>
+                        <td class="d-flex gap-2">
+                            <button class="edit" (click)="edit(b)"><i class="bi bi-pencil"></i></button>
+                            <button class="delete" (click)="delete(b.id!)"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>Total</strong></td>
+                        <td class="amount"><strong>{{ getTotal() }}</strong></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+        <!-- FORM -->
+    <div class="form-grid">
+        <input type="text" class="form-control-lg" placeholder="Pay To" [(ngModel)]="model.payTo">
+
+        <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose">
+
+        <select [(ngModel)]="model.categoryId">
+            <option value="">Select Category</option>
+            <option *ngFor="let c of categories" [value]="c.id">
+                {{ c.configurationName }}
+            </option>
+        </select>
+
+        <input type="number" placeholder="Amount" [(ngModel)]="model.amount">
+
+        <button (click)="save()">
+            {{ isEdit ? 'Update' : 'Add' }}
+        </button>
+
+        <button class="reset" (click)="reset()">Clear</button>
+    </div>
+
+</div>

@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-6">
+        <div class="table-container">
+            <table border="1" width="100%" style="border-collapse: collapse;">
+                <tr style="background:#f3f3f3">
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Task</th>
+                    <th>Duration</th>
+                    <th>Action</th>
+                </tr>
+
+                <tr *ngFor="let r of routines">
+                    <td><input type="time" [(ngModel)]="r.fromTime"></td>
+                    <td><input type="time" [(ngModel)]="r.toTime"></td>
+                    <td><input type="text" [(ngModel)]="r.task"></td>
+                    <td>{{ calculateDuration(r.fromTime, r.toTime) }}</td>
+                    <td>
+                        <button (click)="save(r)">💾 Save</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -2,7 +2,7 @@ export interface TransactionReportResponse {
   firstDate?: string;
   lastDate?: string;
   sourceOrReason?: string;
-  subCategoryName?: string;
+  categoryName?: string;
   description?: string;
   takenAmount?: number;
   givenAmount?: number;
