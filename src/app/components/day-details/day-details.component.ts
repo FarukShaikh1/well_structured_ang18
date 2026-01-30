@@ -84,6 +84,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
   editable: boolean = false;
+  isSaving: boolean = false;
   constructor(
     private _details: FormBuilder,
     private _dayService: DayService,
@@ -198,10 +199,12 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
   }
 
   submitDayDetails() {
+    this.isSaving = true;
     this.loaderService.showLoader();
     this.globalService.trimAllFields(this.dayDetailsForm);
 
     if (this.dayDetailsForm.invalid) {
+      this.isSaving = false;
       this.showError("Please fill valid details.");
       return;
     }
@@ -282,9 +285,11 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
         localStorage.removeItem(NavigationURLs.DAY_LIST);
         localStorage.removeItem(NavigationURLs.USER_LIST);
         this.globalService.triggerGridReload(ApplicationModules.DAY);
+        this.isSaving = false;
       }),
       catchError((error) => {
         this.showError("Some issue is in Add the data.");
+        this.isSaving = false;
         return of(null);
       })
     ).subscribe());
@@ -298,9 +303,11 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
         localStorage.removeItem(NavigationURLs.DAY_LIST);
         localStorage.removeItem(NavigationURLs.USER_LIST);
         this.globalService.triggerGridReload(ApplicationModules.DAY);
+        this.isSaving = false;
       }),
       catchError((error) => {
         this.showError("Some issue is in Update the data.");
+        this.isSaving = false;
         return of(null);
       })
     ).subscribe());
@@ -312,6 +319,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
 
     if (this.specialOccasionRequest.id) {
       this.updateDayDetails();
+
     } else {
       this.addDayDetails();
     }
@@ -320,6 +328,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
   uploadImageAndSaveData() {
     if (!this.selectedImageFile) {
       this.addOrUpdateDayDetails();
+      this.isSaving = false;
       return;
     }
 
@@ -336,6 +345,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
             this.addOrUpdateDayDetails();
           }),
           catchError((error) => {
+            this.isSaving = false;
             this.showError('Error uploading image. ' + error);
             return of(null);
           })

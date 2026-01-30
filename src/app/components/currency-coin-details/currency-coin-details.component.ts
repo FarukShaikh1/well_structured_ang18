@@ -278,11 +278,11 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           this.toaster.showMessage("Record Updated Successfully.", "success");
-          this.isSaving = false;
           this.loaderService.hideLoader();
           this.renderer
             .selectRootElement(this.btnCloseDayPopup?.nativeElement)
             .click();
+          this.isSaving = false;
           localStorage.removeItem(NavigationURLs.CURRENCY_LIST);
           localStorage.removeItem(NavigationURLs.CURRENCY_SUMMARY);
           this.globalService.triggerGridReload(ApplicationModules.COIN_NOTE_COLLECTION);

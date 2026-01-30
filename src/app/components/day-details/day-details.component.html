@@ -292,7 +292,7 @@
                   @if(globalService.isAccessible(ActionConstant.ADD) ||
                   globalService.isAccessible(ActionConstant.EDIT)){
                   <button class="btn btn-primary rounded-button" type="submit"
-                    [disabled]="dayDetailsForm.invalid || !relationList || relationList.length===0 || !occasionTypeList || occasionTypeList.length===0">
+                    [disabled]="dayDetailsForm.invalid || !relationList || relationList.length===0 || !occasionTypeList || occasionTypeList.length===0 || isSaving">
                     Save
                   </button>
                   }

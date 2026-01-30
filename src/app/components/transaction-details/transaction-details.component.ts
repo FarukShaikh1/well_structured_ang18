@@ -88,6 +88,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   accountList: any[] = [];
 
   private subscriptions: Subscription = new Subscription();
+  isSaving: boolean=false;
 
   constructor(
     private fb: FormBuilder,
@@ -457,9 +458,11 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
   submitTransactionDetails() {
     this.loaderService.showLoader();
+    this.isSaving = true;
     this.globalService.trimAllFields(this.transactionDetailsForm);
 
     if (!this.transactionDetailsForm.valid) {
+      this.isSaving = false;
       this.showError("Please fill valid details.");
       return;
     }
@@ -469,12 +472,14 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
     const validationError = this.validateAccountEntries();
     if (validationError) {
+      this.isSaving = false;
       this.showError(validationError);
       return;
     }
 
     const splits = this.buildSplits();
     if (splits.length === 0) {
+      this.isSaving = false;
       this.showError("Please enter valid amount for at least one account.");
       return;
     }
@@ -553,12 +558,14 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
             this.renderer
               .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
               .click();
+            this.isSaving = false;
             this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
             this.addTransactionSuggestion(request);
             return res.data;
           }
         },
         error: (error: any) => {
+          this.isSaving = false;
           this.toaster.showMessage(
             error?.message, "error"
           );
@@ -576,12 +583,14 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
             this.renderer
               .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
               .click();
+            this.isSaving = false;
             this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
             this.addTransactionSuggestion(request);
             return res.data;
           }
         },
         error: (error: any) => {
+          this.isSaving = false;
           this.toaster.showMessage(
             error?.message, "error"
           );

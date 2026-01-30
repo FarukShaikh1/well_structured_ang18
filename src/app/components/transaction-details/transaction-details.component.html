@@ -156,7 +156,7 @@
                     Cancel
                   </button>
                   <button class="btn btn-primary rounded-button" type="submit"
-                    [disabled]="transactionDetailsForm.invalid || accountList===null || accountList.length===0">
+                    [disabled]="transactionDetailsForm.invalid || accountList===null || accountList.length===0 || isSaving">
                     Save
                   </button>
                 </div>
