@@ -11,6 +11,7 @@ import {
   DdlConfig,
   LocalStorageConstants,
   NavigationURLs,
+  TransactionTabs,
   UserConfig
 } from "../../../utils/application-constants";
 import { DateUtils } from "../../../utils/date-utils";
@@ -95,10 +96,7 @@ export class TransactionComponent implements OnInit {
   columnList: string = '_col';
   accountColumnList: string = '_AccountColumns';
   reportType = "sourceWise";
-  // reportColumnConfig: any;//({ title: string; field: string; sorter: string; minWidth: number; formatter: (cell: CellComponent) => string; cssClass?: undefined; headerHozAlign?: undefined; hozAlign?: undefined; bottomCalc?: undefined; bottomCalcFormatter?: undefined; bottomCalcFormatterParams?: undefined; maxWidth?: undefined; cellClick?: undefined; headerSort?: undefined; clickMenu?: undefined; } | { title: string; field: string; sorter: string; minWidth: number; formatter?: undefined; cssClass?: undefined; headerHozAlign?: undefined; hozAlign?: undefined; bottomCalc?: undefined; bottomCalcFormatter?: undefined; bottomCalcFormatterParams?: undefined; maxWidth?: undefined; cellClick?: undefined; headerSort?: undefined; clickMenu?: undefined; } | { sorter: string; title: string; field: string; minWidth: number; formatter: (cell: any) => string; cssClass: string; headerHozAlign?: undefined; hozAlign?: undefined; bottomCalc?: undefined; bottomCalcFormatter?: undefined; bottomCalcFormatterParams?: undefined; maxWidth?: undefined; cellClick?: undefined; headerSort?: undefined; clickMenu?: undefined; } | { title: string; field: string; sorter: string; formatter: (cell: CellComponent) => string; headerHozAlign: string; hozAlign: string; bottomCalc: string; bottomCalcFormatter: (cell: CellComponent) => string; bottomCalcFormatterParams: { symbol: string; precision: number; }; cssClass: string; minWidth: number; maxWidth?: undefined; cellClick?: undefined; headerSort?: undefined; clickMenu?: undefined; } | { title: string; field: string; minWidth: number; maxWidth: number; formatter: (cell: CellComponent) => string; cellClick: (e: any, cell: any) => void; headerSort: boolean; sorter?: undefined; cssClass?: undefined; headerHozAlign?: undefined; hozAlign?: undefined; bottomCalc?: undefined; bottomCalcFormatter?: undefined; bottomCalcFormatterParams?: undefined; clickMenu?: undefined; } | { title: string; field: string; minWidth: number; maxWidth: number; formatter: (_cell: any) => string; clickMenu: ({ label: string; action: (_e: any, cell: CellComponent) => void; separator?: undefined; } | { separator: boolean; label?: undefined; action?: undefined; })[]; hozAlign: string; headerSort: boolean; sorter?: undefined; cssClass?: undefined; headerHozAlign?: undefined; bottomCalc?: undefined; bottomCalcFormatter?: undefined; bottomCalcFormatterParams?: undefined; cellClick?: undefined; })[];
-  // reportTableData: any;
-  // reportFilteredTableData: any;
-  // reportActiveComponent: string = '';
+  selectedTab: string = TransactionTabs.EXPENSE_LIST;
 
   constructor(
     private transactionService: TransactionService,
@@ -488,122 +486,6 @@ export class TransactionComponent implements OnInit {
   }
 
   loadConfigForCategoryWiseReportList() {
-    // this.columnConfig = [
-    //   {
-    //     title: "FirstDate",
-    //     field: "firstDate",
-    //     sorter: "alphanum",
-    //     minWidth: 100,
-    //     formatter: this.dateFormatter.bind(this),
-    //   },
-    //   {
-    //     title: "LastDate",
-    //     field: "lastDate",
-    //     sorter: "alphanum",
-    //     minWidth: 100,
-    //     formatter: this.dateFormatter.bind(this),
-    //   },
-    //   {
-    //     title: "Category",
-    //     field: "subCategoryName",
-    //     sorter: "alphanum",
-    //     minWidth: 200,
-    //   },
-    //   {
-    //     sorter: "alphanum",
-    //     title: "Source/Reason",
-    //     field: "sourceOrReason",
-    //     minWidth: 600,
-    //     formatter: (cell) => {
-    //       const value = cell.getValue() || "";
-    //       return `<div class="text-wrap">${value}</div>`;
-    //     },
-    //     cssClass: "description-column",
-    //   },
-    //   {
-    //     title: "TakenAmount",
-    //     field: "takenAmount",
-    //     sorter: "alphanum",
-    //     formatter: this.amountColorFormatter.bind(this),
-    //     headerHozAlign: "right",
-    //     hozAlign: "right",
-    //     bottomCalc: "sum",
-    //     bottomCalcFormatter: this.amountColorFormatter.bind(this),
-    //     bottomCalcFormatterParams: { symbol: "", precision: 2 },
-    //     cssClass: "amount-column",
-    //     minWidth: 120,
-    //   },
-    //   {
-    //     title: "GivenAmount",
-    //     field: "givenAmount",
-    //     sorter: "alphanum",
-    //     formatter: this.amountColorFormatter.bind(this),
-    //     headerHozAlign: "right",
-    //     hozAlign: "right",
-    //     bottomCalc: "sum",
-    //     bottomCalcFormatter: this.amountColorFormatter.bind(this),
-    //     bottomCalcFormatterParams: { symbol: "", precision: 2 },
-    //     cssClass: "amount-column",
-    //     minWidth: 120,
-    //   },
-    //   {
-    //     title: "TotalAmount",
-    //     field: "totalAmount",
-    //     sorter: "alphanum",
-    //     formatter: this.amountColorFormatter.bind(this),
-    //     headerHozAlign: "right",
-    //     hozAlign: "right",
-    //     bottomCalc: "sum",
-    //     bottomCalcFormatter: this.amountColorFormatter.bind(this),
-    //     bottomCalcFormatterParams: { symbol: "", precision: 2 },
-    //     cssClass: "amount-column",
-    //     minWidth: 120,
-    //   },
-    //   {
-    //     title: "",
-    //     field: "",
-    //     minWidth: 50,
-    //     maxWidth: 70,
-    //     formatter: this.globalService.hidebuttonFormatter.bind(this),
-    //     cellClick: (e, cell) => {
-    //       const subCategoryName = cell.getRow().getData()["categoryName"];
-    //       this.hideTransactionByCategory(subCategoryName);
-    //     },
-    //     headerSort: false,
-    //   },
-    //   {
-    //     title: "",
-    //     field: "",
-    //     minWidth: 50,
-    //     maxWidth: 70,
-    //     formatter: (_cell) =>
-    //       '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-    //     clickMenu: [
-    //       {
-    //         label: ApplicationConstantHtml.VIEW_LABLE,
-    //         action: (_e: any, cell: CellComponent) => {
-    //           const transactionData = cell.getRow().getData();
-    //           this.activeComponent = NavigationURLs.EXPENSE_LIST;
-    //           this.sourceOrReason = transactionData["sourceOrReason"];
-    //           this.loadGrid();
-    //         },
-    //       },
-    //       {
-    //         separator: true,
-    //       },
-    //       {
-    //         label: ApplicationConstantHtml.DELETE_LABLE,
-    //         action: (_e: any, cell: CellComponent) => {
-    //           const transactionData = cell.getRow().getData();
-    //           const transactionGroupId = transactionData["transactionGroupId"];
-    //           this.deleteTransaction(transactionGroupId);
-    //         },
-    //       },
-    //     ],
-    //     hozAlign: "left",
-    //     headerSort: false,
-    //   },
-    // ];
     this.columnConfig = [
       {
         title: "FirstDate",
@@ -727,7 +609,7 @@ export class TransactionComponent implements OnInit {
         minWidth: 50,
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
-        cellClick: (e:any, cell:any) => {
+        cellClick: (e: any, cell: any) => {
           const subCategoryName = cell.getRow().getData()["categoryName"];
           this.hideTransactionByCategory(subCategoryName);
         },
@@ -738,7 +620,7 @@ export class TransactionComponent implements OnInit {
         field: "",
         minWidth: 50,
         maxWidth: 70,
-        formatter: (_cell:any) =>
+        formatter: (_cell: any) =>
           '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
         clickMenu: [
           {
@@ -1141,23 +1023,27 @@ export class TransactionComponent implements OnInit {
   }
 
   goToTransactionList() {
+    this.selectedTab = TransactionTabs.EXPENSE_LIST;
     this.activeComponent = NavigationURLs.EXPENSE_LIST;
     this.loadGrid();
     this.applyFilters();
   }
 
   goToTransactionSummary() {
+    this.selectedTab = TransactionTabs.EXPENSE_SUMMARY;
     this.activeComponent = NavigationURLs.EXPENSE_SUMMARY_LIST;
     this.loadGrid();
     this.applyFilters();
   }
   goToBalanceSummary() {
+    this.selectedTab = TransactionTabs.BALANCE_SUMMARY;
     this.activeComponent = NavigationURLs.EXPENSE_BALANCE_LIST;
     this.loadGrid();
     this.applyFilters();
   }
 
   goToTransactionReport() {
+    this.selectedTab = TransactionTabs.EXPENSE_REPORT;
     this.reportType = ApplicationConstants.REPORT_TYPE_SOURCE_WISE;
     this.activeComponent = NavigationURLs.EXPENSE_REPORT;
     this.loadGrid();
@@ -1165,6 +1051,7 @@ export class TransactionComponent implements OnInit {
   }
 
   monthlyBudget() {
+    this.selectedTab = TransactionTabs.EXPENSE_BUDGET;
     this.activeComponent = NavigationURLs.BUDGET;
     // this.loadGrid();
     // this.applyFilters();
@@ -1173,6 +1060,7 @@ export class TransactionComponent implements OnInit {
 
 
   goToCategoryWiseReport() {
+    this.selectedTab = TransactionTabs.CATEGORY_WISE_REPORT;
     this.reportType = ApplicationConstants.REPORT_TYPE_CATEGORY_WISE;
     this.activeComponent = NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT;
     this.loadGrid();
@@ -1197,11 +1085,10 @@ export class TransactionComponent implements OnInit {
       this.filteredTableData = cachedData;
       this.transactionReports = cachedData;
       this.categoryWiseReportResponse = cachedData;
-      // this.reportFilteredTableData = reportCachedData;
       this.columnConfiguration();
       this.loaderService.hideLoader();
       this.applyFilters();
-        return;
+      return;
     }
 
     this.transactionfilterRequest = {
@@ -1299,25 +1186,6 @@ export class TransactionComponent implements OnInit {
             this.loaderService.hideLoader();
           },
         });
-
-      // this.transactionService
-      //   .getCategoryWiseReportList(this.transactionfilterRequest)
-      //   .subscribe({
-      //     next: (res: any) => {
-      //       this.categoryWiseReportResponse = res.data;
-      //       this.tableData = res.data;
-      //       this.filteredTableData = res.data;
-      //       this.lastTransactionDate = this.getLatestTransactionDate();
-      //       this.cacheService.set(this.activeComponent, res.data);
-      //       this.columnConfiguration();
-      //       this.loaderService.hideLoader();
-      //     },
-      //     error: (error: any) => {
-      //       console.error("error : ", error);
-      //       this.loaderService.hideLoader();
-      //     },
-      //   });
-
     }
     else {
       this.loaderService.hideLoader();

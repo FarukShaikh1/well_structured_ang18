@@ -9,9 +9,10 @@ import { Component } from '@angular/core';
   styleUrl: './my-profile.component.css'
 })
 export class MyProfileComponent {
+  experienceYears: number = new Date().getFullYear() - 2020;
   profile = {
     name: 'FARUK SHAIKH',
-    title: 'Full Stack .NET Developer | 5.9 Years Enterprise Development',
+    title: 'Full Stack .NET Developer | ' + this.experienceYears + '+ Years Experience',
     contact: {
       address: 'Amravati, Maharashtra, India',
       location: 'Indira Chauk, Nerpinglai',
@@ -20,7 +21,7 @@ export class MyProfileComponent {
       email: 'farukshaikh908@gmail.com',
       linkedin: 'https://www.linkedin.com/in/faruk-shaikh-2a9835166'
     },
-    professionalSummary: `Highly accomplished Full Stack .NET Developer with around 6 years of experience in designing, developing, and deploying robust, scalable, and enterprise-grade web applications. Deep expertise in the Microsoft ecosystem, specializing in .NET Core, C#, Web API, Microservices, and Angular (16–18). Proven success in system automation and building high-performance solutions with Azure services (Functions, Key Vault) and real-time capabilities (SignalR). Seeking a challenging role to leverage technical depth, feature ownership, and client collaboration skills to deliver high-quality software solutions.`,
+    professionalSummary: `Highly accomplished Full Stack .NET Developer with ${this.experienceYears}+ years of experience in designing, developing, and deploying robust, scalable, and enterprise-grade web applications. Deep expertise in the Microsoft ecosystem, specializing in .NET Core, C#, Web API, Microservices, and Angular (16–18). Proven success in system automation and building high-performance solutions with Azure services (Functions, Key Vault) and real-time capabilities (SignalR). Seeking a challenging role to leverage technical depth, feature ownership, and client collaboration skills to deliver high-quality software solutions.`,
     coreTechSkills: [
       { label: 'Backend & Frameworks', value: 'C#, ASP.NET MVC, .NET Core, Web API, Razor Pages, ADO.NET, LINQ, Entity Framework' },
       { label: 'Frontend & UI', value: 'Angular (16–18), HTML5, CSS, Bootstrap, JavaScript, Kendo UI, Telerik' },

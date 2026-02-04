@@ -66,6 +66,7 @@ export class BudgetComponent implements OnInit {
         }
       });
     } else {
+      this.model.id = null;
       this.budgetService.addBudget(this.model)
         .subscribe({
         next: (res) => {

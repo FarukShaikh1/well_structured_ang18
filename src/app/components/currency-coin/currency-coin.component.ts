@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
-import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
+import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, CollectionTabs, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
 import { TruncatePipe } from '../../common/truncate.pipe';
 import { CacheService } from '../../services/cache/cache.service';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
@@ -56,6 +56,7 @@ export class CurrencyCoinComponent implements OnInit {
   public filterColumns: ColumnDefinition[] = [];
   public viewMode: 'grid' | 'gallery' | 'summary' | 'news' = 'gallery';
   loading = false;
+  selectedTab: string = CollectionTabs.GALLERY_VIEW;
   currentIndex = 0;
   scale = 1;
   transformStyle = "scale(1)";
@@ -657,6 +658,20 @@ export class CurrencyCoinComponent implements OnInit {
 
   setView(mode: 'grid' | 'gallery' | 'summary' | 'news') {
     // this.selectDefaultIndia();
+    switch (mode) {
+      case 'grid':
+        this.selectedTab = CollectionTabs.DATA_VIEW;
+        break;
+      case  'gallery':
+        this.selectedTab = CollectionTabs.GALLERY_VIEW;
+        break;
+      case 'summary':
+        this.selectedTab = CollectionTabs.SUMMARY_VIEW;
+        break;
+      case 'news':
+        this.selectedTab = CollectionTabs.NEWS_VIEW;
+        break;
+    }
     this.viewMode = mode;
   }
   redirectToOwnersProfile() {

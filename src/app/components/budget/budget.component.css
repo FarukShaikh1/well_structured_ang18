@@ -6,12 +6,12 @@ h2 {
   margin-bottom: 15px;
 }
 
-.form-grid {
+/* .form-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
   margin-bottom: 10px;
-}
+} */
 
 button {
   padding: 8px;

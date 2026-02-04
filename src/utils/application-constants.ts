@@ -78,6 +78,22 @@ export const UserConfig = {
     ACCOUNT: 'Accounts',
 };
 
+export const TransactionTabs= {
+    EXPENSE_LIST: 'Transaction List',
+    EXPENSE_SUMMARY: 'Transaction Summary',
+    BALANCE_SUMMARY: 'Balance Summary',
+    EXPENSE_REPORT: 'Transaction Report',
+    EXPENSE_BUDGET: 'Transaction Budget',
+    CATEGORY_WISE_REPORT: 'Category Wise Transaction Report',
+}
+
+export const CollectionTabs= {
+    GALLERY_VIEW: 'Gallery View',
+    SUMMARY_VIEW: 'Summary View',
+    DATA_VIEW: 'Data View',
+    NEWS_VIEW: 'News View',
+}
+
 export const DdlConfig = {
     OCCASION_TYPES: 'DdlOccasionTypes',
     RELATIONS: 'DdlRelations',
@@ -211,8 +227,8 @@ export const Messages = {
     CLIENTS_FETCHED_SUCCESS: 'clients fetched successfully.',
     ERROR_IN_FETCH_CLIENT: 'Error in fetching clients.',
     EXPENSES_FETCHED_SUCCESS: 'EXPENSES fetched successfully.',
-    EXPENSE_ADDED_SUCCESS: 'Expense details added successfully.',
-    EXPENSE_UPDATED_SUCCESS: 'Expense details updated successfully.',
+    EXPENSE_ADDED_SUCCESS: 'Transaction details added successfully.',
+    EXPENSE_UPDATED_SUCCESS: 'Transaction details updated successfully.',
     ERROR_IN_FETCH_EXPENSE: 'Unable to load expense data. Please try again later.',
     ERROR_IN_FETCH_ROLE_MODULE_MAPPINGS: 'Error fetching user-permissions',
 
@@ -327,7 +343,7 @@ export const Messages = {
 };
 
 export const ApplicationModules = {
-    EXPENSE: 'Expense',
+    EXPENSE: 'Transaction',
     DAY: 'Day',
     COIN_NOTE_COLLECTION: 'Coin Note Collection',
     USER: 'AUTH',
