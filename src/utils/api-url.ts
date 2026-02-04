@@ -93,11 +93,13 @@ export const API_URL = {
   ADD_ROUTINE: `${serverUrl}${apiPrefix}/routine/`,
   GET_ROUTINE_BY_USER: `${serverUrl}${apiPrefix}/routine/user/`,
   GET_ROUTINE_DETAILS: `${serverUrl}${apiPrefix}/routine/`,
+  DELETE_ROUTINE: `${serverUrl}${apiPrefix}/routine/delete?routineId=`,
   UPDATE_ROUTINE: `${serverUrl}${apiPrefix}/routine/`,
 
   GET_BUDGET: `${serverUrl}${apiPrefix}/budget`,
   ADD_BUDGET: `${serverUrl}${apiPrefix}/budget`,
   GET_BUDGET_BY_USER: `${serverUrl}${apiPrefix}/budget/user/`,
   GET_BUDGET_DETAILS: `${serverUrl}${apiPrefix}/budget/`,
+  DELETE_BUDGET: `${serverUrl}${apiPrefix}/budget/delete?budgetId=`,
   UPDATE_BUDGET: `${serverUrl}${apiPrefix}/budget`,
 };

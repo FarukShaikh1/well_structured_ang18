@@ -10,6 +10,7 @@ import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
 import { RoutineComponent } from "./components/routine/routine.component";
 import { BudgetComponent } from "./components/budget/budget.component";
+import { SelfDataComponent } from "./components/self-data/self-data.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -91,8 +92,7 @@ export const routes: Routes = [
       {
         path: RoutePath.BUDGET,
         title: RoutePathTitles.BUDGET,
-        component: BudgetComponent,
-
+        component: SelfDataComponent,
       },
 
       {

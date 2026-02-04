@@ -52,6 +52,15 @@ export class BudgetService {
     );
   }
 
+    // =========================
+  // GET budget details
+  // =========================
+  deleteBudget(budgetId: string) {
+    return this.http.get<boolean>(
+      API_URL.DELETE_BUDGET + budgetId+'&userId='+this.loggedInUserId
+    );
+  }
+
   //  getBudget(userId: string) {
   //   const params = new HttpParams()
   //     .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))

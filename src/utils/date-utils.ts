@@ -269,5 +269,11 @@ export class DateUtils {
     return `${value}:00`;
   }
 
+  static amPmFormat(time: string): string {
+  const date = new Date(`1970-01-01T${time}`);
+  return formatDate(date, 'hh:mm a', 'en-US')!;
+  // return this.datePipe.transform(date, 'hh:mm a')!;
+}
+
 
 }

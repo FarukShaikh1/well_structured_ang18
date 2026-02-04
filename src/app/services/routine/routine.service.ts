@@ -52,6 +52,15 @@ export class RoutineService {
     );
   }
 
+      // =========================
+  // GET routine details
+  // =========================
+  deleteRoutine(routineId: string) {
+    return this.http.get<boolean>(
+      API_URL.DELETE_ROUTINE + routineId+'&userId='+this.loggedInUserId
+    );
+  }
+
   //  getRoutine(userId: string) {
   //   const params = new HttpParams()
   //     .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))

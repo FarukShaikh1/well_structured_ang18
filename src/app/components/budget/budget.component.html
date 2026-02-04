@@ -1,102 +1,116 @@
-<div class="budget-container">
-    <!-- FORM -->
-    <div class="row pb-2 pt-2">
-        <div class="col-3 col-md-3 col-lg-2 col-xl-2 pt-2">
-            <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo"
-                class="form-control form-control-lg text-dark bg-transparent">
-        </div>
-        <div class="col-3 col-md-3 col-lg-2 col-xl-2 pt-2">
-            <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose"
-                class="form-control form-control-lg text-dark bg-transparent">
-        </div>
-        <div class="col-3 col-md-3 col-lg-2 col-xl-2 pt-2">
-            <select [(ngModel)]="model.categoryId" class="
-            form-select form-control form-control-lg text-dark bg-transparent styled-select scrollable-button text-start
-            ">
-                <option value="">Select Category</option>
-                <option *ngFor="let c of categories" [value]="c.id">
-                    {{ c.configurationName }}
-                </option>
-            </select>
-        </div>
-        <div class="col-3 col-md-3 col-lg-2 col-xl-2 pt-2">
-            <input type="number" placeholder="Amount" [(ngModel)]="model.amount"
-                class="form-control form-control-lg text-dark bg-transparent">
-        </div>
-        <div class="col-3 col-md-3 col-lg-2 col-xl-2 pt-2 d-flex align-items-center gap-2">
-            <button (click)="save()">
-                {{ isEdit ? 'Update' : 'Add' }}
-            </button>
-            <button class="reset" (click)="reset()">Clear</button>
+<div class="row">
+    <div class="col-12">
+        <div class="table-container">
+            <h2>Budget Management</h2>
+            <table border="1" width="100%" style="border-collapse: collapse;">
+                <tr>
+                    <th>Pay To</th>
+                    <th>Purpose</th>
+                    <th>Category</th>
+                    <th>Amount (₹)</th>
+                    <th>Action</th>
+                </tr>
+                <tr *ngFor="let b of budgets">
+                    <td>
+                        @if(selectedId === b.id && isEdit){
+                        <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo" class="form-control form-control-lg" style="width: auto;">
+                        }
+                        @else{
+                        {{ b.payTo }}
+                        }
+                    </td>
+                    <td>
+                        @if(selectedId === b.id && isEdit){
+                        <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose" class="form-control form-control-lg" style="width: auto;">
+                        }
+                        @else{
+                        {{ b.purpose }}
+                        }
+                    </td>
+
+                    <td>
+                        @if(selectedId === b.id && isEdit){
+                        <select [(ngModel)]="model.categoryId" class="form-select form-control form-control-lg" style="width: auto;">
+                            <option value="">Select Category</option>
+                            <option *ngFor="let c of categories" [value]="c.id">
+                                {{ c.configurationName }}
+                            </option>
+                        </select>
+                        }
+                        @else{
+
+                        {{ b.categoryName }}
+                        }
+                    </td>
+                    <td class="amount">
+                        @if(selectedId === b.id && isEdit){
+                        <input type="number" placeholder="Amount" [(ngModel)]="model.amount" class="form-control form-control-lg" style="width: auto;">
+                        }
+                        @else{
+
+                        {{ b.amount }}
+                        }
+                    </td>
+                    <td class="d-flex gap-2 justify-content-center">
+                        @if(selectedId === b.id && isEdit){
+                        <button (click)="save()">
+                            💾{{ isEdit ? '' : '' }}
+                        </button>
+                        }
+                        @else{
+                        <button class="edit" (click)="edit(b)"><i class="bi bi-pencil"></i></button>
+                        }
+                        <button class="delete" (click)="delete(b.id!)"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"><strong>Total</strong></td>
+                    <td class="amount"><strong>{{ getTotal() }}</strong></td>
+                    <td></td>
+                </tr>
+            </table>
+            <br>
+            <table>
+                <tr>
+                    <td>
+                        <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo"
+                            class="form-control form-control-lg text-dark bg-transparent">
+                    </td>
+                    <td>
+                        <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose"
+                            class="form-control form-control-lg text-dark bg-transparent">
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select [(ngModel)]="model.categoryId"
+                            class="form-select form-control form-control-lg text-dark bg-transparent">
+                            <option value="">Select Category</option>
+                            <option *ngFor="let c of categories" [value]="c.id">
+                                {{ c.configurationName }}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" placeholder="Amount" [(ngModel)]="model.amount"
+                            class="form-control form-control-lg text-dark bg-transparent">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" class=" pt-3">
+                        <button (click)="save()">
+                            {{ isEdit ? 'Update' : 'Add' }}
+                        </button>
+                        <button class="reset" (click)="reset()">Clear</button>
+
+                    </td>
+                </tr>
+
+            </table>
+
         </div>
     </div>
-
-    <!-- TABLE -->
-    <div class="row">
-        <div class="col-12">
-            <div class="table-container">
-                <table border="1" width="100%" style="border-collapse: collapse;">
-                    <tr>
-                        <th>Pay To</th>
-                        <th>Purpose</th>
-                        <th>Category</th>
-                        <th>Amount (₹)</th>
-                        <th>Action</th>
-                    </tr>
-                    <tr *ngFor="let b of budgets">
-                        <td>{{ b.payTo }}</td>
-                        <td>{{ b.purpose }}</td>
-                        <td>{{ b.categoryName }}</td>
-                        <td class="amount">{{ b.amount }}</td>
-                        <td class="d-flex gap-2 justify-content-center">
-                            <button class="edit" (click)="edit(b)"><i class="bi bi-pencil"></i></button>
-                            <button class="delete" (click)="delete(b.id!)"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo"
-                                class="form-control form-control-lg text-dark bg-transparent">
-                        </td>
-                        <td>
-                            <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose"
-                                class="form-control form-control-lg text-dark bg-transparent">
-
-                        </td>
-                        <td>
-                            <select [(ngModel)]="model.categoryId" class="
-            form-select form-control form-control-lg text-dark bg-transparent styled-select scrollable-button text-start
-            ">
-                                <option value="">Select Category</option>
-                                <option *ngFor="let c of categories" [value]="c.id">
-                                    {{ c.configurationName }}
-                                </option>
-                            </select>
-
-                        </td>
-                        <td class="amount">
-                            <input type="number" placeholder="Amount" [(ngModel)]="model.amount"
-                                class="form-control form-control-lg text-dark bg-transparent">
-                        </td>
-                        <td class="d-flex gap-2 justify-content-center">
-                            <button (click)="save()">
-                                {{ isEdit ? 'Update' : 'Add' }}
-                            </button>
-                            <button class="reset" (click)="reset()">Clear</button>
-                            <!-- <button class="edit" (click)="edit(b)"><i class="bi bi-pencil"></i></button> -->
-                            <!-- <button class="delete" (click)="delete(b.id!)"><i class="bi bi-trash"></i></button> -->
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td colspan="3"><strong>Total</strong></td>
-                        <td class="amount"><strong>{{ getTotal() }}</strong></td>
-                        <td></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-
-
 </div>
+<app-toaster></app-toaster>
