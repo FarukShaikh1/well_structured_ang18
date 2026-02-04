@@ -11,6 +11,7 @@ import { publicGuard } from "./guards/public.guard";
 import { RoutineComponent } from "./components/routine/routine.component";
 import { BudgetComponent } from "./components/budget/budget.component";
 import { SelfDataComponent } from "./components/self-data/self-data.component";
+import { CredentialsComponent } from "./components/credentials/credentials.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -92,9 +93,18 @@ export const routes: Routes = [
       {
         path: RoutePath.BUDGET,
         title: RoutePathTitles.BUDGET,
+        component: BudgetComponent,
+      },
+      {
+        path: RoutePath.PLANS,
+        title: RoutePathTitles.PLANS,
         component: SelfDataComponent,
       },
-
+      {
+        path: RoutePath.CREDENTIALS,
+        title: RoutePathTitles.CREDENTIALS,
+        component: CredentialsComponent,
+      },
       {
         path: RoutePath.CHANGE_PASSWORD,
         title: RoutePathTitles.CHANGE_PASSWORD,

@@ -102,4 +102,11 @@ export const API_URL = {
   GET_BUDGET_DETAILS: `${serverUrl}${apiPrefix}/budget/`,
   DELETE_BUDGET: `${serverUrl}${apiPrefix}/budget/delete?budgetId=`,
   UPDATE_BUDGET: `${serverUrl}${apiPrefix}/budget`,
+
+  GET_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,
+  ADD_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,
+  GET_CREDENTIAL_BY_USER: `${serverUrl}${apiPrefix}/credential/user/`,
+  GET_CREDENTIAL_DETAILS: `${serverUrl}${apiPrefix}/credential/`,
+  DELETE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential/delete?credentialId=`,
+  UPDATE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,
 };

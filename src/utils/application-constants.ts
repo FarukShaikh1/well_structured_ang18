@@ -163,6 +163,8 @@ export const NavigationURLs = {
     CURRENCY_GALLERY: '/home/currency-gallery',
     ALL_NOTIFICATIONS: '/home/notifications',
     OTP_VERIFICATION: '/otp-verification',
+    PLANS: '/home/plans',
+    CREDENTIALS: '/home/credentials',
 };
 
 export const RoutePath = {
@@ -186,7 +188,8 @@ export const RoutePath = {
     UNAUTHORIZED: 'unauthorised',
     ROUTINE: 'routine',
     BUDGET: 'budget',
-
+    PLANS: 'plans',
+CREDENTIALS: 'credentials',
 };
 
 export const RoutePathTitles = {
@@ -210,6 +213,8 @@ export const RoutePathTitles = {
     UNAUTHORIZED: 'Unauthorised',
     ROUTINE: 'Routine',
     BUDGET: 'Budget',
+    PLANS: 'Plans',
+    CREDENTIALS: 'Credentials',
 
 };
 
