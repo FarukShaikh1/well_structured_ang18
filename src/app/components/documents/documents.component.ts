@@ -82,9 +82,9 @@ export class DocumentsComponent {
       return;
     }
     this.filteredDocumentList = this.documentList.filter((doc: any) =>
-      doc.uploadedFileName.toLowerCase().includes(this.searchText.toLowerCase()) ||
-      doc.documentName.toLowerCase().includes(this.searchText.toLowerCase()) ||
-      doc.keywords.toLowerCase().includes(this.searchText.toLowerCase())
+      doc.uploadedFileName?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      doc.documentName?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      doc.keywords?.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
