@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule, ToasterComponent],
   templateUrl: './credentials.component.html',
-  styleUrl: './credentials.component.css'
+  styleUrls: ['../budget/budget.component.css']
 })
 export class CredentialsComponent {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;

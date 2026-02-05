@@ -69,15 +69,18 @@
                     class="form-control form-control-lg text-dark bg-transparent">
             </td>
             <td>
+                <input type="text" placeholder="Task" value="{{ calculateDuration(model.fromTime, model.toTime) }}"
+                    class="form-control form-control-lg text-dark bg-transparent">
             </td>
+
         </tr>
 
         <tr>
-            <td colspan="2" class=" pt-3">
+            <td colspan="2">
                 <button (click)="save(model)">
                     {{ isEdit ? 'Update' : 'Add' }}
                 </button>
-                <button class="reset" (click)="reset()">Clear</button>
+                <button class="reset ms-2" (click)="reset()">Clear</button>
             </td>
         </tr>
     </table>

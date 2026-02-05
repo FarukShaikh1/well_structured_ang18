@@ -87,7 +87,7 @@ export const API_URL = {
   GET_DOCUMENT_List: `${serverUrl}${apiPrefix}/document/getList`,
   GET_DOCUMENT_DOWNLOAD_SAS_URL: `${serverUrl}${apiPrefix}/document/GetDownloadUrl?blobPath=`,
   UPLOAD_DOCUMENT: `${serverUrl}${apiPrefix}/document/UploadDocument?userId=`,
-  DELETE_DOCUMENT: `${serverUrl}${apiPrefix}/document/delete?dayId=`,
+  DELETE_DOCUMENT: `${serverUrl}${apiPrefix}/document/delete?documentId=`,
 
   GET_ROUTINE: `${serverUrl}${apiPrefix}/routine`,
   ADD_ROUTINE: `${serverUrl}${apiPrefix}/routine/`,
@@ -105,7 +105,7 @@ export const API_URL = {
 
   GET_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,
   ADD_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,
-  GET_CREDENTIAL_BY_USER: `${serverUrl}${apiPrefix}/credential/user/`,
+  GET_CREDENTIAL_BY_USER: `${serverUrl}${apiPrefix}/credential/GetList?userId=`,
   GET_CREDENTIAL_DETAILS: `${serverUrl}${apiPrefix}/credential/`,
   DELETE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential/delete?credentialId=`,
   UPDATE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,

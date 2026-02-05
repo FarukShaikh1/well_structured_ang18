@@ -55,7 +55,6 @@ export class RoutineComponent implements OnInit {
   }
 
   calculateDurationInMinutes(from: string, to: string): number {
-    debugger;
     const start = new Date(`1970-01-01T${from}`);
     let end = new Date(`1970-01-01T${to}`);
 
@@ -99,7 +98,6 @@ export class RoutineComponent implements OnInit {
   }
 
   save(row: Routine) {
-    debugger;
     row.fromTime = DateUtils.normalizeTime(row.fromTime);
     row.toTime = DateUtils.normalizeTime(row.toTime);
 
@@ -107,7 +105,7 @@ export class RoutineComponent implements OnInit {
       this.toaster.showMessage('Please fill all fields', 'error');
       return;
     }
-    if (this.calculateDurationInMinutes(row.fromTime, row.toTime) <= 10) {
+    if (this.calculateDurationInMinutes(row.fromTime, row.toTime) <= 9) {
       this.toaster.showMessage('Duration must be at least 10 minutes', 'error');
       return;
     }

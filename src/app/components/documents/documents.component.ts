@@ -132,10 +132,12 @@ export class DocumentsComponent {
   async deleteDocument(docId: any) {
     if (docId) {
       this.docId = docId;
-      this.confirmationDialog.openConfirmationPopup(
-        "Confirmation",
-        "Are you sure you want to delete this document? This action cannot be undone."
-      );
+      if (!confirm('Delete this entry?')) return;
+      this.handleConfirmResult(true);
+      // this.confirmationDialog.openConfirmationPopup(
+      //   "Confirmation",
+      //   "Are you sure you want to delete this document? This action cannot be undone."
+      // );
     }
   }
 
