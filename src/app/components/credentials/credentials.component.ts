@@ -1,11 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import { LocalStorageConstants, UserConfig } from '../../../utils/application-constants';
-import { ConfigurationService } from '../../services/configuration/configuration.service';
-import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { CredentialService } from '../../services/credential/credential.service';
-import { Credential } from '../../interfaces/credential';
 import { CommonModule } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { LocalStorageConstants } from '../../../utils/application-constants';
+import { Credential } from '../../interfaces/credential';
+import { ConfigurationService } from '../../services/configuration/configuration.service';
+import { CredentialService } from '../../services/credential/credential.service';
+import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 @Component({
   selector: 'app-credentials',
@@ -18,7 +18,6 @@ export class CredentialsComponent {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
 
   credentials: Credential[] = [];
-
   model: Credential = {
     id: '',
     userId: '',
@@ -29,6 +28,9 @@ export class CredentialsComponent {
   };
 
   isEdit = false;
+  hidePassword: boolean = true;
+  viewPassword: boolean = false;
+
   userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
   selectedId: string = '';
 
@@ -45,7 +47,7 @@ export class CredentialsComponent {
   }
 
   save() {
-    if (!this.model.siteName|| !this.model.siteUrl || !this.model.userName || !this.model.password) {
+    if (!this.model.siteName || !this.model.siteUrl || !this.model.userName || !this.model.password) {
       this.toaster.showMessage('Please fill all required fields', 'error');
       return;
     }
@@ -91,6 +93,13 @@ export class CredentialsComponent {
   edit(item: Credential) {
     this.model = { ...item };
     this.isEdit = true;
+    this.selectedId = this.model.id || '';
+  }
+
+  showPassword(item: Credential) {
+    this.model = { ...item };
+    this.viewPassword = true;
+    this.isEdit = false;
     this.selectedId = this.model.id || '';
   }
 

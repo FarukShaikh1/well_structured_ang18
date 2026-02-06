@@ -105,9 +105,9 @@ export const API_URL = {
   UPDATE_BUDGET: `${serverUrl}${apiPrefix}/budget`,
 
   GET_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,
-  ADD_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,
+  ADD_CREDENTIAL: `${serverUrl}${apiPrefix}/credential/Add`,
   GET_CREDENTIAL_BY_USER: `${serverUrl}${apiPrefix}/credential/GetList?userId=`,
   GET_CREDENTIAL_DETAILS: `${serverUrl}${apiPrefix}/credential/`,
   DELETE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential/delete?credentialId=`,
-  UPDATE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,
+  UPDATE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential/Update`,
 };

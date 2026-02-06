@@ -122,8 +122,8 @@ export class RoutineComponent implements OnInit {
 
       });
     } else {
-      if (this.routines.find(r => r.task === row.task && r.fromTime === row.fromTime && r.toTime === row.toTime) != undefined) {
-        this.toaster.showMessage('Duplicate routine entry found', 'error');
+      if (this.routines.find(r => r.fromTime === row.fromTime && r.toTime === row.toTime) != undefined) {
+        this.toaster.showMessage('Same routine timing entry found', 'error');
         return;
       }
       row.id = null!;
