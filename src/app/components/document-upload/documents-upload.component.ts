@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Renderer2 } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SafeUrlPipe } from '../../common/safe-url.pipe';
 import { DocumentItem } from '../../interfaces/document-item';
+import { DocumentRequest } from '../../interfaces/document-request';
 import { DocumentService } from '../../services/document/document.service';
 import { ApplicationModules } from '../../../utils/application-constants';
 import { GlobalService } from '../../services/global/global.service';
@@ -16,11 +17,34 @@ import { GlobalService } from '../../services/global/global.service';
 })
 
 export class DocumentsUploadComponent {
+
+  @Input() document: any; // null = add, object = edit
+  @Output() saved = new EventEmitter<void>();
+
+  model: DocumentRequest = {
+    id: '',
+    file: null,
+    documentName: '',
+    keywords: ''
+  };
   constructor(private documentService: DocumentService,
     private renderer: Renderer2, private globalService: GlobalService
 
   ) { }
 
+  // ngOnChanges() {
+  //   if (this.document) {
+  //     // EDIT MODE
+  //     this.isEditMode = true;
+  //     this.documentName = this.document.documentName;
+  //     this.keywords = this.document.keywords;
+  //   } else {
+  //     // ADD MODE
+  //     this.isEditMode = false;
+  //     this.resetForm();
+  //   }
+  // }
+  isEditMode = false;
 
   userId = ''; // populate from authentication token or parent component
   documents: DocumentItem[] = [];
@@ -57,7 +81,7 @@ export class DocumentsUploadComponent {
     formData.append('documentName', this.documentName);
     formData.append('keywords', this.keywords);
 
-    await this.documentService.upload(formData).toPromise();
+    await this.documentService.uploadDocument(formData).toPromise();
 
 
     this.selectedFile = null;
@@ -65,6 +89,40 @@ export class DocumentsUploadComponent {
     if (modalEl) (window as any).bootstrap.Modal.getInstance(modalEl)?.hide();
     this.globalService.triggerGridReload(ApplicationModules.DOCUMENT);
 
+  }
+
+
+  save() {
+    debugger
+    if (this.isEditMode) {
+      this.model = {
+        id: this.document.id,
+        documentName: this.documentName,
+        keywords: this.keywords,
+        file: null
+      }
+
+      this.documentService.updateDocument(
+        this.model
+      ).subscribe(() => {
+        this.saved.emit();
+        this.closeModal();
+      });
+    } else {
+      this.model = {
+        id: null,
+        documentName: this.documentName,
+        keywords: this.keywords,
+        file: this.selectedFile
+      }
+
+      // this.documentService.uploadDocument(
+        
+      // ).subscribe(() => {
+      //   this.saved.emit();
+      //   this.closeModal();
+      // });
+    }
   }
 
   // Open preview using SAS URL (preferred)
@@ -81,4 +139,19 @@ export class DocumentsUploadComponent {
     this.showPreview = false;
     this.previewUrl = null;
   }
+
+  resetForm() {
+    this.documentName = '';
+    this.keywords = '';
+    this.selectedFile = null;
+  }
+
+  closeModal() {
+    const modal = document.getElementById('uploadModal');
+    if (modal) {
+      // const bsModal = bootstrap.Modal.getInstance(modal);
+      // bsModal?.hide();
+    }
+  }
+
 }

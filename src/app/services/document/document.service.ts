@@ -3,8 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/internal/Observable";
 import { API_URL } from "../../../utils/api-url";
 import { LocalStorageConstants } from "../../../utils/application-constants";
-import { SpecialOccasionRequest } from "../../interfaces/special-occasion-request";
-import { DocumentItem } from "../../interfaces/document-item";
+import { DocumentRequest } from "../../interfaces/document-request";
 @Injectable({
   providedIn: "root",
 })
@@ -31,19 +30,19 @@ export class DocumentService {
     );
   }
 
-  addDocument(specialOccasionRequest: SpecialOccasionRequest): Observable<any> {
-    specialOccasionRequest.id = null;
+  addDocument(documentRequest: DocumentRequest): Observable<any> {
+    documentRequest.id = null;
     return this.http.post(
       API_URL.ADD_SPECIAL_OCCASION + this.loggedInUserId,
-      specialOccasionRequest
+      documentRequest
     );
   }
-  upload(formData: FormData) {
+  uploadDocument(formData: FormData) {
     return this.http.post(API_URL.UPLOAD_DOCUMENT + this.loggedInUserId, formData);
   }
 
-  updateDocument(specialOccasionRequest: SpecialOccasionRequest): Observable<any> {
-    return this.http.post(API_URL.UPDATE_SPECIAL_OCCASION + String(localStorage.getItem(LocalStorageConstants.USERID)), specialOccasionRequest);
+  updateDocument(documentRequest: DocumentRequest): Observable<any> {
+    return this.http.post(API_URL.UPDATE_DOCUMENT + String(localStorage.getItem(LocalStorageConstants.USERID)), documentRequest);
   }
 
   deleteDocument(docId: string): Observable<any> {

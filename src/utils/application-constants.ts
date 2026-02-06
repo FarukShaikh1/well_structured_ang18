@@ -78,7 +78,7 @@ export const UserConfig = {
     ACCOUNT: 'Accounts',
 };
 
-export const TransactionTabs= {
+export const TransactionTabs = {
     EXPENSE_LIST: 'Transaction List',
     EXPENSE_SUMMARY: 'Transaction Summary',
     BALANCE_SUMMARY: 'Balance Summary',
@@ -87,7 +87,7 @@ export const TransactionTabs= {
     CATEGORY_WISE_REPORT: 'Category Wise Transaction Report',
 }
 
-export const CollectionTabs= {
+export const CollectionTabs = {
     GALLERY_VIEW: 'Gallery View',
     SUMMARY_VIEW: 'Summary View',
     DATA_VIEW: 'Data View',
@@ -165,6 +165,8 @@ export const NavigationURLs = {
     OTP_VERIFICATION: '/otp-verification',
     PLANS: '/home/plans',
     CREDENTIALS: '/home/credentials',
+    UNDER_DEVELOPMENT: '/site-under-development',
+
 };
 
 export const RoutePath = {
@@ -189,7 +191,8 @@ export const RoutePath = {
     ROUTINE: 'routine',
     BUDGET: 'budget',
     PLANS: 'plans',
-CREDENTIALS: 'credentials',
+    CREDENTIALS: 'credentials',
+    UNDER_DEVELOPMENT: 'site-under-development',
 };
 
 export const RoutePathTitles = {
@@ -215,7 +218,7 @@ export const RoutePathTitles = {
     BUDGET: 'Budget',
     PLANS: 'Plans',
     CREDENTIALS: 'Credentials',
-
+    UNDER_DEVELOPMENT: 'Site Under Development',
 };
 
 

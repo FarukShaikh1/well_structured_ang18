@@ -5,7 +5,10 @@
 
       <!-- Header -->
       <div class="modal-header">
-        <h5 class="modal-title">Upload Document</h5>
+        <h5 class="modal-title">
+          {{ isEditMode ? 'Edit Document' : 'Upload Document' }}
+        </h5>
+
         <button type="button" class="btn-close" data-bs-dismiss="modal">✕</button>
       </div>
 
@@ -27,9 +30,7 @@
         <!-- Description -->
         <div class="mb-3">
           <label class="form-label fw-bold">Keywords for easy search</label>
-          <textarea [(ngModel)]="keywords"
-            class="form-control"
-            rows="3"
+          <textarea [(ngModel)]="keywords" class="form-control" rows="3"
             placeholder="Enter keywords separated by spaces or commas">
           </textarea>
         </div>
@@ -42,9 +43,13 @@
           Close
         </button>
 
-        <button type="button" class="btn btn-success" (click)="uploadFile()">
+        <!-- <button type="button" class="btn btn-success" (click)="uploadFile()">
           Upload
+        </button> -->
+        <button type="button" class="btn btn-success" (click)="uploadFile()">
+          {{ isEditMode ? 'Update' : 'Upload' }}
         </button>
+
       </div>
 
     </div>

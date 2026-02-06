@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActionConstant, ApplicationModules } from '../../../utils/application-constants';
+import { Router } from '@angular/router';
+import { ActionConstant, ApplicationModules, NavigationURLs } from '../../../utils/application-constants';
 import { DateUtils } from '../../../utils/date-utils';
 import { SafeUrlPipe } from '../../common/safe-url.pipe';
 import { TruncatePipe } from '../../common/truncate.pipe';
@@ -9,12 +10,13 @@ import { DocumentService } from '../../services/document/document.service';
 import { GlobalService } from '../../services/global/global.service';
 import { DocumentsUploadComponent } from '../document-upload/documents-upload.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
+import { SiteUnderDevelopmentComponent } from '../shared/site-under-development/site-under-development.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [CommonModule, FormsModule, SafeUrlPipe, DocumentsUploadComponent, TruncatePipe, ConfirmationDialogComponent, ToasterComponent],
+  imports: [CommonModule, FormsModule, SafeUrlPipe, DocumentsUploadComponent, TruncatePipe, ConfirmationDialogComponent, ToasterComponent,SiteUnderDevelopmentComponent],
   templateUrl: './documents.component.html',
   styleUrl: './documents.component.css'
 })
@@ -27,7 +29,8 @@ export class DocumentsComponent {
   confirmationDialog!: ConfirmationDialogComponent;
   docId: any;
   constructor(private documentService: DocumentService,
-    public globalService: GlobalService
+    public globalService: GlobalService,
+    private router: Router,
   ) { }
 
 
@@ -92,18 +95,33 @@ export class DocumentsComponent {
     this.loadDocuments();
   }
 
+selectedDocument: any = null;
+
+openNewDocument() {
+  this.selectedDocument = null; // ADD mode
+}
+
+editDocument(doc: any) {
+  this.selectedDocument = { ...doc }; // EDIT mode
+}
+
+onDocumentSaved() {
+  this.loadDocuments(); // reload list
+}
 
   async openPreview(doc: any) {
-    this.previewFileName = doc.uploadedFileName;
-    this.previewContentType = doc.contentType;
+        this.router.navigate([NavigationURLs.UNDER_DEVELOPMENT]);
+    
+    // this.previewFileName = doc.uploadedFileName;
+    // this.previewContentType = doc.contentType;
 
-    // Force inline display (prevents auto download)
-    const inlineUrl = doc.originalPathSasUrl + "&response-content-disposition=inline";
+    // // Force inline display (prevents auto download)
+    // const inlineUrl = doc.originalPathSasUrl + "&response-content-disposition=inline";
 
-    this.previewUrl = inlineUrl;
-    console.log('this.previewUrl : ', this.previewUrl);
+    // this.previewUrl = inlineUrl;
+    // console.log('this.previewUrl : ', this.previewUrl);
 
-    this.showPreview = true;
+    // this.showPreview = true;
   }
 
   // async download(doc: any) {

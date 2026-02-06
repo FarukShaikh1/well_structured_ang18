@@ -1,17 +1,18 @@
 import { Routes } from "@angular/router";
 import { ApplicationModules, RoutePath, RoutePathTitles } from "../utils/application-constants";
+import { BudgetComponent } from "./components/budget/budget.component";
+import { CredentialsComponent } from "./components/credentials/credentials.component";
 import { CurrencyCoinComponent } from "./components/currency-coin/currency-coin.component";
 import { DayComponent } from "./components/day/day.component";
 import { DocumentsComponent } from "./components/documents/documents.component";
 import { MyProfileComponent } from "./components/my-profile/my-profile.component";
+import { RoutineComponent } from "./components/routine/routine.component";
+import { SelfDataComponent } from "./components/self-data/self-data.component";
 import { SettingsComponent } from "./components/settings/settings.component";
+import { SiteUnderDevelopmentComponent } from "./components/shared/site-under-development/site-under-development.component";
 import { TransactionComponent } from "./components/transaction/transaction.component";
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
-import { RoutineComponent } from "./components/routine/routine.component";
-import { BudgetComponent } from "./components/budget/budget.component";
-import { SelfDataComponent } from "./components/self-data/self-data.component";
-import { CredentialsComponent } from "./components/credentials/credentials.component";
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
   {
@@ -32,8 +33,12 @@ export const routes: Routes = [
     path: RoutePath.OWNER_PROFILE,
     title: RoutePathTitles.OWNER_PROFILE,
     component: MyProfileComponent,
+  },  
+  {
+    path: RoutePath.UNDER_DEVELOPMENT,
+    title: RoutePathTitles.UNDER_DEVELOPMENT,
+    component: SiteUnderDevelopmentComponent,
   },
-
   {
     path: RoutePath.HOME,
     title: RoutePathTitles.HOME,
