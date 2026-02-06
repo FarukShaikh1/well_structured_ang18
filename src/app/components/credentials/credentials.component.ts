@@ -23,6 +23,7 @@ export class CredentialsComponent {
     userId: '',
     siteName: '',
     siteUrl: '',
+    notes:'',
     userName: '',
     password: '',
   };
@@ -96,11 +97,15 @@ export class CredentialsComponent {
     this.selectedId = this.model.id || '';
   }
 
-  showPassword(item: Credential) {
+  togglePassword(item: Credential) {
     this.model = { ...item };
-    this.viewPassword = true;
     this.isEdit = false;
-    this.selectedId = this.model.id || '';
+    if (this.selectedId === item.id) {
+      this.viewPassword = !this.viewPassword;
+    } else {
+      this.selectedId = item.id || '';
+      this.viewPassword = true;
+    }
   }
 
   delete(id: string) {
@@ -118,6 +123,7 @@ export class CredentialsComponent {
       id: '',
       siteName: '',
       siteUrl: '',
+      notes: '',
       userName: '',
       password: '',
       userId: this.userId,

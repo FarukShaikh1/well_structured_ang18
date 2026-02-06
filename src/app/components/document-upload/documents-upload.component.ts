@@ -93,7 +93,6 @@ export class DocumentsUploadComponent {
 
 
   save() {
-    debugger
     if (this.isEditMode) {
       this.model = {
         id: this.document.id,

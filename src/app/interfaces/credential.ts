@@ -3,6 +3,7 @@ export interface Credential {
   userId: string;
   siteName: string;
   siteUrl: string;
+  notes: string;
   userName: string;
   password: string;
 }
