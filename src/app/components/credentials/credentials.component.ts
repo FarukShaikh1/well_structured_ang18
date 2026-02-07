@@ -6,11 +6,12 @@ import { Credential } from '../../interfaces/credential';
 import { ConfigurationService } from '../../services/configuration/configuration.service';
 import { CredentialService } from '../../services/credential/credential.service';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { TruncatePipe } from '../../common/truncate.pipe';
 
 @Component({
   selector: 'app-credentials',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToasterComponent],
+  imports: [CommonModule, FormsModule, ToasterComponent, TruncatePipe],
   templateUrl: './credentials.component.html',
   styleUrls: ['../budget/budget.component.css']
 })
@@ -18,12 +19,13 @@ export class CredentialsComponent {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
 
   credentials: Credential[] = [];
+  filteredCredentials: Credential[] = [];
   model: Credential = {
     id: '',
     userId: '',
     siteName: '',
     siteUrl: '',
-    notes:'',
+    notes: '',
     userName: '',
     password: '',
   };
@@ -34,6 +36,7 @@ export class CredentialsComponent {
 
   userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
   selectedId: string = '';
+  searchText: string = '';
 
   constructor(private credentialService: CredentialService, private configService: ConfigurationService) { }
 
@@ -44,7 +47,7 @@ export class CredentialsComponent {
 
   loadCredentials() {
     this.credentialService.getCredentialByUser()
-      .subscribe(res => this.credentials = res);
+      .subscribe(res => { this.credentials = res; this.filteredCredentials = res });
   }
 
   save() {
@@ -132,5 +135,14 @@ export class CredentialsComponent {
     this.selectedId = '';
   }
 
-
+  search(textBox: any) {
+    this.searchText = textBox?.target?.value?.toLowerCase();
+    this.filteredCredentials = this.credentials.filter((item: any) => {
+      const siteName = item.siteName?.toLowerCase().includes(this.searchText);
+      const siteUrl = item.siteUrl?.toLowerCase().includes(this.searchText);
+      const userName = item.userName?.toLowerCase().includes(this.searchText);
+      const notes = item.notes?.toLowerCase().includes(this.searchText);
+      return (siteName || siteUrl || userName || notes);
+    });
+  }
 }

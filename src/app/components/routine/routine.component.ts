@@ -17,6 +17,7 @@ export class RoutineComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   dateUtils = DateUtils;
   routines: Routine[] = [];
+  filteredRoutines: Routine[] = [];
   model: Routine = {
     id: '',
     userId: '',
@@ -26,6 +27,7 @@ export class RoutineComponent implements OnInit {
   };
   isEdit: boolean = false;
   selectedId: string = '';
+  searchText: string = '';
   constructor(private service: RoutineService) { }
 
   ngOnInit() {
@@ -35,7 +37,8 @@ export class RoutineComponent implements OnInit {
   loadData() {
     this.service.getRoutineByUser().subscribe(res => {
       this.routines = res;
-      this.routines.forEach(r => r.duration = this.calculateDuration(r.fromTime, r.toTime));
+      this.filteredRoutines = res;
+      this.filteredRoutines.forEach(r => r.duration = this.calculateDurationInMinutes(r.fromTime, r.toTime));
     });
   }
 
@@ -135,4 +138,19 @@ export class RoutineComponent implements OnInit {
         });
     }
   }
+  getTotal() {
+    let totalInMinute = this.filteredRoutines.reduce((sum, x) => sum + (x.duration || 0), 0);
+    const h = Math.floor(totalInMinute / 60);
+    const m = totalInMinute % 60;
+    return `${h}:${m.toString().padStart(2, '0')}`;
+  }
+
+  search(textBox: any) {
+    this.searchText = textBox?.target?.value?.toLowerCase();
+    this.filteredRoutines = this.routines.filter((item: any) => {
+      const task = item.task?.toLowerCase().includes(this.searchText);
+      return (task);
+    });
+  }
+
 }

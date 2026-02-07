@@ -19,6 +19,7 @@ export class BudgetComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
 
   budgets: Budget[] = [];
+  filteredBudgets: Budget[] = [];
   categories: any;
 
   model: Budget = {
@@ -34,6 +35,7 @@ export class BudgetComponent implements OnInit {
   isEdit = false;
   userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
   selectedId: string = '';
+  searchText: string = '';
 
   constructor(private budgetService: BudgetService, private configService: ConfigurationService) { }
 
@@ -45,7 +47,9 @@ export class BudgetComponent implements OnInit {
 
   loadBudgets() {
     this.budgetService.getBudgetByUser()
-      .subscribe(res => this.budgets = res);
+      .subscribe(res => {
+        this.budgets = res; this.filteredBudgets = res;
+      });
   }
 
   loadCategories() {
@@ -130,4 +134,16 @@ export class BudgetComponent implements OnInit {
   getTotal(): number {
     return this.budgets.reduce((sum, x) => sum + (x.amount || 0), 0);
   }
+
+  search(textBox: any) {
+    this.searchText = textBox?.target?.value?.toLowerCase();
+    this.filteredBudgets = this.budgets.filter((item: any) => {
+      const payTo = item.payTo?.toLowerCase().includes(this.searchText);
+      const purpose = item.purpose?.toLowerCase().includes(this.searchText);
+      const category = item.categoryName?.toLowerCase().includes(this.searchText);
+      // const amount = item.amount?.toLowerCase().includes(this.searchText);
+      return (payTo || purpose || category);
+    });
+  }
+
 }

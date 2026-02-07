@@ -1,5 +1,5 @@
 <div class="main-body">
-    <div class="d-flex justify-content-start mb-3">
+    <div class="d-flex gap-2" style="flex-wrap: wrap;">
         @if(isSuperAdmin)
         {
         <div class="col-5 col-sm-4 col-md-3 col-lg-3 col-xl-2 col-xxl-2">
@@ -15,16 +15,19 @@
         <button (click)="refreshData()" class="btn btn-primary rounded-button">
             <i class="fa fa-refresh"></i> Refresh data
         </button>
-        @if(globalService.isAccessible(ActionConstant.ADD) ||
-        globalService.isAccessible(ActionConstant.EDIT)){
-        <button class="btn btn-primary rounded-button" type="button" (click)="openDetailPopup('',UserConfig.ACCOUNT)"
-            data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
-            <i class="fa fa-plus"></i>
-            Add Account
-        </button>
-        }
     </div>
-
+    <div class="row">
+        <div class="col-12 pt-2">
+            @if(globalService.isAccessible(ActionConstant.ADD) ||
+            globalService.isAccessible(ActionConstant.EDIT)){
+            <button class="btn btn-primary" type="button" (click)="openDetailPopup('',UserConfig.ACCOUNT)"
+                data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
+                <i class="fa fa-plus"></i>
+                Add Account
+            </button>
+            }
+        </div>
+    </div>
 
     @if (filteredAccountTableData.length > 0) {
     <app-tabulator-grid [tableData]="filteredAccountTableData" [columnConfig]="accountColumnConfig" [height]="'320px'"
@@ -50,7 +53,7 @@
             </button>
             }
         </div>
-        <div class="col-12 col-lg-12 pt-2">
+        <div class="col-12 col-lg-12">
             @if (filteredOccasionTypeTableData.length > 0) {
             <app-tabulator-grid [tableData]="filteredOccasionTypeTableData" [columnConfig]="occasionTypeColumnConfig"
                 [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
@@ -77,7 +80,7 @@
             </button>
             }
         </div>
-        <div class="col-12 col-lg-12 pt-2">
+        <div class="col-12 col-lg-12">
             @if (filteredRelationTableData.length > 0) {
             <app-tabulator-grid [tableData]="filteredRelationTableData" [columnConfig]="relationColumnConfig"
                 [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
@@ -94,7 +97,7 @@
         </div>
     </div>
 
-        <div class="row">
+    <div class="row">
         <div class="col-12 pt-2">
             @if (globalService.isAccessible(ActionConstant.ADD) || globalService.isAccessible(ActionConstant.EDIT)) {
             <button class="btn btn-primary" type="button" (click)="openDetailPopup('',UserConfig.TRANSACTION_CATEGORY)"
@@ -106,10 +109,10 @@
         </div>
         <div class="col-12 col-lg-12 pt-2">
             @if (filteredTransactionCategoryTableData.length > 0) {
-            <app-tabulator-grid [tableData]="filteredTransactionCategoryTableData" [columnConfig]="transactionCategoryColumnConfig"
-                [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
-                [allowCSVExport]="allowCSVExport" [isLoading]="isTransactionCategoryGridLoading"
-                [loadingText]="'Loading transactionsubcategorys...'">
+            <app-tabulator-grid [tableData]="filteredTransactionCategoryTableData"
+                [columnConfig]="transactionCategoryColumnConfig" [height]="'320px'" [paginationSize]="paginationSize"
+                [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
+                [isLoading]="isTransactionCategoryGridLoading" [loadingText]="'Loading transactionsubcategorys...'">
             </app-tabulator-grid>
             } @else {
             <div class="alert alert-info text-center mt-3" role="alert">

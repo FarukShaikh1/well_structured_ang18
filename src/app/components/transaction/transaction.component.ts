@@ -994,27 +994,6 @@ export class TransactionComponent implements OnInit {
     }
   }
 
-  ClearFilter() {
-    this.cacheService.clear(NavigationURLs.EXPENSE_LIST);
-    this.cacheService.clear(NavigationURLs.EXPENSE_SUMMARY_LIST);
-    this.cacheService.clear(NavigationURLs.EXPENSE_BALANCE_LIST);
-    this.cacheService.clear(NavigationURLs.EXPENSE_REPORT);
-    this.cacheService.clear(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
-    this.sourceOrReason = "";
-    this.minAmount = 0;
-    this.maxAmount = 0;
-    if (this.searchInput) {
-      this.searchInput.nativeElement.value = "";
-    }
-    if (this.minInput) {
-      this.minInput.nativeElement.value = "";
-    }
-    if (this.maxInput) {
-      this.maxInput.nativeElement.value = "";
-    }
-    this.loadGrid();
-  }
-
   getLatestTransactionDate(): any {
     if (!this.filteredTableData || this.filteredTableData.length === 0) {
       return new Date();
@@ -1068,12 +1047,25 @@ export class TransactionComponent implements OnInit {
   }
 
   refreshData() {
-    localStorage.removeItem(NavigationURLs.EXPENSE_LIST);
-    localStorage.removeItem(NavigationURLs.EXPENSE_SUMMARY_LIST);
-    localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
-    localStorage.removeItem(NavigationURLs.EXPENSE_REPORT);
-    localStorage.removeItem(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
+    this.cacheService.clear(NavigationURLs.EXPENSE_LIST);
+    this.cacheService.clear(NavigationURLs.EXPENSE_SUMMARY_LIST);
+    this.cacheService.clear(NavigationURLs.EXPENSE_BALANCE_LIST);
+    this.cacheService.clear(NavigationURLs.EXPENSE_REPORT);
+    this.cacheService.clear(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
+    this.sourceOrReason = "";
+    this.minAmount = 0;
+    this.maxAmount = 0;
+    if (this.searchInput) {
+      this.searchInput.nativeElement.value = "";
+    }
+    if (this.minInput) {
+      this.minInput.nativeElement.value = "";
+    }
+    if (this.maxInput) {
+      this.maxInput.nativeElement.value = "";
+    }
     this.loadGrid();
+
   }
 
   loadGrid() {

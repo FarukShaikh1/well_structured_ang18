@@ -4,5 +4,5 @@ export interface Routine {
   fromTime: string;
   toTime: string;
   task: string;
-  duration?: string;
+  duration?: number;
 }
