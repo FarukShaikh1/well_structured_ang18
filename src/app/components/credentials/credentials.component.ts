@@ -7,11 +7,12 @@ import { ConfigurationService } from '../../services/configuration/configuration
 import { CredentialService } from '../../services/credential/credential.service';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { TruncatePipe } from '../../common/truncate.pipe';
-
+import { PasswordPatternPipe } from '../../common/password-pattern.pipe';
+import { applyPasswordPattern } from '../../../utils/password-pattern';
 @Component({
   selector: 'app-credentials',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToasterComponent, TruncatePipe],
+  imports: [CommonModule, FormsModule, ToasterComponent, TruncatePipe, PasswordPatternPipe],
   templateUrl: './credentials.component.html',
   styleUrls: ['../budget/budget.component.css']
 })
@@ -47,7 +48,14 @@ export class CredentialsComponent {
 
   loadCredentials() {
     this.credentialService.getCredentialByUser()
-      .subscribe(res => { this.credentials = res; this.filteredCredentials = res });
+      .subscribe(res => { 
+        res = res.map(a => ({
+        ...a,
+        password: applyPasswordPattern(a.password ?? '')
+      }));
+        this.credentials = res;
+        this.filteredCredentials = res;
+       });
   }
 
   save() {
