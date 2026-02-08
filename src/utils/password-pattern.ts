@@ -1,8 +1,23 @@
 // password-pattern.util.ts
-export function applyPasswordPattern(value: string): string {
+export function applyPasswordPattern(value: string, shift = 5): string {
   if (!value) return '';
 
-  
+  const min = 32;
+  const max = 126;
+
+  value = value.split('').map(c => {
+    const code = c.charCodeAt(0);
+
+    if (code < min || code > max) return c;
+
+    let shifted = code - shift;
+    if (shifted < min) {
+      shifted = max - (min - shifted - 1);
+    }
+
+    return String.fromCharCode(shifted);
+  }).join('');
+
   let chars = value.split('').map(c => {
     if (c >= 'a' && c <= 'z') return c.toUpperCase();
     if (c >= 'A' && c <= 'Z') return c.toLowerCase();
