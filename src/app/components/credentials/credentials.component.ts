@@ -7,12 +7,11 @@ import { ConfigurationService } from '../../services/configuration/configuration
 import { CredentialService } from '../../services/credential/credential.service';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { TruncatePipe } from '../../common/truncate.pipe';
-import { PasswordPatternPipe } from '../../common/password-pattern.pipe';
 import { applyPasswordPattern } from '../../../utils/password-pattern';
 @Component({
   selector: 'app-credentials',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToasterComponent, TruncatePipe, PasswordPatternPipe],
+  imports: [CommonModule, FormsModule, ToasterComponent, TruncatePipe],
   templateUrl: './credentials.component.html',
   styleUrls: ['../budget/budget.component.css']
 })

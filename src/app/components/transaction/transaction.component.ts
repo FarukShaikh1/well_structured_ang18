@@ -550,6 +550,7 @@ export class TransactionComponent implements OnInit {
         headerHozAlign: "center",
         hozAlign: "center",
         formatter: this.overSpentFormatter.bind(this),
+        bottomCalcFormatter: this.overSpentFormatter.bind(this),
         cssClass: "amount-column",
         minWidth: 150,
       },
