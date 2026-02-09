@@ -1,13 +1,13 @@
 <h1>Pie Chart</h1>
 <div class="row">
   
-  <div class="col-8">
+  <div class="col-12 col-sm-7 col-md-8 col-lg-6 col-xl-7">
     <canvas baseChart [type]="'pie'" [data]="pieChartData" [options]="pieChartOptions">
     </canvas>
   </div>
 
   
-  <div class="col-4">
+  <div class="col-12 col-sm-5 col-md-4 col-lg-6 col-xl-5">
     <div class="category-toggle">
       <label class="category-option income" [class.active]="selectedType === 'income'"
         (click)="toggleCategory('income')">
