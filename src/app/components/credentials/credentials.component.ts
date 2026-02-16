@@ -29,7 +29,7 @@ export class CredentialsComponent {
     userName: '',
     password: '',
   };
-
+  newModel = this.model;
   isEdit = false;
   hidePassword: boolean = true;
   viewPassword: boolean = false;
@@ -47,27 +47,27 @@ export class CredentialsComponent {
 
   loadCredentials() {
     this.credentialService.getCredentialByUser()
-      .subscribe(res => { 
+      .subscribe(res => {
         res = res.map(a => ({
-        ...a,
-        password: applyPasswordPattern(a.password ?? '')
-      }));
+          ...a,
+          password: applyPasswordPattern(a.password ?? '')
+        }));
         this.credentials = res;
         this.filteredCredentials = res;
-       });
+      });
   }
 
-  save() {
-    if (!this.model.siteName || !this.model.siteUrl || !this.model.userName || !this.model.password) {
+  save(model: Credential) {
+    if (!model.siteName || !model.siteUrl || !model.userName || !model.password) {
       this.toaster.showMessage('Please fill all required fields', 'error');
       return;
     }
     if (this.isEdit) {
-      if (this.credentials.find(b => b.id === this.model.id) == undefined) {
+      if (this.credentials.find(b => b.id === model.id) == undefined) {
         this.toaster.showMessage('Credential entry not found for update', 'error');
         return;
       }
-      this.credentialService.updateCredential(this.model)
+      this.credentialService.updateCredential(model)
         .subscribe({
           next: (res) => {
             this.isEdit = false;
@@ -80,12 +80,12 @@ export class CredentialsComponent {
           }
         });
     } else {
-      if (this.credentials.find(b => b.siteUrl === this.model.siteUrl && b.userName === this.model.userName) != undefined) {
+      if (this.credentials.find(b => b.siteUrl === model.siteUrl && b.userName === model.userName) != undefined) {
         this.toaster.showMessage('Duplicate credential entry found', 'error');
         return;
       }
-      this.model.id = null;
-      this.credentialService.addCredential(this.model)
+      model.id = null;
+      this.credentialService.addCredential(model)
         .subscribe({
           next: (res) => {
             this.toaster.showMessage('Credential entry added successfully', 'success');
@@ -102,6 +102,7 @@ export class CredentialsComponent {
   }
 
   edit(item: Credential) {
+    this.newModel = { ...item };
     this.model = { ...item };
     this.isEdit = true;
     this.selectedId = this.model.id || '';
@@ -138,6 +139,7 @@ export class CredentialsComponent {
       password: '',
       userId: this.userId,
     };
+    this.newModel = this.model;
     this.isEdit = false;
     this.selectedId = '';
   }
