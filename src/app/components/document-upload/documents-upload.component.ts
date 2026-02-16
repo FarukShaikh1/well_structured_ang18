@@ -27,6 +27,7 @@ export class DocumentsUploadComponent {
     documentName: '',
     keywords: ''
   };
+  isSaving: boolean=false;
   constructor(private documentService: DocumentService,
     private renderer: Renderer2, private globalService: GlobalService
 
@@ -73,7 +74,7 @@ export class DocumentsUploadComponent {
   }
   async uploadFile() {
     if (!this.selectedFile) return;
-
+    this.isSaving = true;
 
     const formData = new FormData();
     formData.append('file', this.selectedFile);
@@ -88,6 +89,7 @@ export class DocumentsUploadComponent {
     const modalEl = document.getElementById('uploadModal');
     if (modalEl) (window as any).bootstrap.Modal.getInstance(modalEl)?.hide();
     this.globalService.triggerGridReload(ApplicationModules.DOCUMENT);
+    this.isSaving = false;
 
   }
 

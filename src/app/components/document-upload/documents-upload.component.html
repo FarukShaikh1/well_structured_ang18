@@ -43,10 +43,7 @@
           Close
         </button>
 
-        <!-- <button type="button" class="btn btn-success" (click)="uploadFile()">
-          Upload
-        </button> -->
-        <button type="button" class="btn btn-success" (click)="uploadFile()">
+        <button type="button" [disabled]="isSaving" class="btn btn-success" (click)="uploadFile()">
           {{ isEditMode ? 'Update' : 'Upload' }}
         </button>
 
