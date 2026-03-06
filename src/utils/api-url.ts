@@ -60,7 +60,7 @@ export const API_URL = {
   GET_DEFAULT_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetDefaultPermission`,
   GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,
   UPDATE_USER_PERMISSION: `${serverUrl}${apiPrefix}/user/updateUserPermission?userId=`,
-  CHANGE_PASSWORD: `${serverUrl}${apiPrefix}/user/changepassword`,
+  // CHANGE_PASSWORD: `${serverUrl}${apiPrefix}/user/changepassword`,
 
   GET_ALL_USERS: `${serverUrl}${apiPrefix}/user/GetList`,
   GET_LOGGED_IN_USER_DETAILS: `${serverUrl}${apiPrefix}/auth/getloggedinuserdetails`,
@@ -81,7 +81,10 @@ export const API_URL = {
   FORGOT_PASSWORD: `${serverUrl}${apiPrefix}/auth/forgotpassword`,
   VERIFY_OTP: `${serverUrl}${apiPrefix}/otp/verify`,
   SEND_OTP: `${serverUrl}${apiPrefix}/otp/send`,
-  LOGIN: `${serverUrl}${apiPrefix}/user/Login`,
+  LOGIN: `${serverUrl}${apiPrefix}/user/login`,
+  REFRESH_TOKEN: `${serverUrl}${apiPrefix}/user/refresh-token`,
+  LOGOUT: `${serverUrl}${apiPrefix}/user/logout`,
+  CHANGE_PASSWORD: `${serverUrl}${apiPrefix}/user/change-password`,
 
 
   GET_DOCUMENT_List: `${serverUrl}${apiPrefix}/document/getList`,

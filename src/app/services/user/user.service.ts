@@ -55,4 +55,19 @@ export class UserService {
   getUserList(): Observable<any> {
     return this.httpService.get(API_URL.GET_ALL_USERS);
   }
+
+  /**
+   * Exchanges a refresh token for a new access + refresh token pair.
+   * Called automatically by HttpInterceptorService on 401 responses.
+   */
+  refreshToken(refreshToken: string): Observable<any> {
+    return this.httpService.post<any>(API_URL.REFRESH_TOKEN, { refreshToken });
+  }
+
+  /**
+   * Revokes the current refresh token server-side. Call on explicit logout.
+   */
+  logout(refreshToken: string): Observable<any> {
+    return this.httpService.post<any>(API_URL.LOGOUT, { refreshToken });
+  }
 }
