@@ -43,8 +43,8 @@ export const API_URL = {
   GET_AVAIL_AMOUNT: `${serverUrl}${apiPrefix}/transaction/getAvailAmount`,
 
 
-  GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/commonList/getCommonListItem`,
-  GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/GetCountryList`,
+  GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/commonList/`,
+  GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/countries`,
   GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/`,
   GET_DEFAULT_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetDefaultPermission`,
   GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,
@@ -56,7 +56,7 @@ export const API_URL = {
   Get_USER_DETAILS: `${serverUrl}${apiPrefix}/user/GetDetails?userId=`,
 
   GET_CONFIG_LIST: `${serverUrl}${apiPrefix}/settings/config/active`,
-  GET_ACTIVE_CONFIG_LIST: `${serverUrl}${apiPrefix}/settings/GetActiveConfigList`,
+  GET_ACTIVE_CONFIG_LIST: `${serverUrl}${apiPrefix}/settings/config/active`,
   GET_CONFIG_DETAIL: `${serverUrl}${apiPrefix}/settings/GetConfigDetails`,
   GET_CONFIG_ADD: `${serverUrl}${apiPrefix}/settings/AddConfig`,
   GET_CONFIG_UPDATE: `${serverUrl}${apiPrefix}/settings/UpdateConfig`,

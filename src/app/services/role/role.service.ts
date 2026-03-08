@@ -22,7 +22,7 @@ export class RoleService {
     if (userString) {
       user = JSON.parse(userString);
     }
-    return this.httpService.get(API_URL.GET_USER_PERMISSIONS + user?.id);
+    return this.httpService.get(API_URL.GET_USER_PERMISSIONS + user?.userId+'/permissions');
   }
 
   getPermission(userId: string): Observable<any> {
