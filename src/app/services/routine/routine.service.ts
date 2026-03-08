@@ -1,7 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../../utils/api-url';
-import { Observable } from 'rxjs';
 import { LocalStorageConstants } from '../../../utils/application-constants';
 import { Routine } from '../../interfaces/routine';
 
@@ -20,7 +19,7 @@ export class RoutineService {
   getRoutineByUser() {
     const userId = localStorage.getItem(LocalStorageConstants.USERID);
     return this.http.get<Routine[]>(
-      API_URL.GET_ROUTINE_BY_USER + userId
+      API_URL.GET_ROUTINE_BY_USER
     );
   }
 
