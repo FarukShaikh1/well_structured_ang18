@@ -30,36 +30,31 @@ export class DocumentService {
     );
   }
 
-  addDocument(documentRequest: DocumentRequest): Observable<any> {
-    documentRequest.id = null;
-    return this.http.post(
-      API_URL.ADD_SPECIAL_OCCASION + this.loggedInUserId,
-      documentRequest
-    );
-  }
+  // addDocument(documentRequest: DocumentRequest): Observable<any> {
+  //   documentRequest.id = null;
+  //   return this.http.post(
+  //     API_URL.ADD_DOCUMENT,
+  //     documentRequest
+  //   );
+  // }
   uploadDocument(formData: FormData) {
-    return this.http.post(API_URL.UPLOAD_DOCUMENT + this.loggedInUserId, formData);
+    return this.http.post(API_URL.UPLOAD_DOCUMENT, formData);
   }
 
   updateDocument(documentRequest: DocumentRequest): Observable<any> {
-    return this.http.post(API_URL.UPDATE_DOCUMENT + String(localStorage.getItem(LocalStorageConstants.USERID)), documentRequest);
+    return this.http.post(API_URL.UPDATE_DOCUMENT, documentRequest);
   }
 
   deleteDocument(docId: string): Observable<any> {
-    return this.http.get(
+    return this.http.delete(
       API_URL.DELETE_DOCUMENT +
-      docId +
-      "&userId=" +
-      String(localStorage.getItem(LocalStorageConstants.USERID))
+      docId
     );
   }
 
   approveDocument(dayId: string): Observable<any> {
     return this.http.get(
       API_URL.APPROVE_SPECIAL_OCCASION +
-      dayId +
-      "&userId=" +
-      String(localStorage.getItem(LocalStorageConstants.USERID))
-    );
+      dayId);
   }
 }

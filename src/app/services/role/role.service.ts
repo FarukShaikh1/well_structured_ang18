@@ -39,6 +39,6 @@ export class RoleService {
     if (userString) {
       user = JSON.parse(userString);
     }
-    return this.httpService.post(API_URL.UPDATE_USER_PERMISSION + user.id, data);
+    return this.httpService.post(API_URL.UPDATE_USER_PERMISSION, data);
   }
 }

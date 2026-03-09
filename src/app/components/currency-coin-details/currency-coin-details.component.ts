@@ -263,6 +263,9 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         if (this.selectedImageFile) {
           this.uploadImageAndSaveData();
         }
+        else{
+          this.addOrUpdateCurrencyCoinDetails();
+        }
       } catch (error) {
         this.isSaving = false;
         this.loaderService.hideLoader();
@@ -270,6 +273,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         console.error("Error in adding data : ", error);
       }
     }
+    this.isSaving = false;
   }
 
   addCurrencyCoinDetails() {

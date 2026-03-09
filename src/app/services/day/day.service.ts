@@ -14,10 +14,7 @@ export class DayService {
   }
 
   getDayDetails(dayId: string) {
-    const params = new HttpParams()
-      .set("userid", String(localStorage.getItem(LocalStorageConstants.USERID)))
-      .set("dayId", dayId);
-    return this.http.get(API_URL.GET_SPECIAL_OCCASION_DETAILS, { params: params });
+    return this.http.get(API_URL.GET_SPECIAL_OCCASION_DETAILS+dayId);
   }
 
   getDayList(
@@ -45,31 +42,19 @@ export class DayService {
     
     specialOccasionRequest.id = null;
     return this.http.post(
-      API_URL.ADD_SPECIAL_OCCASION + this.loggedInUserId,
+      API_URL.ADD_SPECIAL_OCCASION,
       specialOccasionRequest
     );
   }
 
   updateDay(specialOccasionRequest: SpecialOccasionRequest): Observable<any> {
-    return this.http.post(API_URL.UPDATE_SPECIAL_OCCASION + String(localStorage.getItem(LocalStorageConstants.USERID)), specialOccasionRequest);
+    return this.http.put(API_URL.UPDATE_SPECIAL_OCCASION, specialOccasionRequest);
   }
 
-  
-  
-  
-  
-  
-  
-  
-  
-
-
   deleteDay(dayId: string): Observable<any> {
-    return this.http.get(
+    return this.http.delete(
       API_URL.DELETE_SPECIAL_OCCASION +
-      dayId +
-      "&userId=" +
-      String(localStorage.getItem(LocalStorageConstants.USERID))
+      dayId 
     );
   }
 
