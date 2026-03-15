@@ -56,6 +56,11 @@ export class UserService {
     return this.httpService.get(API_URL.GET_ALL_USERS);
   }
 
+  getModuleList(): Observable<any> {
+    debugger;
+    return this.httpService.get(API_URL.GET_MODULE_LIST);
+  }
+
   /**
    * Exchanges a refresh token for a new access + refresh token pair.
    * Called automatically by HttpInterceptorService on 401 responses.

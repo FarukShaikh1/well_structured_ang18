@@ -46,7 +46,8 @@ export const API_URL = {
 
   GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/commonList/`,
   GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/countries`,
-  GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/`,
+  GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/permissions/`,
+  GET_USER_PERMISSIONS_FOR_MENU: `${serverUrl}${apiPrefix}/user/permissionsForMenu/`,
   GET_DEFAULT_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetDefaultPermission`,
   GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,
   UPDATE_USER_PERMISSION: `${serverUrl}${apiPrefix}/user/permissions/`,
@@ -55,6 +56,7 @@ export const API_URL = {
   GET_ALL_USERS: `${serverUrl}${apiPrefix}/user/list`,
   GET_LOGGED_IN_USER_DETAILS: `${serverUrl}${apiPrefix}/auth/getloggedinuserdetails`,
   Get_USER_DETAILS: `${serverUrl}${apiPrefix}/user/GetDetails?userId=`,
+  GET_MODULE_LIST: `${serverUrl}${apiPrefix}/user/modules`,
 
   GET_CONFIG_LIST: `${serverUrl}${apiPrefix}/settings/config/active`,
   GET_ACTIVE_CONFIG_LIST: `${serverUrl}${apiPrefix}/settings/config/active`,
