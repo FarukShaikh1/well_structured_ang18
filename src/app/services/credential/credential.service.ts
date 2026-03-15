@@ -1,7 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../../utils/api-url';
-import { Observable } from 'rxjs';
 import { LocalStorageConstants } from '../../../utils/application-constants';
 import { Credential } from '../../interfaces/credential';
 
@@ -20,7 +19,7 @@ export class CredentialService {
   getCredentialByUser() {
     const userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
     return this.http.get<Credential[]>(
-      API_URL.GET_CREDENTIAL_BY_USER + userId
+      API_URL.GET_CREDENTIAL_BY_USER 
     );
   }
 

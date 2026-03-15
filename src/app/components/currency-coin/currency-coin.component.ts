@@ -4,6 +4,7 @@ import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
 import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, CollectionTabs, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
 import { TruncatePipe } from '../../common/truncate.pipe';
+import { AssetService } from '../../services/asset/asset.service';
 import { CacheService } from '../../services/cache/cache.service';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { GlobalService } from '../../services/global/global.service';
@@ -41,7 +42,8 @@ export class CurrencyCoinComponent implements OnInit {
   @ViewChild("searchInput") searchInput!: ElementRef;
   basePath: string = API_URL.ATTACHMENT;
   searchText: string = '';
-  currencyCoinId: string = '';
+  id: string = '';
+  assetId: string = '';
   fullscreenImage: string = "";
 
   public tableData: Record<string, unknown>[] = [];
@@ -65,6 +67,7 @@ export class CurrencyCoinComponent implements OnInit {
   touchEndX = 0;
   constructor(
     private currencyCoinService: CurrencyCoinService,
+    private _assetService: AssetService,
     private localStorageService: LocalStorageService,
     public globalService: GlobalService,
     private cacheService: CacheService,
@@ -388,7 +391,7 @@ export class CurrencyCoinComponent implements OnInit {
       menu.push({
         label: ApplicationConstantHtml.DELETE_LABLE,
         action: () => {
-          this.deleteCurrencyCoin(rowData['id']);
+          this.deleteCurrencyCoin(rowData['id'], rowData['assetId']);
         },
       });
     }
@@ -523,9 +526,10 @@ export class CurrencyCoinComponent implements OnInit {
     });
   }
 
-  deleteCurrencyCoin(currencyCoinId: string) {
+  deleteCurrencyCoin(currencyCoinId: string, assetId: string) {
     if (currencyCoinId) {
-      this.currencyCoinId = currencyCoinId;
+      this.id = currencyCoinId;
+      this.assetId = assetId;
       this.confirmationDialog.openConfirmationPopup(
         "Confirmation",
         "Are you sure you want to delete this currencyCoin? This action cannot be undone."
@@ -535,8 +539,18 @@ export class CurrencyCoinComponent implements OnInit {
 
   handleConfirmResult(isConfirmed: boolean) {
     if (isConfirmed) {
+      if (this.assetId) {
+        this._assetService.deleteAsset(this.assetId).subscribe({
+          next: (res: any) => {
+            this.toaster.showMessage("asset deleted successfully.", "success");
+          },
+          error: (error: any) => {
+            this.toaster.showMessage("Failed to delete the asset.", "error");
+          },
+        });
+      }
 
-      this.currencyCoinService.deleteCurrencyCoin(this.currencyCoinId).subscribe({
+      this.currencyCoinService.deleteCurrencyCoin(this.id).subscribe({
         next: (res: any) => {
           this.toaster.showMessage("Record Deleted Successfully.", "success");
           this.reloadData();

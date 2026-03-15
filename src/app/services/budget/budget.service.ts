@@ -20,7 +20,7 @@ export class BudgetService {
   getBudgetByUser() {
     const userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
     return this.http.get<Budget[]>(
-      API_URL.GET_BUDGET_BY_USER + userId
+      API_URL.GET_BUDGET_BY_USER
     );
   }
 

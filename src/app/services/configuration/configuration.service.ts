@@ -30,7 +30,7 @@ export class ConfigurationService {
     const params = new HttpParams()
       .set('id', id)
       .set('config', config);
-    return this.http.get(API_URL.GET_CONFIG_DETAIL, { params });
+    return this.http.get(API_URL.GET_CONFIG_DETAIL+config+'/'+id);
   }
 
   addConfiguration(request: ConfigurationRequest, config: string) {

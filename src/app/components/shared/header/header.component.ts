@@ -92,6 +92,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getModuleList() {
+    this.globalService.getUserPermissionData();
     this.moduleList = this.localStorageService.getLoggedInUserPermissions();
     this.moduleList = this.moduleList.filter((module: any) => {
       if (module.moduleName === RoutePathTitles.EXPENSES) {

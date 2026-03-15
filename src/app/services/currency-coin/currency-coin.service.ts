@@ -15,7 +15,6 @@ export class CurrencyCoinService {
   getCurrencyCoinList(): Observable<any> {
     if (localStorage.getItem(LocalStorageConstants.USERID) !== null) {
       const params = new HttpParams()
-        .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
       return this.http.get(API_URL.GET_COLLECTION_COIN_GALLERY, { params: params });
     }
     return this.http.get(API_URL.GET_COLLECTION_COIN_GALLERY);
@@ -42,31 +41,23 @@ export class CurrencyCoinService {
     }
   }
   getCurrencyCoinDetails(collectionCoinId: string) {
-    if (localStorage.getItem(LocalStorageConstants.USERID) !== null) {
       const params = new HttpParams()
-        .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
-        .set('coinNoteCollectionId', collectionCoinId)
-      return this.http.get(API_URL.GET_COLLECTION_COIN_DETAILS, { params: params })
-    }
-    const params = new HttpParams()
-      .set('coinNoteCollectionId', collectionCoinId)
-    return this.http.get(API_URL.GET_COLLECTION_COIN_DETAILS, { params: params })
-
+      return this.http.get(API_URL.GET_COLLECTION_COIN_DETAILS+collectionCoinId);
   }
 
   addCurrencyCoin(coinNoteCollectionRequest: CoinNoteCollectionRequest): Observable<any> {
-    return this.http.post(API_URL.ADD_COLLECTION_COIN + String(localStorage.getItem(LocalStorageConstants.USERID)), coinNoteCollectionRequest);
+    return this.http.post(API_URL.ADD_COLLECTION_COIN, coinNoteCollectionRequest);
   }
 
   updateCurrencyCoin(coinNoteCollectionRequest: CoinNoteCollectionRequest): Observable<any> {
-    return this.http.post(API_URL.UPDATE_COLLECTION_COIN + String(localStorage.getItem(LocalStorageConstants.USERID)), coinNoteCollectionRequest);
+    return this.http.put(API_URL.UPDATE_COLLECTION_COIN, coinNoteCollectionRequest);
   }
 
-  deleteCurrencyCoin(dayId: string): Observable<any> {
-    return this.http.get(API_URL.DELETE_COLLECTION_COIN + dayId + '&userId=' + String(localStorage.getItem(LocalStorageConstants.USERID)));
+  deleteCurrencyCoin(coinId: string): Observable<any> {
+    return this.http.delete(API_URL.DELETE_COLLECTION_COIN + coinId);
   }
 
   approveCurrencyCoin(coinNoteCollectionId: string): Observable<any> {
-    return this.http.get(API_URL.APPROVE_COLLECTION_COIN + coinNoteCollectionId + '&userId=' + String(localStorage.getItem(LocalStorageConstants.USERID)));
+    return this.http.get(API_URL.APPROVE_COLLECTION_COIN + coinNoteCollectionId);
   }
 }

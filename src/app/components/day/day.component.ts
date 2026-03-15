@@ -21,6 +21,7 @@ import { DayDetailsComponent } from "../day-details/day-details.component";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
 import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { AssetService } from "../../services/asset/asset.service";
 
 export interface Task {
   name: string;
@@ -75,10 +76,12 @@ export class DayComponent implements OnInit {
   selectedOccasionType: string[] = [];
   selectedRelationType: string[] = [];
   id: string = '';
+  assetId: string = '';
   showTodaysOccasion: boolean = false;
-  displayDay=false;
+  displayDay = false;
   constructor(
     private _dayService: DayService,
+    private _assetService: AssetService,
 
     public localStorageService: LocalStorageService,
     public globalService: GlobalService,
@@ -110,7 +113,7 @@ export class DayComponent implements OnInit {
 
   loadGrid() {
     // ✅ 1. Check cache first
-    const cachedData = this.cacheService.get<any[]>(this.cacheKey); 
+    const cachedData = this.cacheService.get<any[]>(this.cacheKey);
     if (cachedData) {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;
@@ -138,7 +141,7 @@ export class DayComponent implements OnInit {
           this.loaderService.hideLoader();
         },
       });
-          this.loaderService.hideLoader();
+    this.loaderService.hideLoader();
   }
 
   // ✅ Method to clear cache for this grid only
@@ -310,16 +313,17 @@ export class DayComponent implements OnInit {
       menu.push({
         label: ApplicationConstantHtml.DELETE_LABLE,
         action: () => {
-          this.deleteDay(rowData['id']);
+          this.deleteDay(rowData['id'], rowData['assetId']);
         },
       });
     }
     return menu;
   }
 
-  deleteDay(birthdayId: string) {
+  deleteDay(birthdayId: string, assetId: string) {
     if (birthdayId) {
       this.id = birthdayId;
+      this.assetId = assetId;
       this.confirmationDialog.openConfirmationPopup(
         "Confirmation",
         "Are you sure you want to delete this record? This action cannot be undone."
@@ -330,6 +334,16 @@ export class DayComponent implements OnInit {
   handleConfirmResult(isConfirmed: boolean) {
     if (isConfirmed) {
       this.loaderService.showLoader();
+      if (this.assetId) {
+        this._assetService.deleteAsset(this.assetId).subscribe({
+          next: (res: any) => {
+            this.toaster.showMessage("asset deleted successfully.", "success");
+          },
+          error: (error: any) => {
+            this.toaster.showMessage("Failed to delete the asset.", "error");
+          },
+        });
+      }
       this._dayService.deleteDay(this.id).subscribe({
         next: (res: any) => {
           this.toaster.showMessage("Record deleted successfully.", "success");

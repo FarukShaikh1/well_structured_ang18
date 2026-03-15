@@ -1167,7 +1167,7 @@ export class TransactionComponent implements OnInit {
     } else if (this.activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT) {
 
       this.transactionService
-        .getBudgetWiseReportList(this.transactionfilterRequest)
+        .getCategoryWiseReportList(this.transactionfilterRequest)
         .subscribe({
           next: (res: any) => {
             this.tableData = res.data;

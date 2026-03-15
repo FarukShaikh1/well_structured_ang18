@@ -10,6 +10,7 @@ import { OktaAuth } from '@okta/okta-auth-js';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { GlobalErrorHandlerService } from './services/error-handling/global-error-handler.service';
+import { ErrorInterceptorService } from './services/interceptors/error-interceptor.service';
 import { HttpInterceptorService } from './services/interceptors/http-interceptor.service';
 
 export function MSALInstanceFactory(): IPublicClientApplication {
@@ -75,6 +76,12 @@ export const appConfig: ApplicationConfig = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
+      multi: true
+    },
+    // Error interceptor runs after auth interceptor so 401-with-refresh is handled first
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptorService,
       multi: true
     },
     {

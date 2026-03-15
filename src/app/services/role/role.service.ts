@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URL } from '../../../utils/api-url';
 import { LocalStorageConstants } from '../../../utils/application-constants';
-import { HttpService } from '../rest/http.service';
 import { UserPermission } from '../../interfaces/user-permission';
+import { HttpService } from '../rest/http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +22,11 @@ export class RoleService {
     if (userString) {
       user = JSON.parse(userString);
     }
-    return this.httpService.get(API_URL.GET_USER_PERMISSIONS + user?.id);
+    return this.httpService.get(API_URL.GET_USER_PERMISSIONS + user?.userId);
   }
 
   getPermission(userId: string): Observable<any> {
-    return this.httpService.get(API_URL.GET_USER_PERMISSIONS + userId);
+    return this.httpService.get(API_URL.GET_USER_PERMISSIONS + userId );
   }
 
   getDefaultPermission(): Observable<any> {
@@ -39,6 +39,6 @@ export class RoleService {
     if (userString) {
       user = JSON.parse(userString);
     }
-    return this.httpService.post(API_URL.UPDATE_USER_PERMISSION + user.id, data);
+    return this.httpService.post(API_URL.UPDATE_USER_PERMISSION, data);
   }
 }

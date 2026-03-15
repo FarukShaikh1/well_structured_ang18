@@ -17,10 +17,7 @@ export class TransactionService {
   }
 
   getTransactionDetails(transactionId: string) {
-    const params = new HttpParams()
-      .set("userId", this.loggedInUserId)
-      .set("transactionId", transactionId);
-    return this.http.get(API_URL.GET_TRANSACTION_DETAILS, { params: params });
+    return this.http.get(API_URL.GET_TRANSACTION_DETAILS+transactionId);
   }
 
   getTransactionSummaryList(filter: ExpenseFilterRequest): Observable<any> {
@@ -50,36 +47,34 @@ export class TransactionService {
 
   getTransactionList(filter: ExpenseFilterRequest): Observable<any> {
     const params = new HttpParams().set("userid", this.loggedInUserId);
-    return this.http.post(API_URL.GET_TRANSACTION_LIST, filter, { params });
+    return this.http.post(API_URL.GET_TRANSACTION_LIST, filter);
   }
 
   addTransaction(TransactionRequest: TransactionRequest): Observable<any> {
     return this.http.post(
-      API_URL.ADD_TRANSACTION + this.loggedInUserId,
+      API_URL.ADD_TRANSACTION ,
       TransactionRequest
     );
   }
 
   adjustTransaction(transactionAdjustmentForm: any): Observable<any> {
     return this.http.post(
-      API_URL.TRANSACTION_ADJUSTMENT + this.loggedInUserId,
+      API_URL.TRANSACTION_ADJUSTMENT,
       transactionAdjustmentForm
     );
   }
 
   updateTransaction(TransactionRequest: TransactionRequest): Observable<any> {
-    return this.http.post(
-      API_URL.UPDATE_TRANSACTION + this.loggedInUserId,
+    return this.http.put(
+      API_URL.UPDATE_TRANSACTION,
       TransactionRequest
     );
   }
 
   deleteTransaction(transactionId: string): Observable<any> {
-    return this.http.get(
+    return this.http.delete(
       API_URL.DELETE_TRANSACTION +
-      transactionId +
-      "&userId=" +
-      String(localStorage.getItem(LocalStorageConstants.USERID))
+      transactionId 
     );
   }
 
