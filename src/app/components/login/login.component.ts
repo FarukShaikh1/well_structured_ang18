@@ -51,8 +51,8 @@ export class LoginComponent {
     private localStorageService: LocalStorageService
   ) {
     this.loginForm = this.fb.group({
-      userName: "farukshaikh908@gmail.com",
-      password: "Faruk@07011",
+      userName: "",
+      password: "Faruk",
     });
   }
   parameters = "";
