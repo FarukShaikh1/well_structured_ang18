@@ -151,7 +151,7 @@ export class GlobalService {
       "commonListId",
       commonListId.toString()
     );
-    return this.http.get(API_URL.GET_COMMON_LIST_ITEMS+commonListId.toString()+'/items');
+    return this.http.get(API_URL.GET_COMMON_LIST_ITEMS+commonListId.toString());
   }
 
   getCountryList() {
@@ -317,13 +317,17 @@ export class GlobalService {
     }
     const userId = user?.userId;
     localStorage.setItem(LocalStorageConstants.USERID, userId);
+    // this.setConfigValuesInLocalStorage(userId);
+    this.setCountryListToLocalStorage();
+    this.setCommonListItemsToLocalStorage(DBConstants.COINTYPE, DdlConfig.COIN_TYPES);
+    this.setCommonListItemsToLocalStorage(DBConstants.MONTH, DdlConfig.MONTHS);
+  }
+
+  public setConfigValuesInLocalStorage(userId: any) {
     this.setConfigToLocalStorage(userId, UserConfig.ACCOUNT, DdlConfig.ACCOUNTS);
     this.setConfigToLocalStorage(userId, UserConfig.RELATION, DdlConfig.RELATIONS);
     this.setConfigToLocalStorage(userId, UserConfig.OCCASION_TYPE, DdlConfig.OCCASION_TYPES);
     this.setConfigToLocalStorage(userId, UserConfig.TRANSACTION_CATEGORY, DdlConfig.TRANSACTION_CATEGORY);
-    this.setCountryListToLocalStorage();
-    this.setCommonListItemsToLocalStorage(DBConstants.COINTYPE, DdlConfig.COIN_TYPES);
-    this.setCommonListItemsToLocalStorage(DBConstants.MONTH, DdlConfig.MONTHS);
   }
 
   setConfigToLocalStorage(id: string, config: string, DdlConfig: string) {

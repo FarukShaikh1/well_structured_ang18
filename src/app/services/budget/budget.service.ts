@@ -56,8 +56,8 @@ export class BudgetService {
   // GET budget details
   // =========================
   deleteBudget(budgetId: string) {
-    return this.http.get<boolean>(
-      API_URL.DELETE_BUDGET + budgetId+'&userId='+this.loggedInUserId
+    return this.http.delete<boolean>(
+      API_URL.DELETE_BUDGET + budgetId
     );
   }
 

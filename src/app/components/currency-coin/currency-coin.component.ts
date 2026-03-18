@@ -28,7 +28,6 @@ export class CurrencyCoinComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   selectedCountry: string[] = [];
   selectedType: string[] = [];
-  countryList: any;
   typeList: any;
   filteredTypeList: any;
   lableForCountryDropDown: string = '';
@@ -77,15 +76,13 @@ export class CurrencyCoinComponent implements OnInit {
   async ngOnInit() {
     this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
     this.columnConfiguration();
-    this.countryList = this.localStorageService.getCountryList();
-    if (!this.countryList || this.countryList.length == 0) {
-      this.globalService.setValuesInLocalStorage();
-    }
     this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
     if (!this.typeList || this.typeList.length == 0) {
       this.globalService.setValuesInLocalStorage();
+      setTimeout(()=>{
+      this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
+      },1000)
     }
-    this.LoadSummaryGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.COIN_NOTE_COLLECTION) {
         this.loadGrid();
@@ -94,6 +91,7 @@ export class CurrencyCoinComponent implements OnInit {
     });
     this.globalService.refreshList$.subscribe(() => { });
     await this.loadGrid();
+    this.LoadSummaryGrid();
     // this.selectDefaultRareCoins();
   }
   removeBlur(event: Event) {
@@ -439,7 +437,7 @@ export class CurrencyCoinComponent implements OnInit {
         return;
       }
 
-      this.currencyCoinService.getCurrencyCoinRecords().subscribe({
+      this.currencyCoinService.getCurrencyCoinList().subscribe({
         next: (res: any) => {
           this.tableData = res.data;
           this.filteredTableData = res.data;
@@ -604,40 +602,6 @@ export class CurrencyCoinComponent implements OnInit {
     this.filteredSummaryTableData = filteredSummary;
   }
 
-
-  // toggleAllCountryCheck(event: Event) {
-  //   const checked = (event.target as HTMLInputElement).checked;
-  //   if (checked) {
-  //     this.selectedCountry = this.countryList.map((m: any) => m.country);
-  //   } else {
-  //     this.selectedCountry = [];
-  //   }
-  //   this.getCountryDropdownLabel();
-  //   this.applyFilters();
-  // }
-
-  // toggleCountryCheck(event: Event, countryName: string) {
-  //   const checked = (event.target as HTMLInputElement).checked;
-  //   if (checked) {
-  //     this.selectedCountry.push(countryName);
-  //   } else {
-  //     this.selectedCountry = this.selectedCountry.filter((m) => m !== countryName);
-  //   }
-  //   this.getCountryDropdownLabel();
-  //   this.applyFilters();
-  // }
-
-  // getCountryDropdownLabel() {
-  //   if (this.selectedCountry.length === 0) {
-  //     this.lableForCountryDropDown = "";
-  //   } else if (this.selectedCountry.length === this.countryList.length) {
-  //     this.lableForCountryDropDown = "All";
-  //   } else {
-  //     this.lableForCountryDropDown = this.selectedCountry.join(", ");
-  //   }
-  //   this.filteredTypes();
-  // }
-
   toggleAllTypeCheck(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -676,7 +640,7 @@ export class CurrencyCoinComponent implements OnInit {
       case 'grid':
         this.selectedTab = CollectionTabs.DATA_VIEW;
         break;
-      case  'gallery':
+      case 'gallery':
         this.selectedTab = CollectionTabs.GALLERY_VIEW;
         break;
       case 'summary':

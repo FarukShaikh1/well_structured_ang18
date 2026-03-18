@@ -55,8 +55,8 @@ export class RoutineService {
   // GET routine details
   // =========================
   deleteRoutine(routineId: string) {
-    return this.http.get<boolean>(
-      API_URL.DELETE_ROUTINE + routineId+'&userId='+this.loggedInUserId
+    return this.http.delete<boolean>(
+      API_URL.DELETE_ROUTINE + routineId
     );
   }
 

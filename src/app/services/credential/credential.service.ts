@@ -55,8 +55,8 @@ export class CredentialService {
   // GET credential details
   // =========================
   deleteCredential(credentialId: string) {
-    return this.http.get<boolean>(
-      API_URL.DELETE_CREDENTIAL + credentialId+'&userId='+this.loggedInUserId
+    return this.http.delete<boolean>(
+      API_URL.DELETE_CREDENTIAL + credentialId
     );
   }
 

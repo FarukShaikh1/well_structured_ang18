@@ -14,15 +14,15 @@ export class ConfigurationService {
 
   getConfigList(userId: string = '', config: string = '') {
     const params = new HttpParams()
-      .set('userId', userId)
-      .set('config', config);
+      .set('config', config)
+      .set('userId', userId);
     return this.http.get(API_URL.GET_CONFIG_LIST, { params });
   }
 
   getActiveConfigList(userId: string = '', config: string = '') {
     const params = new HttpParams()
+      .set('config', config)
       .set('userId', userId)
-      .set('config', config);
     return this.http.get(API_URL.GET_ACTIVE_CONFIG_LIST, { params });
   }
 
@@ -34,36 +34,27 @@ export class ConfigurationService {
   }
 
   addConfiguration(request: ConfigurationRequest, config: string) {
-    console.log('this.loggedInUserId : ', this.loggedInUserId);
-
     const params = new HttpParams()
-      .set('userId', this.loggedInUserId)
       .set('config', config);
     return this.http.post(API_URL.GET_CONFIG_ADD, request, { params });
   }
 
   updateConfiguration(request: ConfigurationRequest, config: string) {
-    console.log('this.loggedInUserId : ', this.loggedInUserId);
     const params = new HttpParams()
-      .set('userId', this.loggedInUserId)
       .set('config', config);
     return this.http.post(API_URL.GET_CONFIG_UPDATE, request, { params });
   }
 
   deleteConfiguration(id: string, config: string) {
-    console.log('this.loggedInUserId : ', this.loggedInUserId);
     const params = new HttpParams()
       .set('id', id)
-      .set('userId', this.loggedInUserId)
       .set('config', config);
     return this.http.get(API_URL.GET_CONFIG_DELETE, { params });
   }
 
   deactivateConfiguration(id: string, config: string) {
-    console.log('this.loggedInUserId : ', this.loggedInUserId);
     const params = new HttpParams()
       .set('id', id)
-      .set('userId', this.loggedInUserId)
       .set('config', config);
     return this.http.get(API_URL.GET_CONFIG_DEACTIVATE, { params });
   }
