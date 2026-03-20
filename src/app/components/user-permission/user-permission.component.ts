@@ -34,7 +34,7 @@ export class UserPermissionComponent implements OnInit {
     this.getUserList();
     this.editable = this.globalService.isAccessible(ActionConstant.EDIT)
     this.disableUpdate = true;
-    this.getPermission("c3d0a1d1-78f3-4128-8c22-c394ad7f55e5");
+    this.getPermission("");
   }
 
   changeUser(event: Event) {
@@ -44,7 +44,7 @@ export class UserPermissionComponent implements OnInit {
 
     if (!this.selectedUserId || this.selectedUserId === 'select') {
       this.disableUpdate = true;
-      this.getPermission("c3d0a1d1-78f3-4128-8c22-c394ad7f55e5");
+      this.getPermission("");
     }
     else {
       this.disableUpdate = false;
