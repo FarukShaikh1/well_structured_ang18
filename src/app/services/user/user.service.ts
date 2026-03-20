@@ -57,7 +57,6 @@ export class UserService {
   }
 
   getModuleList(): Observable<any> {
-    debugger;
     return this.httpService.get(API_URL.GET_MODULE_LIST);
   }
 

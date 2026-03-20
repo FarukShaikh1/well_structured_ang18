@@ -20,9 +20,10 @@ export class CredentialsComponent {
 
   credentials: Credential[] = [];
   filteredCredentials: Credential[] = [];
+  userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
   model: Credential = {
     id: '',
-    userId: '',
+    userId: this.userId,
     siteName: '',
     siteUrl: '',
     notes: '',
@@ -34,7 +35,6 @@ export class CredentialsComponent {
   hidePassword: boolean = true;
   viewPassword: boolean = false;
 
-  userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
   selectedId: string = '';
   searchText: string = '';
 

@@ -246,7 +246,6 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
 
   openDetailsPopup(specialOccasionId: any) {
     this.loaderService.showLoader();
-    this.loggedInUserId = localStorage.getItem(LocalStorageConstants.USERID) || '';
     this.loadOccasionTypeList();
     this.loadRelationList();
     const model = document.getElementById("detailsPopup");

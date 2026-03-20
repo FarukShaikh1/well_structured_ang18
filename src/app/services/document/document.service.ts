@@ -8,16 +8,11 @@ import { DocumentRequest } from "../../interfaces/document-request";
   providedIn: "root",
 })
 export class DocumentService {
-  loggedInUserId: string;
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
 
   getDocumentList() {
-    const params = new HttpParams()
-      .set("userid", String(localStorage.getItem(LocalStorageConstants.USERID)))
-    //   .set("documentItem", JSON.stringify(DocumentItem));
-    return this.http.get(API_URL.GET_DOCUMENT_List, { params: params });
+    return this.http.get(API_URL.GET_DOCUMENT_List);
   }
 
   /**

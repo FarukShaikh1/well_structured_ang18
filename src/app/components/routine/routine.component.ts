@@ -5,6 +5,7 @@ import { DateUtils } from "../../../utils/date-utils";
 import { Routine } from "../../interfaces/routine";
 import { RoutineService } from "../../services/routine/routine.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { LocalStorageConstants } from "../../../utils/application-constants";
 
 @Component({
   selector: 'app-routine',
@@ -18,9 +19,10 @@ export class RoutineComponent implements OnInit {
   dateUtils = DateUtils;
   routines: Routine[] = [];
   filteredRoutines: Routine[] = [];
+  userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
   model: Routine = {
     id: '',
-    userId: '',
+    userId: this.userId,
     fromTime: '',
     toTime: '',
     task: ''

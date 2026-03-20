@@ -20,11 +20,12 @@ export class BudgetComponent implements OnInit {
 
   budgets: Budget[] = [];
   filteredBudgets: Budget[] = [];
+  userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
   categories: any;
 
   model: Budget = {
     id: '',
-    userId: '',
+    userId: this.userId,
     payTo: '',
     purpose: '',
     categoryId: '',
@@ -33,7 +34,6 @@ export class BudgetComponent implements OnInit {
   };
 
   isEdit = false;
-  userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
   selectedId: string = '';
   searchText: string = '';
 

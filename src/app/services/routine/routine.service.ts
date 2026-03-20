@@ -8,16 +8,13 @@ import { Routine } from '../../interfaces/routine';
   providedIn: 'root'
 })
 export class RoutineService {
-  loggedInUserId: string;
 
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
   // =========================
   // GET routine by user
   // =========================
   getRoutineByUser() {
-    const userId = localStorage.getItem(LocalStorageConstants.USERID);
     return this.http.get<Routine[]>(
       API_URL.GET_ROUTINE_BY_USER
     );
@@ -27,7 +24,6 @@ export class RoutineService {
   // ADD routine
   // =========================
   addRoutine(data: Routine) {
-    data.userId = localStorage.getItem(LocalStorageConstants.USERID)!;
     return this.http.post<string>(API_URL.ADD_ROUTINE, data);
   }
 
@@ -35,7 +31,6 @@ export class RoutineService {
   // UPDATE routine
   // =========================
   updateRoutine(data: Routine) {
-    data.userId = localStorage.getItem(LocalStorageConstants.USERID)!;
     return this.http.put(
       API_URL.UPDATE_ROUTINE,
       data
@@ -59,15 +54,4 @@ export class RoutineService {
       API_URL.DELETE_ROUTINE + routineId
     );
   }
-
-  //  getRoutine(userId: string) {
-  //   const params = new HttpParams()
-  //     .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
-  //   return this.http.get<Routine[]>(API_URL.GET_ROUTINE, { params: params });
-  // }
-
-  // saveRoutine(data: Routine) {
-  //   return this.http.post(API_URL.ADD_ROUTINE + String(localStorage.getItem(LocalStorageConstants.USERID)), data);
-  // }
-  
 }

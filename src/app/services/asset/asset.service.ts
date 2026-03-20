@@ -8,10 +8,8 @@ import { LocalStorageConstants } from '../../../utils/application-constants';
   providedIn: 'root'
 })
 export class AssetService {
-  loggedInUserId: string;
 
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
 
   getAssetDetails(assetId: string) {

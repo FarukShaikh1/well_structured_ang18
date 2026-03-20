@@ -59,8 +59,6 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit() {
     this.loaderService.showLoader();
     this.hasPasswordExpired = this.localStorageService.getLoggedInUserData()?.hasPasswordExpired;
-
-    this.userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
     this.userFullName =
       this.localStorageService.getLoggedInUserData().userName;
     this.loaderService.hideLoader();

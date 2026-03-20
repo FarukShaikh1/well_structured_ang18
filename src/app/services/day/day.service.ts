@@ -8,9 +8,7 @@ import { SpecialOccasionRequest } from "../../interfaces/special-occasion-reques
   providedIn: "root",
 })
 export class DayService {
-  loggedInUserId: string;
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
 
   getDayDetails(dayId: string) {
@@ -27,7 +25,6 @@ export class DayService {
     isYesterday: boolean = false
   ) {
     const params = new HttpParams()
-      .set("userid", String(localStorage.getItem(LocalStorageConstants.USERID)))
       .set("searchText", searchText)
       .set("month", month)
       .set("occasionType", occasionType)
@@ -61,9 +58,7 @@ export class DayService {
   approveDay(dayId: string): Observable<any> {
     return this.http.get(
       API_URL.APPROVE_SPECIAL_OCCASION +
-      dayId +
-      "&userId=" +
-      String(localStorage.getItem(LocalStorageConstants.USERID))
+      dayId 
     );
   }
 }

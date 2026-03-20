@@ -9,16 +9,13 @@ import { Budget } from '../../interfaces/budget';
   providedIn: 'root'
 })
 export class BudgetService {
-  loggedInUserId: string;
 
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
   // =========================
   // GET budget by user
   // =========================
   getBudgetByUser() {
-    const userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
     return this.http.get<Budget[]>(
       API_URL.GET_BUDGET_BY_USER
     );
@@ -28,7 +25,6 @@ export class BudgetService {
   // ADD budget
   // =========================
   addBudget(data: Budget) {
-    data.userId = localStorage.getItem(LocalStorageConstants.USERID)!;
     return this.http.post<string>(API_URL.ADD_BUDGET, data);
   }
 
@@ -36,7 +32,6 @@ export class BudgetService {
   // UPDATE budget
   // =========================
   updateBudget(data: Budget) {
-    data.userId = localStorage.getItem(LocalStorageConstants.USERID)!;
     return this.http.put(
       API_URL.UPDATE_BUDGET,
       data
@@ -59,16 +54,5 @@ export class BudgetService {
     return this.http.delete<boolean>(
       API_URL.DELETE_BUDGET + budgetId
     );
-  }
-
-  //  getBudget(userId: string) {
-  //   const params = new HttpParams()
-  //     .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
-  //   return this.http.get<Budget[]>(API_URL.GET_BUDGET, { params: params });
-  // }
-
-  // saveBudget(data: Budget) {
-  //   return this.http.post(API_URL.ADD_BUDGET + String(localStorage.getItem(LocalStorageConstants.USERID)), data);
-  // }
-  
+  }  
 }

@@ -8,16 +8,13 @@ import { Credential } from '../../interfaces/credential';
   providedIn: 'root'
 })
 export class CredentialService {
-  loggedInUserId: string;
 
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
   // =========================
   // GET credential by user
   // =========================
   getCredentialByUser() {
-    const userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
     return this.http.get<Credential[]>(
       API_URL.GET_CREDENTIAL_BY_USER 
     );
@@ -27,7 +24,6 @@ export class CredentialService {
   // ADD credential
   // =========================
   addCredential(data: Credential) {
-    data.userId = localStorage.getItem(LocalStorageConstants.USERID)!;
     return this.http.post<string>(API_URL.ADD_CREDENTIAL, data);
   }
 
@@ -35,7 +31,6 @@ export class CredentialService {
   // UPDATE credential
   // =========================
   updateCredential(data: Credential) {
-    data.userId = localStorage.getItem(LocalStorageConstants.USERID)!;
     return this.http.put(
       API_URL.UPDATE_CREDENTIAL,
       data
@@ -59,15 +54,4 @@ export class CredentialService {
       API_URL.DELETE_CREDENTIAL + credentialId
     );
   }
-
-  //  getCredential(userId: string) {
-  //   const params = new HttpParams()
-  //     .set('userid', String(localStorage.getItem(LocalStorageConstants.USERID)))
-  //   return this.http.get<Credential[]>(API_URL.GET_CREDENTIAL, { params: params });
-  // }
-
-  // saveCredential(data: Credential) {
-  //   return this.http.post(API_URL.ADD_CREDENTIAL + String(localStorage.getItem(LocalStorageConstants.USERID)), data);
-  // }
-  
 }

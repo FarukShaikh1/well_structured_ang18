@@ -11,9 +11,7 @@ import { LocalStorageConstants } from "../../../utils/application-constants";
   providedIn: "root",
 })
 export class TransactionService {
-  loggedInUserId: string;
   constructor(private http: HttpClient) {
-    this.loggedInUserId = String(localStorage.getItem(LocalStorageConstants.USERID));
   }
 
   getTransactionDetails(transactionId: string) {
@@ -21,32 +19,26 @@ export class TransactionService {
   }
 
   getTransactionSummaryList(filter: ExpenseFilterRequest): Observable<any> {
-    const params = new HttpParams().set("userid", this.loggedInUserId);
-    return this.http.post(API_URL.GET_TRANSACTION_SUMMARY_LIST, filter, { params });
+    return this.http.post(API_URL.GET_TRANSACTION_SUMMARY_LIST, filter);
   }
 
   getBalanceList(filter: ExpenseFilterRequest): Observable<any> {
-    const params = new HttpParams().set("userid", this.loggedInUserId);
-    return this.http.post(API_URL.GET_BALANCE_LIST, filter, { params });
+    return this.http.post(API_URL.GET_BALANCE_LIST, filter);
   }
 
   getTransactionReportList(filter: ExpenseFilterRequest): Observable<any> {
-    const params = new HttpParams().set("userid", this.loggedInUserId);
-    return this.http.post(API_URL.GET_TRANSACTION_REPORT_LIST, filter, { params });
+    return this.http.post(API_URL.GET_TRANSACTION_REPORT_LIST, filter);
   }
 
   getCategoryWiseReportList(filter: ExpenseFilterRequest): Observable<any> {
-    const params = new HttpParams().set("userid", this.loggedInUserId);
-    return this.http.post(API_URL.GET_CATEGORY_WISE_REPORT_LIST, filter, { params });
+    return this.http.post(API_URL.GET_CATEGORY_WISE_REPORT_LIST, filter);
   }
 
   getBudgetWiseReportList(filter: ExpenseFilterRequest): Observable<any> {
-    const params = new HttpParams().set("userid", this.loggedInUserId);
-    return this.http.post(API_URL.GET_BUDGET_WISE_REPORT_LIST, filter, { params });
+    return this.http.post(API_URL.GET_BUDGET_WISE_REPORT_LIST, filter);
   }
 
   getTransactionList(filter: ExpenseFilterRequest): Observable<any> {
-    const params = new HttpParams().set("userid", this.loggedInUserId);
     return this.http.post(API_URL.GET_TRANSACTION_LIST, filter);
   }
 
@@ -79,10 +71,7 @@ export class TransactionService {
   }
 
   getTransactionSuggestionList(): Observable<any> {
-    const params = new HttpParams().set("userid", this.loggedInUserId);
-    return this.http.get(API_URL.GET_TRANSACTION_SUGGESTION_LIST, {
-      params: params,
-    });
+    return this.http.get(API_URL.GET_TRANSACTION_SUGGESTION_LIST);
   }
 
   getAvailAmount(
@@ -90,7 +79,6 @@ export class TransactionService {
     accountType: string = ""
   ): Observable<any> {
     const params = new HttpParams()
-      .set("userid", this.loggedInUserId)
       .set("onDate", onDate)
       .set("accountType", accountType);
     return this.http.get(API_URL.GET_AVAIL_AMOUNT, { params: params });
