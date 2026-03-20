@@ -116,7 +116,7 @@ export class LoginComponent {
               setTimeout(() => {
                 this.globalService.setValuesInLocalStorage();
                 console.log('✅ Background localStorage setup done');
-              }, 0);
+              }, 2000);
             }
           }
         } else {
