@@ -67,7 +67,7 @@ export class GlobalService {
   }
 
   getUserPermissionData(): Observable<boolean> {
-    return this.roleService.getLoggedInUserPermissions().pipe(
+    return this.roleService.getPermission("").pipe(
       map((result) => {
         if (result.success) {
           this.localStorageService.setUserPermission(result.data);

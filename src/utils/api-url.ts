@@ -45,8 +45,7 @@ export const API_URL = {
 
   GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/commonList/items/`,
   GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/countries`,
-  GET_USER_PERMISSIONS_FOR_MENU: `${serverUrl}${apiPrefix}/user/permissions/`,
-  GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/permissionsForMenu/`,
+  GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/permissions/`,
   GET_DEFAULT_PERMISSIONS: `${serverUrl}${apiPrefix}/user/GetDefaultPermission`,
   GET_ALL_ROLES: `${serverUrl}${apiPrefix}/role/GetList`,
   UPDATE_USER_PERMISSION: `${serverUrl}${apiPrefix}/user/permissions`,
