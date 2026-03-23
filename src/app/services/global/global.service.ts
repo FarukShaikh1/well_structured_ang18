@@ -151,7 +151,7 @@ export class GlobalService {
       "commonListId",
       commonListId.toString()
     );
-    return this.http.get(API_URL.GET_COMMON_LIST_ITEMS+commonListId.toString());
+    return this.http.get(API_URL.GET_COMMON_LIST_ITEMS + commonListId.toString());
   }
 
   getCountryList() {
@@ -323,7 +323,15 @@ export class GlobalService {
     this.setCommonListItemsToLocalStorage(DBConstants.MONTH, DdlConfig.MONTHS);
   }
 
-  public setConfigValuesInLocalStorage(userId: any) {
+  public setConfigValuesInLocalStorage() {
+
+    const userString = localStorage.getItem(LocalStorageConstants.USER);
+    let user = null;
+    if (userString) {
+      user = JSON.parse(userString);
+    }
+    const userId = user?.userId;
+
     this.setConfigToLocalStorage(userId, UserConfig.ACCOUNT, DdlConfig.ACCOUNTS);
     this.setConfigToLocalStorage(userId, UserConfig.RELATION, DdlConfig.RELATIONS);
     this.setConfigToLocalStorage(userId, UserConfig.OCCASION_TYPE, DdlConfig.OCCASION_TYPES);

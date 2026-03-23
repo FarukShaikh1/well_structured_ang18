@@ -115,6 +115,7 @@ export class LoginComponent {
               // ✅ Defer heavy/non-blocking operations
               setTimeout(() => {
                 this.globalService.setValuesInLocalStorage();
+                this.globalService.setConfigValuesInLocalStorage();
                 console.log('✅ Background localStorage setup done');
               }, 2000);
             }
