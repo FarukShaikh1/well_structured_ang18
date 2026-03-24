@@ -27,7 +27,7 @@ export const API_URL = {
   DELETE_SPECIAL_OCCASION: `${serverUrl}${apiPrefix}/SpecialOccasion`,
   APPROVE_SPECIAL_OCCASION: `${serverUrl}${apiPrefix}/SpecialOccasion/approveDay?dayId=`,
 
-  GET_TRANSACTION_DETAILS: `${serverUrl}${apiPrefix}/transaction`,
+  GET_TRANSACTION_DETAILS: `${serverUrl}${apiPrefix}/transaction/`,
   GET_TRANSACTION_SUMMARY_LIST: `${serverUrl}${apiPrefix}/transaction/summary`,
   GET_BALANCE_LIST: `${serverUrl}${apiPrefix}/transaction/balance-summary`,
   GET_TRANSACTION_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/report`,
