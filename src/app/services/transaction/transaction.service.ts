@@ -15,7 +15,7 @@ export class TransactionService {
   }
 
   getTransactionDetails(transactionId: string) {
-    return this.http.get(API_URL.GET_TRANSACTION_DETAILS+transactionId);
+    return this.http.get(API_URL.GET_TRANSACTION_DETAILS + transactionId);
   }
 
   getTransactionSummaryList(filter: ExpenseFilterRequest): Observable<any> {
@@ -44,7 +44,7 @@ export class TransactionService {
 
   addTransaction(TransactionRequest: TransactionRequest): Observable<any> {
     return this.http.post(
-      API_URL.ADD_TRANSACTION ,
+      API_URL.ADD_TRANSACTION,
       TransactionRequest
     );
   }
@@ -66,7 +66,7 @@ export class TransactionService {
   deleteTransaction(transactionId: string): Observable<any> {
     return this.http.delete(
       API_URL.DELETE_TRANSACTION +
-      transactionId 
+      transactionId
     );
   }
 
