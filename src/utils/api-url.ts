@@ -20,7 +20,7 @@ export const API_URL = {
   DELETE_COLLECTION_COIN: `${serverUrl}${apiPrefix}/coinNoteCollection`,
   APPROVE_COLLECTION_COIN: `${serverUrl}${apiPrefix}/coinNoteCollection/approve?coinNoteCollectionId=`,
 
-  GET_SPECIAL_OCCASION_DETAILS: `${serverUrl}${apiPrefix}/SpecialOccasion`,
+  GET_SPECIAL_OCCASION_DETAILS: `${serverUrl}${apiPrefix}/SpecialOccasion/`,
   GET_SPECIAL_OCCASION_LIST: `${serverUrl}${apiPrefix}/SpecialOccasion`,
   ADD_SPECIAL_OCCASION: `${serverUrl}${apiPrefix}/SpecialOccasion`,
   UPDATE_SPECIAL_OCCASION: `${serverUrl}${apiPrefix}/SpecialOccasion`,
