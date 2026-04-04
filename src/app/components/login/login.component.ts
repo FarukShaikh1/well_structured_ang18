@@ -106,7 +106,7 @@ export class LoginComponent {
               localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
               localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'true');
               this.loaderService.hideLoader();
-              if (this.data.roleName?.toLowerCase() === ApplicationRoles.SUPER_ADMIN) {
+              if (this.data.roleName?.toLowerCase() === ApplicationRoles.SUPER_ADMIN.toLowerCase()) {
                 this.router.navigate([NavigationURLs.USER_LIST]);
               }
               else {
