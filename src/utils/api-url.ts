@@ -103,4 +103,11 @@ export const API_URL = {
   GET_CREDENTIAL_DETAILS: `${serverUrl}${apiPrefix}/credential`,
   DELETE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential/`,
   UPDATE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,
+
+  FAMILY_SEARCH: `${serverUrl}${apiPrefix}/family/search`,
+  FAMILY_GRAPH: `${serverUrl}${apiPrefix}/family`,          // /{personId}/graph
+  FAMILY_PERSON_ADD: `${serverUrl}${apiPrefix}/family/person`,
+  FAMILY_PERSON_UPDATE: `${serverUrl}${apiPrefix}/family/person`,
+  FAMILY_RELATIONSHIP_ADD: `${serverUrl}${apiPrefix}/family/relationship`,
+  FAMILY_RELATIONSHIP_DELETE: `${serverUrl}${apiPrefix}/family/relationship`,
 };

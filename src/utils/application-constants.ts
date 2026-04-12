@@ -132,6 +132,7 @@ export const ApplicationConstantHtml = {
     CONFIG_EDIT_LABLE: `<a class="dropdown-item btn-link" data-bs-toggle="modal" data-bs-target="#configDetailsPopup"><i class="bi bi-pencil"></i>&nbsp;Edit</a>`,
 }
 export const NavigationURLs = {
+    FAMILY_GRAPH: '/home/family-graph',
     LOGIN: '/login',
     SIGNUP: '/sign-up',
     ERROR_PAGE: '/home/unauthorised',
@@ -193,6 +194,7 @@ export const RoutePath = {
     PLANS: 'plans',
     CREDENTIALS: 'credentials',
     UNDER_DEVELOPMENT: 'site-under-development',
+    FAMILY_GRAPH: 'family-graph',
 };
 
 export const RoutePathTitles = {
@@ -219,6 +221,7 @@ export const RoutePathTitles = {
     PLANS: 'Plans',
     CREDENTIALS: 'Credentials',
     UNDER_DEVELOPMENT: 'Site Under Development',
+    FAMILY_GRAPH: 'Family Tree',
 };
 
 

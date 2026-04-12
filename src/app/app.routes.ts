@@ -111,6 +111,14 @@ export const routes: Routes = [
         component: CredentialsComponent,
       },
       {
+        path: RoutePath.FAMILY_GRAPH,
+        title: RoutePathTitles.FAMILY_GRAPH,
+        loadComponent: () =>
+          import('./components/family-graph/family-graph.component').then(
+            (m) => m.FamilyGraphComponent
+          ),
+      },
+      {
         path: RoutePath.CHANGE_PASSWORD,
         title: RoutePathTitles.CHANGE_PASSWORD,
         loadComponent: () =>
