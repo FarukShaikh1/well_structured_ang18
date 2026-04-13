@@ -7,9 +7,7 @@
       <button class="btn btn-sm btn-outline-primary" (click)="toggleAddPersonForm()">
         {{ showAddPersonForm ? 'Cancel' : '+ Add Person' }}
       </button>
-      <button
-        class="btn btn-sm btn-outline-secondary"
-        [disabled]="!selectedPerson"
+      <button class="btn btn-sm btn-outline-secondary" [disabled]="!selectedPerson"
         (click)="toggleAddRelationshipForm()">
         {{ showAddRelationshipForm ? 'Cancel' : '+ Add Relationship' }}
       </button>
@@ -18,90 +16,95 @@
 
   <!-- Status toast -->
   @if (statusMessage) {
-    <div class="alert alert-sm py-2"
-         [ngClass]="statusType === 'success' ? 'alert-success' : 'alert-danger'"
-         role="alert">
-      {{ statusMessage }}
-    </div>
+  <div class="alert alert-sm py-2" [ngClass]="statusType === 'success' ? 'alert-success' : 'alert-danger'" role="alert">
+    {{ statusMessage }}
+  </div>
   }
 
   <!-- Add Person Form -->
   @if (showAddPersonForm) {
-    <div class="card mb-3 border-primary">
-      <div class="card-header bg-primary text-white py-2">Add New Person</div>
-      <div class="card-body">
-        <div class="row g-2">
-          <div class="col-md-3">
-            <input type="text" class="form-control form-control-sm"
-                   placeholder="First Name *" [(ngModel)]="newPerson.firstName" />
-          </div>
-          <div class="col-md-3">
-            <input type="text" class="form-control form-control-sm"
-                   placeholder="Last Name *" [(ngModel)]="newPerson.lastName" />
-          </div>
-          <div class="col-md-2">
-            <input type="date" class="form-control form-control-sm"
-                   [(ngModel)]="newPerson.dateOfBirth" />
-          </div>
-          <div class="col-md-2">
-            <select class="form-select form-select-sm" [(ngModel)]="newPerson.gender">
-              <option value="">Gender</option>
-              <option value="M">Male</option>
-              <option value="F">Female</option>
-            </select>
-          </div>
-          <div class="col-md-2 d-flex gap-1">
-            <button class="btn btn-sm btn-primary flex-fill"
-                    [disabled]="isSavingPerson" (click)="savePerson()">
-              {{ isSavingPerson ? 'Saving...' : 'Save' }}
-            </button>
-          </div>
-          <div class="col-12">
-            <input type="text" class="form-control form-control-sm"
-                   placeholder="Notes (optional)" [(ngModel)]="newPerson.notes" />
-          </div>
+  <div class="card mb-3 border-primary">
+    <div class="card-header bg-primary text-white py-2">Add New Person</div>
+    <div class="card-body">
+      <div class="row g-2">
+        <div class="col-md-3">
+          <input type="text" class="form-control form-control-sm" placeholder="First Name *"
+            [(ngModel)]="newPerson.firstName" />
+        </div>
+        <div class="col-md-3">
+          <input type="text" class="form-control form-control-sm" placeholder="Last Name *"
+            [(ngModel)]="newPerson.lastName" />
+        </div>
+        <div class="col-md-2">
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="newPerson.dateOfBirth" />
+        </div>
+        <div class="col-md-2">
+          <select class="form-select form-select-sm" [(ngModel)]="newPerson.gender">
+            <option value="">Gender</option>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+        </div>
+        <div class="col-md-2 d-flex gap-1">
+          <button class="btn btn-sm btn-primary flex-fill" [disabled]="isSavingPerson" (click)="savePerson()">
+            {{ isSavingPerson ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
+        <div class="col-12">
+          <input type="text" class="form-control form-control-sm" placeholder="Notes (optional)"
+            [(ngModel)]="newPerson.notes" />
         </div>
       </div>
     </div>
+  </div>
   }
 
   <!-- Add Relationship Form -->
   @if (showAddRelationshipForm) {
-    <div class="card mb-3 border-secondary">
-      <div class="card-header bg-secondary text-white py-2">Add Relationship</div>
-      <div class="card-body">
-        <div class="row g-2 align-items-end">
-          <div class="col-md-4">
-            <label class="form-label form-label-sm mb-1">Person ID (from)</label>
-            <input type="text" class="form-control form-control-sm"
-                   placeholder="Person GUID"
-                   [(ngModel)]="newRelationship.personId" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label form-label-sm mb-1">Related Person ID (to)</label>
-            <input type="text" class="form-control form-control-sm"
-                   placeholder="Related Person GUID"
-                   [(ngModel)]="newRelationship.relatedPersonId" />
-          </div>
-          <div class="col-md-2">
-            <label class="form-label form-label-sm mb-1">Type</label>
-            <select class="form-select form-select-sm"
-                    [(ngModel)]="newRelationship.relationshipType">
-              <option value="">Select...</option>
-              @for (rt of relationshipTypes; track rt) {
-                <option [value]="rt">{{ rt }}</option>
-              }
-            </select>
-          </div>
-          <div class="col-md-2">
-            <button class="btn btn-sm btn-secondary w-100"
-                    [disabled]="isSavingRelationship" (click)="saveRelationship()">
-              {{ isSavingRelationship ? 'Saving...' : 'Save' }}
-            </button>
-          </div>
+  <div class="card mb-3 border-secondary">
+    <div class="card-header bg-secondary text-white py-2">Add Relationship</div>
+    <div class="card-body">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label form-label-sm mb-1">Person ID (from)</label>
+          <select class="form-select form-select-sm" [(ngModel)]="newRelationship.relationshipType">
+            <option value="">Select...</option>
+            @for (rt of relationshipTypes; track rt) {
+            <option [value]="rt">{{ rt }}</option>
+            }
+          </select>
+          <input type="text" class="form-control form-control-sm" placeholder="Person GUID"
+            [(ngModel)]="newRelationship.personId" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label form-label-sm mb-1">Related Person ID (to)</label>
+          <select class="form-select form-select-sm" [(ngModel)]="newRelationship.relationshipType">
+            <option value="">Select...</option>
+            @for (rt of relationshipTypes; track rt) {
+            <option [value]="rt">{{ rt }}</option>
+            }
+          </select>
+
+          <input type="text" class="form-control form-control-sm" placeholder="Related Person GUID"
+            [(ngModel)]="newRelationship.relatedPersonId" />
+        </div>
+        <div class="col-md-2">
+          <label class="form-label form-label-sm mb-1">Type</label>
+          <select class="form-select form-select-sm" [(ngModel)]="newRelationship.relationshipType">
+            <option value="">Select...</option>
+            @for (rt of relationshipTypes; track rt) {
+            <option [value]="rt">{{ rt }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-sm btn-secondary w-100" [disabled]="isSavingRelationship" (click)="saveRelationship()">
+            {{ isSavingRelationship ? 'Saving...' : 'Save' }}
+          </button>
         </div>
       </div>
     </div>
+  </div>
   }
 
   <!-- Search bar -->
@@ -110,46 +113,42 @@
       <div class="row g-2 align-items-center">
         <div class="col-md-5 position-relative">
           <div class="input-group input-group-sm">
-            <input type="text" class="form-control"
-                   placeholder="Search person by name..."
-                   [(ngModel)]="searchQuery"
-                   (keyup.enter)="onSearch()" />
+            <input type="text" class="form-control" placeholder="Search person by name..." [(ngModel)]="searchQuery"
+              (keyup.enter)="onSearch()" />
             <button class="btn btn-primary" [disabled]="isSearching" (click)="onSearch()">
               {{ isSearching ? '...' : 'Search' }}
             </button>
           </div>
           <!-- Dropdown results -->
           @if (searchResults.length > 0) {
-            <ul class="list-group search-dropdown shadow-sm">
-              @for (person of searchResults; track person.personId) {
-                <li class="list-group-item list-group-item-action py-1 px-2"
-                    (click)="selectPerson(person)" style="cursor:pointer">
-                  <strong>{{ person.fullName }}</strong>
-                  @if (person.dateOfBirth) {
-                    <small class="text-muted ms-2">
-                      {{ person.dateOfBirth | date:'dd-MMM-yyyy' }}
-                    </small>
-                  }
-                </li>
+          <ul class="list-group search-dropdown shadow-sm">
+            @for (person of searchResults; track person.personId) {
+            <li class="list-group-item list-group-item-action py-1 px-2" (click)="selectPerson(person)"
+              style="cursor:pointer">
+              <strong>{{ person.fullName }}</strong>
+              @if (person.dateOfBirth) {
+              <small class="text-muted ms-2">
+                {{ person.dateOfBirth | date:'dd-MMM-yyyy' }}
+              </small>
               }
-            </ul>
+            </li>
+            }
+          </ul>
           }
         </div>
         <div class="col-md-2">
           <div class="input-group input-group-sm">
             <span class="input-group-text">Depth</span>
-            <input type="number" class="form-control" min="1" max="10"
-                   [(ngModel)]="maxDepth" />
+            <input type="number" class="form-control" min="1" max="10" [(ngModel)]="maxDepth" />
           </div>
         </div>
         @if (selectedPerson) {
-          <div class="col-md-3">
-            <button class="btn btn-sm btn-outline-primary"
-                    (click)="loadGraph(selectedPerson!.personId)">
-              Reload Graph
-            </button>
-            <span class="ms-2 text-muted small">Root: {{ selectedPerson.fullName }}</span>
-          </div>
+        <div class="col-md-3">
+          <button class="btn btn-sm btn-outline-primary" (click)="loadGraph(selectedPerson!.personId)">
+            Reload Graph
+          </button>
+          <span class="ms-2 text-muted small">Root: {{ selectedPerson.fullName }}</span>
+        </div>
         }
       </div>
     </div>
@@ -166,20 +165,20 @@
   <!-- Graph canvas -->
   <div class="graph-wrapper border rounded">
     @if (isLoadingGraph) {
-      <div class="graph-overlay d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary me-2" role="status"></div>
-        <span>Loading graph...</span>
-      </div>
+    <div class="graph-overlay d-flex align-items-center justify-content-center">
+      <div class="spinner-border text-primary me-2" role="status"></div>
+      <span>Loading graph...</span>
+    </div>
     }
     @if (graphError) {
-      <div class="graph-overlay d-flex align-items-center justify-content-center">
-        <div class="alert alert-danger mb-0">{{ graphError }}</div>
-      </div>
+    <div class="graph-overlay d-flex align-items-center justify-content-center">
+      <div class="alert alert-danger mb-0">{{ graphError }}</div>
+    </div>
     }
     @if (!selectedPerson && !isLoadingGraph && !graphError) {
-      <div class="graph-overlay d-flex align-items-center justify-content-center text-muted">
-        Search for a person above to view their family tree.
-      </div>
+    <div class="graph-overlay d-flex align-items-center justify-content-center text-muted">
+      Search for a person above to view their family tree.
+    </div>
     }
     <div #graphCanvas class="graph-canvas"></div>
   </div>
