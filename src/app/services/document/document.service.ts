@@ -21,7 +21,8 @@ export class DocumentService {
 */
   getDownloadUrl(documentId: string, fileName:string): Observable<{ url: string }> {
     return this.http.get<{ url: string }>(
-      `${API_URL.GET_DOCUMENT_DOWNLOAD_SAS_URL}${documentId}&fileName=${encodeURIComponent(fileName)}`
+      `${API_URL.GET_DOCUMENT_DOWNLOAD_SAS_URL}${documentId}`
+      // `${API_URL.GET_DOCUMENT_DOWNLOAD_SAS_URL}${documentId}&fileName=${encodeURIComponent(fileName)}`
     );
   }
 

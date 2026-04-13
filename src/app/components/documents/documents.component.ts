@@ -134,7 +134,7 @@ onDocumentSaved() {
 
   async download(doc: any) {
     await this.documentService
-      .getDownloadUrl(doc.originalPath, doc.uploadedFileName).subscribe({
+      .getDownloadUrl(doc.id, doc.uploadedFileName).subscribe({
         next: (response: any) => {
           const url = response.data;
           console.log('url : ', url);
