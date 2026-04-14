@@ -2,6 +2,41 @@
   min-height: calc(100vh - 60px);
 }
 
+// ── Typeahead shared wrapper ──────────────────────────────────────────────────
+.typeahead-wrap {
+  position: relative;
+}
+
+.typeahead-dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  z-index: 1050;
+  max-height: 240px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+
+  .list-group-item {
+    cursor: pointer;
+    font-size: 0.875rem;
+    border-left: none;
+    border-right: none;
+
+    &:first-child { border-top: none; border-radius: 0.375rem 0.375rem 0 0; }
+    &:last-child  { border-bottom: none; border-radius: 0 0 0.375rem 0.375rem; }
+
+    &:hover,
+    &:focus {
+      background-color: #e9ecef;
+    }
+  }
+}
+
+// ── Graph container ───────────────────────────────────────────────────────────
 .graph-wrapper {
   position: relative;
   height: 600px;
@@ -21,22 +56,7 @@
   background: rgba(248, 249, 250, 0.85);
 }
 
-.search-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  max-height: 260px;
-  overflow-y: auto;
-  border-top: none;
-  border-radius: 0 0 0.375rem 0.375rem;
-
-  .list-group-item:hover {
-    background-color: #e9ecef;
-  }
-}
-
+// ── Legend dots ───────────────────────────────────────────────────────────────
 .legend-dot {
   display: inline-block;
   width: 12px;
@@ -46,8 +66,8 @@
   margin-right: 3px;
   vertical-align: middle;
 
-  &.root   { background: #0d6efd; border-color: #0a58ca; }
-  &.male   { background: #cfe2ff; border-color: #6ea8fe; }
-  &.female { background: #f8d7da; border-color: #f1aeb5; }
-  &.unknown{ background: #e2e3e5; border-color: #adb5bd; }
+  &.root    { background: #0d6efd; border-color: #0a58ca; }
+  &.male    { background: #cfe2ff; border-color: #6ea8fe; }
+  &.female  { background: #f8d7da; border-color: #f1aeb5; }
+  &.unknown { background: #e2e3e5; border-color: #adb5bd; }
 }

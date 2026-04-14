@@ -45,23 +45,23 @@ interface VisEdge {
 export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
   @ViewChild('graphCanvas') graphCanvas!: ElementRef<HTMLDivElement>;
 
-  // Search
+  // ── Main search ───────────────────────────────────────────────────────────
   searchQuery = '';
   searchResults: FamilyPersonSearchResult[] = [];
   isSearching = false;
 
-  // Graph state
+  // ── Graph state ───────────────────────────────────────────────────────────
   selectedPerson: FamilyPersonSearchResult | null = null;
   maxDepth = 5;
   isLoadingGraph = false;
   graphError = '';
 
-  // Add person form
+  // ── Add person form ───────────────────────────────────────────────────────
   showAddPersonForm = false;
   newPerson: FamilyPersonRequest = { firstName: '', lastName: '' };
   isSavingPerson = false;
 
-  // Add relationship form
+  // ── Add relationship form ─────────────────────────────────────────────────
   showAddRelationshipForm = false;
   newRelationship: FamilyRelationshipRequest = {
     personId: '',
@@ -71,7 +71,19 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
   relationshipTypes = ['Father', 'Mother', 'Child', 'Sibling', 'Spouse'];
   isSavingRelationship = false;
 
-  // Status messages
+  // Typeahead — "from" person
+  relFromQuery = '';
+  relFromResults: FamilyPersonSearchResult[] = [];
+  relFromSearching = false;
+  relFromSelected: FamilyPersonSearchResult | null = null;
+
+  // Typeahead — "to" person
+  relToQuery = '';
+  relToResults: FamilyPersonSearchResult[] = [];
+  relToSearching = false;
+  relToSelected: FamilyPersonSearchResult | null = null;
+
+  // ── Status ────────────────────────────────────────────────────────────────
   statusMessage = '';
   statusType: 'success' | 'error' = 'success';
 
@@ -120,6 +132,8 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
     );
   }
 
+  // ── Main search ───────────────────────────────────────────────────────────
+
   onSearch(): void {
     if (!this.searchQuery.trim()) return;
     this.isSearching = true;
@@ -143,6 +157,12 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
     this.searchQuery = person.fullName;
     this.loadGraph(person.personId);
   }
+
+  dismissMainResults(): void {
+    setTimeout(() => (this.searchResults = []), 200);
+  }
+
+  // ── Graph ─────────────────────────────────────────────────────────────────
 
   loadGraph(personId: string): void {
     this.isLoadingGraph = true;
@@ -197,7 +217,6 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
     this.nodes.add(visNodes);
     this.edges.add(visEdges);
 
-    // Focus on root after stabilization
     this.network?.once('stabilized', () => {
       if (rootId) this.network?.focus(rootId, { scale: 1.2, animation: true });
     });
@@ -206,14 +225,17 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
   private buildTooltip(n: FamilyGraphNode): string {
     const dob = n.dateOfBirth
       ? new Date(n.dateOfBirth).toLocaleDateString('en-GB', {
-          day: '2-digit', month: 'short', year: 'numeric',
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
         })
       : 'Unknown';
-    const gender = n.gender === 'M' ? 'Male' : n.gender === 'F' ? 'Female' : 'Unknown';
+    const gender =
+      n.gender === 'M' ? 'Male' : n.gender === 'F' ? 'Female' : 'Unknown';
     return `<b>${n.label}</b><br>DOB: ${dob}<br>Gender: ${gender}<br>Depth: ${n.depth}`;
   }
 
-  // ── Add Person ────────────────────────────────────────────────────────────
+  // ── Add person ────────────────────────────────────────────────────────────
 
   toggleAddPersonForm(): void {
     this.showAddPersonForm = !this.showAddPersonForm;
@@ -241,23 +263,97 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  // ── Add Relationship ──────────────────────────────────────────────────────
+  // ── Add relationship ──────────────────────────────────────────────────────
 
   toggleAddRelationshipForm(): void {
     this.showAddRelationshipForm = !this.showAddRelationshipForm;
     if (this.showAddRelationshipForm) {
-      this.newRelationship = {
-        personId: this.selectedPerson?.personId ?? '',
-        relatedPersonId: '',
-        relationshipType: '',
-      };
+      this.newRelationship = { personId: '', relatedPersonId: '', relationshipType: '' };
+      this.relFromQuery = '';
+      this.relFromResults = [];
+      this.relFromSelected = null;
+      this.relToQuery = '';
+      this.relToResults = [];
+      this.relToSelected = null;
     }
+  }
+
+  // "From" typeahead
+  onRelFromInput(): void {
+    if (this.relFromQuery.trim().length < 2) {
+      this.relFromResults = [];
+      return;
+    }
+    this.relFromSearching = true;
+    this.familyService.searchPersons(this.relFromQuery.trim()).subscribe({
+      next: (res: any) => {
+        this.relFromResults = res?.data ?? [];
+        this.relFromSearching = false;
+      },
+      error: () => {
+        this.relFromSearching = false;
+      },
+    });
+  }
+
+  selectRelFrom(person: FamilyPersonSearchResult): void {
+    this.relFromSelected = person;
+    this.relFromQuery = person.fullName;
+    this.relFromResults = [];
+    this.newRelationship.personId = person.personId;
+  }
+
+  clearRelFrom(): void {
+    this.relFromSelected = null;
+    this.relFromQuery = '';
+    this.relFromResults = [];
+    this.newRelationship.personId = '';
+  }
+
+  dismissRelFromResults(): void {
+    setTimeout(() => (this.relFromResults = []), 200);
+  }
+
+  // "To" typeahead
+  onRelToInput(): void {
+    if (this.relToQuery.trim().length < 2) {
+      this.relToResults = [];
+      return;
+    }
+    this.relToSearching = true;
+    this.familyService.searchPersons(this.relToQuery.trim()).subscribe({
+      next: (res: any) => {
+        this.relToResults = res?.data ?? [];
+        this.relToSearching = false;
+      },
+      error: () => {
+        this.relToSearching = false;
+      },
+    });
+  }
+
+  selectRelTo(person: FamilyPersonSearchResult): void {
+    this.relToSelected = person;
+    this.relToQuery = person.fullName;
+    this.relToResults = [];
+    this.newRelationship.relatedPersonId = person.personId;
+  }
+
+  clearRelTo(): void {
+    this.relToSelected = null;
+    this.relToQuery = '';
+    this.relToResults = [];
+    this.newRelationship.relatedPersonId = '';
+  }
+
+  dismissRelToResults(): void {
+    setTimeout(() => (this.relToResults = []), 200);
   }
 
   saveRelationship(): void {
     const r = this.newRelationship;
     if (!r.personId || !r.relatedPersonId || !r.relationshipType) {
-      this.showStatus('All relationship fields are required.', 'error');
+      this.showStatus('Select both persons and a relationship type.', 'error');
       return;
     }
     this.isSavingRelationship = true;
@@ -274,6 +370,8 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
       },
     });
   }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
 
   private showStatus(msg: string, type: 'success' | 'error'): void {
     this.statusMessage = msg;
