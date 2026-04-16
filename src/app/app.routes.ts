@@ -27,13 +27,21 @@ export const routes: Routes = [
         title: RoutePathTitles.CURRENCY_LIST,
         component: CurrencyCoinComponent,
       },
+      {
+        path: RoutePath.FAMILY_GRAPH,
+        title: RoutePathTitles.FAMILY_GRAPH,
+        loadComponent: () =>
+          import('./components/family-graph/family-graph.component').then(
+            (m) => m.FamilyGraphComponent
+          ),
+      },
     ],
   },
   {
     path: RoutePath.OWNER_PROFILE,
     title: RoutePathTitles.OWNER_PROFILE,
     component: MyProfileComponent,
-  },  
+  },
   {
     path: RoutePath.UNDER_DEVELOPMENT,
     title: RoutePathTitles.UNDER_DEVELOPMENT,
@@ -109,14 +117,6 @@ export const routes: Routes = [
         path: RoutePath.CREDENTIALS,
         title: RoutePathTitles.CREDENTIALS,
         component: CredentialsComponent,
-      },
-      {
-        path: RoutePath.FAMILY_GRAPH,
-        title: RoutePathTitles.FAMILY_GRAPH,
-        loadComponent: () =>
-          import('./components/family-graph/family-graph.component').then(
-            (m) => m.FamilyGraphComponent
-          ),
       },
       {
         path: RoutePath.CHANGE_PASSWORD,
