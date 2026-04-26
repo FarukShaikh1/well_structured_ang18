@@ -17,8 +17,7 @@
             style="display:none"></button>
         </li>
         <li>
-          <button (click)="setView('grid')" class="btn btn-primary rounded-button"
-            >
+          <button (click)="setView('grid')" class="btn btn-primary rounded-button">
             <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M6 4H18C18.5523 4 19 4.44772 19 5V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V5C5 4.44772 5.44772 4 6 4Z"
@@ -33,14 +32,12 @@
           </button>
         </li>
         <li>
-          <button (click)="setView('gallery')" class="btn btn-primary rounded-button"
-            >
+          <button (click)="setView('gallery')" class="btn btn-primary rounded-button">
             <i class="bi bi-images"></i> Gallery
           </button>
         </li>
         <li>
-          <button (click)="setView('summary')" class="btn btn-primary rounded-button"
-            >
+          <button (click)="setView('summary')" class="btn btn-primary rounded-button">
             <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
               <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -50,17 +47,14 @@
             Summary
           </button>
         </li>
-        <li>
-          <button (click)="setView('news')" class="btn btn-primary rounded-button"
-            >
-            <i class="bi bi-newspaper"></i>
-            Artcle in news
-          </button>
-        </li>
       </ul>
     </div>
     <button (click)="reloadData()" class="btn btn-primary rounded-button" *ngIf="viewMode !== 'news'">
       <i class="fa fa-refresh"></i> Refresh data
+    </button>
+    <button (click)="setView('news')" class="btn btn-primary rounded-button">
+      <i class="bi bi-newspaper"></i>
+      Article in news
     </button>
 
     <button (click)="redirectToOwnersProfile()" class="btn btn-primary rounded-button">
@@ -107,7 +101,7 @@
         <label>Search</label>
         <input #searchInput (input)="filterGridSearchText($event)"
           class="form-control form-control-lg text-dark bg-transparent"
-           placeholder="Type something to filter the records" />
+          placeholder="Type something to filter the records" />
       </div>
     </div>
     <div class="col-4 col-sm-4 col-md-4 col-lg-4 d-md-inline-flex d-none align-items-end justify-content-end">
