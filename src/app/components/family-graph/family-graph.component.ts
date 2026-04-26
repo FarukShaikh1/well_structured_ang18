@@ -16,6 +16,7 @@ import {
   FamilyPersonRequest,
   FamilyRelationshipRequest,
 } from '../../services/family/family.service';
+import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 interface VisNode {
   id: string;
@@ -38,11 +39,12 @@ interface VisEdge {
 @Component({
   selector: 'app-family-graph',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,ToasterComponent],
   templateUrl: './family-graph.component.html',
   styleUrls: ['./family-graph.component.scss'],
 })
 export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
+    @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild('graphCanvas') graphCanvas!: ElementRef<HTMLDivElement>;
 
   // ── Main search ───────────────────────────────────────────────────────────
@@ -376,6 +378,7 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
   private showStatus(msg: string, type: 'success' | 'error'): void {
     this.statusMessage = msg;
     this.statusType = type;
+    this.toaster.showMessage(msg, type);
     setTimeout(() => (this.statusMessage = ''), 4000);
   }
 }

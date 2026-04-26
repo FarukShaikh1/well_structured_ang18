@@ -14,13 +14,6 @@
     </div>
   </div>
 
-  <!-- Status alert -->
-  @if (statusMessage) {
-  <div class="alert py-2 mb-3" [ngClass]="statusType === 'success' ? 'alert-success' : 'alert-danger'" role="alert">
-    {{ statusMessage }}
-  </div>
-  }
-
   <!-- ── Add Person Form ── -->
   @if (showAddPersonForm) {
   <div class="card mb-3 border-primary">
@@ -241,3 +234,4 @@
   </div>
 
 </div>
+<app-toaster></app-toaster>

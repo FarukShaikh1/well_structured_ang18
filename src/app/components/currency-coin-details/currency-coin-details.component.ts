@@ -92,7 +92,6 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   ngOnInit(): void { }
 
   openDetailsPopup(currencyCoinId: string) {
-
     this.loaderService.showLoader();
     this.currencyTypeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
 
@@ -108,7 +107,6 @@ export class CurrencyCoinDetailsComponent implements OnInit {
     }
     else {
       this.loaderService.hideLoader();
-
     }
   }
 
@@ -145,6 +143,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
           this.loaderService.hideLoader();
         },
         error: (err) => {
+        this.closePopup();
           this.loaderService.hideLoader();
         }
       });
@@ -159,6 +158,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         this.loaderService.hideLoader();
       },
       error: (error: any) => {
+        this.closePopup();
         this.showPreview = false;
         this.loaderService.hideLoader();
       },
@@ -263,7 +263,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
         if (this.selectedImageFile) {
           this.uploadImageAndSaveData();
         }
-        else{
+        else {
           this.addOrUpdateCurrencyCoinDetails();
         }
       } catch (error) {

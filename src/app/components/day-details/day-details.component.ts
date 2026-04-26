@@ -152,6 +152,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       }),
       catchError((error: any) => {
         this.showError("Error fetching day details.");
+        this.closePopup();
         return of(null);
       })
     ).subscribe());
@@ -169,6 +170,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       catchError((error: any) => {
         this.showPreview = false;
         this.showError("Error fetching asset details.");
+        this.closePopup();
         return of(null);
       })
     ).subscribe());

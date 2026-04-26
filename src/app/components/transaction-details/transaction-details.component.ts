@@ -399,6 +399,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
           this.showError(
             error?.message || "Error fetching transaction details."
           );
+        this.closePopup();
           return of(null);
         })
       )
