@@ -4,7 +4,6 @@ import { Observable } from "rxjs/internal/Observable";
 import { API_URL } from "../../../utils/api-url";
 import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
 import { TransactionRequest } from "../../interfaces/transaction-request";
-import { LocalStorageConstants } from "../../../utils/application-constants";
 
 
 @Injectable({

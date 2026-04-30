@@ -88,7 +88,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   accountList: any[] = [];
 
   private subscriptions: Subscription = new Subscription();
-  isSaving: boolean=false;
+  isSaving: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -399,7 +399,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
           this.showError(
             error?.message || "Error fetching transaction details."
           );
-        this.closePopup();
+          this.loaderService.hideLoader();
+          this.closePopup();
           return of(null);
         })
       )
@@ -425,8 +426,6 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   patchValues(res: any) {
-    const selectedCategory = this.transactionCategoryList
-      ?.find((x: any) => x.id === res.subCategoryId);
 
     this.transactionDetailsForm.patchValue({
       transactionGroupId: res.transactionGroupId,
@@ -570,6 +569,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
           this.toaster.showMessage(
             error?.message, "error"
           );
+          this.loaderService.hideLoader();
+          this.closePopup();
           return of(null);
         }
       })
@@ -595,6 +596,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
           this.toaster.showMessage(
             error?.message, "error"
           );
+          this.loaderService.hideLoader();
+          this.closePopup();
           return of(null);
         }
       });
@@ -607,10 +610,6 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.toaster.showMessage(message, "error");
   }
 
-  private showSuccess(message: string) {
-    this.loaderService.hideLoader();
-    this.toaster.showMessage(message, "success");
-  }
 
   toggleCategory(accountId: string, value: string) {
     const key = "category_" + accountId;
