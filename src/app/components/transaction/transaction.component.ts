@@ -160,7 +160,7 @@ export class TransactionComponent implements OnInit {
         minWidth: 200,
       },
       {
-        title: "Source/Reason",
+        title: "Get From/Paid To",
         field: "sourceOrReason",
         sorter: "alphanum",
         formatter: this.getColorForText.bind(this),
@@ -244,7 +244,7 @@ export class TransactionComponent implements OnInit {
         minWidth: 200,
       },
       {
-        title: "Source/Reason",
+        title: "Get From/Paid To",
         field: "sourceOrReason",
         sorter: "alphanum",
         formatter: this.getColorForText.bind(this),
@@ -377,7 +377,7 @@ export class TransactionComponent implements OnInit {
       },
 
       {
-        title: "Source/Reason",
+        title: "Get From/Paid To",
         field: "sourceOrReason",
         sorter: "alphanum",
         minWidth: 150,
@@ -557,7 +557,7 @@ export class TransactionComponent implements OnInit {
       },
       {
         sorter: "alphanum",
-        title: "Source/Reason",
+        title: "Get From/Paid To",
         field: "sourceOrReason",
         minWidth: 600,
         formatter: (cell: any) => {
@@ -702,7 +702,7 @@ export class TransactionComponent implements OnInit {
 
   hideTransactionByCategory(category: any) {
     this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.subCategoryName != category;
+      return item.categoryName != category;
     });
     this.categoryWiseReportResponse = this.filteredTableData;
   }
@@ -899,6 +899,7 @@ export class TransactionComponent implements OnInit {
       this.filteredTableData = this.tableData.filter((item: any) => {
         const searchText =
           item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
+          item.subCategoryName?.toLowerCase().includes(this.sourceOrReason) ||
           item.description?.toLowerCase().includes(this.sourceOrReason);
         const minAmountCondition =
           this.minAmount == 0 ||
@@ -918,6 +919,7 @@ export class TransactionComponent implements OnInit {
         // 🔎 TEXT SEARCH
         const searchText =
           item.sourceOrReason?.toLowerCase().includes(searchValue) ||
+          item.subCategoryName?.toLowerCase().includes(this.sourceOrReason) ||
           item.description?.toLowerCase().includes(searchValue);
 
         // 🧮 DYNAMIC ACCOUNT AMOUNTS
@@ -979,6 +981,7 @@ export class TransactionComponent implements OnInit {
       this.filteredTableData = this.tableData.filter((item: any) => {
         const searchText =
           item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
+          item.categoryName?.toLowerCase().includes(this.sourceOrReason) ||
           item.description?.toLowerCase().includes(this.sourceOrReason);
         const minAmountCondition =
           this.minAmount == 0 ||

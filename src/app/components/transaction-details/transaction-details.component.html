@@ -46,9 +46,9 @@
                 transactionDetailsForm.get('sourceOrReason')?.invalid){
                 <div class="text-danger">
                   @if(transactionDetailsForm.get('sourceOrReason')?.errors?.['required']){
-                  Source/Reason is required. }
+                  Get From/Paid To is required. }
                   @else if(transactionDetailsForm.get('sourceOrReason')?.errors?.['pattern']){
-                  Invalid source/Reason. }
+                  Invalid Get From/Paid To. }
                 </div>
                 } @if(filteredSourceOrReasonList!==undefined &&
                 filteredSourceOrReasonList != null && focusInSource){
