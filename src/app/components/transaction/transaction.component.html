@@ -220,3 +220,8 @@
 </div>
 <app-transaction-details [lastTransactionDate]="lastTransactionDate"></app-transaction-details>
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
+
+@if(activeComponent === NavigationURLs.EXPENSE_LIST){
+  <span style="color: var(--danger-color); font-weight:bold">Emergency</span>Emergency<br>
+  <span style="color: var(--success-color); font-weight:bold">Return </span>Return 
+}

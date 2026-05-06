@@ -810,7 +810,7 @@ export class TransactionComponent implements OnInit {
 
   getColorForText(cell: CellComponent): any {
     const transactionData = cell.getRow().getData();
-    const columnValue = transactionData["purpose"];
+    const columnValue = transactionData["description"];
     const sourceValue = transactionData["sourceOrReason"];
 
     if (columnValue?.toLowerCase().includes("emergency")) {
