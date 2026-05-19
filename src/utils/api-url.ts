@@ -37,7 +37,7 @@ export const API_URL = {
   ADD_TRANSACTION: `${serverUrl}${apiPrefix}/transaction`,
   TRANSACTION_ADJUSTMENT: `${serverUrl}${apiPrefix}/transaction/transactionAdjustment?userId=`,
   UPDATE_TRANSACTION: `${serverUrl}${apiPrefix}/transaction`,
-  DELETE_TRANSACTION: `${serverUrl}${apiPrefix}/transaction`,
+  DELETE_TRANSACTION: `${serverUrl}${apiPrefix}/transaction/`,
   GET_TRANSACTION_SUGGESTION_LIST: `${serverUrl}${apiPrefix}/transaction/suggestions`,
   // GET_TRANSACTION_CATEGORY_LIST: `${serverUrl}${apiPrefix}/transaction/GetTransactionSuggestionList`,
   GET_AVAIL_AMOUNT: `${serverUrl}${apiPrefix}/transaction/getAvailAmount`,
