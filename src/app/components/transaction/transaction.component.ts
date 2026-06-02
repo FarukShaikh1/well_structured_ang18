@@ -123,6 +123,10 @@ export class TransactionComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.refreshDateFields();
+  }
+
   columnConfiguration() {
     if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
       this.loadConfigForExpenseList();
@@ -837,10 +841,7 @@ export class TransactionComponent implements OnInit {
     localStorage.removeItem(NavigationURLs.EMERGENCY_RETURN_REPORT + '_col');
   }
 
-
-
-  ngAfterViewInit() {
-
+  refreshDateFields() {
     flatpickr("#fromDate", {
       dateFormat: "d/m/Y",
       defaultDate: (() => {
@@ -1003,6 +1004,7 @@ export class TransactionComponent implements OnInit {
   }
 
   goToList(listType: string) {
+    this.refreshDateFields();
     switch (listType) {
       case TransactionTabs.EXPENSE_LIST:
         this.selectedTab = TransactionTabs.EXPENSE_LIST;
