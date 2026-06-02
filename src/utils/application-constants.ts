@@ -35,6 +35,7 @@ export const ApplicationConstants = {
     APPLICATIONS_OWNER_EMAILID: 'farukshaikh908@gmail.com',
     REPORT_TYPE_SOURCE_WISE: 'SourceWise',
     REPORT_TYPE_CATEGORY_WISE: 'CategoryWise',
+    EMERGENCY_RETURN_REPORT: 'EmergencyReturn',
 
 
 };
@@ -85,6 +86,7 @@ export const TransactionTabs = {
     EXPENSE_REPORT: 'Transaction Report',
     EXPENSE_BUDGET: 'Transaction Budget',
     CATEGORY_WISE_REPORT: 'Category Wise Transaction Report',
+    EMERGENCY_RETURN_REPORT: 'Emergency and Return Report',
 }
 
 export const CollectionTabs = {
@@ -158,6 +160,7 @@ export const NavigationURLs = {
     EXPENSE_BALANCE_LIST: '/home/expense-balance',
     EXPENSE_REPORT: '/home/expense-report',
     CATEGORY_WISE_EXPENSE_REPORT: '/home/expense-report-by-category',
+    EMERGENCY_RETURN_REPORT: '/home/emergency-return-report',
     REPORT_LIST: '/home/expenses/reports',
     CURRENCY_LIST: '/home/currency-coin',
     CURRENCY_SUMMARY: '/home/currency-summary',

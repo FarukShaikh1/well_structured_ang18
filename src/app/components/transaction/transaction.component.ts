@@ -97,7 +97,7 @@ export class TransactionComponent implements OnInit {
   accountColumnList: string = '_AccountColumns';
   reportType = "sourceWise";
   selectedTab: string = TransactionTabs.EXPENSE_LIST;
-
+  TransactionTabs = TransactionTabs;
   constructor(
     private transactionService: TransactionService,
     private configService: ConfigurationService,
@@ -128,7 +128,7 @@ export class TransactionComponent implements OnInit {
       this.loadConfigForExpenseList();
       return;
     }
-    if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
+    if (this.activeComponent === NavigationURLs.EXPENSE_REPORT || this.activeComponent === NavigationURLs.EMERGENCY_RETURN_REPORT) {
       this.loadConfigForExpenseReportList();
       return;
     }
@@ -375,7 +375,6 @@ export class TransactionComponent implements OnInit {
         minWidth: 100,
         formatter: this.dateFormatter.bind(this),
       },
-
       {
         title: "Get From/Paid To",
         field: "sourceOrReason",
@@ -392,12 +391,6 @@ export class TransactionComponent implements OnInit {
           return `<div class="text-wrap">${value}</div>`;
         },
         cssClass: "description-column",
-      },
-      {
-        title: "Category",
-        field: "subCategoryName",
-        sorter: "alphanum",
-        minWidth: 200,
       },
       {
         title: "TakenAmount",
@@ -839,6 +832,9 @@ export class TransactionComponent implements OnInit {
 
     localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
     localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST + '_col');
+
+    localStorage.removeItem(NavigationURLs.EMERGENCY_RETURN_REPORT);
+    localStorage.removeItem(NavigationURLs.EMERGENCY_RETURN_REPORT + '_col');
   }
 
 
@@ -1006,32 +1002,54 @@ export class TransactionComponent implements OnInit {
     return this.filteredTableData[0]["transactionDate"];
   }
 
-  goToTransactionList() {
-    this.selectedTab = TransactionTabs.EXPENSE_LIST;
-    this.activeComponent = NavigationURLs.EXPENSE_LIST;
-    this.loadGrid();
-    this.applyFilters();
-  }
-
-  goToTransactionSummary() {
-    this.selectedTab = TransactionTabs.EXPENSE_SUMMARY;
-    this.activeComponent = NavigationURLs.EXPENSE_SUMMARY_LIST;
-    this.loadGrid();
-    this.applyFilters();
-  }
-  goToBalanceSummary() {
-    this.selectedTab = TransactionTabs.BALANCE_SUMMARY;
-    this.activeComponent = NavigationURLs.EXPENSE_BALANCE_LIST;
-    this.loadGrid();
-    this.applyFilters();
-  }
-
-  goToTransactionReport() {
-    this.selectedTab = TransactionTabs.EXPENSE_REPORT;
-    this.reportType = ApplicationConstants.REPORT_TYPE_SOURCE_WISE;
-    this.activeComponent = NavigationURLs.EXPENSE_REPORT;
-    this.loadGrid();
-    this.applyFilters();
+  goToList(listType: string) {
+    switch (listType) {
+      case TransactionTabs.EXPENSE_LIST:
+        this.selectedTab = TransactionTabs.EXPENSE_LIST;
+        this.activeComponent = NavigationURLs.EXPENSE_LIST;
+        this.loadGrid();
+        this.applyFilters();
+        break;
+      case TransactionTabs.EXPENSE_SUMMARY:
+        this.selectedTab = TransactionTabs.EXPENSE_SUMMARY;
+        this.activeComponent = NavigationURLs.EXPENSE_SUMMARY_LIST;
+        this.loadGrid();
+        this.applyFilters();
+        break;
+      case TransactionTabs.BALANCE_SUMMARY:
+        this.selectedTab = TransactionTabs.BALANCE_SUMMARY;
+        this.activeComponent = NavigationURLs.EXPENSE_BALANCE_LIST;
+        this.loadGrid();
+        this.applyFilters();
+        break;
+      case TransactionTabs.EXPENSE_REPORT:
+        this.selectedTab = TransactionTabs.EXPENSE_REPORT;
+        this.reportType = ApplicationConstants.REPORT_TYPE_SOURCE_WISE;
+        this.activeComponent = NavigationURLs.EXPENSE_REPORT;
+        this.loadGrid();
+        this.applyFilters();
+        break;
+      case TransactionTabs.EXPENSE_BUDGET:
+        this.selectedTab = TransactionTabs.EXPENSE_BUDGET;
+        this.activeComponent = NavigationURLs.BUDGET;
+        // this.loadGrid();
+        // this.applyFilters();
+        break;
+      case TransactionTabs.CATEGORY_WISE_REPORT:
+        this.selectedTab = TransactionTabs.CATEGORY_WISE_REPORT;
+        this.reportType = ApplicationConstants.REPORT_TYPE_CATEGORY_WISE;
+        this.activeComponent = NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT;
+        this.loadGrid();
+        this.applyFilters();
+        break;
+      case TransactionTabs.EMERGENCY_RETURN_REPORT:
+        this.selectedTab = TransactionTabs.EMERGENCY_RETURN_REPORT;
+        this.reportType = ApplicationConstants.EMERGENCY_RETURN_REPORT;
+        this.activeComponent = NavigationURLs.EMERGENCY_RETURN_REPORT;
+        this.loadGrid();
+        this.applyFilters();
+        break;
+    }
   }
 
   monthlyBudget() {
@@ -1041,22 +1059,13 @@ export class TransactionComponent implements OnInit {
     // this.applyFilters();
   }
 
-
-
-  goToCategoryWiseReport() {
-    this.selectedTab = TransactionTabs.CATEGORY_WISE_REPORT;
-    this.reportType = ApplicationConstants.REPORT_TYPE_CATEGORY_WISE;
-    this.activeComponent = NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT;
-    this.loadGrid();
-    this.applyFilters();
-  }
-
   refreshData() {
     this.cacheService.clear(NavigationURLs.EXPENSE_LIST);
     this.cacheService.clear(NavigationURLs.EXPENSE_SUMMARY_LIST);
     this.cacheService.clear(NavigationURLs.EXPENSE_BALANCE_LIST);
     this.cacheService.clear(NavigationURLs.EXPENSE_REPORT);
     this.cacheService.clear(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
+    this.cacheService.clear(NavigationURLs.EMERGENCY_RETURN_REPORT);
     this.sourceOrReason = "";
     this.minAmount = 0;
     this.maxAmount = 0;
@@ -1087,14 +1096,15 @@ export class TransactionComponent implements OnInit {
       this.applyFilters();
       return;
     }
-
-    this.transactionfilterRequest = {
-      fromDate: this.fromDate,
-      toDate: this.toDate,
-      minAmount: this.minAmount ?? 0,
-      maxAmount: this.maxAmount ?? 0,
-      sourceOrReason: this.sourceOrReason ?? ''
-    };
+    else {
+      this.transactionfilterRequest = {
+        fromDate: this.fromDate,
+        toDate: this.toDate,
+        minAmount: this.minAmount ?? 0,
+        maxAmount: this.maxAmount ?? 0,
+        sourceOrReason: this.sourceOrReason ?? ''
+      };
+    }
     if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
       this.transactionService
         .getTransactionList(this.transactionfilterRequest)
@@ -1152,6 +1162,24 @@ export class TransactionComponent implements OnInit {
     } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
       this.transactionService
         .getTransactionReportList(this.transactionfilterRequest)
+        .subscribe({
+          next: (res: any) => {
+            this.transactionReports = res.data;
+            this.tableData = res.data;
+            this.filteredTableData = res.data;
+            this.lastTransactionDate = this.getLatestTransactionDate();
+            this.cacheService.set(this.activeComponent, res.data);
+            this.columnConfiguration();
+            this.loaderService.hideLoader();
+          },
+          error: (error: any) => {
+            console.error("error : ", error);
+            this.loaderService.hideLoader();
+          },
+        });
+    } else if (this.activeComponent === NavigationURLs.EMERGENCY_RETURN_REPORT) {
+      this.transactionService
+        .getEmergencyReturnReportList()
         .subscribe({
           next: (res: any) => {
             this.transactionReports = res.data;

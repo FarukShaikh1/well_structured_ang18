@@ -33,6 +33,7 @@ export const API_URL = {
   GET_TRANSACTION_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/report`,
   GET_CATEGORY_WISE_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/report/category-wise`,
   GET_BUDGET_WISE_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/report/budget-wise`,
+  GET_EMERGENCYRETURN_REPORT_LIST: `${serverUrl}${apiPrefix}/transaction/report/emergency-return`,
   GET_TRANSACTION_LIST: `${serverUrl}${apiPrefix}/transaction/List`,
   ADD_TRANSACTION: `${serverUrl}${apiPrefix}/transaction`,
   TRANSACTION_ADJUSTMENT: `${serverUrl}${apiPrefix}/transaction/transactionAdjustment?userId=`,

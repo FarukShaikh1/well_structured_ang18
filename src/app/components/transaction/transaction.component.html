@@ -16,8 +16,7 @@
       </button>
       <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
         <li>
-
-          <button (click)="goToTransactionList()" class="btn btn-primary rounded-button">
+          <button (click)="goToList(TransactionTabs.EXPENSE_LIST)" class="btn btn-primary rounded-button">
             <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M6 4H18C18.5523 4 19 4.44772 19 5V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V5C5 4.44772 5.44772 4 6 4Z"
@@ -33,7 +32,7 @@
           </button>
         </li>
         <li>
-          <button (click)="goToTransactionSummary()" class="btn btn-primary rounded-button">
+          <button (click)="goToList(TransactionTabs.EXPENSE_SUMMARY)" class="btn btn-primary rounded-button">
             <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
               <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -44,7 +43,7 @@
           </button>
         </li>
         <li>
-          <button (click)="goToBalanceSummary()" class="btn btn-primary rounded-button">
+          <button (click)="goToList(TransactionTabs.BALANCE_SUMMARY)" class="btn btn-primary rounded-button">
             <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
               <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -55,7 +54,7 @@
           </button>
         </li>
         <li>
-          <button (click)="goToTransactionReport()" class="btn btn-primary rounded-button">
+          <button (click)="goToList(TransactionTabs.EXPENSE_REPORT)" class="btn btn-primary rounded-button">
             <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
               <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
@@ -69,8 +68,7 @@
           </button>
         </li>
         <li>
-
-          <button (click)="goToCategoryWiseReport()" class="btn btn-primary rounded-button">
+          <button (click)="goToList(TransactionTabs.CATEGORY_WISE_REPORT)" class="btn btn-primary rounded-button">
             <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
               <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
@@ -81,6 +79,20 @@
               <rect x="14" y="10" width="2" height="8" fill="currentColor" />
             </svg>
             Category wise Report
+          </button>
+        </li>
+        <li>
+          <button (click)="goToList(TransactionTabs.EMERGENCY_RETURN_REPORT)" class="btn btn-primary rounded-button">
+            <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+              <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
+                stroke="currentColor" stroke-width="2" fill="none" />
+
+              <rect x="8" y="14" width="2" height="4" fill="currentColor" />
+              <rect x="11" y="12" width="2" height="6" fill="currentColor" />
+              <rect x="14" y="10" width="2" height="8" fill="currentColor" />
+            </svg>
+            Emergency/Return Report
           </button>
         </li>
         <li>
@@ -114,6 +126,7 @@
 
 
   <div class="row pb-2 pt-2" style="flex-wrap: wrap;">
+    @if(activeComponent !== NavigationURLs.EMERGENCY_RETURN_REPORT){
     <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
       From Date:
       <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate"
@@ -129,7 +142,6 @@
         <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round" />
       </svg>
-
       Min Amount
       <input class="form-control form-control-lg text-dark bg-transparent" type="text" placeholder="Min Amount"
         aria-label="Min Amount" #minInput (input)="filterGridByMinAmount($event)"
@@ -145,6 +157,7 @@
         aria-label="Max Amount" #maxInput (input)="filterGridByMaxAmount($event)"
         (keydown)="globalService.validateAmount($event)" />
     </div>
+    }
     <div class="col-6 col-sm-6 col-md-6 col-lg-4 pt-2">
       <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -209,6 +222,8 @@
       </div>
     </div>
     }
+    @else if(activeComponent === NavigationURLs.EMERGENCY_RETURN_REPORT){
+    }
     @if(activeComponent !== NavigationURLs.BUDGET){
     <div class="mb-2">
       <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
@@ -222,6 +237,6 @@
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
 
 @if(activeComponent === NavigationURLs.EXPENSE_LIST){
-  <span style="color: var(--danger-color); font-weight:bold">Emergency</span>Emergency<br>
-  <span style="color: var(--success-color); font-weight:bold">Return </span>Return 
+<span style="color: var(--danger-color); font-weight:bold">Emergency</span>Emergency<br>
+<span style="color: var(--success-color); font-weight:bold">Return </span>Return
 }

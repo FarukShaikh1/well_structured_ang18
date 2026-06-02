@@ -37,6 +37,10 @@ export class TransactionService {
     return this.http.post(API_URL.GET_BUDGET_WISE_REPORT_LIST, filter);
   }
 
+  getEmergencyReturnReportList(): Observable<any> {
+    return this.http.get(API_URL.GET_EMERGENCYRETURN_REPORT_LIST);
+  }
+
   getTransactionList(filter: ExpenseFilterRequest): Observable<any> {
     return this.http.post(API_URL.GET_TRANSACTION_LIST, filter);
   }
