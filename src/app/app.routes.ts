@@ -13,8 +13,16 @@ import { SiteUnderDevelopmentComponent } from "./components/shared/site-under-de
 import { TransactionComponent } from "./components/transaction/transaction.component";
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
+import { RtoHomepageComponent } from "./components/rto/rto-homepage/rto-homepage.component";
 export const routes: Routes = [
-  { path: "", redirectTo: "home", pathMatch: "full" },
+  {
+    path: "", 
+    pathMatch: "full",
+    component: RtoHomepageComponent,
+    title: "Tanveer Daula RTO agent"
+  },
+  { path: "rto-home", redirectTo: "home", pathMatch: "full" },
+  { path: "home", redirectTo: "home", pathMatch: "full" },
   {
     path: RoutePath.HOME,
     title: RoutePathTitles.HOME,

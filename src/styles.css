@@ -77,7 +77,9 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
-
+body.rto-home-page {
+  background-image: url('assets/images/white_background.png');
+}
 
 .modal-content,
 .table-container {

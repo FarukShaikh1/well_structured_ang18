@@ -1,0 +1,283 @@
+<div class="rto-home-page">
+
+    <!-- NAVBAR -->
+    <header class="navbar1">
+        <div class="container1">
+
+            <div class="logo1">
+                <div class="logo-main1">RTO SOLUTIONS</div>
+                <div class="logo-sub1">Fast | Reliable | Transparent</div>
+            </div>
+
+            <nav>
+                <a href="#">Home</a>
+                <a href="#">About Us</a>
+                <a href="#">Services</a>
+                <a href="#">Price List</a>
+                <a href="#">Track Application</a>
+                <a href="#">Blog</a>
+                <a href="#">Contact Us</a>
+            </nav>
+
+            <div class="header-right1">
+                <div class="contact1">
+                    <strong>88888 69198</strong>
+                    <span>Mon - Sat: 9AM - 7PM</span>
+                </div>
+
+                <!-- <button class="apply-btn1">
+                    Apply Now
+                </button> -->
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero1">
+
+        <div class="container1 hero-wrapper1">
+
+            <div class="hero-content1">
+
+                <h1>
+                    ALL <span>RTO SERVICES</span>
+                    UNDER ONE ROOF
+                </h1>
+
+                <p>
+                    We make RTO work simple, fast and hassle-free for you.
+                </p>
+
+                <div class="hero-features1">
+
+                    <div>⚡ Fast Processing</div>
+                    <div>👨‍💼 Expert Support</div>
+                    <div>💰 Affordable Fees</div>
+                    <div>🔒 100% Secure</div>
+
+                </div>
+
+                <div class="hero-buttons1">
+                    <button>Our Services</button>
+
+                    <button class="whatsapp1">
+                        Chat on WhatsApp
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="hero-image1">
+                <img src="assets/images/car.png" alt="vehicle">
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services1">
+
+        <div class="container1">
+
+            <h2>OUR RTO SERVICES</h2>
+
+            <p class="section-subtitle1">
+                A complete range of services related to your vehicle and driving licence
+            </p>
+
+            <div class="service-grid1">
+
+                @for(item of services; track $index){
+
+                <div class="service-card1">
+
+                    <div class="icon1">
+                        {{item.icon}}
+                    </div>
+
+                    <h3>{{item.title}}</h3>
+
+                    <ul>
+                        <li *ngFor="let service of item.items">
+                            {{service}}
+                        </li>
+                    </ul>
+
+                    <a class="view-all1">View All →</a>
+
+                </div>
+
+                }
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- WHY US -->
+    <section class="why-us1">
+
+        <div class="container1 why-grid1">
+
+            <div>
+
+                <h2>WHY CHOOSE US?</h2>
+
+                <div class="why-list1">
+
+                    <div class="why-item1">
+                        <h4>⚡ Fast & Reliable</h4>
+                        <p>We ensure quick and timely service delivery.</p>
+                    </div>
+
+                    <div class="why-item1">
+                        <h4>🔒 Secure & Safe</h4>
+                        <p>Your documents and data are 100% secure.</p>
+                    </div>
+
+                    <div class="why-item1">
+                        <h4>👨‍💼 Expert Guidance</h4>
+                        <p>Our experts guide you at every step.</p>
+                    </div>
+
+                    <div class="why-item1">
+                        <h4>💰 Affordable Charges</h4>
+                        <p>Transparent pricing with no hidden charges.</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="stats1">
+
+                <div>
+                    <h3>10,000+</h3>
+                    <p>Happy Customers</p>
+                </div>
+
+                <div>
+                    <h3>15+</h3>
+                    <p>RTO Services</p>
+                </div>
+
+                <div>
+                    <h3>5+</h3>
+                    <p>Years Experience</p>
+                </div>
+
+                <div>
+                    <h3>24/7</h3>
+                    <p>Customer Support</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- PROCESS -->
+    <section class="process1">
+
+        <div class="container1">
+
+            <h2>HOW IT WORKS</h2>
+
+            <div class="steps1">
+
+                <div class="step1">
+                    <span>1</span>
+                    <h4>Submit Documents</h4>
+                    <p>Share your documents with us online or offline.</p>
+                </div>
+
+                <div class="step1">
+                    <span>2</span>
+                    <h4>Verification</h4>
+                    <p>We verify the documents for accuracy.</p>
+                </div>
+
+                <div class="step1">
+                    <span>3</span>
+                    <h4>Application Processing</h4>
+                    <p>We process your application with RTO.</p>
+                </div>
+
+                <div class="step1">
+                    <span>4</span>
+                    <h4>Service Completion</h4>
+                    <p>Your work is completed successfully.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- TESTIMONIAL -->
+    <section class="testimonial1">
+
+        <div class="container1">
+
+            <h2>WHAT OUR CUSTOMERS SAY</h2>
+
+            <div class="review-card1">
+
+                <div class="stars1">★★★★★</div>
+
+                <p>
+                    “Great experience! My RC transfer was completed within 3 days.
+                    Very professional and supportive team.”
+                </p>
+
+                <strong>
+                    – Rahul Sharma
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+
+        <div class="container1 footer-grid1">
+
+            <div>
+                <h3>ABOUT US</h3>
+
+                <p>
+                    RTO Solutions is a trusted RTO service provider offering all
+                    vehicle and driving related services.
+                </p>
+            </div>
+
+            <div>
+                <h3>QUICK LINKS</h3>
+
+                <p>Home</p>
+                <p>About Us</p>
+                <p>Services</p>
+                <p>Price List</p>
+                <p>Contact Us</p>
+            </div>
+
+            <div>
+                <h3>CONTACT US</h3>
+                <h3>Contact</h3>
+                <p>+91 8888869198</p>
+                <p>support&#64;maharashtratransport.com</p>
+                <p>123, RTO Road, Sector 12</p>
+            </div>
+
+        </div>
+
+    </footer>
+
+</div>
