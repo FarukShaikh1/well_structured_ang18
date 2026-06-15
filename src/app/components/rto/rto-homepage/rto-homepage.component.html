@@ -80,9 +80,9 @@
                     <button class="whatsapp1">
                         <a class="contact-item" style="color:#FFF" target="_blank" rel="noopener noreferrer"
                             [href]="'https://wa.me/' + contact.whatsapp + '?text=' + encodedMessage">
-                                <img src="assets/icons/32px-WhatsApp.svg.png" class="wa-icon" /><span>{{
-                                    contact.whatsapp
-                                    }}</span>
+                            <img src="assets/icons/32px-WhatsApp.svg.png" class="wa-icon" /><span>{{
+                                contact.whatsapp
+                                }}</span>
                         </a>
                     </button>
                 </div>
@@ -268,65 +268,55 @@
 
     <!-- FOOTER -->
     <footer>
-
         <div class="container1 footer-grid1">
-
             <div>
                 <h3>ABOUT US</h3>
-
                 <p>
                     RTO Solutions is a trusted RTO service provider offering all
                     vehicle and driving related services.
                 </p>
             </div>
-
             <div>
                 <h3>QUICK LINKS</h3>
-
                 <p>Home</p>
                 <p>About Us</p>
                 <p>Services</p>
                 <p>Price List</p>
                 <p>Contact Us</p>
             </div>
-
             <div>
                 <h3>CONTACT US</h3>
-                <a class="contact-item" target="_blank" rel="noopener noreferrer"
-                    [href]="'https://wa.me/' + contact.whatsapp + '?text=' + encodedMessage">
-                    <div class="wa-row">
-                        <img src="assets/icons/32px-WhatsApp.svg.png" class="wa-icon" /><span>{{
-                            contact.whatsapp
-                            }}</span>
-                    </div>
-                </a>
-
-                <a class="contact-item"
-                    [href]="'mailto:' + contact.email + '?subject=Regarding Your Profile&body=Hi Faruk,%0D%0A%0D%0AI would like to connect with you regarding...%0D%0A%0D%0AThanks,'">
-                    ✉️ {{ contact.email }}
-                </a>
-                <div class="contact-links">
+                <p><a class="contact-item" target="_blank" rel="noopener noreferrer"
+                        [href]="'https://wa.me/' + contact.whatsapp + '?text=' + encodedMessage">
+                        <div class="wa-row">
+                            <img src="assets/icons/32px-WhatsApp.svg.png" class="wa-icon" /><span>{{
+                                contact.whatsapp
+                                }}</span>
+                        </div>
+                    </a>
+                </p>
+                <p>
+                    <a class="contact-item"
+                        [href]="'mailto:' + contact.email + '?subject=Regarding Your Profile&body=Hi Faruk,%0D%0A%0D%0AI would like to connect with you regarding...%0D%0A%0D%0AThanks,'">
+                        ✉️ {{ contact.email }}
+                    </a>
+                </p>
+                <p>
                     <!-- Location -->
                     <a class="contact-item" target="_blank" rel="noopener noreferrer"
                         [href]="'https://www.google.com/maps/search/?api=1&query=' + contact.location">
                         📍{{ contact.address }}
                     </a>
-                </div>
-                <div class="contact-links">
+                </p>
+                <p>
                     <!-- Delivery truck -->
                     <a class="contact-item" target="_blank" rel="noopener noreferrer"
                         [href]="'https://www.google.com/maps/search/?api=1&query=' + contact.location">
                         <i class="fas fa-truck"></i>
                     </a>
                     {{ contact.courior }}
-                </div>
-
-
-                <p></p>
+                </p>
             </div>
-
         </div>
-
     </footer>
-
 </div>
