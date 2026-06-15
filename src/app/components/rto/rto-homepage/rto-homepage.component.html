@@ -30,8 +30,11 @@
 
             <div class="header-right1">
                 <div class="contact1">
-                    <strong>88888 69198</strong>
-                    <span>Mon - Sat: 9AM - 7PM</span>
+                    <strong> <a class="contact-item" [href]="'tel:' + contact.mobile">
+                            📞{{ contact.mobile }}
+                        </a>
+                    <span>Mon-Sat: 9AM-7PM</span>
+                    </strong>
                 </div>
 
                 <!-- <button class="apply-btn1">

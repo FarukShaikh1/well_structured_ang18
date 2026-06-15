@@ -19,19 +19,19 @@ export const routes: Routes = [
   {
     path: "", 
     pathMatch: "full",
-    component: RtoOwnerComponent,
-    title: "Tanveer Daula RTO agent"
-  },
-  {
-    path: "rto-owner", 
-    pathMatch: "full",
-    component: RtoOwnerComponent,
+    component: RtoHomepageComponent,
     title: "Tanveer Daula RTO agent"
   },
   {
     path: "rto-home", 
     pathMatch: "full",
     component: RtoHomepageComponent,
+    title: "Tanveer Daula RTO agent"
+  },
+    {
+    path: "rto-owner", 
+    pathMatch: "full",
+    component: RtoOwnerComponent,
     title: "Tanveer Daula RTO agent"
   },
   { path: "home", redirectTo: "home", pathMatch: "full" },
