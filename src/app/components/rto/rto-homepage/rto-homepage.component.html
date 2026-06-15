@@ -286,6 +286,10 @@
             </div>
             <div>
                 <h3>CONTACT US</h3>
+                <p> <a class="contact-item" [href]="'tel:' + contact.mobile">
+                        📞{{ contact.mobile }}
+                    </a>
+                </p>
                 <p><a class="contact-item" target="_blank" rel="noopener noreferrer"
                         [href]="'https://wa.me/' + contact.whatsapp + '?text=' + encodedMessage">
                         <div class="wa-row">
