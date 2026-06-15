@@ -25,7 +25,8 @@ export class SiteUnderDevelopmentComponent {
     console.log('Site Under Development Loaded');
   }
   logout(): void {
-    this.logoutService.logout();
+    this.router.navigate(['rto-home']);
+    // this.logoutService.logout();
   }
   occasionList(): void {
     this.router.navigate([NavigationURLs.DAY_LIST]);

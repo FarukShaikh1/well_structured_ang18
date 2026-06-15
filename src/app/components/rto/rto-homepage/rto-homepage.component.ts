@@ -9,6 +9,18 @@ import { Component } from '@angular/core';
   styleUrl: './rto-homepage.component.css'
 })
 export class RtoHomepageComponent {
+  encodedMessage = encodeURIComponent(`Hi Tanveer Daula Sir, I want to connect with you!`);
+
+  contact = {
+    address: 'Amravati, Maharashtra, India',
+    location: 'Regional Transport Office, Amravati, Maharashtra, India',
+    mobile: '+918888869198',
+    whatsapp: '+918888869198',
+    email: 'tanveershaikhlucky@gmail.com',
+    website: 'https://victorious-glacier-026e78e00.3.azurestaticapps.net/',
+    courior:'TANVEER MEHBOOB DAULA SHEΙΚΗ, Sundarlal Chowk, SRPF Camp Road, Chaprasi Pura, Shivneri Colony Amravati, Maharashtra 444604, MOBILE: 8888869198/7020948898'
+  };
+
    ngOnInit(): void {
     document.body.classList.add('rto-home-page');
   }

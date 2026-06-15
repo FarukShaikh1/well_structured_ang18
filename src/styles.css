@@ -77,8 +77,11 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
 body.rto-home-page {
-  background-image: url('assets/images/white_background.png');
+  background-color: var(--theme-bg);
+  background-image: none;
+  /* background-image: url('assets/images/white_background.png'); */
 }
 
 .modal-content,

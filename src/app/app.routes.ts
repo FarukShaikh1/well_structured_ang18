@@ -14,14 +14,26 @@ import { TransactionComponent } from "./components/transaction/transaction.compo
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
 import { RtoHomepageComponent } from "./components/rto/rto-homepage/rto-homepage.component";
+import { RtoOwnerComponent } from "./components/rto/rto-owner/rto-owner.component";
 export const routes: Routes = [
   {
     path: "", 
     pathMatch: "full",
+    component: RtoOwnerComponent,
+    title: "Tanveer Daula RTO agent"
+  },
+  {
+    path: "rto-owner", 
+    pathMatch: "full",
+    component: RtoOwnerComponent,
+    title: "Tanveer Daula RTO agent"
+  },
+  {
+    path: "rto-home", 
+    pathMatch: "full",
     component: RtoHomepageComponent,
     title: "Tanveer Daula RTO agent"
   },
-  { path: "rto-home", redirectTo: "home", pathMatch: "full" },
   { path: "home", redirectTo: "home", pathMatch: "full" },
   {
     path: RoutePath.HOME,

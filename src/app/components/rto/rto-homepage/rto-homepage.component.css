@@ -471,3 +471,19 @@ footer p {
     gap: 20px;
   }
 }
+.contact-item {
+  text-decoration: none;
+  color: var(--theme-primary);
+  font-size: 14px;
+}
+
+.contact-item:hover {
+  color: var(--theme-link-hover);
+  text-decoration: underline;
+}
+.wa-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  /* keeps quality */
+}

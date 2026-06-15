@@ -5,8 +5,17 @@
         <div class="container1">
 
             <div class="logo1">
-                <div class="logo-main1">RTO SOLUTIONS (By Tanveer Daula)</div>
-                <div class="logo-sub1">Fast | Reliable | Transparent</div>
+                <div class="dropdown flex-shrink-0 me-2">
+                    <button class="btn p-0" type="button">
+                        <div class="profile-circle">
+                            <a href="rto-owner">
+                                <img src="../../../../assets/rto/Tanveer.jpeg" class="profile-circle">
+                            </a>
+                        </div>
+                    </button>
+                    MR. TANVEER DAULA
+                </div>
+                <div class="logo-sub1">All RTO Services(Fast | Reliable | Transparent)</div>
             </div>
 
             <nav>
@@ -58,10 +67,18 @@
                 </div>
 
                 <div class="hero-buttons1">
-                    <button>Our Services</button>
-
+                    <a href="site-under-development">
+                        <button>Our Services</button>
+                    </a>
                     <button class="whatsapp1">
-                        Chat on WhatsApp
+                        <a class="contact-item" target="_blank" rel="noopener noreferrer"
+                            [href]="'https://wa.me/' + contact.whatsapp + '?text=' + encodedMessage">
+                            <div class="wa-row">
+                                <img src="assets/icons/32px-WhatsApp.svg.png" class="wa-icon" /><span>{{
+                                    contact.whatsapp
+                                    }}</span>
+                            </div>
+                        </a>
                     </button>
                 </div>
 
@@ -270,9 +287,37 @@
 
             <div>
                 <h3>CONTACT US</h3>
-                <p>+91 8888869198</p>
-                <p>support&#64;maharashtratransport.com</p>
-                <p>123, RTO Road, Sector 12</p>
+                <a class="contact-item" target="_blank" rel="noopener noreferrer"
+                    [href]="'https://wa.me/' + contact.whatsapp + '?text=' + encodedMessage">
+                    <div class="wa-row">
+                        <img src="assets/icons/32px-WhatsApp.svg.png" class="wa-icon" /><span>{{
+                            contact.whatsapp
+                            }}</span>
+                    </div>
+                </a>
+
+                <a class="contact-item"
+                    [href]="'mailto:' + contact.email + '?subject=Regarding Your Profile&body=Hi Faruk,%0D%0A%0D%0AI would like to connect with you regarding...%0D%0A%0D%0AThanks,'">
+                    ✉️ {{ contact.email }}
+                </a>
+                <div class="contact-links">
+                    <!-- Location -->
+                    <a class="contact-item" target="_blank" rel="noopener noreferrer"
+                        [href]="'https://www.google.com/maps/search/?api=1&query=' + contact.location">
+                        📍{{ contact.address }}
+                    </a>
+                </div>
+                <div class="contact-links">
+                    <!-- Delivery truck -->
+                    <a class="contact-item" target="_blank" rel="noopener noreferrer"
+                        [href]="'https://www.google.com/maps/search/?api=1&query=' + contact.location">
+                        <i class="fas fa-truck"></i>
+                    </a>
+                    {{ contact.courior }}
+                </div>
+
+
+                <p></p>
             </div>
 
         </div>
