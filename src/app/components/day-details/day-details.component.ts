@@ -292,9 +292,9 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       }),
       catchError((error) => {
         this.showError("Some issue is in Add the data.");
+        this.renderer.selectRootElement(this.btnCloseDayPopup?.nativeElement).click();
         this.isSaving = false;
         this.loaderService.hideLoader();
-        this.closePopup();
         return of(null);
       })
     ).subscribe());
@@ -312,9 +312,9 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
       }),
       catchError((error) => {
         this.showError("Some issue is in Update the data.");
+        this.renderer.selectRootElement(this.btnCloseDayPopup?.nativeElement).click();
         this.isSaving = false;
         this.loaderService.hideLoader();
-        this.closePopup();
         return of(null);
       })
     ).subscribe());

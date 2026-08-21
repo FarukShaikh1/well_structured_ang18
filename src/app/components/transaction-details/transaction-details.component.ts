@@ -566,11 +566,11 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         },
         error: (error: any) => {
           this.isSaving = false;
+          this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
           this.toaster.showMessage(
             error?.message, "error"
           );
           this.loaderService.hideLoader();
-          this.closePopup();
           return of(null);
         }
       })
@@ -593,11 +593,11 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         },
         error: (error: any) => {
           this.isSaving = false;
+          this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
           this.toaster.showMessage(
             error?.message, "error"
           );
           this.loaderService.hideLoader();
-          this.closePopup();
           return of(null);
         }
       });
