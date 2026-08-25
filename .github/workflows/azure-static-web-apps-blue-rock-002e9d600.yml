@@ -46,10 +46,10 @@ jobs:
       
           api_location: ""
       
-          #output_location: "dist/rto-services/browser"
+          #output_location: "dist/fmscollection/browser"
       
          # skip_app_build: true  # 🚀 Prevent Azure from re-running npm install/build
           
-          app_location: "dist/rto-services/browser"
+          app_location: "dist/fmscollection/browser"
           output_location: ""
           skip_app_build: true
