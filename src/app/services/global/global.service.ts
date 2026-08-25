@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable, of, Subject } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { catchError, map, tap } from "rxjs/operators";
 import { CellComponent } from "tabulator-tables";
 import { API_URL } from "../../../utils/api-url";
 import { DBConstants, DdlConfig, LocalStorageConstants, NavigationURLs, UserConfig } from "../../../utils/application-constants";
@@ -85,6 +85,27 @@ export class GlobalService {
         return of(false);
       })
     );
+
+
+    // return this.roleService.getPermission("").pipe(
+    //   map((result) => {
+    //     debugger;
+    //     if (result.success) {
+    //       this.localStorageService.setUserPermission(result.data);
+    //       if (result.data.length > 0) {
+    //         const user = this.localStorageService.getLoggedInUserData();
+    //         // user.role = result.roleName;
+    //         localStorage.setItem("user", JSON.stringify(user));
+    //         return true;
+    //       }
+    //     }
+    //     return false;
+    //   }),
+    //   catchError((error: any) => {
+    //     console.error("Error fetching role data", error?.message);
+    //     return of(false);
+    //   })
+    // );
   }
 
   getCurrentRoute(): string {

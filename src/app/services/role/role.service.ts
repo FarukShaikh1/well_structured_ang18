@@ -17,6 +17,7 @@ export class RoleService {
   }
 
   getPermission(userId: string): Observable<any> {
+    debugger;
     if (userId == "") {
       const userString = localStorage.getItem(LocalStorageConstants.USER);
       let user = null;

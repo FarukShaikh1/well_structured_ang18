@@ -81,27 +81,41 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.setLoginDisplay();
     this.alreadyLoggedIn = this.localStorageService.isAuthenticated();
     this.loggedInUserName = this.getLoggedInUserName();
     this.userNameInitials = this.getUserNameInitials();
     this.thumbnailUrl = this.localStorageService.getLoggedInUserData()?.thumbnailPathSasUrl || '';
     this.ImageUrl = this.localStorageService.getLoggedInUserData()?.imagePathSasUrl || '';
-    this.getModuleList();
+    await this.getModuleList();
   }
 
   getModuleList() {
-    this.globalService.getUserPermissionData();
+    debugger;
     this.moduleList = this.localStorageService.getLoggedInUserPermissions();
-    this.moduleList = this.moduleList.filter((module: any) => {
-      if (module.moduleName === RoutePathTitles.EXPENSES) {
-        // For Expenses: view must be true AND add must be true
-        return module.view === true && module.add === true;
-      }
-      // For all others: only view must be true
-      return module.view === true;
-    });
+    if (this.moduleList?.length == 0) {
+      this.globalService.getUserPermissionData().subscribe({
+        next: (result) => {
+          console.log("Permission result:", result);
+          this.moduleList = this.localStorageService.getLoggedInUserPermissions();
+          this.moduleList = this.moduleList.filter((module: any) => {
+            if (module.moduleName === RoutePathTitles.EXPENSES) {
+              // For Expenses: view AND add both must be true
+              return module.view === true && module.add === true;
+            }
+            // For all others: only view must be true
+            return module.view === true;
+          });
+        },
+        error: (error) => {
+          console.error("Permission error:", error);
+        },
+        complete: () => {
+          console.log("Permission request completed");
+        }
+      });
+    }
   }
 
   isActiveMenu(route: string): boolean {
@@ -109,6 +123,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.router.url.includes(route);
   }
   navigate(route: string) {
+    console.log('route clicked : ', route);
+
     this.router.navigate([route]);
   }
 

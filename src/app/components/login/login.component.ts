@@ -51,8 +51,8 @@ export class LoginComponent implements OnDestroy {
     private localStorageService: LocalStorageService
   ) {
     this.loginForm = this.fb.group({
-      userName: "",
-      password: "Faruk",
+      userName: "farukshaikh908@gmail.com",
+      password: "Faruk@07011",
     });
   }
   parameters = "";
@@ -92,6 +92,7 @@ export class LoginComponent implements OnDestroy {
             this.data?.userName != null &&
             this.data?.userName?.length > 0
           ) {
+
             localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
             localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
             if (this.data.isOtpRequired) {
