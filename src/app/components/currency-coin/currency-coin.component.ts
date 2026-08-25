@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
 import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, CollectionTabs, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
@@ -24,7 +24,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
   styleUrls: ['./currency-coin.component.scss']
 })
 
-export class CurrencyCoinComponent implements OnInit {
+export class CurrencyCoinComponent implements OnInit,OnDestroy {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   selectedCountry: string[] = [];
   selectedType: string[] = [];
@@ -654,6 +654,10 @@ export class CurrencyCoinComponent implements OnInit {
   }
   redirectToOwnersProfile() {
     window.open(NavigationURLs.OWNER_PROFILE, '_blank');
+  }
+
+  ngOnDestroy(){
+    this.loaderService.hideLoader();
   }
 }
 

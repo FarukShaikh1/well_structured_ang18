@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ApplicationRoles, LocalStorageConstants, NavigationURLs, OtpConfig } from "../../../utils/application-constants";
@@ -19,7 +19,7 @@ import { ToasterComponent } from "../shared/toaster/toaster.component";
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
 
   accountList: any;
@@ -138,6 +138,10 @@ export class LoginComponent {
 
   navigate(route: string) {
     this.router.navigate([route]);
+  }
+  
+  ngOnDestroy(){
+    this.loaderService.hideLoader();
   }
 
 }

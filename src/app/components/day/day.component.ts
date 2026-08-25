@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from "@angular/common";
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CellComponent, ColumnDefinition } from "tabulator-tables";
 import {
@@ -37,7 +37,7 @@ export interface Task {
   imports: [TabulatorGridComponent, FormsModule, CommonModule, DayDetailsComponent, ConfirmationDialogComponent, ToasterComponent],
   providers: [DatePipe],
 })
-export class DayComponent implements OnInit {
+export class DayComponent implements OnInit , OnDestroy{
   @ViewChild("searchInput") searchInput!: ElementRef;
   @ViewChild("typeInput", { static: true }) typeInput: any;
   @ViewChild("monthInput", { static: true }) monthInput: any;
@@ -564,5 +564,7 @@ export class DayComponent implements OnInit {
       );
     });
   }
-
+  ngOnDestroy(){
+    this.loaderService.hideLoader();
+  }
 }
