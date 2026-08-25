@@ -82,7 +82,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    debugger;
     this.setLoginDisplay();
     this.alreadyLoggedIn = this.localStorageService.isAuthenticated();
     this.loggedInUserName = this.getLoggedInUserName();
