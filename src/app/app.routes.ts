@@ -13,27 +13,9 @@ import { SiteUnderDevelopmentComponent } from "./components/shared/site-under-de
 import { TransactionComponent } from "./components/transaction/transaction.component";
 import { authGuard } from "./guards/auth.guard";
 import { publicGuard } from "./guards/public.guard";
-import { RtoHomepageComponent } from "./components/rto/rto-homepage/rto-homepage.component";
-import { RtoOwnerComponent } from "./components/rto/rto-owner/rto-owner.component";
 export const routes: Routes = [
-  {
-    path: "", 
-    pathMatch: "full",
-    component: RtoHomepageComponent,
-    title: "Tanveer Daula RTO agent"
-  },
-  {
-    path: "rto-home", 
-    pathMatch: "full",
-    component: RtoHomepageComponent,
-    title: "Tanveer Daula RTO agent"
-  },
-    {
-    path: "rto-owner", 
-    pathMatch: "full",
-    component: RtoOwnerComponent,
-    title: "Tanveer Daula RTO agent"
-  },
+
+  { path: "", redirectTo: "home", pathMatch: "full" },
   { path: "home", redirectTo: "home", pathMatch: "full" },
   {
     path: RoutePath.HOME,
@@ -55,6 +37,7 @@ export const routes: Routes = [
             (m) => m.FamilyGraphComponent
           ),
       },
+      { path: "**", redirectTo: RoutePath.CURRENCY_LIST, pathMatch: "full" },
     ],
   },
   {
@@ -219,6 +202,5 @@ export const routes: Routes = [
         (m) => m.SignUpComponent
       ),
   },
-
   { path: "**", redirectTo: RoutePath.EXPENSES },
 ];
