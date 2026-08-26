@@ -5,12 +5,12 @@
 <!-- Floating Toggle Button -->
 
 @if(showThemeButton){
-<button class="floating-btn" (click)="toggleTheme()" aria-label="Close"
+<button class="floating-btn print-hide" (click)="toggleTheme()" aria-label="Close"
   [title]="!isDarkMode ? 'Switch to Dark Mode' : 'Switch to Light Mode'">
   {{!isDarkMode ? '🌙' : '☀️'}}
 </button>
 <!-- Close (X) Button -->
-<button class="floating-close-btn" (click)="hideThemeButton()" title="Hide Theme Button">
+<button class="floating-close-btn print-hide" (click)="hideThemeButton()" title="Hide Theme Button">
   ✕
 </button>
 }

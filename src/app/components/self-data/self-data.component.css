@@ -1,0 +1,62 @@
+.print-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.print-hidden {
+  display: none !important;
+}
+
+.print-btn {
+  cursor: pointer;
+}
+
+
+/* ================================
+   PRINT
+   ================================ */
+
+@media print {
+
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show selected section */
+  .print-selected,
+  .print-selected * {
+    visibility: visible;
+  }
+
+  
+  /* Position selected section at the top-left */
+  .print-selected {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide print button */
+  .print-toolbar {
+    display: none !important;
+  }
+
+  /* Remove bootstrap column restrictions */
+  .print-selected.col-lg-6,
+  .print-selected.col-lg-12 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none !important;
+  }
+
+  /* Better printing */
+  .print-selected {
+    background: white !important;
+    color: black !important;
+  }
+}

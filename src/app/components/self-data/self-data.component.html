@@ -1,11 +1,59 @@
 <div class="row">
-    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-        <app-routine></app-routine>
+
+  <!-- Routine -->
+  <div
+    class="col-12 col-sm-12 col-md-12 col-lg-6 print-section"
+    [class.print-selected]="selectedPrintSection == 'routine'"
+    [class.print-hidden]="selectedPrintSection != null && selectedPrintSection != 'routine'"
+  >
+    <div class="print-toolbar">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="printSection('routine')">
+        🖨️ Print Routine
+      </button>
     </div>
-    <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-        <app-budget></app-budget>
+
+    <app-routine></app-routine>
+  </div>
+
+
+  <!-- Budget -->
+  <div
+    class="col-12 col-sm-12 col-md-12 col-lg-6 print-section"
+    [class.print-selected]="selectedPrintSection == 'budget'"
+    [class.print-hidden]="selectedPrintSection != null && selectedPrintSection != 'budget'"
+  >
+    <div class="print-toolbar">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="printSection('budget')">
+        🖨️ Print Budget
+      </button>
     </div>
-    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-3">
-        <app-credentials></app-credentials>
+
+    <app-budget></app-budget>
+  </div>
+
+
+  <!-- Credentials -->
+  <div
+    class="col-12 col-sm-12 col-md-12 col-lg-12 mt-3 print-section"
+    [class.print-selected]="selectedPrintSection == 'credentials'"
+    [class.print-hidden]="selectedPrintSection != null && selectedPrintSection != 'credentials'"
+  >
+    <div class="print-toolbar">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="printSection('credentials')">
+        🖨️ Print Credentials
+      </button>
     </div>
+
+    <app-credentials></app-credentials>
+  </div>
+
 </div>

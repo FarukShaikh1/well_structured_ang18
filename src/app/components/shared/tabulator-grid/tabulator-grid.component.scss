@@ -1,0 +1,33 @@
+.grid-actions {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.grid-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  min-width: 90px;
+  height: 36px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  border-radius: 6px;
+
+  transition: all 0.2s ease;
+}
+
+.grid-action-btn i {
+  font-size: 16px;
+}
+
+.grid-action-btn:hover {
+  transform: translateY(-1px);
+}

@@ -25,7 +25,8 @@ export class SettingsComponent {
   @ViewChild(ConfigurationDetailsComponent) configDetailsComponent!: ConfigurationDetailsComponent;
   @ViewChild('searchInput') searchInput!: ElementRef;
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = false;
+  public allowCSVExport = true;
+  public allowPrint = true;
   public filterColumns: ColumnDefinition[] = [];
   searchText: string = '';
   noDataMessage = UIStrings.COMMON.NO_DATA;

@@ -1771,3 +1771,69 @@ img{
   object-fit: cover;
   border-radius: 4px;
 }
+
+@media print {
+  .print-hide {
+    display: none !important;
+  }
+
+   .print-only {
+    display: block !important;
+  }
+
+   /* For table cells */
+  td.print-only,
+  th.print-only {
+    display: table-cell !important;
+  }
+  
+  /* Make the printable table fit the page */
+  table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+  }
+
+  th,
+  td {
+    padding: 6px !important;
+    font-size: 11px !important;
+    word-wrap: break-word !important;
+    overflow-wrap: anywhere !important;
+    white-space: normal !important;
+  }
+
+  /* Prevent inputs from making the table wider */
+  table input,
+  table .form-control {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Hide the second/add-new table completely */
+  table.print-hide {
+    display: none !important;
+  }
+
+  /* Don't allow the credentials table to break horizontally */
+  .table-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Remove horizontal scrolling during print */
+  body {
+    overflow: visible !important;
+  }
+}
+th {
+  text-align: center;
+  vertical-align: middle;
+}
+.print-only {
+  display: none !important;
+}
+

@@ -19,7 +19,7 @@ import { LoaderService } from "../../services/loader/loader.service";
 import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 import { DayDetailsComponent } from "../day-details/day-details.component";
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
-import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
+import { PrintColumnDefinition, TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { AssetService } from "../../services/asset/asset.service";
 
@@ -37,7 +37,7 @@ export interface Task {
   imports: [TabulatorGridComponent, FormsModule, CommonModule, DayDetailsComponent, ConfirmationDialogComponent, ToasterComponent],
   providers: [DatePipe],
 })
-export class DayComponent implements OnInit , OnDestroy{
+export class DayComponent implements OnInit, OnDestroy {
   @ViewChild("searchInput") searchInput!: ElementRef;
   @ViewChild("typeInput", { static: true }) typeInput: any;
   @ViewChild("monthInput", { static: true }) monthInput: any;
@@ -50,10 +50,11 @@ export class DayComponent implements OnInit , OnDestroy{
 
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
-  public columnConfig: ColumnDefinition[] = [];
+  public columnConfig: PrintColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = false;
-  public filterColumns: ColumnDefinition[] = [];
+  public allowCSVExport = true;
+  public allowPrint = true;
+  public filterColumns: PrintColumnDefinition[] = [];
   private cacheKey = NavigationURLs.DAY_LIST;
   isGridLoading: boolean = false;
   ActionConstant = ActionConstant;
@@ -182,6 +183,7 @@ export class DayComponent implements OnInit , OnDestroy{
         minWidth: 60,
         maxWidth: 100,
         formatter: this.dateFormatter.bind(this),
+        printWidth: '10%'
       },
       {
         title: "Person Name",
@@ -196,35 +198,41 @@ export class DayComponent implements OnInit , OnDestroy{
         field: "personName",
         sorter: "string",
         minWidth: 150,
+        printWidth: '10%'
       },
       {
         title: "Relation",
         field: "relationName",
         minWidth: 120,
+        printWidth: '10%'
       },
       {
         title: "Email Id",
         field: "emailId",
         sorter: "alphanum",
         minWidth: 200,
+        printWidth: '10%'
       },
       {
         title: "Mobile Number",
         field: "mobileNumber",
         sorter: "alphanum",
         minWidth: 120,
+        printWidth: '10%'
       },
       {
         title: "Address",
         field: "address",
         sorter: "alphanum",
         minWidth: 200,
+        printWidth: '20%'
       },
       {
         title: "Day Type",
         field: "dayType",
         sorter: "alphanum",
         minWidth: 120,
+        printWidth: '10%'
       },
       {
         title: "Pic",
@@ -236,6 +244,7 @@ export class DayComponent implements OnInit , OnDestroy{
         },
         minWidth: 70,
         maxWidth: 100,
+        print: false
       },
       {
         title: "",
@@ -249,6 +258,7 @@ export class DayComponent implements OnInit , OnDestroy{
         },
         hozAlign: "center",
         headerSort: false,
+        print: false
       },
     ];
     if (
@@ -263,6 +273,7 @@ export class DayComponent implements OnInit , OnDestroy{
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
+        print: false
       });
     }
   }
@@ -564,7 +575,7 @@ export class DayComponent implements OnInit , OnDestroy{
       );
     });
   }
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.loaderService.hideLoader();
   }
 }

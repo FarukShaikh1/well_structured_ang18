@@ -1,13 +1,13 @@
 <div class="table-container mt-2">
     <h2>Budget Management</h2>
-    <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg mb-2">
-    <table border="1" width="100%" style="border-collapse: collapse;">
+    <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg mb-2 print-hide">
+    <table border="0" width="100%" style="border-collapse: collapse;">
         <tr>
             <th>Pay To</th>
             <th>Purpose</th>
             <th>Category</th>
             <th>Amount (₹)</th>
-            <th>Action</th>
+            <th class="print-hide">Action</th>
         </tr>
         <tr *ngFor="let b of filteredBudgets">
             <td>
@@ -54,7 +54,7 @@
                 {{ b.amount }}
                 }
             </td>
-            <td class="d-flex gap-2 justify-content-center">
+            <td class="d-flex gap-2 justify-content-center print-hide">
                 @if(selectedId === b.id && isEdit){
                 <button (click)="save()">
                     💾{{ isEdit ? '' : '' }}
@@ -69,11 +69,11 @@
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td class="amount"><strong>{{ getTotal() }}</strong></td>
-            <td></td>
+            <td class="print-hide"></td>
         </tr>
     </table>
     <br>
-    <table>
+    <table class="print-hide">
         <tr>
             <td>
                 <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo"
@@ -110,4 +110,4 @@
         </tr>
     </table>
 </div>
-<app-toaster></app-toaster>
+<app-toaster class="print-hide"></app-toaster>

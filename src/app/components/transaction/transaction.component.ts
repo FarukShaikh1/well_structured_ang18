@@ -68,7 +68,8 @@ export class TransactionComponent implements OnInit {
   public filteredTableData: Record<string, unknown>[] = [];
   public columnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = false;
+  public allowCSVExport = true;
+  public allowPrint = true;
   public filterColumns: ColumnDefinition[] = [];
 
   lastTransactionDate: Date = new Date();

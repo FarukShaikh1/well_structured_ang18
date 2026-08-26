@@ -1,6 +1,45 @@
 <div class="table-container" [class.loading-disabled]="isLoading">
-  <div class="row">
-    <div class="col-12 tabulator-grid-wrapper" #tabulatorGridWrapper id="tabulator-grid-wrapper"></div>
+
+  <!-- Grid Actions -->
+  <div class="grid-actions" *ngIf="allowCSVExport || allowPrint">
+
+    <button
+      *ngIf="allowCSVExport"
+      type="button"
+      class="btn btn-outline-success grid-action-btn"
+      (click)="exportTableData()"
+      title="Export to Excel">
+      <i class="bi bi-file-earmark-excel"></i>
+      <span>Excel</span>
+    </button>
+
+    <button
+      *ngIf="allowPrint"
+      type="button"
+      class="btn btn-outline-danger grid-action-btn"
+      (click)="printGrid()"
+      title="Print / Save as PDF">
+      <i class="bi bi-file-earmark-pdf"></i>
+      <span>PDF</span>
+    </button>
+
   </div>
-  <app-grid-loader [isLoading]="isLoading" [loadingText]="loadingText"></app-grid-loader>
+
+
+  <!-- Tabulator Grid -->
+  <div class="row">
+    <div
+      class="col-12 tabulator-grid-wrapper"
+      #tabulatorGridWrapper
+      id="tabulator-grid-wrapper">
+    </div>
+  </div>
+
+
+  <!-- Loader -->
+  <app-grid-loader
+    [isLoading]="isLoading"
+    [loadingText]="loadingText">
+  </app-grid-loader>
+
 </div>

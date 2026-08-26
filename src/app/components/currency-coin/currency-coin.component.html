@@ -113,7 +113,7 @@
   <div class="row pb-2" *ngIf="viewMode === 'grid'">
     <div class="mb-2">
       <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport">
+        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint">
       </app-tabulator-grid>
     </div>
   </div>
@@ -123,7 +123,7 @@
     <div class="mb-2">
       <app-tabulator-grid [tableData]="filteredSummaryTableData" [columnConfig]="summaryTableColumnConfig"
         [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="summaryTableColumnConfig"
-        [allowCSVExport]="allowCSVExport">
+        [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint">
       </app-tabulator-grid>
     </div>
   </div>

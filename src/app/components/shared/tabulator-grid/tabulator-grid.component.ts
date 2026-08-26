@@ -31,17 +31,19 @@ import { GridLoaderComponent } from "../grid-loader/grid-loader.component";
   imports: [ReactiveFormsModule, CommonModule, GridLoaderComponent],
   standalone: true,
 })
+
 export class TabulatorGridComponent implements OnChanges, OnDestroy {
   @ViewChild("tabulatorGridWrapper", { static: true })
   wrapperDiv!: ElementRef<HTMLDivElement>;
 
   @Input() tableData: Record<string, unknown>[] | undefined;
-  @Input() columnConfig: ColumnDefinition[] | undefined;
+  @Input() columnConfig: PrintColumnDefinition[] = [];
   @Input() dateFormat = "";
-  @Input() height = ""; 
-  @Input() paginationSize = 10; 
+  @Input() height = "";
+  @Input() paginationSize = 10;
   @Input() filterColumns!: ColumnDefinition[] | [];
   @Input() allowCSVExport!: boolean;
+  @Input() allowPrint!: boolean;
   @Input() noDataMessage = "No Data";
   @Input() noMatchingDataMessage = "No Matching Data";
   @Input() isLoading: boolean = false;
@@ -49,29 +51,29 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
   public filterForm!: FormGroup;
 
-  
+
   @Output() buildingTable = new EventEmitter<void>();
   @Output() builtTable = new EventEmitter<void>();
   @Output() loadingData = new EventEmitter<Record<string, unknown>[]>();
   @Output() loadedData = new EventEmitter<Record<string, unknown>[]>();
   @Output() cellChanged = new EventEmitter<CellComponent>();
 
-  
-  private tableDiv = document.createElement("div"); 
-  private myTable?: TabulatorFull; 
+
+  private tableDiv = document.createElement("div");
+  private myTable?: TabulatorFull;
   private gridClosing = false;
   isTableBuilt = false;
 
   constructor() {
-    
+
     this.dateFormat = this.dateFormat || "DD MMM YYYY";
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    
-    
+
+
     if (changes["filterColumns"]) {
-      this.createFilterForm(); 
+      this.createFilterForm();
     }
     this.drawTable(changes);
   }
@@ -83,7 +85,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  
+
   private createFilterForm(): void {
     this.filterForm = new FormGroup({
       column: new FormControl(
@@ -103,7 +105,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   }
 
   private isTableInitialized(): boolean {
-    return !!this.myTable && !!this.myTable.element; 
+    return !!this.myTable && !!this.myTable.element;
   }
 
   applyFilter(): void {
@@ -122,7 +124,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  
+
   clearFilter(): void {
     this.filterForm.reset({ column: "", type: "like", value: "" });
     this.myTable?.clearFilter(true);
@@ -134,9 +136,9 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     }
 
     if (!this.myTable) {
-      
+
       this.myTable = new TabulatorFull(this.tableDiv, {
-        
+
         data: this.tableData || [],
         reactiveData: true,
         columns: this.columnConfig,
@@ -145,15 +147,15 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         height: "530",
         maxHeight: "100%",
 
-        pagination: true, 
+        pagination: true,
         paginationMode: "local",
-        paginationSize: this.paginationSize, 
-        
+        paginationSize: this.paginationSize,
+
         paginationSizeSelector: [2, 5, 10, 20, 50, 100, 500, true],
         paginationButtonCount: 4,
 
-        
-        
+
+
         paginationCounter: function (
           pageSize,
           currentRow,
@@ -164,17 +166,17 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
           if (totalRows === 0) {
             return "No records available";
           }
-          const startRow = currentRow; 
-          const endRow = Math.min(currentRow + pageSize - 1, totalRows); 
+          const startRow = currentRow;
+          const endRow = Math.min(currentRow + pageSize - 1, totalRows);
           return `Showing ${startRow}-${endRow} out of ${totalRows} record(s)`;
         },
 
-        movableColumns: true, 
+        movableColumns: true,
 
-        
+
         // selectableRange: 1, 
-        selectableRangeColumns: false, 
-        selectableRangeRows: false, 
+        selectableRangeColumns: false,
+        selectableRangeRows: false,
         selectableRangeClearCells: true,
 
         clipboardCopyStyled: false,
@@ -184,20 +186,20 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         },
 
         // selectableRangeMode: "click", 
-        clipboard: true, 
+        clipboard: true,
         clipboardCopyRowRange: "range",
-        
+
         columnDefaults: {
           headerHozAlign: "left",
           vertAlign: "middle",
           resizable: "header",
         },
-        
+
         resizableRows: false,
 
         placeholder: () => {
           if (!this.isTableInitialized() || !this.isTableBuilt) {
-            return this.noDataMessage; 
+            return this.noDataMessage;
           }
           const filtersExist = this.myTable!.getFilters(true).length > 0;
           return filtersExist ? this.noMatchingDataMessage : this.noDataMessage;
@@ -206,8 +208,8 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
       this.myTable.on("tableBuilt", () => {
         this.isTableBuilt = true;
-        this.tableBuilt(); 
-        this.updatePaginationVisibility(); 
+        this.tableBuilt();
+        this.updatePaginationVisibility();
       });
 
       this.wrapperDiv.nativeElement.appendChild(this.tableDiv);
@@ -218,7 +220,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
       }
       if (changes["tableData"]) {
         this.myTable.setData(this.tableData).then(() => {
-          this.updatePaginationVisibility(); 
+          this.updatePaginationVisibility();
         });
       }
     }
@@ -237,22 +239,194 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     }
   }
 
+  private formatPrintValue(value: any): string {
+    if (value === null || value === undefined) {
+      return '';
+    }
+
+    if (typeof value === 'boolean') {
+      return value ? 'Yes' : 'No';
+    }
+
+    if (value instanceof Date) {
+      return value.toLocaleDateString();
+    }
+
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
   exportTableData() {
     this.myTable?.download("csv", "table-data.csv");
   }
 
-  
+  printGrid(): void {
+    if (!this.tableData || this.tableData.length === 0) {
+      return;
+    }
+
+    const printableColumns = this.columnConfig?.filter(
+      (column: any) => column.print !== false
+    ) ?? [];
+
+    if (printableColumns.length === 0) {
+      return;
+    }
+
+    const printWindow = window.open('', '_blank', 'width=1200,height=800');
+
+    if (!printWindow) {
+      return;
+    }
+
+    // ============================
+    // Generate table headers
+    // ============================
+
+    const headers = printableColumns
+      .map((column: any) => {
+        const width = column.printWidth ?? 'auto';
+
+        return `
+        <th style="width: ${width};">
+          ${column.title ?? ''}
+        </th>
+      `;
+      })
+      .join('');
+
+
+    // ============================
+    // Generate table rows
+    // ============================
+
+    const rows = this.tableData
+      .map((row: any) => {
+
+        const cells = printableColumns
+          .map((column: any) => {
+
+            const value = row[column.field];
+
+            const width = column.printWidth ?? 'auto';
+
+            return `
+            <td style="width: ${width};">
+              ${this.formatPrintValue(value)}
+            </td>
+          `;
+          })
+          .join('');
+
+        return `<tr>${cells}</tr>`;
+      })
+      .join('');
+
+
+    // ============================
+    // Print document
+    // ============================
+
+    printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Print Report</title>
+        <style>
+          @page {
+           size: A4 landscape;
+            margin: 10mm;
+          }
+          * {
+            box-sizing: border-box;
+          }
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            color: #000;
+            background: #fff;
+          }
+          h2 {
+            text-align: center;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+          }
+          table {
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            /*
+             * IMPORTANT
+             * This makes printWidth work correctly.
+             */
+            table-layout: fixed;
+          }
+          th,
+          td {
+            border: 1px solid #000;
+            padding: 6px 8px;
+            font-size: 11px;
+            text-align: left;
+            vertical-align: middle;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            overflow: hidden;
+         }
+          th {
+            text-align: center;
+            font-weight: bold;
+            background: #f2f2f2;
+          }
+          tr {
+            page-break-inside: avoid;
+          }
+
+          thead {
+            display: table-header-group;
+          }
+
+          tbody {
+            display: table-row-group;
+          }
+        </style>
+      </head>
+     <body>
+        <h2>Report</h2>
+        <table>
+          <thead>
+            <tr>
+              ${headers}
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 300);
+  }
   public applySearch(searchText: string): void {
     this.myTable?.setFilter((row) => {
-      
+
       const rowData = row.getData ? row.getData() : row;
 
-      
+
       const actualValues = Object.entries(rowData)
-        .filter(([_key, value]) => typeof value !== "function") 
+        .filter(([_key, value]) => typeof value !== "function")
         .map(([_key, value]) => value);
 
-      
+
       return actualValues.some((val) =>
         String(val).toLowerCase().includes(searchText.toLowerCase())
       );
@@ -268,8 +442,8 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     );
   }
 
-  
-  
+
+
   private tableBuilding() {
     this.buildingTable.emit();
   }
@@ -277,48 +451,48 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     this.builtTable.emit();
   }
   private cellEdited(cell: CellComponent) {
-    
+
     this.cellChanged.emit(cell);
   }
   private dataLoading(data: Record<string, unknown>[]) {
-    
+
     this.loadingData.emit(data);
   }
   private dataLoaded(data: Record<string, unknown>[]) {
-    
+
     this.loadedData.emit(data);
   }
 
-  
-  
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
-  
-  
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   get columnControl(): FormControl {
     return this.filterForm.get("column") as FormControl;
@@ -331,4 +505,8 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   get valueControl(): FormControl {
     return this.filterForm.get("value") as FormControl;
   }
+}
+
+export interface PrintColumnDefinition extends ColumnDefinition {
+  printWidth?: string;
 }

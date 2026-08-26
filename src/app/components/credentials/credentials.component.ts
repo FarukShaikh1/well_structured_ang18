@@ -43,7 +43,9 @@ export class CredentialsComponent {
   ngOnInit(): void {
     this.loadCredentials();
   }
-
+  toggleAllPassword() {
+    this.hidePassword = !this.hidePassword;
+  }
 
   loadCredentials() {
     this.credentialService.getCredentialByUser()

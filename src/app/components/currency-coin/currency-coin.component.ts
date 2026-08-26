@@ -53,7 +53,8 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
   public filteredSummaryTableData: Record<string, unknown>[] = [];
   public summaryTableColumnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = false;
+  public allowCSVExport = true;
+  public allowPrint = true;
   public filterColumns: ColumnDefinition[] = [];
   public viewMode: 'grid' | 'gallery' | 'summary' | 'news' = 'gallery';
   loading = false;

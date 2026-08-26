@@ -12,4 +12,25 @@ import { CredentialsComponent } from '../credentials/credentials.component';
 })
 export class SelfDataComponent {
 
+  selectedPrintSection: string | null = null;
+
+  constructor() {
+    window.addEventListener('afterprint', () => {
+      this.onAfterPrint();
+    });
+  }
+
+  printSection(section: string): void {
+    debugger;
+    this.selectedPrintSection = section;
+
+    // Allow Angular to apply the class before printing
+    setTimeout(() => {
+      window.print();
+    });
+  }
+
+  onAfterPrint(): void {
+    this.selectedPrintSection = null;
+  }
 }

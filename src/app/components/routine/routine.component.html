@@ -1,17 +1,17 @@
 <div class="table-container mt-2">
     <h2>Routine Management</h2>
-    <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg mb-2">
-    <table border="1" width="100%" style="border-collapse: collapse;">
+    <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg mb-2 print-hide">
+    <table  style="border-collapse: collapse;">
         <tr>
             <th>From</th>
             <th>To</th>
             <th>Task</th>
             <th>Duration</th>
-            <th>Action</th>
+            <th class="print-hide">Action</th>
         </tr>
 
         <tr *ngFor="let r of filteredRoutines">
-            <td>
+            <td class="text-center">
                 @if(selectedId === r.id && isEdit){
                 <input type="time" [(ngModel)]="r.fromTime">
                 }
@@ -19,7 +19,7 @@
                 {{ dateUtils.amPmFormat(r.fromTime)}}
                 }
             </td>
-            <td>
+            <td class="text-center">
                 @if(selectedId === r.id && isEdit){
                 <input type="time" [(ngModel)]="r.toTime">
                 }
@@ -35,8 +35,8 @@
                 {{ r.task }}
                 }
             </td>
-            <td>{{ calculateDuration(r.fromTime, r.toTime) }}</td>
-            <td class="d-flex gap-2 justify-content-center">
+            <td class="text-center">{{ calculateDuration(r.fromTime, r.toTime) }}</td>
+            <td class="d-flex gap-2 justify-content-center print-hide">
                 @if(selectedId === r.id && isEdit){
                 <button (click)="save(r)">💾</button>
                 <button class="reset" (click)="reset()"><i class="bi bi-reset"></i>Reset</button>
@@ -48,15 +48,15 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3"><strong>Total</strong></td>
-            <td><strong>{{ getTotal() }}</strong></td>
-            <td></td>
+            <td colspan="3" ><strong>Total</strong></td>
+            <td class="text-center"><strong>{{ getTotal() }}</strong></td>
+            <td class="print-hide"></td>
         </tr>
 
     </table>
 
     <br>
-    <table>
+    <table class="print-hide">
         <tr>
             <td>
                 <input type="time" placeholder="From Time" [(ngModel)]="model.fromTime"

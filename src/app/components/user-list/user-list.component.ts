@@ -41,7 +41,8 @@ export class UserListComponent implements OnInit {
   public tableData: Record<string, unknown>[] = [];
   public columnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = false;
+  public allowCSVExport = true;
+  public allowPrint = true;
   public filterColumns: ColumnDefinition[] = [];
   searchText: string = '';
   noDataMessage = 'No Data Exists.';
