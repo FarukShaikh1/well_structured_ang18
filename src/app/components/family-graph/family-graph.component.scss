@@ -39,7 +39,8 @@
 // ── Graph container ───────────────────────────────────────────────────────────
 .graph-wrapper {
   position: relative;
-  height: 600px;
+  height: calc(100vh - 200px);
+  min-height: 400px;
   background: #f8f9fa;
   overflow: hidden;
 }
