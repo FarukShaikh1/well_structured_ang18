@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { BudgetComponent } from '../budget/budget.component';
 import { RoutineComponent } from '../routine/routine.component';
 import { CredentialsComponent } from '../credentials/credentials.component';
+import { DailyFoodPickerComponent } from '../daily-food-picker/daily-food-picker.component';
+import { FoodMenuComponent } from '../food-menu/food-menu.component';
 
 @Component({
   selector: 'app-self-data',
   standalone: true,
-  imports: [BudgetComponent, RoutineComponent, CredentialsComponent],
+  imports: [BudgetComponent, RoutineComponent, CredentialsComponent, FoodMenuComponent],
   templateUrl: './self-data.component.html',
   styleUrl: './self-data.component.css'
 })
@@ -21,7 +23,6 @@ export class SelfDataComponent {
   }
 
   printSection(section: string): void {
-    debugger;
     this.selectedPrintSection = section;
 
     // Allow Angular to apply the class before printing

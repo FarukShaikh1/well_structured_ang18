@@ -1830,6 +1830,86 @@ img{
   body {
     overflow: visible !important;
   }
+
+.print-5 {
+  width: 5% !important;
+}
+
+.print-10 {
+  width: 10% !important;
+}
+
+.print-15 {
+  width: 15% !important;
+}
+
+.print-20 {
+  width: 20% !important;
+}
+
+.print-25 {
+  width: 25% !important;
+}
+
+.print-30 {
+  width: 30% !important;
+}
+
+.print-35 {
+  width: 35% !important;
+}
+
+.print-40 {
+  width: 40% !important;
+}
+
+.print-45 {
+  width: 45% !important;
+}
+
+.print-50 {
+  width: 50% !important;
+}
+
+.print-55 {
+  width: 55% !important;
+}
+
+.print-60 {
+  width: 60% !important;
+}
+
+.print-65 {
+  width: 65% !important;
+}
+
+.print-70 {
+  width: 70% !important;
+}
+
+.print-75 {
+  width: 75% !important;
+}
+
+.print-80 {
+  width: 80% !important;
+}
+
+.print-85 {
+  width: 85% !important;
+}
+
+.print-90 {
+  width: 90% !important;
+}
+
+.print-95 {
+  width: 95% !important;
+}
+
+.print-100 {
+  width: 100% !important;
+}
 }
 th {
   text-align: center;

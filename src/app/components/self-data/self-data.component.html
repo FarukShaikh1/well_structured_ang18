@@ -18,6 +18,24 @@
     <app-routine></app-routine>
   </div>
 
+    <!-- Routine -->
+  <div
+    class="col-12 col-sm-12 col-md-12 col-lg-6 print-section"
+    [class.print-selected]="selectedPrintSection == 'food-menu'"
+    [class.print-hidden]="selectedPrintSection != null && selectedPrintSection != 'food-menu'"
+  >
+    <div class="print-toolbar">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="printSection('food-menu')">
+        🖨️ Print food-picker
+      </button>
+    </div>
+
+    <app-food-menu></app-food-menu>
+  </div>
+
 
   <!-- Budget -->
   <div

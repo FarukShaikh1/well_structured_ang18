@@ -3,10 +3,10 @@
     <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg mb-2 print-hide">
     <table border="0" width="100%" style="border-collapse: collapse;">
         <tr>
-            <th>Pay To</th>
-            <th>Purpose</th>
-            <th>Category</th>
-            <th>Amount (₹)</th>
+            <th class="print-20">Pay To</th>
+            <th class="print-20">Purpose</th>
+            <th class="print-20">Category</th>
+            <th class="print-10">Amount (₹)</th>
             <th class="print-hide">Action</th>
         </tr>
         <tr *ngFor="let b of filteredBudgets">

@@ -105,10 +105,23 @@ export const API_URL = {
   DELETE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential/`,
   UPDATE_CREDENTIAL: `${serverUrl}${apiPrefix}/credential`,
 
+   // =========================
+    // FAMILY GRAPH
+    // =========================
   FAMILY_SEARCH: `${serverUrl}${apiPrefix}/family/search`,
   FAMILY_GRAPH: `${serverUrl}${apiPrefix}/family`,          // /{personId}/graph
   FAMILY_PERSON_ADD: `${serverUrl}${apiPrefix}/family/person`,
   FAMILY_PERSON_UPDATE: `${serverUrl}${apiPrefix}/family/person`,
   FAMILY_RELATIONSHIP_ADD: `${serverUrl}${apiPrefix}/family/relationship`,
   FAMILY_RELATIONSHIP_DELETE: `${serverUrl}${apiPrefix}/family/relationship`,
+
+   // =========================
+    // FOOD MENU
+    // =========================
+
+    GET_FOOD_MENU_BY_USER: `${serverUrl}${apiPrefix}/FoodMenu`,
+    ADD_FOOD_MENU: `${serverUrl}${apiPrefix}/FoodMenu`,
+    UPDATE_FOOD_MENU: `${serverUrl}${apiPrefix}/FoodMenu`,
+    GET_FOOD_MENU_DETAILS: `${serverUrl}${apiPrefix}/FoodMenu/`,
+    DELETE_FOOD_MENU: `${serverUrl}${apiPrefix}/FoodMenu/`
 };

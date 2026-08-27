@@ -1,0 +1,53 @@
+<div class="food-picker-container">
+
+    <div class="header">
+        <div>
+            <h2>🍽️ Daily Food Planner</h2>
+            <p>{{ getToday() }}</p>
+        </div>
+
+        <button class="pick-all-btn" (click)="pickAllMeals()">
+            🎲 Pick Today's Food
+        </button>
+    </div>
+
+    <div class="meal-grid">
+
+        <div class="meal-card" *ngFor="let meal of meals">
+
+            <div class="meal-header">
+                <div>
+                    <span class="meal-icon">{{ meal.icon }}</span>
+                    <h3>{{ meal.title }}</h3>
+                </div>
+
+                <button
+                    class="pick-btn"
+                    (click)="pickMeal(meal)">
+                    🎲
+                </button>
+            </div>
+
+            <div class="food-result" *ngIf="meal.selected; else emptyFood">
+
+                <div class="food-name">
+                    {{ meal.selected.name }}
+                </div>
+
+                <span class="food-category">
+                    {{ meal.selected.category }}
+                </span>
+
+            </div>
+
+            <ng-template #emptyFood>
+                <div class="empty-result">
+                    Click 🎲 to decide what to cook
+                </div>
+            </ng-template>
+
+        </div>
+
+    </div>
+
+</div>

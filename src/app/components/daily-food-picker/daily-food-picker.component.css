@@ -1,0 +1,112 @@
+.food-picker-container {
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    margin: 0;
+}
+
+.header p {
+    margin: 5px 0 0;
+    opacity: 0.7;
+}
+
+.pick-all-btn,
+.pick-btn {
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 10px 16px;
+}
+
+.pick-all-btn {
+    font-size: 16px;
+}
+
+.meal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.meal-card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 18px;
+    background: #fff;
+    min-height: 150px;
+}
+
+.meal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.meal-header > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.meal-header h3 {
+    margin: 0;
+}
+
+.meal-icon {
+    font-size: 28px;
+}
+
+.pick-btn {
+    font-size: 20px;
+    padding: 8px 12px;
+}
+
+.food-result {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background: #f8f9fa;
+}
+
+.food-name {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.food-category {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+.empty-result {
+    margin-top: 25px;
+    text-align: center;
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .pick-all-btn {
+        width: 100%;
+    }
+
+    .meal-grid {
+        grid-template-columns: 1fr;
+    }
+}

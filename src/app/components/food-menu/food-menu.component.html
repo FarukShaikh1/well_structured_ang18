@@ -1,0 +1,481 @@
+<div class="table-container mt-2">
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+
+        <h2>Food Menu</h2>
+
+        <input
+            type="text"
+            placeholder="Search"
+            (keyup)="search($event)"
+            class="form-control form-control-lg print-hide"
+            style="max-width: 300px;">
+
+    </div>
+
+
+    <table border="0" width="100%" style="border-collapse: collapse;">
+
+        <tr>
+            <th class="print-5">Date</th>
+            <th class="print-hide">Sequence</th>
+            <th class="print-10">Breakfast</th>
+            <th class="print-20">Lunch</th>
+            <th class="print-15">Evening Breakfast</th>
+            <th class="print-20">Dinner</th>
+            <th class="print-hide">Action</th>
+
+        </tr>
+
+
+        <tr *ngFor="let food of filteredFoodMenus">
+
+            <!-- DATE -->
+
+            <td class="text-center">
+
+                @if(selectedId === food.id && isEdit) {
+
+                    <select
+                        [(ngModel)]="model.menuDate"
+                        class="form-select form-control form-control-lg">
+
+                        <option
+                            *ngFor="let date of menuDates"
+                            [ngValue]="date">
+
+                            {{ date }}
+
+                        </option>
+
+                    </select>
+
+                }
+                @else {
+
+                    {{ food.menuDate }}
+
+                }
+
+            </td>
+
+
+            <!-- SEQUENCE -->
+
+            <td class="text-center print-hide">
+
+                @if(selectedId === food.id && isEdit) {
+
+                    <select
+                        [(ngModel)]="model.sequence"
+                        class="form-select form-control form-control-lg">
+
+                        <option
+                            *ngFor="let sequence of sequences"
+                            [ngValue]="sequence">
+
+                            {{ sequence }}
+
+                        </option>
+
+                    </select>
+
+                }
+                @else {
+
+                    {{ food.sequence }}
+
+                }
+
+            </td>
+
+
+            <!-- BREAKFAST -->
+
+            <td>
+
+                @if(selectedId === food.id && isEdit) {
+
+                    <select
+                        [(ngModel)]="model.breakfast"
+                        class="form-select form-control form-control-lg">
+
+                        <option value="">
+                            Select Breakfast
+                        </option>
+
+                        <option
+                            *ngFor="let item of breakfastItems"
+                            [value]="item">
+
+                            {{ item }}
+
+                        </option>
+
+                    </select>
+
+                }
+                @else {
+
+                    {{ food.breakfast || '-' }}
+
+                }
+
+            </td>
+
+
+            <!-- LUNCH -->
+
+            <td>
+
+                @if(selectedId === food.id && isEdit) {
+
+                    <select
+                        [(ngModel)]="model.lunch"
+                        class="form-select form-control form-control-lg">
+
+                        <option value="">
+                            Select Lunch
+                        </option>
+
+                        <option
+                            *ngFor="let item of lunchItems"
+                            [value]="item">
+
+                            {{ item }}
+
+                        </option>
+
+                    </select>
+
+                }
+                @else {
+
+                    {{ food.lunch || '-' }}
+
+                }
+
+            </td>
+
+
+            <!-- EVENING BREAKFAST -->
+
+            <td>
+
+                @if(selectedId === food.id && isEdit) {
+
+                    <select
+                        [(ngModel)]="model.eveningBreakfast"
+                        class="form-select form-control form-control-lg">
+
+                        <option value="">
+                            Select Evening Breakfast
+                        </option>
+
+                        <option
+                            *ngFor="let item of eveningBreakfastItems"
+                            [value]="item">
+
+                            {{ item }}
+
+                        </option>
+
+                    </select>
+
+                }
+                @else {
+
+                    {{ food.eveningBreakfast || '-' }}
+
+                }
+
+            </td>
+
+
+            <!-- DINNER -->
+
+            <td>
+
+                @if(selectedId === food.id && isEdit) {
+
+                    <select
+                        [(ngModel)]="model.dinner"
+                        class="form-select form-control form-control-lg">
+
+                        <option value="">
+                            Select Dinner
+                        </option>
+
+                        <option
+                            *ngFor="let item of dinnerItems"
+                            [value]="item">
+
+                            {{ item }}
+
+                        </option>
+
+                    </select>
+
+                }
+                @else {
+
+                    {{ food.dinner || '-' }}
+
+                }
+
+            </td>
+
+
+            <!-- ACTION -->
+
+            <td class="d-flex gap-2 justify-content-center print-hide">
+
+                @if(selectedId === food.id && isEdit) {
+
+                    <button
+                        (click)="save()"
+                        title="Save">
+
+                        💾
+
+                    </button>
+
+                    <button
+                        class="reset"
+                        (click)="reset()"
+                        title="Cancel">
+
+                        ✖
+
+                    </button>
+
+                }
+                @else {
+
+                    <button
+                        class="edit"
+                        (click)="edit(food)"
+                        title="Edit">
+
+                        <i class="bi bi-pencil"></i>
+
+                    </button>
+
+                }
+
+                <button
+                    class="delete"
+                    (click)="delete(food.id)"
+                    title="Delete">
+
+                    <i class="bi bi-trash"></i>
+
+                </button>
+
+            </td>
+
+        </tr>
+
+
+        <tr *ngIf="filteredFoodMenus.length === 0">
+
+            <td colspan="7" class="text-center">
+
+                No food menu found.
+
+            </td>
+
+        </tr>
+
+    </table>
+
+
+    <br>
+
+
+    <!-- ADD / UPDATE -->
+
+    <table class="print-hide">
+
+        <tr>
+
+            <td>
+
+                <label>Date</label>
+
+                <select
+                    [(ngModel)]="model.menuDate"
+                    class="form-select form-control form-control-lg">
+
+                    <option
+                        *ngFor="let date of menuDates"
+                        [ngValue]="date">
+
+                        {{ date }}
+
+                    </option>
+
+                </select>
+
+            </td>
+
+
+            <td>
+
+                <label>Sequence</label>
+
+                <select
+                    [(ngModel)]="model.sequence"
+                    class="form-select form-control form-control-lg">
+
+                    <option
+                        *ngFor="let sequence of sequences"
+                        [ngValue]="sequence">
+
+                        {{ sequence }}
+
+                    </option>
+
+                </select>
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+
+                <label>Breakfast</label>
+
+                <select
+                    [(ngModel)]="model.breakfast"
+                    class="form-select form-control form-control-lg">
+
+                    <option value="">
+                        Select Breakfast
+                    </option>
+
+                    <option
+                        *ngFor="let item of breakfastItems"
+                        [value]="item">
+
+                        {{ item }}
+
+                    </option>
+
+                </select>
+
+            </td>
+
+
+            <td>
+
+                <label>Lunch</label>
+
+                <select
+                    [(ngModel)]="model.lunch"
+                    class="form-select form-control form-control-lg">
+
+                    <option value="">
+                        Select Lunch
+                    </option>
+
+                    <option
+                        *ngFor="let item of lunchItems"
+                        [value]="item">
+
+                        {{ item }}
+
+                    </option>
+
+                </select>
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+
+                <label>Evening Breakfast</label>
+
+                <select
+                    [(ngModel)]="model.eveningBreakfast"
+                    class="form-select form-control form-control-lg">
+
+                    <option value="">
+                        Select Evening Breakfast
+                    </option>
+
+                    <option
+                        *ngFor="let item of eveningBreakfastItems"
+                        [value]="item">
+
+                        {{ item }}
+
+                    </option>
+
+                </select>
+
+            </td>
+
+
+            <td>
+
+                <label>Dinner</label>
+
+                <select
+                    [(ngModel)]="model.dinner"
+                    class="form-select form-control form-control-lg">
+
+                    <option value="">
+                        Select Dinner
+                    </option>
+
+                    <option
+                        *ngFor="let item of dinnerItems"
+                        [value]="item">
+
+                        {{ item }}
+
+                    </option>
+
+                </select>
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td colspan="2">
+
+                <button (click)="save()">
+
+                    {{ isEdit ? 'Update' : 'Add' }}
+
+                </button>
+
+                <button
+                    class="reset ms-2"
+                    (click)="reset()">
+
+                    Clear
+
+                </button>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+</div>
+
+
+<app-toaster class="print-hide"></app-toaster>

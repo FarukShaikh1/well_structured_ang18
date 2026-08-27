@@ -21,6 +21,8 @@ import { publicGuard } from "./guards/public.guard";
 import { FamilyGraphComponent } from "./components/family-graph/family-graph.component";
 import { LoginComponent } from "./components/login/login.component";
 import { SiteUnderDevelopmentComponent } from "./components/shared/site-under-development/site-under-development.component";
+import { DailyFoodPickerComponent } from "./components/daily-food-picker/daily-food-picker.component";
+import { FoodMenuComponent } from "./components/food-menu/food-menu.component";
 
 export const routes: Routes = [
   {
@@ -143,6 +145,17 @@ export const routes: Routes = [
             title: RoutePathTitles.CREDENTIALS,
             component: CredentialsComponent
           },
+          // {
+          //   path: RoutePath.FOOD_PICKER,
+          //   title: RoutePathTitles.FOOD_PICKER,
+          //   component: DailyFoodPickerComponent
+          // },
+          {
+            path: RoutePath.FOOD_MENU,
+            title: RoutePathTitles.FOOD_MENU,
+            component: FoodMenuComponent
+          },
+
 
           {
             path: RoutePath.NOTIFICATIONS,
