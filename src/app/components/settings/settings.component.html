@@ -2,8 +2,7 @@
     <div class="d-flex gap-2" style="flex-wrap: wrap;">
         @if(isSuperAdmin)
         {
-                    <div class="col-8 col-sm-8 col-md-6 col-lg-6 col-xl-5 mb-3">
-
+        <div class="col-8 col-sm-8 col-md-6 col-lg-6 col-xl-5 mb-3">
             <select id="roleSelect" class="form-select form-control-lg text-dark bg-transparent"
                 (change)="changeUser($event)">
                 <option value="">Select User</option>
@@ -29,51 +28,52 @@
             }
         </div>
     </div>
+</div>
 
-    @if (filteredAccountTableData.length > 0) {
-    <app-tabulator-grid [tableData]="filteredAccountTableData" [columnConfig]="accountColumnConfig" [height]="'320px'"
-        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint"
-        [isLoading]="isAccountGridLoading" [loadingText]="'Loading accounts...'">
-    </app-tabulator-grid>
-    } @else {
-    <div class="alert alert-info text-center mt-3" role="alert">
-        <strong>No account data found.</strong><br />
-        Please add accounts to properly manage your expenses and income.
-        You can configure your account list from here.
+@if (filteredAccountTableData.length > 0) {
+<app-tabulator-grid [tableData]="filteredAccountTableData" [columnConfig]="accountColumnConfig" [height]="'320px'"
+    [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
+    [allowPrint]="allowPrint" [isLoading]="isAccountGridLoading" [loadingText]="'Loading accounts...'">
+</app-tabulator-grid>
+} @else {
+<div class="alert alert-info text-center mt-3" role="alert">
+    <strong>No account data found.</strong><br />
+    Please add accounts to properly manage your expenses and income.
+    You can configure your account list from here.
+</div>
+}
+
+<div class="main-body">
+    <div class="col-12 pt-2">
+        @if(globalService.isAccessible(ActionConstant.ADD) ||
+        globalService.isAccessible(ActionConstant.EDIT)){
+        <button class="btn btn-primary" type="button" (click)="openDetailPopup('',UserConfig.OCCASION_TYPE)"
+            data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
+            <i class="fa fa-plus"></i>
+            Add Occasion Type
+        </button>
+        }
     </div>
-    }
+</div>
+@if (filteredOccasionTypeTableData.length > 0) {
+<app-tabulator-grid [tableData]="filteredOccasionTypeTableData" [columnConfig]="occasionTypeColumnConfig"
+    [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
+    [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isOccasionTypeGridLoading"
+    [loadingText]="'Loading occasion types...'">
+</app-tabulator-grid>
+} @else {
+<div class="alert alert-info text-center mt-3" role="alert">
+    <strong>No occasion types found.</strong><br />
+    Occasion types are used to categorize Birthdays, anniversaries and Other event.
+    You can configure your Occasion types from here.
+</div>
+}
 
+<div class="main-body">
     <div class="row">
         <div class="col-12 pt-2">
-            @if(globalService.isAccessible(ActionConstant.ADD) ||
-            globalService.isAccessible(ActionConstant.EDIT)){
-            <button class="btn btn-primary" type="button" (click)="openDetailPopup('',UserConfig.OCCASION_TYPE)"
-                data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
-                <i class="fa fa-plus"></i>
-                Add Occasion Type
-            </button>
-            }
-        </div>
-        <div class="col-12 col-lg-12">
-            @if (filteredOccasionTypeTableData.length > 0) {
-            <app-tabulator-grid [tableData]="filteredOccasionTypeTableData" [columnConfig]="occasionTypeColumnConfig"
-                [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
-                [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isOccasionTypeGridLoading"
-                [loadingText]="'Loading occasion types...'">
-            </app-tabulator-grid>
-            } @else {
-            <div class="alert alert-info text-center mt-3" role="alert">
-                <strong>No occasion types found.</strong><br />
-                Occasion types are used to categorize Birthdays, anniversaries and Other event.
-                You can configure your Occasion types from here.
-            </div>
-            }
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 pt-2">
-            @if (globalService.isAccessible(ActionConstant.ADD) || globalService.isAccessible(ActionConstant.EDIT)) {
+            @if (globalService.isAccessible(ActionConstant.ADD) || globalService.isAccessible(ActionConstant.EDIT))
+            {
             <button class="btn btn-primary" type="button" (click)="openDetailPopup('',UserConfig.RELATION)"
                 data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
                 <i class="fa fa-plus"></i>
@@ -81,26 +81,25 @@
             </button>
             }
         </div>
-        <div class="col-12 col-lg-12">
-            @if (filteredRelationTableData.length > 0) {
-            <app-tabulator-grid [tableData]="filteredRelationTableData" [columnConfig]="relationColumnConfig"
-                [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
-                [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isRelationGridLoading"
-                [loadingText]="'Loading relations...'">
-            </app-tabulator-grid>
-            } @else {
-            <div class="alert alert-info text-center mt-3" role="alert">
-                <strong>No relation data found.</strong><br />
-                Relations help you link contacts when you add Birthdays or anniversaries.
-                You can configure your relation types from here.
-            </div>
-            }
-        </div>
     </div>
-
+</div>
+@if (filteredRelationTableData.length > 0) {
+<app-tabulator-grid [tableData]="filteredRelationTableData" [columnConfig]="relationColumnConfig" [height]="'320px'"
+    [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
+    [allowPrint]="allowPrint" [isLoading]="isRelationGridLoading" [loadingText]="'Loading relations...'">
+</app-tabulator-grid>
+} @else {
+<div class="alert alert-info text-center mt-3" role="alert">
+    <strong>No relation data found.</strong><br />
+    Relations help you link contacts when you add Birthdays or anniversaries.
+    You can configure your relation types from here.
+</div>
+}
+<div class="main-body">
     <div class="row">
         <div class="col-12 pt-2">
-            @if (globalService.isAccessible(ActionConstant.ADD) || globalService.isAccessible(ActionConstant.EDIT)) {
+            @if (globalService.isAccessible(ActionConstant.ADD) || globalService.isAccessible(ActionConstant.EDIT))
+            {
             <button class="btn btn-primary" type="button" (click)="openDetailPopup('',UserConfig.TRANSACTION_CATEGORY)"
                 data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
                 <i class="fa fa-plus"></i>
@@ -108,24 +107,22 @@
             </button>
             }
         </div>
-        <div class="col-12 col-lg-12 pt-2">
-            @if (filteredTransactionCategoryTableData.length > 0) {
-            <app-tabulator-grid [tableData]="filteredTransactionCategoryTableData"
-                [columnConfig]="transactionCategoryColumnConfig" [height]="'320px'" [paginationSize]="paginationSize"
-                [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint"
-                [isLoading]="isTransactionCategoryGridLoading" [loadingText]="'Loading transactionsubcategorys...'">
-            </app-tabulator-grid>
-            } @else {
-            <div class="alert alert-info text-center mt-3" role="alert">
-                <strong>No transactionsubcategory data found.</strong><br />
-                TransactionCategorys help you link contacts when you add Birthdays or anniversaries.
-                You can configure your Transaction Category from here.
-            </div>
-            }
-        </div>
     </div>
-
-    <app-configuration-details [selectedUserId]="selectedUserId"></app-configuration-details>
-    <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
-    <app-toaster></app-toaster>
 </div>
+@if (filteredTransactionCategoryTableData.length > 0) {
+<app-tabulator-grid [tableData]="filteredTransactionCategoryTableData" [columnConfig]="transactionCategoryColumnConfig"
+    [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
+    [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isTransactionCategoryGridLoading"
+    [loadingText]="'Loading transactionsubcategorys...'">
+</app-tabulator-grid>
+} @else {
+<div class="alert alert-info text-center mt-3" role="alert">
+    <strong>No transactionsubcategory data found.</strong><br />
+    TransactionCategorys help you link contacts when you add Birthdays or anniversaries.
+    You can configure your Transaction Category from here.
+</div>
+}
+
+<app-configuration-details [selectedUserId]="selectedUserId"></app-configuration-details>
+<app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
+<app-toaster></app-toaster>

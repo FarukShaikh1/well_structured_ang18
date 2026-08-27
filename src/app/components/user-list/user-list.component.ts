@@ -140,6 +140,7 @@ export class UserListComponent implements OnInit {
         },
         hozAlign: "center",
         headerSort: false,
+        print:false
       },
     ];
     if (
@@ -153,6 +154,7 @@ export class UserListComponent implements OnInit {
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
+        print:false
       });
     }
   }

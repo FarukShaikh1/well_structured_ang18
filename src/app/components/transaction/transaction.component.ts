@@ -215,6 +215,7 @@ export class TransactionComponent implements OnInit {
         hozAlign: "center",
         headerSort: false,
         minWidth: 70,
+        print:false
       },
     ];
     if (
@@ -229,6 +230,7 @@ export class TransactionComponent implements OnInit {
         headerSort: false,
         minWidth: 70,
         maxWidth: 70,
+        print:false
       });
     }
   }
@@ -299,6 +301,7 @@ export class TransactionComponent implements OnInit {
         this.hideTransaction(transactionGroupId);
       },
       headerSort: false,
+        print:false
     });
     if (
       this.globalService.isAccessible(ActionConstant.EDIT) ||
@@ -312,6 +315,7 @@ export class TransactionComponent implements OnInit {
         formatter: this.globalService.optionDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
+        print:false
       });
     }
   }
@@ -361,6 +365,7 @@ export class TransactionComponent implements OnInit {
         this.hideTransactionByDate(date);
       },
       headerSort: false,
+        print:false
     });
   }
 
@@ -447,6 +452,7 @@ export class TransactionComponent implements OnInit {
           this.hideTransactionBySource(sourceOrReason);
         },
         headerSort: false,
+        print:false
       },
       {
         title: "",
@@ -479,6 +485,7 @@ export class TransactionComponent implements OnInit {
         ],
         hozAlign: "left",
         headerSort: false,
+        print:false
       },
     ];
   }
@@ -646,6 +653,7 @@ export class TransactionComponent implements OnInit {
         ],
         hozAlign: "left",
         headerSort: false,
+        print:false
       },
     ];
   }

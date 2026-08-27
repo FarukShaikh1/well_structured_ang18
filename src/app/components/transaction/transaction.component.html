@@ -190,12 +190,9 @@
   </div>
 
 
-  <div class="row g-3 mb-4">
-    @if(activeComponent === NavigationURLs.BUDGET){
-    <app-budget></app-budget>
-    }
+  <div class="row mb-4">
 
-    @else if(activeComponent === NavigationURLs.EXPENSE_REPORT){
+    @if(activeComponent === NavigationURLs.EXPENSE_REPORT){
     <div class="col-12 col-lg-6 mb-4">
       <div class="card pb-2 ps-2 pe-2">
         <app-transaction-pie-chart [reportData]="transactionReports"
@@ -222,17 +219,18 @@
       </div>
     </div>
     }
-    @else if(activeComponent === NavigationURLs.EMERGENCY_RETURN_REPORT){
-    }
-    @if(activeComponent !== NavigationURLs.BUDGET){
-    <div class="mb-2">
-      <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-        [paginationSize]="1000" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint">
-      </app-tabulator-grid>
-    </div>
-    }
   </div>
 </div>
+@if(activeComponent === NavigationURLs.BUDGET){
+<app-budget></app-budget>
+}
+@if(activeComponent !== NavigationURLs.BUDGET){
+<div class="mb-2">
+  <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
+    [paginationSize]="1000" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint">
+  </app-tabulator-grid>
+</div>
+}
 <app-transaction-details [lastTransactionDate]="lastTransactionDate"></app-transaction-details>
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
 

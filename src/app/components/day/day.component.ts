@@ -183,7 +183,8 @@ export class DayComponent implements OnInit, OnDestroy {
         minWidth: 60,
         maxWidth: 100,
         formatter: this.dateFormatter.bind(this),
-        printWidth: '10%'
+        printWidth: '10%',
+        printFormatter:this.dateFormatter.bind(this)
       },
       {
         title: "Person Name",
@@ -238,13 +239,35 @@ export class DayComponent implements OnInit, OnDestroy {
         title: "Pic",
         field: "thumbnailPath",
         formatter: this.globalService.blobThumbnailFormatter.bind(this),
+        printFormatter: (row: any) => {
+          const thumbnailPath = row["thumbnailPathSasUrl"];
+          const imagePath = row["imagePath"];
+
+          if (thumbnailPath) {
+            return `
+              <div class="print-thumbnail-wrapper">
+                <img src="${thumbnailPath}" class="print-thumbnail-img" />
+              </div>
+            `;
+          }
+
+          if (imagePath) {
+            return `
+              <div class="print-thumbnail-wrapper">
+                <i class="bi bi-person-circle print-person-icon"></i>
+              </div>
+            `;
+          }
+
+          return "";
+        },
         cellClick: (e, cell) => {
           const birthdayId = cell.getRow().getData()["id"];
           this.openDetailsPopup(birthdayId);
         },
         minWidth: 70,
         maxWidth: 100,
-        print: false
+
       },
       {
         title: "",

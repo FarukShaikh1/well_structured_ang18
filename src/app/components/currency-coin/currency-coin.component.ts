@@ -270,6 +270,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
           this.hideCollectionCoin(collectionCoinId);
         },
         headerSort: false,
+        print:false
       },
     ];
     if (
@@ -284,6 +285,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
+        print:false
       });
     }
 
@@ -312,7 +314,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
         headerHozAlign: "center",
         hozAlign: "center",
         bottomCalc: "sum",
-        minWidth: 100,
+        minWidth: 100
       },
       {
         title: UIStrings.COLUMN_TITLES.NOTES,
@@ -343,6 +345,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
           this.hideFromSummary(countryName);
         },
         headerSort: false,
+        print:false
       },
     ];
   }

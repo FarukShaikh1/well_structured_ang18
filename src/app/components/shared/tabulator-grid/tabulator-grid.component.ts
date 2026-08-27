@@ -313,11 +313,14 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
             const width = column.printWidth ?? 'auto';
 
+            const formattedValue = column.printFormatter
+              ? column.printFormatter(row)
+              : this.formatPrintValue(value);
+
             return `
-            <td style="width: ${width};">
-              ${this.formatPrintValue(value)}
-            </td>
-          `;
+              <td style="width: ${width};">
+                ${formattedValue}
+              </td>`;
           })
           .join('');
 
@@ -392,6 +395,23 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
           tbody {
             display: table-row-group;
           }
+
+          .print-thumbnail-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.print-thumbnail-img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.print-person-icon {
+  font-size: 30px;
+}
         </style>
       </head>
      <body>
@@ -462,38 +482,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
     this.loadedData.emit(data);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
   get columnControl(): FormControl {
     return this.filterForm.get("column") as FormControl;
   }
@@ -509,4 +498,5 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
 export interface PrintColumnDefinition extends ColumnDefinition {
   printWidth?: string;
+  printFormatter?: (row: any) => string;
 }

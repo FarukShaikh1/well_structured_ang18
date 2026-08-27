@@ -655,11 +655,12 @@ body.dark-mode .tabulator .tabulator-row.tabulator-odd { background-color: #1118
 }
 
 .table-container {
-  padding: 20px !important;
+  padding: 10px !important;
   border-radius: 8px !important;
   box-shadow: none !important;
   border: none !important;
-  width: 100%;
+  width: 98%;
+  margin: 1%;
   overflow-x: auto;
   background-color: var(--theme-bg);
 }
@@ -1716,8 +1717,10 @@ img{
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   overflow-x: auto;
+  width: 98%;
+  margin: 1%;
 }
 
 
@@ -1786,7 +1789,7 @@ img{
   th.print-only {
     display: table-cell !important;
   }
-  
+
   /* Make the printable table fit the page */
   table {
     width: 100% !important;

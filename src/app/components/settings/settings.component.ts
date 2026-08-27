@@ -293,6 +293,7 @@ export class SettingsComponent {
         },
         hozAlign: "center",
         headerSort: false,
+        print:false
       },
       {
         title: "",
@@ -301,6 +302,7 @@ export class SettingsComponent {
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
+        print:false
       }
     ];
   }
@@ -335,6 +337,7 @@ export class SettingsComponent {
         },
         hozAlign: "center",
         headerSort: false,
+        print:false
       },
       {
         title: "",
@@ -343,6 +346,7 @@ export class SettingsComponent {
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
+        print:false
       }
     ];
   }
@@ -377,6 +381,7 @@ export class SettingsComponent {
         },
         hozAlign: "center",
         headerSort: false,
+        print:false
       },
       {
         title: "",
@@ -385,6 +390,7 @@ export class SettingsComponent {
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
+        print:false
       }
 
     ];
