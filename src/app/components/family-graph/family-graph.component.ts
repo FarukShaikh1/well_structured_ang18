@@ -39,12 +39,12 @@ interface VisEdge {
 @Component({
   selector: 'app-family-graph',
   standalone: true,
-  imports: [CommonModule, FormsModule,ToasterComponent],
+  imports: [CommonModule, FormsModule, ToasterComponent],
   templateUrl: './family-graph.component.html',
   styleUrls: ['./family-graph.component.scss'],
 })
 export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
-    @ViewChild(ToasterComponent) toaster!: ToasterComponent;
+  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @ViewChild('graphCanvas') graphCanvas!: ElementRef<HTMLDivElement>;
 
   // ── Main search ───────────────────────────────────────────────────────────
@@ -93,10 +93,30 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
   private nodes = new DataSet<VisNode>([]);
   private edges = new DataSet<VisEdge>([]);
 
-  constructor(private familyService: FamilyService) {}
+  constructor(private familyService: FamilyService) { }
 
   ngAfterViewInit(): void {
     this.initNetwork();
+    const storedData = localStorage.getItem('FamilyGraph');
+    if (!storedData) {
+      console.log('FamilyGraph data not found in localStorage');
+      return;
+    }
+
+    try {
+      const data = JSON.parse(storedData);
+
+      console.log('data::::::::', data);
+
+      const nodes: FamilyGraphNode[] = data.nodes || [];
+      const edges: FamilyGraphEdge[] = data.edges || [];
+      const rootId: string = data.rootPersonId || '';
+
+      this.renderGraph(nodes, edges, rootId);
+
+    } catch (error) {
+      console.error('Error parsing FamilyGraph data:', error);
+    }
   }
 
   ngOnDestroy(): void {

@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable, of, Subject } from "rxjs";
-import { catchError, map, tap } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 import { CellComponent } from "tabulator-tables";
 import { API_URL } from "../../../utils/api-url";
 import { DBConstants, DdlConfig, LocalStorageConstants, NavigationURLs, UserConfig } from "../../../utils/application-constants";
@@ -11,6 +11,7 @@ import { ModuleResponse } from "../../interfaces/module-response";
 import { ConfigurationService } from "../configuration/configuration.service";
 import { LocalStorageService } from "../local-storage/local-storage.service";
 import { RoleService } from "../role/role.service";
+import { FamilyService } from "../family/family.service";
 
 @Injectable({
   providedIn: "root",
@@ -21,6 +22,7 @@ export class GlobalService {
     private localStorageService: LocalStorageService,
     private configurationService: ConfigurationService,
     private roleService: RoleService,
+    private familyService: FamilyService,
     private router: Router
 
   ) { }
@@ -89,7 +91,6 @@ export class GlobalService {
 
     // return this.roleService.getPermission("").pipe(
     //   map((result) => {
-    //     debugger;
     //     if (result.success) {
     //       this.localStorageService.setUserPermission(result.data);
     //       if (result.data.length > 0) {
@@ -359,6 +360,41 @@ export class GlobalService {
     this.setConfigToLocalStorage(userId, UserConfig.TRANSACTION_CATEGORY, DdlConfig.TRANSACTION_CATEGORY);
   }
 
+  public setFamilyInLocalStorage() {
+
+    const userString = localStorage.getItem(LocalStorageConstants.USER);
+    let user = null;
+    if (userString) {
+      user = JSON.parse(userString);
+    }
+    const userId = user?.userId;
+
+    this.setFamilyToLocalStorage(user?.firstName);
+  }
+
+  setFamilyToLocalStorage(text: string) {
+    this.familyService.searchPersons(text.trim()).subscribe({
+      next: (res: any) => {
+
+        const id = res?.data[0]?.personId;
+
+        this.familyService.getGraph(id, 2).subscribe({
+          next: (result: any) => {
+            localStorage.setItem('FamilyGraph', JSON.stringify(result.data));
+          },
+          error: (error: any) => {
+            console.error('Error fetching family graph', error);
+          },
+        });
+
+      },
+      error: () => {
+        localStorage.setItem('FamilyGraph', JSON.stringify([]));
+      },
+    });
+
+  }
+
   setConfigToLocalStorage(id: string, config: string, DdlConfig: string) {
     this.configurationService.getActiveConfigList(id, config).subscribe({
       next: (result: any) => {
@@ -369,6 +405,7 @@ export class GlobalService {
       },
     });
   }
+
 
   setCountryListToLocalStorage() {
     this.getCountryList().subscribe({

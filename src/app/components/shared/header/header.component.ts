@@ -92,7 +92,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getModuleList() {
-    debugger;
     this.moduleList = this.localStorageService.getLoggedInUserPermissions();
     if (this.moduleList?.length == 0) {
       this.globalService.getUserPermissionData().subscribe({

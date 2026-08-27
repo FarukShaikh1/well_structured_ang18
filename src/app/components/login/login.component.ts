@@ -117,6 +117,7 @@ export class LoginComponent implements OnDestroy {
               setTimeout(() => {
                 this.globalService.setValuesInLocalStorage();
                 this.globalService.setConfigValuesInLocalStorage();
+                this.globalService.setFamilyInLocalStorage();
                 console.log('✅ Background localStorage setup done');
               }, 2000);
             }
