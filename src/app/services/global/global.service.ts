@@ -378,7 +378,7 @@ export class GlobalService {
 
         const id = res?.data[0]?.personId;
 
-        this.familyService.getGraph(id, 2).subscribe({
+        this.familyService.getGraph(id, 20).subscribe({
           next: (result: any) => {
             localStorage.setItem('FamilyGraph', JSON.stringify(result.data));
           },

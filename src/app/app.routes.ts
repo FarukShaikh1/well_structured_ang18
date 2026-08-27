@@ -23,6 +23,7 @@ import { LoginComponent } from "./components/login/login.component";
 import { SiteUnderDevelopmentComponent } from "./components/shared/site-under-development/site-under-development.component";
 import { DailyFoodPickerComponent } from "./components/daily-food-picker/daily-food-picker.component";
 import { FoodMenuComponent } from "./components/food-menu/food-menu.component";
+import { SignupComponent } from "./components/sign-up/sign-up.component";
 
 export const routes: Routes = [
   {
@@ -192,7 +193,7 @@ export const routes: Routes = [
   },
   {
     path: RoutePath.SIGNUP,
-    component: SiteUnderDevelopmentComponent
+    component: SignupComponent
   },
   {
     path: RoutePath.UNDER_DEVELOPMENT,

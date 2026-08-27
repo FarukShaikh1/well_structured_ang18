@@ -216,7 +216,7 @@ export const RoutePathTitles = {
     RESET_PASSWORD: 'Reset Password',
     FORGOT_PASSWORD: 'Forgot Password',
     LOGIN: 'Login',
-    SIGNUP: 'SignUp',
+    SIGNUP: 'Sign Up',
     LOGOUT: 'Logout',
     OTP_VERIFICATION: 'Verify OTP',
     NOTIFICATIONS: 'Notifications',
