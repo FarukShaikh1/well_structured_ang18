@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CellComponent, ColumnDefinition } from 'tabulator-tables';
+import { CellComponent } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
 import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, CollectionTabs, DdlConfig, NavigationURLs, UIStrings } from '../../../utils/application-constants';
 import { TruncatePipe } from '../../common/truncate.pipe';
@@ -13,7 +13,7 @@ import { LocalStorageService } from '../../services/local-storage/local-storage.
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component';
 import { MyProfileComponent } from '../my-profile/my-profile.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
+import { PrintColumnDefinition, TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 @Component({
@@ -24,7 +24,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
   styleUrls: ['./currency-coin.component.scss']
 })
 
-export class CurrencyCoinComponent implements OnInit,OnDestroy {
+export class CurrencyCoinComponent implements OnInit, OnDestroy {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   selectedCountry: string[] = [];
   selectedType: string[] = [];
@@ -48,14 +48,14 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
   public tableData: Record<string, unknown>[] = [];
   public filteredTableData: Record<string, unknown>[] = [];
   public filteredCoinList: any[] = [];
-  public columnConfig: ColumnDefinition[] = [];
+  public columnConfig: PrintColumnDefinition[] = [];
   public summaryTableData: Record<string, unknown>[] = [];
   public filteredSummaryTableData: Record<string, unknown>[] = [];
-  public summaryTableColumnConfig: ColumnDefinition[] = [];
+  public summaryTableColumnConfig: PrintColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = true;
   public allowPrint = true;
-  public filterColumns: ColumnDefinition[] = [];
+  public filterColumns: PrintColumnDefinition[] = [];
   public viewMode: 'grid' | 'gallery' | 'summary' | 'news' = 'gallery';
   loading = false;
   selectedTab: string = CollectionTabs.GALLERY_VIEW;
@@ -80,9 +80,9 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
     this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
     if (!this.typeList || this.typeList.length == 0) {
       this.globalService.setValuesInLocalStorage();
-      setTimeout(()=>{
-      this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
-      },1000)
+      setTimeout(() => {
+        this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
+      }, 1000)
     }
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.COIN_NOTE_COLLECTION) {
@@ -203,12 +203,14 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
         field: "coinNoteName",
         sorter: "alphanum",
         minWidth: 200,
+        printWidth:"10%"
       },
       {
         title: UIStrings.COLUMN_TITLES.COUNTRY,
         field: "countryName",
         sorter: "alphanum",
         minWidth: 120,
+        printWidth:"10%"
       },
       {
         title: UIStrings.COLUMN_TITLES.REAL_VALUE,
@@ -218,6 +220,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         minWidth: 90,
+        printWidth:"10%"
       },
       {
         title: UIStrings.COLUMN_TITLES.INDIAN_VALUE,
@@ -228,36 +231,53 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         minWidth: 90,
+        printWidth:"10%"
       },
       {
         title: UIStrings.COLUMN_TITLES.OTHER_DETAILS,
         field: "description",
         sorter: "alphanum",
         minWidth: 200,
+        printWidth:"20%"
       },
       {
         title: 'ExtractedText',
         field: "extractedText",
         sorter: "alphanum",
         minWidth: 200,
+        printWidth:"20%"
       },
       {
         title: "GeneratedDescription",
         field: "generatedDescription",
         sorter: "alphanum",
         minWidth: 200,
+        print:false
       },
 
       {
         title: UIStrings.COLUMN_TITLES.PIC,
         field: "thumbnailPath",
         formatter: this.globalService.blobThumbnailFormatter.bind(this),
+        printFormatter: (row: any) => {
+          const thumbnailPath = row["thumbnailPathSasUrl"];
+          if (thumbnailPath) {
+            return `
+              <div class="print-thumbnail-wrapper">
+                <img src="${thumbnailPath}" class="print-thumbnail-img" />
+              </div>
+            `;
+          }
+          return "";
+        },
+
         cellClick: (e, cell) => {
           const collectionCoinId = cell.getRow().getData()["id"];
           this.currencyCoinDetails(collectionCoinId);
         },
         minWidth: 70,
         maxWidth: 100,
+        printWidth:"10%"
       },
       {
         title: "",
@@ -270,7 +290,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
           this.hideCollectionCoin(collectionCoinId);
         },
         headerSort: false,
-        print:false
+        print: false
       },
     ];
     if (
@@ -285,7 +305,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
-        print:false
+        print: false
       });
     }
 
@@ -296,6 +316,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
         field: "countryName",
         sorter: "alphanum",
         minWidth: 150,
+        printAlign:'left'
       },
       {
         title: UIStrings.COLUMN_TITLES.CURRENCY,
@@ -313,8 +334,10 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
         sorter: "alphanum",
         headerHozAlign: "center",
         hozAlign: "center",
+        vertAlign:'middle',
         bottomCalc: "sum",
-        minWidth: 100
+        minWidth: 100,
+        printAlign:'center'
       },
       {
         title: UIStrings.COLUMN_TITLES.NOTES,
@@ -324,6 +347,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
         hozAlign: "center",
         bottomCalc: "sum",
         minWidth: 100,
+        printAlign:'center'
       },
       {
         title: UIStrings.COLUMN_TITLES.TOTAL,
@@ -333,6 +357,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
         hozAlign: "center",
         bottomCalc: "sum",
         minWidth: 120,
+        printAlign:'center'
       },
       {
         title: "",
@@ -345,7 +370,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
           this.hideFromSummary(countryName);
         },
         headerSort: false,
-        print:false
+        print: false,
       },
     ];
   }
@@ -660,7 +685,7 @@ export class CurrencyCoinComponent implements OnInit,OnDestroy {
     window.open(NavigationURLs.OWNER_PROFILE, '_blank');
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.loaderService.hideLoader();
   }
 }

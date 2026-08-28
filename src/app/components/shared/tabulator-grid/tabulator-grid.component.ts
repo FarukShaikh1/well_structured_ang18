@@ -268,15 +268,20 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
       return;
     }
 
-    const printableColumns = this.columnConfig?.filter(
-      (column: any) => column.print !== false
-    ) ?? [];
+    const printableColumns: PrintColumnDefinition[] =
+      (this.columnConfig as PrintColumnDefinition[] | undefined)?.filter(
+        (column) => column.print !== false
+      ) ?? [];
 
     if (printableColumns.length === 0) {
       return;
     }
 
-    const printWindow = window.open('', '_blank', 'width=1200,height=800');
+    const printWindow = window.open(
+      '',
+      '_blank',
+      'width=1200,height=800'
+    );
 
     if (!printWindow) {
       return;
@@ -287,11 +292,17 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     // ============================
 
     const headers = printableColumns
-      .map((column: any) => {
+      .map((column: PrintColumnDefinition) => {
         const width = column.printWidth ?? 'auto';
+        const align = column.printAlign ?? 'center';
 
         return `
-        <th style="width: ${width};">
+        <th
+          style="
+            width: ${width};
+            text-align: ${align};
+          "
+        >
           ${column.title ?? ''}
         </th>
       `;
@@ -307,20 +318,35 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
       .map((row: any) => {
 
         const cells = printableColumns
-          .map((column: any) => {
-
-            const value = row[column.field];
+          .map((column: PrintColumnDefinition) => {
 
             const width = column.printWidth ?? 'auto';
+            const align = column.printAlign ?? 'left';
 
-            const formattedValue = column.printFormatter
-              ? column.printFormatter(row)
-              : this.formatPrintValue(value);
+            let formattedValue: string;
+
+            // Use custom print formatter if available
+            if (column.printFormatter) {
+              formattedValue = column.printFormatter(row);
+            }
+            else {
+              const value = column.field
+                ? row[column.field]
+                : '';
+
+              formattedValue = this.formatPrintValue(value);
+            }
 
             return `
-              <td style="width: ${width};">
-                ${formattedValue}
-              </td>`;
+            <td
+              style="
+                width: ${width};
+                text-align: ${align};
+              "
+            >
+              ${formattedValue ?? ''}
+            </td>
+          `;
           })
           .join('');
 
@@ -338,14 +364,18 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     <html>
       <head>
         <title>Print Report</title>
+
         <style>
+
           @page {
-           size: A4 landscape;
+            size: A4;
             margin: 10mm;
           }
+
           * {
             box-sizing: border-box;
           }
+
           body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -353,37 +383,36 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
             color: #000;
             background: #fff;
           }
+
           h2 {
             text-align: center;
             margin: 0 0 15px 0;
             font-size: 18px;
           }
+
           table {
             width: 100%;
             max-width: 100%;
             border-collapse: collapse;
-            /*
-             * IMPORTANT
-             * This makes printWidth work correctly.
-             */
             table-layout: fixed;
           }
+
           th,
           td {
             border: 1px solid #000;
             padding: 6px 8px;
             font-size: 11px;
-            text-align: left;
             vertical-align: middle;
             word-break: break-word;
             overflow-wrap: anywhere;
             overflow: hidden;
-         }
+          }
+
           th {
-            text-align: center;
             font-weight: bold;
             background: #f2f2f2;
           }
+
           tr {
             page-break-inside: avoid;
           }
@@ -396,41 +425,52 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
             display: table-row-group;
           }
 
+          /* ============================
+             Thumbnail
+             ============================ */
+
           .print-thumbnail-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
 
-.print-thumbnail-img {
-  width: 45px;
-  // height: 45px;
-  object-fit: cover;
-  border-radius: 4px;
-}
+          .print-thumbnail-img {
+            height: 45px;
+            object-fit: cover;
+            border-radius: 4px;
+          }
 
-.print-person-icon {
-  font-size: 30px;
-}
+          .print-person-icon {
+            font-size: 30px;
+          }
+
         </style>
       </head>
-     <body>
+
+      <body>
+
         <h2>Report</h2>
+
         <table>
           <thead>
             <tr>
               ${headers}
             </tr>
           </thead>
+
           <tbody>
             ${rows}
           </tbody>
         </table>
+
       </body>
     </html>
   `);
+
     printWindow.document.close();
     printWindow.focus();
+
     setTimeout(() => {
       printWindow.print();
       printWindow.close();
@@ -482,7 +522,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
     this.loadedData.emit(data);
   }
-  
+
   get columnControl(): FormControl {
     return this.filterForm.get("column") as FormControl;
   }
@@ -499,4 +539,5 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 export interface PrintColumnDefinition extends ColumnDefinition {
   printWidth?: string;
   printFormatter?: (row: any) => string;
+  printAlign?: string;
 }
