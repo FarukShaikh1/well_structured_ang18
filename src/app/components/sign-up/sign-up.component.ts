@@ -32,17 +32,21 @@ export class SignupComponent {
   constructor(
     private registrationService: RegistrationService,
     private router: Router
-  ) {}
+  ) { }
 
   getEmptyModel(): UserRegistration {
     return {
-      id: null,
+      id: '',
       dateOfBirth: '',
       name: '',
       email: '',
       mobileNumber: '',
       address: '',
-      profilePhoto: ''
+      profilePhoto: '',
+
+      emailVerified: false,
+      status: '',
+
     };
   }
 

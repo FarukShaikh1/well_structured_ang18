@@ -71,7 +71,7 @@ export class CredentialsComponent {
       }
       this.credentialService.updateCredential(model)
         .subscribe({
-          next: (res) => {
+          next: (res:any) => {
             this.isEdit = false;
             this.toaster.showMessage('Credential entry updated successfully', 'success');
             this.loadCredentials();
@@ -89,7 +89,7 @@ export class CredentialsComponent {
       model.id = null;
       this.credentialService.addCredential(model)
         .subscribe({
-          next: (res) => {
+          next: (res:any) => {
             this.toaster.showMessage('Credential entry added successfully', 'success');
 
             this.reset();

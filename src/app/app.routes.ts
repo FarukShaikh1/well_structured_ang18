@@ -24,6 +24,9 @@ import { SiteUnderDevelopmentComponent } from "./components/shared/site-under-de
 import { DailyFoodPickerComponent } from "./components/daily-food-picker/daily-food-picker.component";
 import { FoodMenuComponent } from "./components/food-menu/food-menu.component";
 import { SignupComponent } from "./components/sign-up/sign-up.component";
+import { EmailVerificationComponent } from "./components/email-verification/email-verification.component";
+import { OTPVerificationComponent } from "./components/otp-verification/otp-verification.component";
+import { UserRegistrationApprovalComponent } from "./components/user-registration-approval/user-registration-approval.component";
 
 export const routes: Routes = [
   {
@@ -98,6 +101,10 @@ export const routes: Routes = [
               moduleName: ApplicationModules.USER
             }
           },
+          // {
+          //   path: 'user-registration-approval',
+          //   component: UserRegistrationApprovalComponent
+          // },
 
           {
             path: RoutePath.USER_PERMISSIONS,
@@ -194,6 +201,14 @@ export const routes: Routes = [
   {
     path: RoutePath.SIGNUP,
     component: SignupComponent
+  },
+  {
+    path: 'email-verification',
+    component: EmailVerificationComponent
+  },
+  {
+    path: RoutePath.OTP_VERIFICATION,
+    component: OTPVerificationComponent
   },
   {
     path: RoutePath.UNDER_DEVELOPMENT,

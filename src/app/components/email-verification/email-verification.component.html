@@ -1,0 +1,88 @@
+<div class="verification-container">
+
+  <div class="verification-card">
+
+    <div class="verification-icon">
+      ✉️
+    </div>
+
+    <h2>Email Verification</h2>
+
+    @if (!isVerified) {
+
+    <p class="verification-message">
+      We have sent a verification OTP to your registered email address.
+    </p>
+
+    <p class="verification-message">
+      Please enter the 6-digit OTP to verify your email.
+    </p>
+
+    <div class="form-group">
+
+      <label for="otp">
+        Verification OTP
+      </label>
+
+      <input id="otp" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" [(ngModel)]="otp"
+        placeholder="Enter 6 digit OTP" class="form-control form-control-lg text-center otp-input"
+        (input)="onOtpInput($event)">
+
+    </div>
+
+    <button type="button" class="verify-button" [disabled]="isLoading" (click)="verify()">
+
+      @if (isLoading) {
+      Verifying...
+      }
+      @else {
+      Verify Email
+      }
+
+    </button>
+
+    <button type="button" class="clear-button" [disabled]="isLoading" (click)="clearOtp()">
+
+      Clear
+
+    </button>
+
+    }
+    @else {
+
+    <div class="success-section">
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+      <h3>Email Verified Successfully</h3>
+
+      <p>
+        Your email address has been verified successfully.
+      </p>
+
+      <p>
+        Your registration is now waiting for administrator approval.
+      </p>
+
+      <p class="small-text">
+        You will receive an email once your account has been
+        approved.
+      </p>
+
+      <button type="button" class="verify-button" (click)="goToLogin()">
+
+        Go to Login
+
+      </button>
+
+    </div>
+
+    }
+
+  </div>
+
+</div>
+
+<app-toaster class="print-hide"></app-toaster>

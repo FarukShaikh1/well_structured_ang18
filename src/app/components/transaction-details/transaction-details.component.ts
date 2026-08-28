@@ -551,13 +551,9 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.transactionService.updateTransaction(request).subscribe({
         next: (res: any) => {
           if (res && res.data) {
-            this.toaster.showMessage(
-              res.message, "success"
-            );
+            this.toaster.showMessage(res.message, "success");
             removeGridFromLocalStorage();
-            this.renderer
-              .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
-              .click();
+            this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
             this.isSaving = false;
             this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
             this.addTransactionSuggestion(request);

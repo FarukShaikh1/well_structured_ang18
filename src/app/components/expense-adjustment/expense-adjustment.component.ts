@@ -138,7 +138,7 @@ export class ExpenseAdjustmentComponent implements OnInit {
   getSourceOrReasonList(searchText: string = "", accountType: string) {
     this.expenseService
       .getSourceOrReasonList("", "", searchText)
-      .subscribe((res) => {
+      .subscribe((res:any) => {
         if (accountType == "sbi") {
           this.sourceOrReasonListSbi = res.data;
         } else if (accountType == "cbi") {
@@ -181,7 +181,7 @@ export class ExpenseAdjustmentComponent implements OnInit {
   }
   getExpenseAdjustment(expenseId: number) {
     this.expenseService.adjustExpense(expenseId).subscribe((res: any) => {
-      this.patchValues(res);
+      this.patchValues(res:any);
     });
   }
 

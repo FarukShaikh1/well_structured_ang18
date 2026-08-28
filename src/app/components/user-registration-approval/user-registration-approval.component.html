@@ -1,0 +1,380 @@
+<div class="table-container mt-2">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+
+        <h2>User Registration Approval</h2>
+
+        <input
+            type="text"
+            placeholder="Search Name / Email / Mobile"
+            (keyup)="search($event)"
+            class="form-control form-control-lg print-hide"
+            style="max-width: 300px;">
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    @if (isLoading) {
+
+        <div class="text-center p-3">
+            Loading registrations...
+        </div>
+
+    }
+
+
+    <!-- TABLE -->
+
+    @if (!isLoading) {
+
+        <table
+            border="0"
+            width="100%"
+            style="border-collapse: collapse;">
+
+            <tr>
+
+                <th>Name</th>
+
+                <th>Email</th>
+
+                <th>Mobile</th>
+
+                <th>Date of Birth</th>
+
+                <th>Email Verified</th>
+
+                <th>Registered On</th>
+
+                <th>Status</th>
+
+                <th class="print-hide">
+                    Action
+                </th>
+
+            </tr>
+
+
+            <tr
+                *ngFor="let user of filteredRegistrations">
+
+                <!-- NAME -->
+
+                <td>
+                    {{ user.name }}
+                </td>
+
+
+                <!-- EMAIL -->
+
+                <td>
+                    {{ user.email }}
+                </td>
+
+
+                <!-- MOBILE -->
+
+                <td>
+                    {{ user.mobileNumber || '-' }}
+                </td>
+
+
+                <!-- DOB -->
+
+                <td>
+                    {{ formatDate(user.dateOfBirth) }}
+                </td>
+
+
+                <!-- EMAIL VERIFIED -->
+
+                <td class="text-center">
+
+                    @if (user.emailVerified) {
+
+                        <span>
+                            ✓
+                        </span>
+
+                    }
+                    @else {
+
+                        <span>
+                            ✖
+                        </span>
+
+                    }
+
+                </td>
+
+
+                <!-- REGISTERED -->
+
+                <td>
+                    {{ formatDate(user.createdOn) }}
+                </td>
+
+
+                <!-- STATUS -->
+
+                <td>
+                    {{ user.status }}
+                </td>
+
+
+                <!-- ACTION -->
+
+                <td
+                    class="d-flex gap-2 justify-content-center print-hide">
+
+                    <button
+                        class="edit"
+                        title="View"
+                        (click)="viewDetails(user)">
+
+                        <i class="bi bi-eye"></i>
+
+                    </button>
+
+
+                    <button
+                        title="Approve"
+                        (click)="approve(user)"
+                        [disabled]="isProcessing">
+
+                        ✓
+
+                    </button>
+
+
+                    <button
+                        class="delete"
+                        title="Reject"
+                        (click)="openReject(user)"
+                        [disabled]="isProcessing">
+
+                        ✖
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+
+            <!-- NO RECORD -->
+
+            <tr
+                *ngIf="filteredRegistrations.length === 0">
+
+                <td
+                    colspan="8"
+                    class="text-center">
+
+                    No pending user registrations found.
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    }
+
+
+    <!-- DETAILS -->
+
+    @if (showDetails && selectedRegistration) {
+
+        <div class="details-panel">
+
+            <div class="details-header">
+
+                <h3>
+                    Registration Details
+                </h3>
+
+                <button
+                    class="reset"
+                    (click)="closeDetails()">
+
+                    ✖
+
+                </button>
+
+            </div>
+
+
+            <div class="details-content">
+
+
+                <!-- PROFILE PHOTO -->
+
+                <div
+                    class="profile-section"
+                    *ngIf="selectedRegistration.profilePhoto">
+
+                    <img
+                        [src]="selectedRegistration.profilePhoto"
+                        alt="Profile Photo"
+                        class="profile-photo">
+
+                </div>
+
+
+                <div class="details-grid">
+
+                    <div>
+                        <strong>Name</strong>
+                        <span>
+                            {{ selectedRegistration.name }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>Date of Birth</strong>
+                        <span>
+                            {{ formatDate(selectedRegistration.dateOfBirth) }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>Email</strong>
+                        <span>
+                            {{ selectedRegistration.email }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>Mobile</strong>
+                        <span>
+                            {{ selectedRegistration.mobileNumber || '-' }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>Email Verified</strong>
+                        <span>
+                            {{ selectedRegistration.emailVerified ? 'Yes' : 'No' }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <strong>Status</strong>
+                        <span>
+                            {{ selectedRegistration.status }}
+                        </span>
+                    </div>
+
+
+                    <div class="address">
+
+                        <strong>Address</strong>
+
+                        <span>
+                            {{ selectedRegistration.address || '-' }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-actions">
+
+                <button
+                    (click)="approve(selectedRegistration)"
+                    [disabled]="isProcessing">
+
+                    ✓ Approve
+
+                </button>
+
+
+                <button
+                    class="delete"
+                    (click)="openReject(selectedRegistration)"
+                    [disabled]="isProcessing">
+
+                    ✖ Reject
+
+                </button>
+
+            </div>
+
+        </div>
+
+    }
+
+
+    <!-- REJECTION -->
+
+    @if (showReject && selectedRegistration) {
+
+        <div class="reject-panel">
+
+            <h3>
+                Reject Registration
+            </h3>
+
+            <p>
+                Reject registration for
+                <strong>
+                    {{ selectedRegistration.name }}
+                </strong>
+            </p>
+
+
+            <label>
+                Rejection Reason
+            </label>
+
+            <textarea
+                [(ngModel)]="rejectionReason"
+                class="form-control"
+                rows="4"
+                placeholder="Enter rejection reason">
+            </textarea>
+
+
+            <div class="mt-3">
+
+                <button
+                    (click)="reject()"
+                    [disabled]="isProcessing">
+
+                    {{ isProcessing ? 'Rejecting...' : 'Reject' }}
+
+                </button>
+
+
+                <button
+                    class="reset ms-2"
+                    (click)="closeReject()"
+                    [disabled]="isProcessing">
+
+                    Cancel
+
+                </button>
+
+            </div>
+
+        </div>
+
+    }
+
+</div>
+
+
+<app-toaster class="print-hide"></app-toaster>

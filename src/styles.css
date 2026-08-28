@@ -1599,7 +1599,87 @@ img{
     max-height: 60vh;
   }
 }
+.verification-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    padding: 20px;
+}
 
+.verification-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 35px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.verification-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.verification-card h2 {
+    margin-bottom: 20px;
+}
+
+.verification-message {
+    margin-bottom: 8px;
+}
+
+.form-group {
+    margin-top: 25px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.otp-input {
+    font-size: 24px;
+    letter-spacing: 8px;
+    font-weight: 600;
+}
+
+.verify-button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.clear-button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.verify-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.success-section {
+    padding-top: 10px;
+}
+
+.success-icon {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.success-section h3 {
+    margin-bottom: 15px;
+}
+
+.small-text {
+    font-size: 14px;
+    margin-top: 15px;
+}
 .otp-card {
   background: var(--theme-card-bg);
   width: 100%;
@@ -1614,6 +1694,82 @@ img{
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.details-panel,
+.reject-panel {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.details-header h3 {
+    margin: 0;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.details-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.details-grid .address {
+    grid-column: span 2;
+}
+
+.details-grid strong {
+    font-size: 14px;
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.details-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.reject-panel {
+    max-width: 600px;
+}
+
+.reject-panel textarea {
+    margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .details-grid .address {
+        grid-column: span 1;
+    }
+
+}
 /* Subtle hover effect for larger screens */
 @media (hover: hover) {
   .otp-card:hover {

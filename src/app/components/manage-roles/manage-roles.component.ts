@@ -42,7 +42,7 @@ export class ManageRolesComponent {
   }
 
   getRoleList() {
-    this.roleService.getAllRoles().subscribe((res) => {
+    this.roleService.getAllRoles().subscribe((res:any) => {
       this.rolesDataSource = res.data;
     },
     )

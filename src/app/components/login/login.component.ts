@@ -122,6 +122,10 @@ export class LoginComponent implements OnDestroy {
               }, 2000);
             }
           }
+          else {
+            this.toaster.showMessage(res.message, res.success ? 'success' : 'error');
+            this.loaderService.hideLoader();
+          }
         } else {
           this.toaster.showMessage(res.message, res.success ? 'success' : 'error');
           this.loaderService.hideLoader();
@@ -141,8 +145,8 @@ export class LoginComponent implements OnDestroy {
   navigate(route: string) {
     this.router.navigate([route]);
   }
-  
-  ngOnDestroy(){
+
+  ngOnDestroy() {
     this.loaderService.hideLoader();
   }
 

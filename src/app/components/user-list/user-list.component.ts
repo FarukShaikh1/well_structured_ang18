@@ -19,6 +19,7 @@ import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confi
 import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { UserDetailsComponent } from '../user-details/user-details.component';
+import { UserRegistrationApprovalComponent } from '../user-registration-approval/user-registration-approval.component';
 @Component({
   selector: 'app-user-list',
   standalone: true,
@@ -29,6 +30,7 @@ import { UserDetailsComponent } from '../user-details/user-details.component';
     DayDetailsComponent,
     TabulatorGridComponent,
     ConfirmationDialogComponent,
+    UserRegistrationApprovalComponent
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',

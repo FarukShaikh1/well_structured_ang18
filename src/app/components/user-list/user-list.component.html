@@ -2,7 +2,7 @@
   @if(globalService.isAccessible(ActionConstant.ADD)){
   <button class="btn btn-primary rounded-button" (click)="openDayDetailsPopup('')">
     <i class="fa fa-plus"></i>
-    Add User
+    Add Users
   </button>
 
   <button (click)="refreshData()" class="btn btn-primary rounded-button">
@@ -25,6 +25,7 @@
       [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
       [isLoading]="isGridLoading" [loadingText]="'Loading users...'" [allowPrint]="allowPrint">
     </app-tabulator-grid>
+  <app-user-registration-approval></app-user-registration-approval>
   </div>
 <app-toaster></app-toaster>
 <app-day-details></app-day-details>

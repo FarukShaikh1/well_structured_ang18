@@ -70,7 +70,7 @@ export class BudgetComponent implements OnInit {
       }
       this.budgetService.updateBudget(this.model)
         .subscribe({
-          next: (res) => {
+          next: (res:any) => {
             this.isEdit = false;
             this.toaster.showMessage('Budget entry updated successfully', 'success');
             this.loadBudgets();
@@ -88,7 +88,7 @@ export class BudgetComponent implements OnInit {
       this.model.id = null;
       this.budgetService.addBudget(this.model)
         .subscribe({
-          next: (res) => {
+          next: (res:any) => {
             this.toaster.showMessage('Budget entry added successfully', 'success');
 
             this.reset();

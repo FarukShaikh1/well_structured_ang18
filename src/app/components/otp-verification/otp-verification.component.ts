@@ -76,10 +76,11 @@ export class OTPVerificationComponent
   ) { }
 
   ngOnInit() {
+    console.log('OTP Verification Page ngOnInit');
+    
     this.enteredEmail = this.localStorageService.getLoggedInUserData()?.emailAddress;
     this.userId = this.localStorageService.getLoggedInUserData()?.id;
     this.otpExpiresAt = Number(localStorage.getItem(LocalStorageConstants.OTP_EXPIRES_ON));
-
     if (!this.enteredEmail) {
       this.onBackToLogin();
       return;
@@ -329,7 +330,7 @@ export class OTPVerificationComponent
         }
         else {
           this.toaster.showMessage(
-            'Error in verifying OTP, please try again later.',
+            result.message,
             'error'
           );
           localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');

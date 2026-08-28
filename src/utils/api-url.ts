@@ -127,9 +127,12 @@ export const API_URL = {
 
 
   REGISTER: `${serverUrl}${apiPrefix}/UserRegistration`,
-  VERIFY_EMAIL: `${serverUrl}${apiPrefix}/Registration/VerifyEmail`,
-  RESEND_OTP: `${serverUrl}${apiPrefix}/Registration/ResendOtp`,
-
+  VERIFY_EMAIL: `${serverUrl}${apiPrefix}/UserRegistration/VerifyEmail`,
+  RESEND_OTP: `${serverUrl}${apiPrefix}/UserRegistration/ResendOtp`,
+  GET_PENDING_USER_REGISTRATIONS: `${serverUrl}${apiPrefix}/UserRegistration/Pending`,
+  GET_USER_REGISTRATION_DETAILS: `${serverUrl}${apiPrefix}/UserRegistration/`,
+  APPROVE_USER_REGISTRATION: `${serverUrl}${apiPrefix}/UserRegistration/approve/`,
+  REJECT_USER_REGISTRATION: `${serverUrl}${apiPrefix}/UserRegistration/`,
 
 
 };
