@@ -183,8 +183,11 @@ export class DayComponent implements OnInit, OnDestroy {
         minWidth: 60,
         maxWidth: 100,
         formatter: this.dateFormatter.bind(this),
-        printWidth: '10%',
-        printFormatter:this.dateFormatter.bind(this)
+        printWidth: '5%',
+        printFormatter: (row: any) => {
+          const date = row["specialOccasionDate"];
+          return `<span>${this.datePipe.transform(date, "dd-MMM")}</span>`;
+        }
       },
       {
         title: "Person Name",
@@ -233,7 +236,7 @@ export class DayComponent implements OnInit, OnDestroy {
         field: "dayType",
         sorter: "alphanum",
         minWidth: 120,
-        printWidth: '10%'
+        printWidth: '5%'
       },
       {
         title: "Pic",
@@ -267,7 +270,7 @@ export class DayComponent implements OnInit, OnDestroy {
         },
         minWidth: 70,
         maxWidth: 100,
-
+        printWidth: '5%'
       },
       {
         title: "",

@@ -404,7 +404,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
 .print-thumbnail-img {
   width: 45px;
-  height: 45px;
+  // height: 45px;
   object-fit: cover;
   border-radius: 4px;
 }
