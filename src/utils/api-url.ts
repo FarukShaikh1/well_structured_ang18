@@ -54,6 +54,7 @@ export const API_URL = {
 
   GET_ALL_USERS: `${serverUrl}${apiPrefix}/user/list`,
   GET_LOGGED_IN_USER_DETAILS: `${serverUrl}${apiPrefix}/auth/getloggedinuserdetails`,
+  Get_USER_DETAILS_BY_EMAIL: `${serverUrl}${apiPrefix}/user/GetDetailsByEmail?email=`,
   Get_USER_DETAILS: `${serverUrl}${apiPrefix}/user/GetDetails?userId=`,
   GET_MODULE_LIST: `${serverUrl}${apiPrefix}/user/modules`,
 

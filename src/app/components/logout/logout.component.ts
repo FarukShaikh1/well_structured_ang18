@@ -13,6 +13,8 @@ export class LogoutComponent {
   constructor(private router: Router, public globalService: GlobalService) { }
 
   ngOnInit() {    
+            console.log('logoutComponent 16 Clearing local storage');
+
     localStorage.clear();
     this.reload();
     this.router.navigate([NavigationURLs.HOME]);

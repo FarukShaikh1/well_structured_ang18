@@ -20,8 +20,10 @@ export class UserService {
   }
 
   getUserDetailsById(id: any): Observable<any> {
-
     return this.httpService.get(API_URL.Get_USER_DETAILS + id);
+  }
+  getUserDetailsByEmail(email: any): Observable<any> {
+    return this.httpService.get(API_URL.Get_USER_DETAILS_BY_EMAIL + email);
   }
 
   addUser(userData: any): Observable<any> {

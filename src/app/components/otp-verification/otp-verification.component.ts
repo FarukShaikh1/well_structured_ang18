@@ -24,6 +24,7 @@ import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 import { OtpService } from '../../services/otp/otp.service';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-otp-verification',
@@ -72,14 +73,15 @@ export class OTPVerificationComponent
     private otpService: OtpService,
     private localStorageService: LocalStorageService,
     private loaderService: LoaderService,
+    private userService: UserService,
     public globalService: GlobalService
   ) { }
 
   ngOnInit() {
     console.log('OTP Verification Page ngOnInit');
-    
+
     this.enteredEmail = this.localStorageService.getLoggedInUserData()?.emailAddress;
-    this.userId = this.localStorageService.getLoggedInUserData()?.id;
+    this.userId = this.localStorageService.getLoggedInUserData()?.id ?? this.localStorageService.getLoggedInUserData()?.userId;
     this.otpExpiresAt = Number(localStorage.getItem(LocalStorageConstants.OTP_EXPIRES_ON));
     if (!this.enteredEmail) {
       this.onBackToLogin();
@@ -307,6 +309,8 @@ export class OTPVerificationComponent
       purpose: OtpConfig.LOGIN
     }
     this.loaderService.showLoader();
+    console.log('otp.length === OtpConfig.NumberOfOtpDigits && this.verifyOtpRequest.emailId : ', otp.length === OtpConfig.NumberOfOtpDigits, ' ', this.verifyOtpRequest.emailId);
+
     if (otp.length === OtpConfig.NumberOfOtpDigits && this.verifyOtpRequest.emailId) {
       this.callVerifyOtpApi(this.verifyOtpRequest);
     } else {
@@ -318,13 +322,21 @@ export class OTPVerificationComponent
   callVerifyOtpApi(verifyOtpRequest: VerifyOtpRequest) {
     this.otpService.verifyOtp(verifyOtpRequest).subscribe({
       next: (result: any) => {
+        debugger;
         if (result.success) {
           this.toaster.showMessage(
             'OTP verified successfully.',
             'success'
           );
+          this.userService.getUserDetailsByEmail(verifyOtpRequest.emailId).subscribe({
+            next: (response: any) => {
+              localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(response.data));
+            }
+          })
           localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'true');
           this.globalService.setValuesInLocalStorage();
+          this.globalService.setConfigValuesInLocalStorage();
+          this.globalService.setFamilyInLocalStorage();
           this.router.navigate([NavigationURLs.HOME]);
 
         }

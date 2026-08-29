@@ -368,8 +368,9 @@ export class GlobalService {
       user = JSON.parse(userString);
     }
     const userId = user?.userId;
-
-    this.setFamilyToLocalStorage(user?.firstName);
+    if (user?.firstName) {
+      this.setFamilyToLocalStorage(user?.firstName);
+    }
   }
 
   setFamilyToLocalStorage(text: string) {

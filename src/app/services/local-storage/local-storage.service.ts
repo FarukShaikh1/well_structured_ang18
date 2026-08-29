@@ -12,6 +12,8 @@ export class LocalStorageService {
   constructor() { }
 
   clear(): void {
+            console.log('localstorageservice 15 Clearing local storage');
+
     localStorage.clear();
   }
 

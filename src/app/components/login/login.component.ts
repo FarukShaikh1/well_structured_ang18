@@ -28,11 +28,15 @@ export class LoginComponent implements OnDestroy {
   user: any;
   NavigationURLs = NavigationURLs;
   ngOninit() {
+    console.log('1 this.localStorageService.isAuthenticated() : ', this.localStorageService.isAuthenticated());
+
     this.reload();
+    console.log('2 this.localStorageService.isAuthenticated() : ', this.localStorageService.isAuthenticated());
     this.loaderService.hideLoader();
     if (this.localStorageService.isAuthenticated()) {
       this.router.navigate([NavigationURLs.HOME]);
     } else {
+      console.log('3 Clearing local storage ');
       localStorage.clear();
       this.router.navigate([NavigationURLs.UNAUTHORIZED_PAGE]);
     }
@@ -63,10 +67,7 @@ export class LoginComponent implements OnDestroy {
     this.isLoginClicked = true;
     this.loaderService.showLoader('Checking details...');
 
-    if (
-      this.loginForm.value["userName"] != null &&
-      this.loginForm.value["userName"].length <= 0
-    ) {
+    if (this.loginForm.value["userName"] != null && this.loginForm.value["userName"].length <= 0) {
       this.loaderService.hideLoader();
       this.isLoginClicked = false;
       return;
@@ -78,6 +79,7 @@ export class LoginComponent implements OnDestroy {
     }
     this.userService.getUser(this.loginForm.value).subscribe({
       next: (res: any) => {
+      debugger;
         this.isLoginClicked = false;
         if (res.success) {
           this.loaderService.showLoader('Please wait we are setting up some things for better performance...');
@@ -87,21 +89,16 @@ export class LoginComponent implements OnDestroy {
             this.loaderService.hideLoader();
             return;
           }
-          if (
-            this.data != null &&
-            this.data?.userName != null &&
-            this.data?.userName?.length > 0
+          if (this.data != null && this.data?.userName != null && this.data?.userName?.length > 0
           ) {
 
-            localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
             localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
             if (this.data.isOtpRequired) {
-              localStorage.setItem(
-                LocalStorageConstants.OTP_EXPIRES_ON,
-                (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString()
-              );
+              localStorage.setItem(LocalStorageConstants.OTP_EXPIRES_ON, (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString());
               this.loaderService.hideLoader();
-              this.router.navigate([NavigationURLs.OTP_VERIFICATION]);
+              if (res.statusCode == 200) {
+                this.router.navigate([NavigationURLs.OTP_VERIFICATION]);
+              }
             }
             else {
               localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
