@@ -80,8 +80,8 @@ export class OTPVerificationComponent
   ngOnInit() {
     console.log('OTP Verification Page ngOnInit');
 
-    this.enteredEmail = this.localStorageService.getLoggedInUserData()?.emailAddress;
-    this.userId = this.localStorageService.getLoggedInUserData()?.id ?? this.localStorageService.getLoggedInUserData()?.userId;
+    this.enteredEmail = localStorage.getItem(LocalStorageConstants.USERNAME);
+    this.userId = localStorage.getItem(LocalStorageConstants.USERID);
     this.otpExpiresAt = Number(localStorage.getItem(LocalStorageConstants.OTP_EXPIRES_ON));
     if (!this.enteredEmail) {
       this.onBackToLogin();
@@ -304,7 +304,7 @@ export class OTPVerificationComponent
   onVerifyOtp() {
     const otp = this.getOtp();
     this.verifyOtpRequest = {
-      emailId: this.localStorageService.getLoggedInUserData()?.emailAddress,
+      emailId:  localStorage.getItem(LocalStorageConstants.USERNAME)?.toString()||'',
       otpCode: otp,
       purpose: OtpConfig.LOGIN
     }
@@ -322,7 +322,6 @@ export class OTPVerificationComponent
   callVerifyOtpApi(verifyOtpRequest: VerifyOtpRequest) {
     this.otpService.verifyOtp(verifyOtpRequest).subscribe({
       next: (result: any) => {
-        debugger;
         if (result.success) {
           this.toaster.showMessage(
             'OTP verified successfully.',

@@ -111,6 +111,8 @@ export const LocalStorageConstants = {
     IS_LOGGED_IN: 'IsLoggedIn',
     USER: 'user',
     USERID: 'userId',
+    USERNAME: 'username',
+    EMAILID: 'emailid',
     USER_ROLE_ID: 'loggedInUserRoleId',
     USER_PERMISSIONS: 'UserPermissions',
     OTP_EXPIRES_ON: 'OtpExpiresOn',

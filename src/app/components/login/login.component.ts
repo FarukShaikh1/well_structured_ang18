@@ -56,7 +56,7 @@ export class LoginComponent implements OnDestroy {
   ) {
     this.loginForm = this.fb.group({
       userName: "farukshaikh908@gmail.com",
-      password: "Faruk@07011",
+      password: "Faruk@0701",
     });
   }
   parameters = "";
@@ -79,7 +79,6 @@ export class LoginComponent implements OnDestroy {
     }
     this.userService.getUser(this.loginForm.value).subscribe({
       next: (res: any) => {
-      debugger;
         this.isLoginClicked = false;
         if (res.success) {
           this.loaderService.showLoader('Please wait we are setting up some things for better performance...');
@@ -92,6 +91,8 @@ export class LoginComponent implements OnDestroy {
           if (this.data != null && this.data?.userName != null && this.data?.userName?.length > 0
           ) {
 
+            localStorage.setItem(LocalStorageConstants.USERID, this.data.userId);
+            localStorage.setItem(LocalStorageConstants.USERNAME, this.data.userName);
             localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
             if (this.data.isOtpRequired) {
               localStorage.setItem(LocalStorageConstants.OTP_EXPIRES_ON, (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString());
