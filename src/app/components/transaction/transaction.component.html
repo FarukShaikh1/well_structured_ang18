@@ -227,7 +227,8 @@
 @if(activeComponent !== NavigationURLs.BUDGET){
 <div class="mb-2">
   <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-    [paginationSize]="1000" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint">
+    [paginationSize]="1000" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint"
+    [allowAdd]="allowAdd" (addClicked)="transactionDetails('')" [allowRefresh]="allowRefresh" (refreshClicked)="refreshData()">
   </app-tabulator-grid>
 </div>
 }

@@ -27,6 +27,8 @@ export class SettingsComponent {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = true;
   public allowPrint = true;
+  public allowAdd = true;
+  public allowRefresh = true;
   public filterColumns: ColumnDefinition[] = [];
   searchText: string = '';
   noDataMessage = UIStrings.COMMON.NO_DATA;
@@ -157,7 +159,7 @@ export class SettingsComponent {
     menu.push({
       label: ApplicationConstantHtml.CONFIG_EDIT_LABLE,
       action: () => {
-        this.openDetailPopup(rowData['id'], config);
+        this.openDetailsPopup(rowData['id'], config);
       },
     });
     menu.push({
@@ -178,7 +180,16 @@ export class SettingsComponent {
     return menu;
   }
 
-  openDetailPopup(id: string, config: string) {
+  openDetailsPopup(id: string, config: string) {
+    debugger;
+    setTimeout(() => {
+      const button = document.querySelector(
+        '#openConfigDetailsButton'
+      ) as HTMLElement | null;
+
+      button?.click();
+    }, 100);
+
     this.currentConfig = config;
     this.configDetailsComponent.openDetailsPopup(id, config);
   }
@@ -293,7 +304,7 @@ export class SettingsComponent {
         },
         hozAlign: "center",
         headerSort: false,
-        print:false
+        print: false
       },
       {
         title: "",
@@ -302,7 +313,7 @@ export class SettingsComponent {
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
-        print:false
+        print: false
       }
     ];
   }
@@ -337,7 +348,7 @@ export class SettingsComponent {
         },
         hozAlign: "center",
         headerSort: false,
-        print:false
+        print: false
       },
       {
         title: "",
@@ -346,7 +357,7 @@ export class SettingsComponent {
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
-        print:false
+        print: false
       }
     ];
   }
@@ -381,7 +392,7 @@ export class SettingsComponent {
         },
         hozAlign: "center",
         headerSort: false,
-        print:false
+        print: false
       },
       {
         title: "",
@@ -390,7 +401,7 @@ export class SettingsComponent {
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
-        print:false
+        print: false
       }
 
     ];

@@ -16,14 +16,21 @@ export class RoleService {
     return this.httpService.get(API_URL.GET_ALL_ROLES);
   }
 
-  getPermission(userId: string): Observable<any> {
+  getPermission(userId: string | null): Observable<any> {
     if (userId == "") {
-      const userString = localStorage.getItem(LocalStorageConstants.USER);
-      let user = null;
-      if (userString) {
-        user = JSON.parse(userString);
+      const localStorageUserId = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
+      if (localStorageUserId != "" && localStorageUserId != undefined && localStorageUserId != "undefined") {
+        userId = localStorageUserId ?? "";
       }
-      return this.httpService.get(API_URL.GET_USER_PERMISSIONS + user?.userId);
+      else {
+        const userString = localStorage.getItem(LocalStorageConstants.USER);
+        let user = null;
+        if (userString) {
+          user = JSON.parse(userString);
+          userId = user.userId;
+        }
+      }
+      return this.httpService.get(API_URL.GET_USER_PERMISSIONS + userId);
     }
     return this.httpService.get(API_URL.GET_USER_PERMISSIONS + userId);
   }

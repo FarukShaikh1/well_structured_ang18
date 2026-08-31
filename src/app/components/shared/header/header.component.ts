@@ -88,10 +88,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userNameInitials = this.getUserNameInitials();
     this.thumbnailUrl = this.localStorageService.getLoggedInUserData()?.thumbnailPathSasUrl || '';
     this.ImageUrl = this.localStorageService.getLoggedInUserData()?.imagePathSasUrl || '';
+    debugger;
     await this.getModuleList();
   }
 
   getModuleList() {
+    debugger;
     this.moduleList = this.localStorageService.getLoggedInUserPermissions();
     if (this.moduleList?.length == 0) {
       this.globalService.getUserPermissionData().subscribe({

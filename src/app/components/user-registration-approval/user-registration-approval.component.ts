@@ -1,22 +1,43 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ColumnDefinition } from 'tabulator-tables';
 
 import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { RegistrationService } from '../../services/registration/registration.service'
+import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
+import { RegistrationService } from '../../services/registration/registration.service';
 import { UserRegistration } from '../../interfaces/user-registration';
-import { NavigationURLs } from '../../../utils/application-constants';
-
+import { ApplicationTableConstants, NavigationURLs } from '../../../utils/application-constants';
+import { DayDetailsComponent } from '../day-details/day-details.component';
+import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
+import { UserDetailsComponent } from '../user-details/user-details.component';
 @Component({
-    selector: 'app-user-registration-approval', templateUrl: './user-registration-approval.component.html', standalone: true, imports: [CommonModule, FormsModule, ToasterComponent],
+    selector: 'app-user-registration-approval',
+    templateUrl: './user-registration-approval.component.html',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ToasterComponent,
+        TabulatorGridComponent
+    ],
 })
 export class UserRegistrationApprovalComponent implements OnInit {
     @ViewChild(ToasterComponent) toaster!: ToasterComponent;
+    @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
+    @ViewChild(UserDetailsComponent) userDetailsComponent!: UserDetailsComponent;
+    @ViewChild(DayDetailsComponent) dayDetailsComponent!: DayDetailsComponent;
+    @ViewChild(ConfirmationDialogComponent)
+    confirmModalComponent!: ConfirmationDialogComponent;
 
-    // =========================================================  // DATA  // =========================================================
-    registrations: UserRegistration[] = [];
-    filteredRegistrations: UserRegistration[] = [];
-    selectedRegistration: UserRegistration | null = null;
+  public filteredTableData: Record<string, unknown>[] = [];
+  public tableData: Record<string, unknown>[] = [];
+  public columnConfig: ColumnDefinition[] = [];
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
+  public allowCSVExport = true;
+  public allowPrint = true;
+  public filterColumns: ColumnDefinition[] = [];
+
     // =========================================================  // UI  // =========================================================
     searchText = '';
     isLoading = false;
@@ -24,6 +45,7 @@ export class UserRegistrationApprovalComponent implements OnInit {
     showDetails = false;
     showReject = false;
     rejectionReason = '';
+    selectedRegistration: any;
 
     // =========================================================  // INIT  // =========================================================
 
@@ -32,20 +54,20 @@ export class UserRegistrationApprovalComponent implements OnInit {
         this.loadRegistrations();
     }
 
-    // =========================================================  // LOAD PENDING REGISTRATIONS  // =========================================================
+    // =========================================================  // LOAD PENDING tableData  // =========================================================
 
     loadRegistrations(): void {
         this.isLoading = true;
         this.registrationService.getPendingRegistrations().subscribe({
             next: (res: any) => {
-                this.registrations = res || [];
-                this.filteredRegistrations = [...this.registrations];
+                this.tableData = res || [];
+                this.filteredTableData = [...this.tableData];
                 this.isLoading = false;
             },
             error: (err: any) => {
                 this.isLoading = false;
-                console.error('Failed to load registrations', err);
-                this.toaster.showMessage(err?.error?.error || 'Failed to load pending registrations.', 'error');
+                console.error('Failed to load tableData', err);
+                this.toaster.showMessage(err?.error?.error || 'Failed to load pending tableData.', 'error');
             }
         });
     }
@@ -55,13 +77,13 @@ export class UserRegistrationApprovalComponent implements OnInit {
     search(event: any): void {
         this.searchText = event?.target?.value?.toLowerCase()?.trim() || '';
 
-        this.filteredRegistrations = this.registrations.filter(item => {
-            return (
-                item.name?.toLowerCase().includes(this.searchText)
-                ||
-                item.email?.toLowerCase().includes(this.searchText)
-                ||
-                item.mobileNumber?.toLowerCase().includes(this.searchText)
+        this.filteredTableData = this.tableData.filter(item => {
+            return (true
+                // item.name?.toLowerCase().includes(this.searchText)
+                // ||
+                // item.email?.toLowerCase().includes(this.searchText)
+                // ||
+                // item.mobileNumber?.toLowerCase().includes(this.searchText)
             );
         });
     }
@@ -80,6 +102,135 @@ export class UserRegistrationApprovalComponent implements OnInit {
         this.selectedRegistration = null;
     }
 
+    columnConfiguration(): void {
+
+        this.columnConfig = [
+
+            {
+                title: 'Name',
+                field: 'name',
+                sorter: 'string'
+            },
+
+            {
+                title: 'Email',
+                field: 'email',
+                sorter: 'string'
+            },
+
+            {
+                title: 'Mobile',
+                field: 'mobileNumber',
+                sorter: 'string',
+                formatter: (cell) => {
+                    return cell.getValue() || '-';
+                }
+            },
+
+            {
+                title: 'Date of Birth',
+                field: 'dateOfBirth',
+                sorter: 'date',
+                formatter: (cell) => {
+                    return this.formatDate(cell.getValue());
+                }
+            },
+
+            {
+                title: 'Email Verified',
+                field: 'emailVerified',
+                hozAlign: 'center',
+                formatter: (cell) => {
+
+                    const value = cell.getValue();
+
+                    return value
+                        ? '<span title="Verified">✓</span>'
+                        : '<span title="Not Verified">✖</span>';
+                }
+            },
+
+            {
+                title: 'Registered On',
+                field: 'createdOn',
+                sorter: 'date',
+                formatter: (cell) => {
+                    return this.formatDate(cell.getValue());
+                }
+            },
+
+            {
+                title: 'Status',
+                field: 'status',
+                sorter: 'string'
+            },
+
+            {
+                title: 'Action',
+                field: 'action',
+                headerSort: false,
+                hozAlign: 'center',
+                width: 160,
+                print: false,
+
+                formatter: () => {
+
+                    return `
+                    <div class="d-flex gap-2 justify-content-center">
+
+                        <button
+                            class="btn btn-sm btn-outline-primary view-registration"
+                            title="View">
+                            <i class="bi bi-eye"></i>
+                        </button>
+
+                        <button
+                            class="btn btn-sm btn-success approve-registration"
+                            title="Approve">
+                            ✓
+                        </button>
+
+                        <button
+                            class="btn btn-sm btn-danger reject-registration"
+                            title="Reject">
+                            ✖
+                        </button>
+
+                    </div>
+                `;
+                },
+
+                cellClick: (e, cell) => {
+
+                    const target = e.target as HTMLElement;
+
+                    const registration =
+                        cell.getRow().getData() as UserRegistration;
+
+                    if (
+                        target.closest('.view-registration')
+                    ) {
+                        this.viewDetails(registration);
+                        return;
+                    }
+
+                    if (
+                        target.closest('.approve-registration')
+                    ) {
+                        this.approve(registration);
+                        return;
+                    }
+
+                    if (
+                        target.closest('.reject-registration')
+                    ) {
+                        this.openReject(registration);
+                        return;
+                    }
+                }
+            }
+        ];
+    }
     // =========================================================  // APPROVE  // =========================================================
 
     approve(registration: UserRegistration): void {
@@ -94,8 +245,8 @@ export class UserRegistrationApprovalComponent implements OnInit {
                 this.toaster.showMessage(res?.message || 'User approved successfully.', 'success');
                 this.closeDetails();
                 this.loadRegistrations();
-                  localStorage.removeItem(NavigationURLs.USER_LIST);
-                
+                localStorage.removeItem(NavigationURLs.USER_LIST);
+
             },
             error: (err: any) => {
                 this.isProcessing = false;

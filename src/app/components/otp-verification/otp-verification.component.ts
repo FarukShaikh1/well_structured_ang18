@@ -302,9 +302,10 @@ export class OTPVerificationComponent
   }
 
   onVerifyOtp() {
+    debugger;
     const otp = this.getOtp();
     this.verifyOtpRequest = {
-      emailId:  localStorage.getItem(LocalStorageConstants.USERNAME)?.toString()||'',
+      emailId: localStorage.getItem(LocalStorageConstants.USERNAME)?.toString() || '',
       otpCode: otp,
       purpose: OtpConfig.LOGIN
     }
@@ -330,14 +331,13 @@ export class OTPVerificationComponent
           this.userService.getUserDetailsByEmail(verifyOtpRequest.emailId).subscribe({
             next: (response: any) => {
               localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(response.data));
+              localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'true');
+              this.globalService.setValuesInLocalStorage();
+              this.globalService.setConfigValuesInLocalStorage();
+              this.globalService.setFamilyInLocalStorage();
+              this.router.navigate([NavigationURLs.HOME]);
             }
           })
-          localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'true');
-          this.globalService.setValuesInLocalStorage();
-          this.globalService.setConfigValuesInLocalStorage();
-          this.globalService.setFamilyInLocalStorage();
-          this.router.navigate([NavigationURLs.HOME]);
-
         }
         else {
           this.toaster.showMessage(

@@ -70,6 +70,8 @@ export class TransactionComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = true;
   public allowPrint = true;
+  public allowAdd = true;
+  public allowRefresh = true;
   public filterColumns: ColumnDefinition[] = [];
 
   lastTransactionDate: Date = new Date();

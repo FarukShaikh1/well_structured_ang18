@@ -2,7 +2,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Account Details</h4>
+        <h4 class="modal-title">{{this.currentConfig}} Details</h4>
         <button #btnCloseConfigPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal">✕</button>
       </div>
 
@@ -28,9 +28,7 @@
           <div class="form-group pt-4">
             <label for="configurationDescription">{{currentConfig}} Description</label>
             <textarea id="configurationDescription" class="form-control" formControlName="configurationDescription"
-              [placeholder]="'Enter ' + currentConfig + ' description'" 
-              rows="3"
-              ></textarea>
+              [placeholder]="'Enter ' + currentConfig + ' description'" rows="3"></textarea>
             <div
               *ngIf="configForm.get('configurationDescription')?.touched && configForm.get('configurationDescription')?.invalid"
               class="text-danger">
@@ -72,7 +70,7 @@
                 }
               </div>
             </div>
-            </div>
+          </div>
 
         </form>
 

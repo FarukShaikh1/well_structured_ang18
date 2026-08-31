@@ -54,6 +54,8 @@ export class DayComponent implements OnInit, OnDestroy {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = true;
   public allowPrint = true;
+  public allowAdd = true;
+  public allowRefresh = true;
   public filterColumns: PrintColumnDefinition[] = [];
   private cacheKey = NavigationURLs.DAY_LIST;
   isGridLoading: boolean = false;
@@ -93,6 +95,7 @@ export class DayComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.allowAdd = this.globalService.isAccessible(ActionConstant.ADD);
     this.monthList = this.localStorageService.getCommonListItems(DdlConfig.MONTHS);
 
     this.occasionTypeList = this.localStorageService.getConfigList(DdlConfig.OCCASION_TYPES);

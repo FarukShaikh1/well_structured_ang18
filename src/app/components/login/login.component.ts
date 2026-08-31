@@ -28,15 +28,11 @@ export class LoginComponent implements OnDestroy {
   user: any;
   NavigationURLs = NavigationURLs;
   ngOninit() {
-    console.log('1 this.localStorageService.isAuthenticated() : ', this.localStorageService.isAuthenticated());
-
     this.reload();
-    console.log('2 this.localStorageService.isAuthenticated() : ', this.localStorageService.isAuthenticated());
     this.loaderService.hideLoader();
     if (this.localStorageService.isAuthenticated()) {
       this.router.navigate([NavigationURLs.HOME]);
     } else {
-      console.log('3 Clearing local storage ');
       localStorage.clear();
       this.router.navigate([NavigationURLs.UNAUTHORIZED_PAGE]);
     }
@@ -90,11 +86,10 @@ export class LoginComponent implements OnDestroy {
           }
           if (this.data != null && this.data?.userName != null && this.data?.userName?.length > 0
           ) {
-
-            localStorage.setItem(LocalStorageConstants.USERID, this.data.userId);
-            localStorage.setItem(LocalStorageConstants.USERNAME, this.data.userName);
-            localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
             if (this.data.isOtpRequired) {
+              localStorage.setItem(LocalStorageConstants.USERID, this.data.userId);
+              localStorage.setItem(LocalStorageConstants.USERNAME, this.data.userName);
+              localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
               localStorage.setItem(LocalStorageConstants.OTP_EXPIRES_ON, (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString());
               this.loaderService.hideLoader();
               if (res.statusCode == 200) {
@@ -117,7 +112,7 @@ export class LoginComponent implements OnDestroy {
                 this.globalService.setConfigValuesInLocalStorage();
                 this.globalService.setFamilyInLocalStorage();
                 console.log('✅ Background localStorage setup done');
-              }, 2000);
+              }, 100);
             }
           }
           else {

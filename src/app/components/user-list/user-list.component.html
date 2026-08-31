@@ -11,27 +11,29 @@
 
   }
   <div class="row pb-2 pt-2 ">
-    <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-5 mb-3">
+    <div class="col-12 col-sm-8 col-lg-6 col-lg-6 col-xl-5 mb-3">
       Search
       <input class="form-control form-control-lg text-dark bg-transparent" type="text"
         placeholder="Type something to filter the records" #searchInput (keyup)="filterGridBySearch($event)" />
     </div>
-
   </div>
-
 </div>
-  <div class="mb-2">
-    <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
+<div class="row">
+  <div class="col-lg-6">
+    <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'200px'"
       [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
       [isLoading]="isGridLoading" [loadingText]="'Loading users...'" [allowPrint]="allowPrint">
     </app-tabulator-grid>
-  <app-user-registration-approval></app-user-registration-approval>
   </div>
-<app-toaster></app-toaster>
-<app-day-details></app-day-details>
-<app-user-details></app-user-details>
-<app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
-<button id="openDayDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup"
-  style="display:none"></button>
-<button id="openUserDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#userDetailsPopup"
-  style="display:none"></button>
+  <div class="col-lg-6">
+    <app-user-registration-approval></app-user-registration-approval>
+  </div>
+  <app-toaster></app-toaster>
+  <app-day-details></app-day-details>
+  <app-user-details></app-user-details>
+  <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
+  <button id="openDayDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup"
+    style="display:none"></button>
+  <button id="openUserDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#userDetailsPopup"
+    style="display:none"></button>
+</div>

@@ -1,45 +1,46 @@
 <div class="table-container" [class.loading-disabled]="isLoading">
 
   <!-- Grid Actions -->
-  <div class="grid-actions" *ngIf="allowCSVExport || allowPrint">
+  <div class="grid-actions">
+    @if (allowRefresh) {
+    <button type="button" class="btn btn-outline-error grid-action-btn" title="Add" (click)="onRefreshClick()">
+      <i class="fa fa-refresh"></i>
+      <span>Refresh</span>
+    </button>
+    }
 
-    <button
-      *ngIf="allowCSVExport"
-      type="button"
-      class="btn btn-outline-success grid-action-btn"
-      (click)="exportTableData()"
+    @if (allowAdd) {
+    <button type="button" class="btn btn-outline-warning grid-action-btn" title="Add" (click)="onAddClick()">
+      <i class="fa fa-plus"></i>
+      <span>Add</span>
+    </button>
+    }
+    @if(allowCSVExport){
+    <button type="button" class="btn btn-outline-success grid-action-btn" (click)="exportTableData()"
       title="Export to Excel">
       <i class="bi bi-file-earmark-excel"></i>
       <span>Excel</span>
     </button>
-
-    <button
-      *ngIf="allowPrint"
-      type="button"
-      class="btn btn-outline-danger grid-action-btn"
-      (click)="printGrid()"
+    }
+    @if(allowPrint){
+    <button type="button" class="btn btn-outline-danger grid-action-btn" (click)="printGrid()"
       title="Print / Save as PDF">
       <i class="bi bi-file-earmark-pdf"></i>
       <span>PDF</span>
     </button>
-
+    }
   </div>
 
 
   <!-- Tabulator Grid -->
   <div class="row">
-    <div
-      class="col-12 tabulator-grid-wrapper"
-      #tabulatorGridWrapper
-      id="tabulator-grid-wrapper">
+    <div class="col-12 tabulator-grid-wrapper" #tabulatorGridWrapper id="tabulator-grid-wrapper">
     </div>
   </div>
 
 
   <!-- Loader -->
-  <app-grid-loader
-    [isLoading]="isLoading"
-    [loadingText]="loadingText">
+  <app-grid-loader [isLoading]="isLoading" [loadingText]="loadingText">
   </app-grid-loader>
 
 </div>

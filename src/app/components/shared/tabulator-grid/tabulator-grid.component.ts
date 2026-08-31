@@ -44,6 +44,8 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   @Input() filterColumns!: ColumnDefinition[] | [];
   @Input() allowCSVExport!: boolean;
   @Input() allowPrint!: boolean;
+  @Input() allowAdd = false;
+  @Input() allowRefresh = false;
   @Input() noDataMessage = "No Data";
   @Input() noMatchingDataMessage = "No Matching Data";
   @Input() isLoading: boolean = false;
@@ -58,7 +60,8 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   @Output() loadedData = new EventEmitter<Record<string, unknown>[]>();
   @Output() cellChanged = new EventEmitter<CellComponent>();
 
-
+  @Output() addClicked = new EventEmitter<void>();
+  @Output() refreshClicked = new EventEmitter<void>();
   private tableDiv = document.createElement("div");
   private myTable?: TabulatorFull;
   private gridClosing = false;
@@ -85,6 +88,12 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     }
   }
 
+  onAddClick(): void {
+  this.addClicked.emit();
+}
+  onRefreshClick(): void {
+  this.refreshClicked.emit();
+}
 
   private createFilterForm(): void {
     this.filterForm = new FormGroup({

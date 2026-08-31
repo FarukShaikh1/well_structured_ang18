@@ -69,6 +69,7 @@ export class GlobalService {
   }
 
   getUserPermissionData(): Observable<boolean> {
+    debugger;
     return this.roleService.getPermission("").pipe(
       map((result) => {
         if (result.success) {
@@ -331,13 +332,16 @@ export class GlobalService {
   }
 
   public setValuesInLocalStorage() {
-
     const userString = localStorage.getItem(LocalStorageConstants.USER);
+    let userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || "";
     let user = null;
     if (userString) {
       user = JSON.parse(userString);
     }
-    const userId = user?.userId;
+    if (userId == "" || userId == "undefined") {
+      userId = user.id ?? user.userId ?? "";
+    }
+
     localStorage.setItem(LocalStorageConstants.USERID, userId);
     // this.setConfigValuesInLocalStorage(userId);
     this.setCountryListToLocalStorage();
@@ -346,13 +350,15 @@ export class GlobalService {
   }
 
   public setConfigValuesInLocalStorage() {
-
     const userString = localStorage.getItem(LocalStorageConstants.USER);
+    let userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || "";
     let user = null;
     if (userString) {
       user = JSON.parse(userString);
     }
-    const userId = user?.userId;
+    if (userId == "" || userId == "undefined") {
+      userId = user.id ?? user.userId ?? "";
+    }
 
     this.setConfigToLocalStorage(userId, UserConfig.ACCOUNT, DdlConfig.ACCOUNTS);
     this.setConfigToLocalStorage(userId, UserConfig.RELATION, DdlConfig.RELATIONS);
@@ -361,13 +367,15 @@ export class GlobalService {
   }
 
   public setFamilyInLocalStorage() {
-
     const userString = localStorage.getItem(LocalStorageConstants.USER);
+    let userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || "";
     let user = null;
     if (userString) {
       user = JSON.parse(userString);
     }
-    const userId = user?.userId;
+    if (userId == "" || userId == "undefined") {
+      userId = user.id ?? user.userId ?? "";
+    }
     if (user?.firstName) {
       this.setFamilyToLocalStorage(user?.firstName);
     }
