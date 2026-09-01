@@ -302,7 +302,6 @@ export class OTPVerificationComponent
   }
 
   onVerifyOtp() {
-    debugger;
     const otp = this.getOtp();
     this.verifyOtpRequest = {
       emailId: localStorage.getItem(LocalStorageConstants.USERNAME)?.toString() || '',

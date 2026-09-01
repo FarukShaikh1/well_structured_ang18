@@ -69,7 +69,6 @@ export class GlobalService {
   }
 
   getUserPermissionData(): Observable<boolean> {
-    debugger;
     return this.roleService.getPermission("").pipe(
       map((result) => {
         if (result.success) {

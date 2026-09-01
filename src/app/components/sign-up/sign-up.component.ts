@@ -169,7 +169,7 @@ export class SignupComponent {
             res?.registrationId || res;
 
           this.router.navigate(
-            ['/verify-email'],
+            ['/email-verification'],
             {
               queryParams: {
                 registrationId: registrationId

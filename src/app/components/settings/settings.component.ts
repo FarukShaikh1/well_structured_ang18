@@ -181,7 +181,6 @@ export class SettingsComponent {
   }
 
   openDetailsPopup(id: string, config: string) {
-    debugger;
     setTimeout(() => {
       const button = document.querySelector(
         '#openConfigDetailsButton'

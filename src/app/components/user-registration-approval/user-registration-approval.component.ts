@@ -30,13 +30,13 @@ export class UserRegistrationApprovalComponent implements OnInit {
     @ViewChild(ConfirmationDialogComponent)
     confirmModalComponent!: ConfirmationDialogComponent;
 
-  public filteredTableData: Record<string, unknown>[] = [];
-  public tableData: Record<string, unknown>[] = [];
-  public columnConfig: ColumnDefinition[] = [];
-  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = true;
-  public allowPrint = true;
-  public filterColumns: ColumnDefinition[] = [];
+    public filteredTableData: Record<string, unknown>[] = [];
+    public tableData: Record<string, unknown>[] = [];
+    public columnConfig: ColumnDefinition[] = [];
+    public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
+    public allowCSVExport = true;
+    public allowPrint = true;
+    public filterColumns: ColumnDefinition[] = [];
 
     // =========================================================  // UI  // =========================================================
     searchText = '';
@@ -51,6 +51,7 @@ export class UserRegistrationApprovalComponent implements OnInit {
 
     constructor(private registrationService: RegistrationService) { }
     ngOnInit(): void {
+        this.columnConfiguration();
         this.loadRegistrations();
     }
 
