@@ -32,6 +32,18 @@ export class FoodMenuComponent implements OnInit {
   foodMenus: FoodMenu[] = [];
 
   filteredFoodMenus: FoodMenu[] = [];
+  selectedPrintSection: string | null = null;
+  printSection(section: string): void {
+    this.selectedPrintSection = section;
+
+    // Allow Angular to apply the class before printing
+    setTimeout(() => {
+      window.print();
+    });
+  }
+  onAfterPrint(): void {
+    this.selectedPrintSection = null;
+  }
 
 
   // =========================
@@ -170,7 +182,11 @@ export class FoodMenuComponent implements OnInit {
 
   constructor(
     private foodMenuService: FoodMenuService
-  ) { }
+  ) {
+    window.addEventListener('afterprint', () => {
+      this.onAfterPrint();
+    });
+  }
 
 
   // =========================

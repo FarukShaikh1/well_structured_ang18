@@ -57,6 +57,12 @@ export const routes: Routes = [
       },
 
       {
+        path: RoutePath.FOOD_MENU,
+        title: RoutePathTitles.FOOD_MENU,
+        component: FoodMenuComponent
+      },
+
+      {
         path: RoutePath.FAMILY_GRAPH,
         title: RoutePathTitles.FAMILY_GRAPH,
         loadComponent: () =>

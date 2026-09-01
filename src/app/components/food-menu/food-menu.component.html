@@ -3,17 +3,19 @@
     <div class="d-flex justify-content-between align-items-center mb-2">
 
         <h2>Food Menu</h2>
-
-        <input
-            type="text"
-            placeholder="Search"
-            (keyup)="search($event)"
-            class="form-control form-control-lg print-hide"
-            style="max-width: 300px;">
-
+        <div class="'d-flex d-inline-flex ">
+            <input type="text" placeholder="Search" (keyup)="search($event)"
+                class="form-control form-control-lg print-hide" style="max-width: 300px;">
+            <div class="print-section"  [class.print-selected]="selectedPrintSection == 'food-menu'"
+                [class.print-hidden]="selectedPrintSection != null && selectedPrintSection != 'food-menu'">
+                <div class="print-toolbar">
+                    <button type="button" style="width: 200px !important" class="btn btn-primary" (click)="printSection('food-menu')">
+                        🖨️ Print Menu
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-
-
     <table border="0" width="100%" style="border-collapse: collapse;">
 
         <tr>
@@ -36,24 +38,20 @@
 
                 @if(selectedId === food.id && isEdit) {
 
-                    <select
-                        [(ngModel)]="model.menuDate"
-                        class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.menuDate" class="form-select form-control form-control-lg">
 
-                        <option
-                            *ngFor="let date of menuDates"
-                            [ngValue]="date">
+                    <option *ngFor="let date of menuDates" [ngValue]="date">
 
-                            {{ date }}
+                        {{ date }}
 
-                        </option>
+                    </option>
 
-                    </select>
+                </select>
 
                 }
                 @else {
 
-                    {{ food.menuDate }}
+                {{ food.menuDate }}
 
                 }
 
@@ -66,24 +64,20 @@
 
                 @if(selectedId === food.id && isEdit) {
 
-                    <select
-                        [(ngModel)]="model.sequence"
-                        class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.sequence" class="form-select form-control form-control-lg">
 
-                        <option
-                            *ngFor="let sequence of sequences"
-                            [ngValue]="sequence">
+                    <option *ngFor="let sequence of sequences" [ngValue]="sequence">
 
-                            {{ sequence }}
+                        {{ sequence }}
 
-                        </option>
+                    </option>
 
-                    </select>
+                </select>
 
                 }
                 @else {
 
-                    {{ food.sequence }}
+                {{ food.sequence }}
 
                 }
 
@@ -96,28 +90,24 @@
 
                 @if(selectedId === food.id && isEdit) {
 
-                    <select
-                        [(ngModel)]="model.breakfast"
-                        class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.breakfast" class="form-select form-control form-control-lg">
 
-                        <option value="">
-                            Select Breakfast
-                        </option>
+                    <option value="">
+                        Select Breakfast
+                    </option>
 
-                        <option
-                            *ngFor="let item of breakfastItems"
-                            [value]="item">
+                    <option *ngFor="let item of breakfastItems" [value]="item">
 
-                            {{ item }}
+                        {{ item }}
 
-                        </option>
+                    </option>
 
-                    </select>
+                </select>
 
                 }
                 @else {
 
-                    {{ food.breakfast || '-' }}
+                {{ food.breakfast || '-' }}
 
                 }
 
@@ -130,28 +120,24 @@
 
                 @if(selectedId === food.id && isEdit) {
 
-                    <select
-                        [(ngModel)]="model.lunch"
-                        class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.lunch" class="form-select form-control form-control-lg">
 
-                        <option value="">
-                            Select Lunch
-                        </option>
+                    <option value="">
+                        Select Lunch
+                    </option>
 
-                        <option
-                            *ngFor="let item of lunchItems"
-                            [value]="item">
+                    <option *ngFor="let item of lunchItems" [value]="item">
 
-                            {{ item }}
+                        {{ item }}
 
-                        </option>
+                    </option>
 
-                    </select>
+                </select>
 
                 }
                 @else {
 
-                    {{ food.lunch || '-' }}
+                {{ food.lunch || '-' }}
 
                 }
 
@@ -164,28 +150,24 @@
 
                 @if(selectedId === food.id && isEdit) {
 
-                    <select
-                        [(ngModel)]="model.eveningBreakfast"
-                        class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.eveningBreakfast" class="form-select form-control form-control-lg">
 
-                        <option value="">
-                            Select Evening Breakfast
-                        </option>
+                    <option value="">
+                        Select Evening Breakfast
+                    </option>
 
-                        <option
-                            *ngFor="let item of eveningBreakfastItems"
-                            [value]="item">
+                    <option *ngFor="let item of eveningBreakfastItems" [value]="item">
 
-                            {{ item }}
+                        {{ item }}
 
-                        </option>
+                    </option>
 
-                    </select>
+                </select>
 
                 }
                 @else {
 
-                    {{ food.eveningBreakfast || '-' }}
+                {{ food.eveningBreakfast || '-' }}
 
                 }
 
@@ -198,28 +180,24 @@
 
                 @if(selectedId === food.id && isEdit) {
 
-                    <select
-                        [(ngModel)]="model.dinner"
-                        class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.dinner" class="form-select form-control form-control-lg">
 
-                        <option value="">
-                            Select Dinner
-                        </option>
+                    <option value="">
+                        Select Dinner
+                    </option>
 
-                        <option
-                            *ngFor="let item of dinnerItems"
-                            [value]="item">
+                    <option *ngFor="let item of dinnerItems" [value]="item">
 
-                            {{ item }}
+                        {{ item }}
 
-                        </option>
+                    </option>
 
-                    </select>
+                </select>
 
                 }
                 @else {
 
-                    {{ food.dinner || '-' }}
+                {{ food.dinner || '-' }}
 
                 }
 
@@ -232,41 +210,30 @@
 
                 @if(selectedId === food.id && isEdit) {
 
-                    <button
-                        (click)="save()"
-                        title="Save">
+                <button (click)="save()" title="Save">
 
-                        💾
+                    💾
 
-                    </button>
+                </button>
 
-                    <button
-                        class="reset"
-                        (click)="reset()"
-                        title="Cancel">
+                <button class="reset" (click)="reset()" title="Cancel">
 
-                        ✖
+                    ✖
 
-                    </button>
+                </button>
 
                 }
                 @else {
 
-                    <button
-                        class="edit"
-                        (click)="edit(food)"
-                        title="Edit">
+                <button class="edit" (click)="edit(food)" title="Edit">
 
-                        <i class="bi bi-pencil"></i>
+                    <i class="bi bi-pencil"></i>
 
-                    </button>
+                </button>
 
                 }
 
-                <button
-                    class="delete"
-                    (click)="delete(food.id)"
-                    title="Delete">
+                <button class="delete" (click)="delete(food.id)" title="Delete">
 
                     <i class="bi bi-trash"></i>
 
@@ -303,13 +270,9 @@
 
                 <label>Date</label>
 
-                <select
-                    [(ngModel)]="model.menuDate"
-                    class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.menuDate" class="form-select form-control form-control-lg">
 
-                    <option
-                        *ngFor="let date of menuDates"
-                        [ngValue]="date">
+                    <option *ngFor="let date of menuDates" [ngValue]="date">
 
                         {{ date }}
 
@@ -324,13 +287,9 @@
 
                 <label>Sequence</label>
 
-                <select
-                    [(ngModel)]="model.sequence"
-                    class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.sequence" class="form-select form-control form-control-lg">
 
-                    <option
-                        *ngFor="let sequence of sequences"
-                        [ngValue]="sequence">
+                    <option *ngFor="let sequence of sequences" [ngValue]="sequence">
 
                         {{ sequence }}
 
@@ -349,17 +308,13 @@
 
                 <label>Breakfast</label>
 
-                <select
-                    [(ngModel)]="model.breakfast"
-                    class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.breakfast" class="form-select form-control form-control-lg">
 
                     <option value="">
                         Select Breakfast
                     </option>
 
-                    <option
-                        *ngFor="let item of breakfastItems"
-                        [value]="item">
+                    <option *ngFor="let item of breakfastItems" [value]="item">
 
                         {{ item }}
 
@@ -374,17 +329,13 @@
 
                 <label>Lunch</label>
 
-                <select
-                    [(ngModel)]="model.lunch"
-                    class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.lunch" class="form-select form-control form-control-lg">
 
                     <option value="">
                         Select Lunch
                     </option>
 
-                    <option
-                        *ngFor="let item of lunchItems"
-                        [value]="item">
+                    <option *ngFor="let item of lunchItems" [value]="item">
 
                         {{ item }}
 
@@ -403,17 +354,13 @@
 
                 <label>Evening Breakfast</label>
 
-                <select
-                    [(ngModel)]="model.eveningBreakfast"
-                    class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.eveningBreakfast" class="form-select form-control form-control-lg">
 
                     <option value="">
                         Select Evening Breakfast
                     </option>
 
-                    <option
-                        *ngFor="let item of eveningBreakfastItems"
-                        [value]="item">
+                    <option *ngFor="let item of eveningBreakfastItems" [value]="item">
 
                         {{ item }}
 
@@ -428,17 +375,13 @@
 
                 <label>Dinner</label>
 
-                <select
-                    [(ngModel)]="model.dinner"
-                    class="form-select form-control form-control-lg">
+                <select [(ngModel)]="model.dinner" class="form-select form-control form-control-lg">
 
                     <option value="">
                         Select Dinner
                     </option>
 
-                    <option
-                        *ngFor="let item of dinnerItems"
-                        [value]="item">
+                    <option *ngFor="let item of dinnerItems" [value]="item">
 
                         {{ item }}
 
@@ -461,9 +404,7 @@
 
                 </button>
 
-                <button
-                    class="reset ms-2"
-                    (click)="reset()">
+                <button class="reset ms-2" (click)="reset()">
 
                     Clear
 
@@ -474,7 +415,6 @@
         </tr>
 
     </table>
-
 </div>
 
 

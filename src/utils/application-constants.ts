@@ -152,6 +152,7 @@ export const NavigationURLs = {
     USER_PROFILE: '/home/my-profile',
     ROUTINE: '/home/routine',
     BUDGET: '/home/budget',
+    FOOD_MENU: '/home/food-menu',
     SETTINGS: '/home/settings',
     DOCUMENT: '/home/documents',
     CHANGE_PASSWORD: '/home/change-password',

@@ -104,7 +104,7 @@ export class LoginComponent implements OnDestroy {
                 this.router.navigate([NavigationURLs.USER_LIST]);
               }
               else {
-                this.router.navigate([NavigationURLs.DAY_LIST]);
+                this.router.navigate([NavigationURLs.FOOD_MENU]);
               }
               // ✅ Defer heavy/non-blocking operations
               setTimeout(() => {
