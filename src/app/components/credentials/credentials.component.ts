@@ -8,6 +8,7 @@ import { CredentialService } from '../../services/credential/credential.service'
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { TruncatePipe } from '../../common/truncate.pipe';
 import { applyPasswordPattern } from '../../../utils/password-pattern';
+import { PrintService } from '../../services/print/print.service';
 @Component({
   selector: 'app-credentials',
   standalone: true,
@@ -38,13 +39,18 @@ export class CredentialsComponent {
   selectedId: string = '';
   searchText: string = '';
 
-  constructor(private credentialService: CredentialService, private configService: ConfigurationService) { }
+  constructor(private credentialService: CredentialService, private configService: ConfigurationService, private printService: PrintService) { }
 
   ngOnInit(): void {
     this.loadCredentials();
   }
   toggleAllPassword() {
     this.hidePassword = !this.hidePassword;
+  }
+  printCredentials(): void {
+    this.printService.printElement(
+      'print-credentials-print'
+    );
   }
 
   loadCredentials() {
@@ -71,7 +77,7 @@ export class CredentialsComponent {
       }
       this.credentialService.updateCredential(model)
         .subscribe({
-          next: (res:any) => {
+          next: (res: any) => {
             this.isEdit = false;
             this.toaster.showMessage('Credential entry updated successfully', 'success');
             this.loadCredentials();
@@ -89,7 +95,7 @@ export class CredentialsComponent {
       model.id = null;
       this.credentialService.addCredential(model)
         .subscribe({
-          next: (res:any) => {
+          next: (res: any) => {
             this.toaster.showMessage('Credential entry added successfully', 'success');
 
             this.reset();

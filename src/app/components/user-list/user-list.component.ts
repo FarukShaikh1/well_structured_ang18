@@ -45,6 +45,9 @@ export class UserListComponent implements OnInit {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = true;
   public allowPrint = true;
+  public allowAdd = false;
+  public allowRefresh = true;
+  public gridName = "Hi";
   public filterColumns: ColumnDefinition[] = [];
   searchText: string = '';
   noDataMessage = 'No Data Exists.';
@@ -75,6 +78,7 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.allowAdd = this.globalService.isAccessible(ActionConstant.ADD)
     this.columnConfiguration();
 
     this.loadGrid();
@@ -142,7 +146,7 @@ export class UserListComponent implements OnInit {
         },
         hozAlign: "center",
         headerSort: false,
-        print:false
+        print: false
       },
     ];
     if (
@@ -156,7 +160,7 @@ export class UserListComponent implements OnInit {
         formatter: this.globalService.threeDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
-        print:false
+        print: false
       });
     }
   }
@@ -166,7 +170,7 @@ export class UserListComponent implements OnInit {
     if (this.globalService.isAccessible(ActionConstant.EDIT)) {
       menu.push({
         label: ApplicationConstantHtml.EDIT_LABLE,
-        action: () => { 
+        action: () => {
           this.openDayDetailsPopup(rowData['id']);
         },
       });
@@ -213,7 +217,7 @@ export class UserListComponent implements OnInit {
   }
 
   loadGrid() {
-    const cachedData = this.cacheService.get<any[]>(this.cacheKey); 
+    const cachedData = this.cacheService.get<any[]>(this.cacheKey);
     if (cachedData) {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;

@@ -8,6 +8,7 @@ import { FoodMenu } from '../../interfaces/food-menu';
 import { FoodMenuService } from '../../services/food-menu.service/food-menu.service'
 
 import { LocalStorageConstants } from '../../../utils/application-constants';
+import { PrintService } from '../../services/print/print.service';
 
 @Component({
   selector: 'app-food-menu',
@@ -33,18 +34,13 @@ export class FoodMenuComponent implements OnInit {
 
   filteredFoodMenus: FoodMenu[] = [];
   selectedPrintSection: string | null = null;
-  printSection(section: string): void {
-    this.selectedPrintSection = section;
 
-    // Allow Angular to apply the class before printing
-    setTimeout(() => {
-      window.print();
-    });
-  }
-  onAfterPrint(): void {
-    this.selectedPrintSection = null;
-  }
+  printFoodMenu(): void {
 
+    this.printService.printElement(
+      'food-menu-print'
+    );
+  }
 
   // =========================
   // USER
@@ -181,11 +177,8 @@ export class FoodMenuComponent implements OnInit {
 
 
   constructor(
-    private foodMenuService: FoodMenuService
+    private foodMenuService: FoodMenuService, private printService: PrintService
   ) {
-    window.addEventListener('afterprint', () => {
-      this.onAfterPrint();
-    });
   }
 
 

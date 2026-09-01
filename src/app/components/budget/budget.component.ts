@@ -6,6 +6,7 @@ import { BudgetService } from '../../services/budget/budget.service';
 import { ConfigurationService } from '../../services/configuration/configuration.service';
 import { LocalStorageConstants, UserConfig } from '../../../utils/application-constants';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { PrintService } from "../../services/print/print.service";
 
 
 @Component({
@@ -36,13 +37,20 @@ export class BudgetComponent implements OnInit {
   isEdit = false;
   selectedId: string = '';
   searchText: string = '';
+  total: number = 0;
 
-  constructor(private budgetService: BudgetService, private configService: ConfigurationService) { }
+  constructor(private budgetService: BudgetService, private configService: ConfigurationService, private printService: PrintService) { }
 
   ngOnInit(): void {
     this.loadBudgets();
     this.loadCategories();
   }
+  printBudget(): void {
+    this.printService.printElement(
+      'budget-print'
+    );
+  }
+
 
 
   loadBudgets() {
@@ -131,9 +139,6 @@ export class BudgetComponent implements OnInit {
     this.selectedId = '';
   }
 
-  getTotal(): number {
-    return this.budgets.reduce((sum, x) => sum + (x.amount || 0), 0);
-  }
 
   search(textBox: any) {
     this.searchText = textBox?.target?.value?.toLowerCase();
@@ -144,6 +149,7 @@ export class BudgetComponent implements OnInit {
       // const amount = item.amount?.toLowerCase().includes(this.searchText);
       return (payTo || purpose || category);
     });
+    this.total =  this.filteredBudgets.reduce((sum, x) => sum + (x.amount || 0), 0);
   }
 
 }

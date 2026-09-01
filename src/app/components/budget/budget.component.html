@@ -1,113 +1,133 @@
-<div class="table-container mt-2">
-    <h2>Budget Management</h2>
-    <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg mb-2 print-hide">
-    <table border="0" width="100%" style="border-collapse: collapse;">
-        <tr>
-            <th class="print-20">Pay To</th>
-            <th class="print-20">Purpose</th>
-            <th class="print-20">Category</th>
-            <th class="print-10">Amount (₹)</th>
-            <th class="print-hide">Action</th>
-        </tr>
-        <tr *ngFor="let b of filteredBudgets">
-            <td>
-                @if(selectedId === b.id && isEdit){
-                <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo" class="form-control form-control-lg"
-                    style="width: auto;">
-                }
-                @else{
-                {{ b.payTo }}
-                }
-            </td>
-            <td>
-                @if(selectedId === b.id && isEdit){
-                <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose"
-                    class="form-control form-control-lg" style="width: auto;">
-                }
-                @else{
-                {{ b.purpose }}
-                }
-            </td>
+<div class="table-container">
 
-            <td>
-                @if(selectedId === b.id && isEdit){
-                <select [(ngModel)]="model.categoryId" class="form-select form-control form-control-lg"
-                    style="width: auto;">
-                    <option value="">Select Category</option>
-                    <option *ngFor="let c of categories" [value]="c.id">
-                        {{ c.configurationName }}
-                    </option>
-                </select>
-                }
-                @else{
-
-                {{ b.categoryName }}
-                }
-            </td>
-            <td class="amount">
-                @if(selectedId === b.id && isEdit){
-                <input type="number" placeholder="Amount" [(ngModel)]="model.amount"
-                    class="form-control form-control-lg" style="width: auto;">
-                }
-                @else{
-
-                {{ b.amount }}
-                }
-            </td>
-            <td class="d-flex gap-2 justify-content-center print-hide">
-                @if(selectedId === b.id && isEdit){
-                <button (click)="save()">
-                    💾{{ isEdit ? '' : '' }}
+    <!-- HEADER - WILL NOT PRINT -->
+    <div class="d-flex justify-content-between align-items-cente print-hide">
+        <h2 class="w-100 mt-2">Budget Management</h2>
+        <div class="grid-actions">
+            <div class="d-flex align-items-center gap-2">
+                <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg"
+                    style="max-width: 300px;">
+                <button type="button" class="btn btn-outline-danger grid-action-btn" (click)="printBudget()"
+                    title="Print / Save as PDF">
+                    <i class="bi bi-file-earmark-pdf"></i>
+                    <span>PDF</span>
                 </button>
-                }
-                @else{
-                <button class="edit" (click)="edit(b)"><i class="bi bi-pencil"></i></button>
-                }
-                <button class="delete" (click)="delete(b.id!)"><i class="bi bi-trash"></i></button>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3"><strong>Total</strong></td>
-            <td class="amount"><strong>{{ getTotal() }}</strong></td>
-            <td class="print-hide"></td>
-        </tr>
-    </table>
-    <br>
-    <table class="print-hide">
-        <tr>
-            <td>
-                <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo"
-                    class="form-control form-control-lg text-dark bg-transparent">
-            </td>
-            <td>
-                <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose"
-                    class="form-control form-control-lg text-dark bg-transparent">
+            </div>
+        </div>
+    </div>
 
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <select [(ngModel)]="model.categoryId"
-                    class="form-select form-control form-control-lg text-dark bg-transparent">
-                    <option value="">Select Category</option>
-                    <option *ngFor="let c of categories" [value]="c.id">
-                        {{ c.configurationName }}
-                    </option>
-                </select>
-            </td>
-            <td>
-                <input type="number" placeholder="Amount" [(ngModel)]="model.amount"
-                    class="form-control form-control-lg text-dark bg-transparent">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <button (click)="save()">
-                    {{ isEdit ? 'Update' : 'Add' }}
-                </button>
-                <button class="reset ms-2" (click)="reset()">Clear</button>
-            </td>
-        </tr>
-    </table>
-</div>
-<app-toaster class="print-hide"></app-toaster>
+
+    <!-- ONLY THIS SECTION WILL PRINT -->
+    <div id="budget-print">
+        <h2 class="print-title print-only">Budget Management</h2>
+        <table border="0" width="100%" style="border-collapse: collapse;">
+            <tr>
+
+                <th class="print-20">Pay To</th>
+                <th class="print-20">Purpose</th>
+                <th class="print-20">Category</th>
+                <th class="print-10">Amount (₹)</th>
+                <th class="print-hide">Action</th>
+            </tr>
+            <tr *ngFor="let b of filteredBudgets">
+                <td>
+                    @if(selectedId === b.id && isEdit){
+                    <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo"
+                        class="form-control form-control-lg" style="width: auto;">
+                    }
+                    @else{
+                    {{ b.payTo }}
+                    }
+                </td>
+                <td>
+                    @if(selectedId === b.id && isEdit){
+                    <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose"
+                        class="form-control form-control-lg" style="width: auto;">
+                    }
+                    @else{
+                    {{ b.purpose }}
+                    }
+                </td>
+
+                <td>
+                    @if(selectedId === b.id && isEdit){
+                    <select [(ngModel)]="model.categoryId" class="form-select form-control form-control-lg"
+                        style="width: auto;">
+                        <option value="">Select Category</option>
+                        <option *ngFor="let c of categories" [value]="c.id">
+                            {{ c.configurationName }}
+                        </option>
+                    </select>
+                    }
+                    @else{
+
+                    {{ b.categoryName }}
+                    }
+                </td>
+                <td class="amount">
+                    @if(selectedId === b.id && isEdit){
+                    <input type="number" placeholder="Amount" [(ngModel)]="model.amount"
+                        class="form-control form-control-lg" style="width: auto;">
+                    }
+                    @else{
+
+                    {{ b.amount }}
+                    }
+                </td>
+                <td class="d-flex gap-2 justify-content-center print-hide">
+                    @if(selectedId === b.id && isEdit){
+                    <button (click)="save()">
+                        💾{{ isEdit ? '' : '' }}
+                    </button>
+                    }
+                    @else{
+                    <button class="edit" (click)="edit(b)"><i class="bi bi-pencil"></i></button>
+                    }
+                    <button class="delete" (click)="delete(b.id!)"><i class="bi bi-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><strong>Total</strong></td>
+                <td class="amount"><strong>{{ total }}</strong></td>
+                <td class="print-hide"></td>
+            </tr>
+        </table>
+        <br>
+        <table class="print-hide">
+            <tr>
+                <td>
+                    <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo"
+                        class="form-control form-control-lg text-dark bg-transparent">
+                </td>
+                <td>
+                    <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose"
+                        class="form-control form-control-lg text-dark bg-transparent">
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select [(ngModel)]="model.categoryId"
+                        class="form-select form-control form-control-lg text-dark bg-transparent">
+                        <option value="">Select Category</option>
+                        <option *ngFor="let c of categories" [value]="c.id">
+                            {{ c.configurationName }}
+                        </option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" placeholder="Amount" [(ngModel)]="model.amount"
+                        class="form-control form-control-lg text-dark bg-transparent">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button (click)="save()">
+                        {{ isEdit ? 'Update' : 'Add' }}
+                    </button>
+                    <button class="reset ms-2" (click)="reset()">Clear</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <app-toaster class="print-hide"></app-toaster>

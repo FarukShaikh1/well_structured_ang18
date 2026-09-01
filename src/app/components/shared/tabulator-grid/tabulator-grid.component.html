@@ -1,4 +1,9 @@
 <div class="table-container" [class.loading-disabled]="isLoading">
+<div class="grid-header">
+   <!-- LEFT SIDE: GRID NAME -->
+  <h5 class="grid-title">
+    {{ gridName }}
+  </h5>
 
   <!-- Grid Actions -->
   <div class="grid-actions">
@@ -30,7 +35,7 @@
     </button>
     }
   </div>
-
+</div>
 
   <!-- Tabulator Grid -->
   <div class="row">

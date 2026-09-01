@@ -1,93 +1,112 @@
-<div class="table-container mt-2">
-    <h2>Routine Management</h2>
-    <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg mb-2 print-hide">
-    <table  style="border-collapse: collapse;">
-        <tr>
-            <th>From</th>
-            <th>To</th>
-            <th>Task</th>
-            <th>Duration</th>
-            <th class="print-hide">Action</th>
-        </tr>
+<div class="table-container">
 
-        <tr *ngFor="let r of filteredRoutines">
-            <td class="text-center">
-                @if(selectedId === r.id && isEdit){
-                <input type="time" [(ngModel)]="r.fromTime">
-                }
-                @else{
-                {{ dateUtils.amPmFormat(r.fromTime)}}
-                }
-            </td>
-            <td class="text-center">
-                @if(selectedId === r.id && isEdit){
-                <input type="time" [(ngModel)]="r.toTime">
-                }
-                @else{
-                {{ dateUtils.amPmFormat(r.toTime) }}
-                }
-            </td>
-            <td>
-                @if(selectedId === r.id && isEdit){
-                <input type="text" [(ngModel)]="r.task">
-                }
-                @else{
-                {{ r.task }}
-                }
-            </td>
-            <td class="text-center">{{ calculateDuration(r.fromTime, r.toTime) }}</td>
-            <td class="d-flex gap-2 justify-content-center print-hide">
-                @if(selectedId === r.id && isEdit){
-                <button (click)="save(r)">💾</button>
-                <button class="reset" (click)="reset()"><i class="bi bi-reset"></i>Reset</button>
-                }
-                @else{
-                <button class="edit" (click)="edit(r)"><i class="bi bi-pencil"></i></button>
-                }
-                <button class="delete" (click)="delete(r.id!)"><i class="bi bi-trash"></i></button>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3" ><strong>Total</strong></td>
-            <td class="text-center"><strong>{{ getTotal() }}</strong></td>
-            <td class="print-hide"></td>
-        </tr>
-
-    </table>
-
-    <br>
-    <table class="print-hide">
-        <tr>
-            <td>
-                <input type="time" placeholder="From Time" [(ngModel)]="model.fromTime"
-                    class="form-control form-control-lg text-dark bg-transparent">
-            </td>
-            <td>
-                <input type="time" placeholder="To Time" [(ngModel)]="model.toTime"
-                    class="form-control form-control-lg text-dark bg-transparent">
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" placeholder="Task" [(ngModel)]="model.task"
-                    class="form-control form-control-lg text-dark bg-transparent">
-            </td>
-            <td>
-                <input type="text" placeholder="Task" value="{{ calculateDuration(model.fromTime, model.toTime) }}"
-                    class="form-control form-control-lg text-dark bg-transparent">
-            </td>
-
-        </tr>
-
-        <tr>
-            <td colspan="2">
-                <button (click)="save(model)">
-                    {{ isEdit ? 'Update' : 'Add' }}
+    <!-- HEADER - WILL NOT PRINT -->
+    <div class="d-flex justify-content-between align-items-cente print-hide">
+        <h2 class="w-100 mt-2">Routine Management</h2>
+        <div class="grid-actions">
+            <div class="d-flex align-items-center gap-2">
+                <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg"
+                    style="max-width: 300px;">
+                <button type="button" class="btn btn-outline-danger grid-action-btn" (click)="printRoutine()"
+                    title="Print / Save as PDF">
+                    <i class="bi bi-file-earmark-pdf"></i>
+                    <span>PDF</span>
                 </button>
-                <button class="reset ms-2" (click)="reset()">Clear</button>
-            </td>
-        </tr>
-    </table>
-</div>
-<app-toaster></app-toaster>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ONLY THIS SECTION WILL PRINT -->
+    <div id="routine-print">
+        <h2 class="print-title print-only">Routine Management</h2>
+        <table border="0" width="100%" style="border-collapse: collapse;">
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Task</th>
+                <th>Duration</th>
+                <th class="print-hide">Action</th>
+            </tr>
+
+            <tr *ngFor="let r of filteredRoutines">
+                <td class="text-center">
+                    @if(selectedId === r.id && isEdit){
+                    <input type="time" [(ngModel)]="r.fromTime">
+                    }
+                    @else{
+                    {{ dateUtils.amPmFormat(r.fromTime)}}
+                    }
+                </td>
+                <td class="text-center">
+                    @if(selectedId === r.id && isEdit){
+                    <input type="time" [(ngModel)]="r.toTime">
+                    }
+                    @else{
+                    {{ dateUtils.amPmFormat(r.toTime) }}
+                    }
+                </td>
+                <td>
+                    @if(selectedId === r.id && isEdit){
+                    <input type="text" [(ngModel)]="r.task">
+                    }
+                    @else{
+                    {{ r.task }}
+                    }
+                </td>
+                <td class="text-center">{{ calculateDuration(r.fromTime, r.toTime) }}</td>
+                <td class="d-flex gap-2 justify-content-center print-hide">
+                    @if(selectedId === r.id && isEdit){
+                    <button (click)="save(r)">💾</button>
+                    <button class="reset" (click)="reset()"><i class="bi bi-reset"></i>Reset</button>
+                    }
+                    @else{
+                    <button class="edit" (click)="edit(r)"><i class="bi bi-pencil"></i></button>
+                    }
+                    <button class="delete" (click)="delete(r.id!)"><i class="bi bi-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><strong>Total</strong></td>
+                <td class="text-center"><strong>{{ getTotal() }}</strong></td>
+                <td class="print-hide"></td>
+            </tr>
+
+        </table>
+
+        <br>
+        <table class="print-hide">
+            <tr>
+                <td>
+                    <input type="time" placeholder="From Time" [(ngModel)]="model.fromTime"
+                        class="form-control form-control-lg text-dark bg-transparent">
+                </td>
+                <td>
+                    <input type="time" placeholder="To Time" [(ngModel)]="model.toTime"
+                        class="form-control form-control-lg text-dark bg-transparent">
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" placeholder="Task" [(ngModel)]="model.task"
+                        class="form-control form-control-lg text-dark bg-transparent">
+                </td>
+                <td>
+                    <input type="text" placeholder="Task" value="{{ calculateDuration(model.fromTime, model.toTime) }}"
+                        class="form-control form-control-lg text-dark bg-transparent">
+                </td>
+
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <button (click)="save(model)">
+                        {{ isEdit ? 'Update' : 'Add' }}
+                    </button>
+                    <button class="reset ms-2" (click)="reset()">Clear</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <app-toaster></app-toaster>

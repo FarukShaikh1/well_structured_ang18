@@ -6,6 +6,7 @@ import { Routine } from "../../interfaces/routine";
 import { RoutineService } from "../../services/routine/routine.service";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { LocalStorageConstants } from "../../../utils/application-constants";
+import { PrintService } from "../../services/print/print.service";
 
 @Component({
   selector: 'app-routine',
@@ -30,7 +31,7 @@ export class RoutineComponent implements OnInit {
   isEdit: boolean = false;
   selectedId: string = '';
   searchText: string = '';
-  constructor(private service: RoutineService) { }
+  constructor(private service: RoutineService, private printService: PrintService) { }
 
   ngOnInit() {
     this.loadData();
@@ -42,6 +43,12 @@ export class RoutineComponent implements OnInit {
       this.filteredRoutines = res;
       this.filteredRoutines.forEach(r => r.duration = this.calculateDurationInMinutes(r.fromTime, r.toTime));
     });
+  }
+
+  printRoutine(): void {
+    this.printService.printElement(
+      'routine-print'
+    );
   }
 
   calculateDuration(from: string, to: string): string {

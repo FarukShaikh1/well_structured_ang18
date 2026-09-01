@@ -50,7 +50,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   @Input() noMatchingDataMessage = "No Matching Data";
   @Input() isLoading: boolean = false;
   @Input() loadingText: string = "Loading data...";
-
+@Input() gridName: string = '';
   public filterForm!: FormGroup;
 
 

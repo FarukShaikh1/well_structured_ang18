@@ -72,6 +72,7 @@ export class TransactionComponent implements OnInit {
   public allowPrint = true;
   public allowAdd = true;
   public allowRefresh = true;
+  public gridName = "Hi";
   public filterColumns: ColumnDefinition[] = [];
 
   lastTransactionDate: Date = new Date();
@@ -112,6 +113,7 @@ export class TransactionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.allowAdd = this.globalService.isAccessible(ActionConstant.ADD)
     this.loadGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSE) {
@@ -217,7 +219,7 @@ export class TransactionComponent implements OnInit {
         hozAlign: "center",
         headerSort: false,
         minWidth: 70,
-        print:false
+        print: false
       },
     ];
     if (
@@ -232,7 +234,7 @@ export class TransactionComponent implements OnInit {
         headerSort: false,
         minWidth: 70,
         maxWidth: 70,
-        print:false
+        print: false
       });
     }
   }
@@ -303,7 +305,7 @@ export class TransactionComponent implements OnInit {
         this.hideTransaction(transactionGroupId);
       },
       headerSort: false,
-        print:false
+      print: false
     });
     if (
       this.globalService.isAccessible(ActionConstant.EDIT) ||
@@ -317,7 +319,7 @@ export class TransactionComponent implements OnInit {
         formatter: this.globalService.optionDotsFormatter.bind(this),
         hozAlign: "center",
         headerSort: false,
-        print:false
+        print: false
       });
     }
   }
@@ -367,7 +369,7 @@ export class TransactionComponent implements OnInit {
         this.hideTransactionByDate(date);
       },
       headerSort: false,
-        print:false
+      print: false
     });
   }
 
@@ -454,7 +456,7 @@ export class TransactionComponent implements OnInit {
           this.hideTransactionBySource(sourceOrReason);
         },
         headerSort: false,
-        print:false
+        print: false
       },
       {
         title: "",
@@ -487,7 +489,7 @@ export class TransactionComponent implements OnInit {
         ],
         hozAlign: "left",
         headerSort: false,
-        print:false
+        print: false
       },
     ];
   }
@@ -655,7 +657,7 @@ export class TransactionComponent implements OnInit {
         ],
         hozAlign: "left",
         headerSort: false,
-        print:false
+        print: false
       },
     ];
   }
@@ -1235,6 +1237,11 @@ export class TransactionComponent implements OnInit {
   }
   transactionDetails(data: any) {
     this.transactionDetailsComponent.openDetailsPopup(data);
+    setTimeout(() => {
+      const btn = document.querySelector('#openDetailsButton') as HTMLElement | null;
+      if (btn) btn.click();
+      else console.error('openDetailsButton not found');
+    }, 120);
   }
 
   deleteTransaction(transactionGroupId: string) {

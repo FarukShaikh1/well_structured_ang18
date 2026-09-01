@@ -55,6 +55,8 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = true;
   public allowPrint = true;
+  public allowAdd = false;
+  public allowRefresh = true;
   public filterColumns: PrintColumnDefinition[] = [];
   public viewMode: 'grid' | 'gallery' | 'summary' | 'news' = 'gallery';
   loading = false;
@@ -75,6 +77,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.allowAdd = this.globalService.isAccessible(ActionConstant.ADD)
     this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
     this.columnConfiguration();
     this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);

@@ -31,7 +31,7 @@
             [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isAccountGridLoading"
             [loadingText]="'Loading accounts...'" [allowAdd]="allowAdd"
             (addClicked)="openDetailsPopup('',UserConfig.ACCOUNT)" [allowRefresh]="allowRefresh"
-            (refreshClicked)="refreshData()">
+            (refreshClicked)="refreshData()" [gridName]="UserConfig.ACCOUNT">
         </app-tabulator-grid>
         } @else {
         <div class="alert alert-info text-center mt-3" role="alert">
@@ -56,7 +56,7 @@
             [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isOccasionTypeGridLoading"
             [loadingText]="'Loading occasion types...'" [allowAdd]="allowAdd"
             (addClicked)="openDetailsPopup('',UserConfig.OCCASION_TYPE)" [allowRefresh]="allowRefresh"
-            (refreshClicked)="refreshData()">
+            (refreshClicked)="refreshData()" [gridName]="UserConfig.OCCASION_TYPE">
         </app-tabulator-grid>
         } @else {
         <div class="alert alert-info text-center mt-3" role="alert">
@@ -82,7 +82,7 @@
             [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isRelationGridLoading"
             [loadingText]="'Loading relations...'" [allowAdd]="allowAdd"
             (addClicked)="openDetailsPopup('',UserConfig.RELATION)" [allowRefresh]="allowRefresh"
-            (refreshClicked)="refreshData()">
+            (refreshClicked)="refreshData()" [gridName]="UserConfig.RELATION">
         </app-tabulator-grid>
         } @else {
         <div class="alert alert-info text-center mt-3" role="alert">
@@ -109,7 +109,7 @@
             [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint"
             [isLoading]="isTransactionCategoryGridLoading" [loadingText]="'Loading transactionsubcategorys...'"
             [allowAdd]="allowAdd" (addClicked)="openDetailsPopup('',UserConfig.TRANSACTION_CATEGORY)"
-            [allowRefresh]="allowRefresh" (refreshClicked)="refreshData()">
+            [allowRefresh]="allowRefresh" (refreshClicked)="refreshData()" [gridName]="UserConfig.TRANSACTION_CATEGORY">
         </app-tabulator-grid>
         } @else {
         <div class="alert alert-info text-center mt-3" role="alert">
