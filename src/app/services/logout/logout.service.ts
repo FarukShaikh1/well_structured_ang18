@@ -21,6 +21,8 @@ export class LogoutService {
   ) { }
 
   async logout() {
+    console.log('logging out');
+    
     this.localStorageService.clear();
     sessionStorage.clear();
     this.router.navigate([NavigationURLs.LOGIN]);

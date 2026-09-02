@@ -27,6 +27,7 @@ import { SignupComponent } from "./components/sign-up/sign-up.component";
 import { EmailVerificationComponent } from "./components/email-verification/email-verification.component";
 import { OTPVerificationComponent } from "./components/otp-verification/otp-verification.component";
 import { UserRegistrationApprovalComponent } from "./components/user-registration-approval/user-registration-approval.component";
+import { ForgotPasswordComponent } from "./components/forgot-password/forgot-password.component";
 
 export const routes: Routes = [
   {
@@ -202,7 +203,7 @@ export const routes: Routes = [
   },
   {
     path: RoutePath.FORGOT_PASSWORD,
-    component: SiteUnderDevelopmentComponent
+    component: ForgotPasswordComponent
   },
   {
     path: RoutePath.SIGNUP,

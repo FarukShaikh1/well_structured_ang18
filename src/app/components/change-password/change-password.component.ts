@@ -234,68 +234,48 @@ export class ChangePasswordComponent implements OnInit {
   // ============================
 
   onSubmit(): void {
-
     if (this.changePasswordForm.invalid) {
-
       this.changePasswordForm.markAllAsTouched();
-
       this.toaster.showMessage(
         'Please correct the validation errors.',
         'error'
       );
-
       return;
     }
 
     this.processing = true;
-
     this.loaderService.showLoader();
-
     const payload: ChangePassword = {
-
       oldPassword:
-        this.changePasswordForm.value.oldPassword,
-
+      this.changePasswordForm.value.oldPassword,
       newPassword:
         this.changePasswordForm.value.newPassword,
-
       userId:
         this.userId,
-
       modifiedBy:
         this.userId
     };
 
     this.userService.changePassword(payload)
       .subscribe({
-
         next: (response) => {
-
+          debugger;
           this.processing = false;
-
           if (response?.success) {
-
             this.toaster.showMessage(
-              response?.message ||
-              'Password changed successfully. Please login again.',
-              'success',
+             response?.message ||
+             'Password changed successfully. Please login again.',
+             'success',
               5000
-            );
-
+           );
             setTimeout(() => {
-
               this.loaderService.hideLoader();
-
               this.logout();
-
             }, 3500);
-
           } else {
-
             this.loaderService.hideLoader();
-
             this.toaster.showMessage(
-              response?.message ||
+             response?.message ||
               'Unable to change password.',
               'error'
             );
@@ -303,13 +283,10 @@ export class ChangePasswordComponent implements OnInit {
         },
 
         error: (error: any) => {
-
           this.processing = false;
-
           this.loaderService.hideLoader();
-
           this.toaster.showMessage(
-            error?.error?.message ||
+           error?.error?.message ||
             error?.error?.error ||
             'Error in changing password.',
             'error'
