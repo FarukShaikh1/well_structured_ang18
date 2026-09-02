@@ -128,9 +128,18 @@
     </div>
     }
     @else{
-    <div class="me-2">
-      <button class="btn btn-primary rounded-button" (click)="navigate(NavigationURLs.SIGNUP)">SIGN UP</button>
-      <button class="btn btn-primary rounded-button" (click)="navigate(NavigationURLs.LOGIN)">LOGIN</button>
+    <div class="grid-actions">
+
+      <button type="button" class="btn btn-outline-success grid-action-btn" (click)="navigate(NavigationURLs.SIGNUP)"
+        title="SIGN UP">
+        <i class="bi bi-file-earmark-excel"></i>
+        <span>SIGN UP</span>
+      </button>
+      <button type="button" class="btn btn-outline-success grid-action-btn" (click)="navigate(NavigationURLs.LOGIN)"
+        title="LOGIN">
+        <i class="bi bi-file-earmark-pdf"></i>
+        <span>LOGIN</span>
+      </button>
     </div>
     }
 

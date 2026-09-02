@@ -1847,11 +1847,6 @@ body.dark-mode .grid-loader-overlay {
   font-weight: 600;
 }
 
-.grid-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 @media (max-width: 768px) {
 
     .details-grid {
