@@ -59,7 +59,7 @@ export class PrintService {
           th,
           td {
             border: 1px solid #000;
-            padding: 6px;
+            padding: 3px;
             text-align: left;
             vertical-align: top;
           }
@@ -77,32 +77,19 @@ export class PrintService {
             // size: landscape;
             margin: 0mm;
           }
-
         </style>
-
       </head>
-
       <body>
-
         ${printContent.innerHTML}
-
       </body>
-
       </html>
     `);
 
     printWindow.document.close();
-
     setTimeout(() => {
-
       printWindow.focus();
-
       printWindow.print();
-
       printWindow.close();
-
     }, 500);
-
   }
-
 }

@@ -40,12 +40,14 @@
       }
 
     </button>
-
     <button type="button" class="clear-button" [disabled]="isLoading" (click)="clearOtp()">
-
       Clear
-
     </button>
+    <div class="text-center mt-3">
+      <button type="button" class="btn text-link back-btn" (click)="logout()">
+        Back to login
+      </button>
+    </div>
 
     }
     @else {

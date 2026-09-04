@@ -179,13 +179,6 @@ export const routes: Routes = [
               import("./components/notification-list/notification-list.component")
                 .then(m => m.NotificationListComponent)
           },
-
-          {
-            path: RoutePath.OWNER_PROFILE,
-            title: RoutePathTitles.OWNER_PROFILE,
-            component: MyProfileComponent
-          },
-
           {
             path: RoutePath.CHANGE_PASSWORD,
             title: RoutePathTitles.CHANGE_PASSWORD,
@@ -216,6 +209,11 @@ export const routes: Routes = [
   {
     path: RoutePath.OTP_VERIFICATION,
     component: OTPVerificationComponent
+  },
+  {
+    path: RoutePath.OWNER_PROFILE,
+    title: RoutePathTitles.OWNER_PROFILE,
+    component: MyProfileComponent
   },
   {
     path: RoutePath.UNDER_DEVELOPMENT,

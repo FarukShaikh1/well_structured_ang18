@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { RegistrationService } from '../../services/registration/registration.service';
 import { VerifyEmailRequest } from '../../interfaces/email-verification';
+import { LogoutService } from '../../services/logout/logout.service';
 
 @Component({
   selector: 'app-email-verification',
@@ -30,17 +31,19 @@ export class EmailVerificationComponent implements OnInit {
   isLoading = false;
 
   isVerified = false;
+  verificationOtp: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private logoutService: LogoutService,
     private registrationService: RegistrationService
   ) {
   }
 
   ngOnInit(): void {
-
     this.registrationId = this.route.snapshot.queryParamMap.get('registrationId') || '';
+    this.verificationOtp = this.route.snapshot.queryParamMap.get('verificationOtp') || '';
 
     if (!this.registrationId) {
 
@@ -49,8 +52,14 @@ export class EmailVerificationComponent implements OnInit {
         'error'
       );
     }
+    if (this.verificationOtp) {
+      this.otp = this.verificationOtp;
+    }
   }
 
+  logout(): void {
+    this.logoutService.logout();
+  }
 
   verify(): void {
     if (!this.registrationId) {
@@ -78,7 +87,7 @@ export class EmailVerificationComponent implements OnInit {
     }
     this.registrationService.verifyEmail(verifyEmailRequest)
       .subscribe({
-        next: (res:any) => {
+        next: (res: any) => {
           this.isLoading = false;
           this.isVerified = true;
           this.toaster.showMessage(res?.message || 'Email verified successfully.', 'success');

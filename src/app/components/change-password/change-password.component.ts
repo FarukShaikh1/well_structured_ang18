@@ -259,7 +259,6 @@ export class ChangePasswordComponent implements OnInit {
     this.userService.changePassword(payload)
       .subscribe({
         next: (response) => {
-          debugger;
           this.processing = false;
           if (response?.success) {
             this.toaster.showMessage(

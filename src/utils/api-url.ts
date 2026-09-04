@@ -120,7 +120,7 @@ export const API_URL = {
   // FOOD MENU
   // =========================
 
-  GET_FOOD_MENU_BY_USER: `${serverUrl}${apiPrefix}/FoodMenu`,
+  GET_FOOD_MENU_BY_USER: `${serverUrl}${apiPrefix}/FoodMenu?isNonveg=`,
   ADD_FOOD_MENU: `${serverUrl}${apiPrefix}/FoodMenu`,
   UPDATE_FOOD_MENU: `${serverUrl}${apiPrefix}/FoodMenu`,
   GET_FOOD_MENU_DETAILS: `${serverUrl}${apiPrefix}/FoodMenu/`,

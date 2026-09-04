@@ -34,7 +34,7 @@ export class FoodMenuComponent implements OnInit {
 
   filteredFoodMenus: FoodMenu[] = [];
   selectedPrintSection: string | null = null;
-
+  isNonVeg: boolean = false;
   printFoodMenu(): void {
 
     this.printService.printElement(
@@ -187,7 +187,8 @@ export class FoodMenuComponent implements OnInit {
   // =========================
 
   ngOnInit(): void {
-    this.loadFoodMenus();
+    this.isNonVeg = false;
+    this.loadFoodMenus(this.isNonVeg);
   }
 
 
@@ -215,10 +216,10 @@ export class FoodMenuComponent implements OnInit {
   // GET DATA FROM API
   // =========================
 
-  loadFoodMenus(): void {
+  loadFoodMenus(isNonVeg: boolean): void {
 
     this.foodMenuService
-      .getFoodMenuByUser()
+      .getFoodMenuByUser(isNonVeg)
       .subscribe({
 
         next: (res: any) => {
@@ -357,7 +358,7 @@ export class FoodMenuComponent implements OnInit {
 
             this.reset();
 
-            this.loadFoodMenus();
+            this.loadFoodMenus(this.isNonVeg);
 
           },
 
@@ -403,7 +404,7 @@ export class FoodMenuComponent implements OnInit {
 
           this.reset();
 
-          this.loadFoodMenus();
+          this.loadFoodMenus(this.isNonVeg);
 
         },
 
@@ -466,18 +467,13 @@ export class FoodMenuComponent implements OnInit {
     this.foodMenuService
       .deleteFoodMenu(id)
       .subscribe({
-
         next: () => {
-
           this.toaster.showMessage(
             'Food menu deleted successfully',
             'success'
           );
-
           this.reset();
-
-          this.loadFoodMenus();
-
+          this.loadFoodMenus(this.isNonVeg);
         },
 
         error: (err: Error) => {

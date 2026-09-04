@@ -8,11 +8,11 @@ import { FoodMenu } from '../../interfaces/food-menu';
 })
 export class FoodMenuService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getFoodMenuByUser() {
+  getFoodMenuByUser(isNonVeg: boolean) {
     return this.http.get<FoodMenu[]>(
-      API_URL.GET_FOOD_MENU_BY_USER
+      API_URL.GET_FOOD_MENU_BY_USER + isNonVeg
     );
   }
 

@@ -7,4 +7,5 @@ export interface FoodMenu {
   lunch?: string;
   eveningBreakfast?: string;
   dinner?: string;
+  isNonVeg?: boolean;
 }
