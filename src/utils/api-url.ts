@@ -134,6 +134,4 @@ export const API_URL = {
   GET_USER_REGISTRATION_DETAILS: `${serverUrl}${apiPrefix}/UserRegistration/`,
   APPROVE_USER_REGISTRATION: `${serverUrl}${apiPrefix}/UserRegistration/approve/`,
   REJECT_USER_REGISTRATION: `${serverUrl}${apiPrefix}/UserRegistration/`,
-
-
 };
