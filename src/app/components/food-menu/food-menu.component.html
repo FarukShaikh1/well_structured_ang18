@@ -4,24 +4,28 @@
     <div class="d-flex justify-content-between align-items-cente print-hide">
         <h2 class="w-100 mt-2">Food Menu</h2>
         <div class="grid-actions">
-            <div class="d-flex align-items-center gap-2">
-                <label class="form-label d-block">
-                    Food Type
-                </label>
+                <div class="food-type-selector">
+                    <label class="food-type-label">Food Type:</label>
 
-                <input class="form-check-input" type="radio" name="foodType" id="veg" [value]="false"
-                    [(ngModel)]="isNonVeg">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="foodType" id="veg" [value]="false"
+                            [(ngModel)]="isNonVeg" (ngModelChange)="onFoodTypeChange($event)" />
 
-                <label class="form-check-label" for="veg">
-                    Veg
-                </label>
-                <input class="form-check-input" type="radio" name="foodType" id="nonVeg" [value]="true"
-                    [(ngModel)]="isNonVeg">
+                        <label class="form-check-label" for="veg">
+                            Veg
+                        </label>
+                    </div>
 
-                <label class="form-check-label" for="nonVeg">
-                    Non-Veg
-                </label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="foodType" id="nonVeg" [value]="true"
+                            [(ngModel)]="isNonVeg" (ngModelChange)="onFoodTypeChange($event)" />
 
+                        <label class="form-check-label" for="nonVeg">
+                            Non-Veg
+                        </label>
+                    </div>
+                </div>
+                
                 <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg"
                     style="max-width: 300px;">
                 <button type="button" class="btn btn-outline-danger grid-action-btn" (click)="printFoodMenu()"
@@ -29,7 +33,6 @@
                     <i class="bi bi-file-earmark-pdf"></i>
                     <span>PDF</span>
                 </button>
-            </div>
         </div>
     </div>
     <!-- ONLY THIS SECTION WILL PRINT -->

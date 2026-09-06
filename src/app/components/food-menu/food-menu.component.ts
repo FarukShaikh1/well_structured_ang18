@@ -191,6 +191,15 @@ export class FoodMenuComponent implements OnInit {
     this.loadFoodMenus(this.isNonVeg);
   }
 
+  onFoodTypeChange(isNonVeg: boolean): void {
+    this.isNonVeg = isNonVeg;
+
+    // Clear current edit state
+    this.reset();
+
+    // Reload menu based on selected food type
+    this.loadFoodMenus(this.isNonVeg);
+}
 
   // =========================
   // EMPTY MODEL

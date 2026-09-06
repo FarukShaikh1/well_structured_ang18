@@ -153,14 +153,6 @@
     </div>
   </div>
 </div>
-@if(filteredTableData.length === 0){
-<div class="alert alert-info text-center mt-3" role="alert">
-  <strong>No special occasion found.</strong><br />
-  You can add your relatives'/friends'/colligues' etc. birthdays/Anniversaries etc.<br>
-  Click Add Occasion to add new special occasion.
-</div>
-}
-@else{
 <div class="mb-2">
   <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
     [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
@@ -168,7 +160,6 @@
     [allowAdd]="allowAdd" (addClicked)="openDetailsPopup('')" [allowRefresh]="allowRefresh" (refreshClicked)="refreshData()" [gridName]="'Special Occasions'">
   </app-tabulator-grid>
 </div>
-}
 <app-day-details></app-day-details>
 
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
