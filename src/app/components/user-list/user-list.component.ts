@@ -139,9 +139,9 @@ export class UserListComponent implements OnInit {
         headerFilterPlaceholder: "Search email"
       },
       {
-        title: 'Role', 
+        title: 'Role',
         field: 'roleName',
-        sorter: 'string', 
+        sorter: 'string',
         headerFilter: "input",
         headerFilterPlaceholder: "Search role"
       },
@@ -183,27 +183,24 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  generateOptionsMenu(rowData: Record<string, any>) {
-    const menu = [];
+  generateOptionsMenu(rowData: Record<string, any>): Array<{ label: string; action: () => void; }> {
+    const menu: Array<{ label: string; action: () => void; }> = [];
     if (this.globalService.isAccessible(ActionConstant.EDIT)) {
       menu.push({
-        label: ApplicationConstantHtml.EDIT_LABLE,
-        action: () => {
+        label: ApplicationConstantHtml.EDIT_LABLE, action: () => {
           this.openDayDetailsPopup(rowData['id']);
-        },
+        }
       });
     }
     if (this.globalService.isAccessible(ActionConstant.DELETE)) {
       menu.push({
-        label: ApplicationConstantHtml.DELETE_LABLE,
-        action: () => {
+        label: ApplicationConstantHtml.DELETE_LABLE, action: () => {
           this.deactivateUser(rowData['id'], true);
-        },
+        }
       });
     }
     return menu;
   }
-
   viewUserProfile(id: string | null | undefined) {
     if (id) {
       this.router.navigate(['home/user-profile']);

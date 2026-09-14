@@ -241,6 +241,8 @@ export class GlobalService {
     menu.style.position = 'absolute';
     menu.style.zIndex = '9999';
     menuOptions.forEach((option: any) => {
+      if (!option?.label?.trim()) return;
+
       const menuItem = document.createElement('li');
       menuItem.innerHTML = `<a class="dropdown-item" href="#">${option.label}</a>`;
       menuItem.addEventListener('click', (event) => {
@@ -253,6 +255,7 @@ export class GlobalService {
     const rect = button.getBoundingClientRect();
     menu.style.top = `${rect.bottom + window.scrollY}px`;
     menu.style.left = `${rect.left + window.scrollX - 70}px`;
+    if (!menu.children.length) return;
     document.body.appendChild(menu);
   }
 
