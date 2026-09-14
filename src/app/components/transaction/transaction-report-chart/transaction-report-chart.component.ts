@@ -2,8 +2,8 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
-import { TransactionReportResponse } from '../../interfaces/transaction-report-response';
-import { ApplicationConstants } from '../../../utils/application-constants';
+import { TransactionReportResponse } from '../../../interfaces/transaction-report-response';
+import { ApplicationConstants } from '../../../../utils/application-constants';
 
 @Component({
   selector: 'app-transaction-report-chart',

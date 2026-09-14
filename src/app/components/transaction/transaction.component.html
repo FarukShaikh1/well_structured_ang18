@@ -1,298 +1,224 @@
 <div class="main-body">
-  <div class="row pb-2 pt-2" style="flex-wrap: wrap;">
-    @if(activeComponent !== TransactionTabs.EMERGENCY_RETURN_REPORT){
-    <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
-      From Date:
-      <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate"
-        placeholder="DD/MM/YYYY" />
+
+
+  <!-- ================= TABS ================= -->
+
+  <div class="app-tabs">
+
+    <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EXPENSE_LIST"
+      (click)="goToTab(TransactionTabs.EXPENSE_LIST)">
+
+      <i class="fa fa-list"></i>
+
+      <span>Transaction List</span>
+
+    </button>
+
+    <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EXPENSE_SUMMARY"
+      (click)="goToTab(TransactionTabs.EXPENSE_SUMMARY)">
+
+      <i class="fa fa-table"></i>
+
+      <span>Transaction Summary</span>
+
+    </button>
+
+    <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.BALANCE_SUMMARY"
+      (click)="goToTab(TransactionTabs.BALANCE_SUMMARY)">
+
+      <i class="fa fa-money"></i>
+
+      <span>Balance Summary</span>
+
+    </button>
+
+    <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EXPENSE_REPORT"
+      (click)="goToTab(TransactionTabs.EXPENSE_REPORT)">
+
+      <i class="fa fa-bar-chart"></i>
+
+      <span>Transaction Report</span>
+
+    </button>
+
+    <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.CATEGORY_WISE_REPORT"
+      (click)="goToTab(TransactionTabs.CATEGORY_WISE_REPORT)">
+
+      <i class="fa fa-pie-chart"></i>
+
+      <span>Category Wise Report</span>
+
+    </button>
+
+    <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EMERGENCY_RETURN_REPORT"
+      (click)="goToTab(TransactionTabs.EMERGENCY_RETURN_REPORT)">
+
+      <i class="fa fa-file"></i>
+
+      <span>Emergency/Return Report</span>
+
+    </button>
+
+    <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EXPENSE_BUDGET"
+      (click)="monthlyBudget()">
+
+      <i class="fa fa-calculator"></i>
+
+      <span>Monthly Budget</span>
+
+    </button>
+
+  </div>
+  <div class="table-container mb-4">
+    <div class="container-fluid">
+
+      @if (
+      activeTab !== TransactionTabs.EMERGENCY_RETURN_REPORT &&
+      activeTab !== TransactionTabs.EXPENSE_BUDGET
+      ) {
+
+      <div class="row pb-2 pt-2" style="flex-wrap: wrap;">
+
+        <!-- From Date -->
+        <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
+
+          From Date:
+
+          <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate" />
+
+        </div>
+
+        <!-- To Date -->
+        <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
+
+          To Date:
+
+          <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="toDate" />
+
+        </div>
+
+        <!-- Minimum Amount -->
+        <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
+
+          <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+            <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+
+          </svg>
+
+          Min Amount
+
+          <input #minInput class="form-control form-control-lg text-dark bg-transparent" type="text"
+            placeholder="Min Amount" (input)="filterGridByMinAmount($event)"
+            (keydown)="globalService.validateAmount($event)" />
+
+        </div>
+
+        <!-- Maximum Amount -->
+        <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
+
+          <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+            <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+
+          </svg>
+
+          Max Amount
+
+          <input #maxInput class="form-control form-control-lg text-dark bg-transparent" type="text"
+            placeholder="Max Amount" (input)="filterGridByMaxAmount($event)"
+            (keydown)="globalService.validateAmount($event)" />
+
+        </div>
+
+        <!-- Search -->
+        <div class="col-6 col-sm-6 col-md-6 col-lg-2 pt-2">
+
+          <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+            <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+
+          </svg>
+
+          Get From/Paid To
+
+          <input #searchInput class="form-control form-control-lg text-dark bg-transparent" type="text"
+            placeholder="Search Something" (keyup)="filterGridBySearch($event)" />
+
+        </div>
+
+      </div>
+      }
     </div>
-    <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
-      To Date:
-      <input class="form-control form-control-lg text-dark bg-transparent" type="Date" id="toDate"
-        placeholder="DD/MM/YYYY" />
-    </div>
-    <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
-      <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-      Min Amount
-      <input class="form-control form-control-lg text-dark bg-transparent" type="text" placeholder="Min Amount"
-        aria-label="Min Amount" #minInput (input)="filterGridByMinAmount($event)"
-        (keydown)="globalService.validateAmount($event)" />
-    </div>
-    <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
-      <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-      Max Amount
-      <input class="form-control form-control-lg text-dark bg-transparent" type="text" placeholder="Max Amount"
-        aria-label="Max Amount" #maxInput (input)="filterGridByMaxAmount($event)"
-        (keydown)="globalService.validateAmount($event)" />
-    </div>
+    <!-- ================= TAB CONTENT ================= -->
+
+    @switch (activeTab) {
+
+    @case (TransactionTabs.EXPENSE_LIST) {
+
+    <app-transaction-list [filter]="filter" [allowAdd]="allowAdd" (openTransaction)="transactionDetails($event)"
+      (deleteTransactionEvent)="deleteTransaction($event)">
+    </app-transaction-list>
+
     }
-    <div class="col-6 col-sm-6 col-md-6 col-lg-2 pt-2">
-      <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-      Get From/Paid To
-      <input class="form-control form-control-lg text-dark bg-transparent" type="text" placeholder="Search Something"
-        aria-label="Search Something" #searchInput (keyup)="filterGridBySearch($event)" />
-    </div>
-    <div class="app-tabs-container">
-      <div class="app-tabs">
-        <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EXPENSE_LIST"
-          (click)="goToList(TransactionTabs.EXPENSE_LIST); activeTab=TransactionTabs.EXPENSE_LIST">
-          <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M6 4H18C18.5523 4 19 4.44772 19 5V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V5C5 4.44772 5.44772 4 6 4Z"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            <line x1="8" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <line x1="8" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <line x1="8" y1="16" x2="16" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <line x1="8" y1="19" x2="16" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-          Transaction List
-        </button>
-        <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EXPENSE_SUMMARY"
-          (click)="goToList(TransactionTabs.EXPENSE_SUMMARY); activeTab=TransactionTabs.EXPENSE_SUMMARY">
-          <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
-            <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-          Transaction Summary
-        </button>
-        <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.BALANCE_SUMMARY"
-          (click)="goToList(TransactionTabs.BALANCE_SUMMARY); activeTab=TransactionTabs.BALANCE_SUMMARY">
-          <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
-            <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-          Balance Summary
-        </button>
-        <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EXPENSE_REPORT"
-          (click)="goToList( TransactionTabs.EXPENSE_REPORT); activeTab=TransactionTabs.EXPENSE_REPORT">
-          <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-            <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
-              stroke="currentColor" stroke-width="2" fill="none" />
+    @case (TransactionTabs.EXPENSE_SUMMARY) {
 
-            <rect x="8" y="14" width="2" height="4" fill="currentColor" />
-            <rect x="11" y="12" width="2" height="6" fill="currentColor" />
-            <rect x="14" y="10" width="2" height="8" fill="currentColor" />
-          </svg>
-          Transaction Report
-        </button>
+    <app-transaction-summary [filter]="filter">
+    </app-transaction-summary>
 
-        <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.CATEGORY_WISE_REPORT"
-          (click)="goToList( TransactionTabs.CATEGORY_WISE_REPORT); activeTab=TransactionTabs.CATEGORY_WISE_REPORT">
-          <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    }
 
-            <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
-              stroke="currentColor" stroke-width="2" fill="none" />
+    @case (TransactionTabs.BALANCE_SUMMARY) {
 
-            <rect x="8" y="14" width="2" height="4" fill="currentColor" />
-            <rect x="11" y="12" width="2" height="6" fill="currentColor" />
-            <rect x="14" y="10" width="2" height="8" fill="currentColor" />
-          </svg>
-          Category wise Report
-        </button>
-        <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EMERGENCY_RETURN_REPORT"
-          (click)="goToList(TransactionTabs.EMERGENCY_RETURN_REPORT); activeTab=TransactionTabs.EMERGENCY_RETURN_REPORT">
-          <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <app-transaction-balance [filter]="filter">
+    </app-transaction-balance>
 
-            <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
-              stroke="currentColor" stroke-width="2" fill="none" />
+    }
 
-            <rect x="8" y="14" width="2" height="4" fill="currentColor" />
-            <rect x="11" y="12" width="2" height="6" fill="currentColor" />
-            <rect x="14" y="10" width="2" height="8" fill="currentColor" />
-          </svg>
-          Emergency/Return Report
-        </button>
-        <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EXPENSE_BUDGET"
-          (click)="goToList(TransactionTabs.EXPENSE_LIST); activeTab=TransactionTabs.EXPENSE_BUDGET">
-          <i class="fa fa-report"></i> Monthly Budget
-        </button>
-      </div>
-      <div appearance="outline" class="form-field col-6 col-sm-6 col-md-6 col-lg-2 pt-2">
-        Select mode
-        <button class="form-select form-control form-control-lg text-dark bg-transparent" type="button"
-          id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          {{selectedTab}}
-        </button>
-        <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
-          <li>
-            <button (click)="goToList(TransactionTabs.EXPENSE_LIST)" class="btn btn-primary rounded-button">
-              <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M6 4H18C18.5523 4 19 4.44772 19 5V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V5C5 4.44772 5.44772 4 6 4Z"
-                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <line x1="8" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="8" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="8" y1="16" x2="16" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="8" y1="19" x2="16" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              </svg>
+    @case (TransactionTabs.EXPENSE_REPORT) {
 
-              Transaction List
-            </button>
-          </li>
-          <li>
-            <button (click)="goToList(TransactionTabs.EXPENSE_SUMMARY)" class="btn btn-primary rounded-button">
-              <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
-                <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              </svg>
-              Transaction Summary
-            </button>
-          </li>
-          <li>
-            <button (click)="goToList(TransactionTabs.BALANCE_SUMMARY)" class="btn btn-primary rounded-button">
-              <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
-                <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              </svg>
-              Balance Summary
-            </button>
-          </li>
-          <li>
-            <button (click)="goToList(TransactionTabs.EXPENSE_REPORT)" class="btn btn-primary rounded-button">
-              <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <app-transaction-report [filter]="filter" [reportType]="reportType">
+    </app-transaction-report>
 
-                <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
-                  stroke="currentColor" stroke-width="2" fill="none" />
+    }
 
-                <rect x="8" y="14" width="2" height="4" fill="currentColor" />
-                <rect x="11" y="12" width="2" height="6" fill="currentColor" />
-                <rect x="14" y="10" width="2" height="8" fill="currentColor" />
-              </svg>
-              Transaction Report
-            </button>
-          </li>
-          <li>
-            <button (click)="goToList(TransactionTabs.CATEGORY_WISE_REPORT)" class="btn btn-primary rounded-button">
-              <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    @case (TransactionTabs.CATEGORY_WISE_REPORT) {
 
-                <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
-                  stroke="currentColor" stroke-width="2" fill="none" />
+    <app-category-wise-report [filter]="filter" [reportType]="reportType">
+    </app-category-wise-report>
 
-                <rect x="8" y="14" width="2" height="4" fill="currentColor" />
-                <rect x="11" y="12" width="2" height="6" fill="currentColor" />
-                <rect x="14" y="10" width="2" height="8" fill="currentColor" />
-              </svg>
-              Category wise Report
-            </button>
-          </li>
-          <li>
-            <button (click)="goToList(TransactionTabs.EMERGENCY_RETURN_REPORT)" class="btn btn-primary rounded-button">
-              <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    }
 
-                <path d="M6 2H14L20 8V22C20 22.55 19.55 23 19 23H6C5.45 23 5 22.55 5 22V3C5 2.45 5.45 2 6 2Z"
-                  stroke="currentColor" stroke-width="2" fill="none" />
+    @case (TransactionTabs.EMERGENCY_RETURN_REPORT) {
 
-                <rect x="8" y="14" width="2" height="4" fill="currentColor" />
-                <rect x="11" y="12" width="2" height="6" fill="currentColor" />
-                <rect x="14" y="10" width="2" height="8" fill="currentColor" />
-              </svg>
-              Emergency/Return Report
-            </button>
-          </li>
-          <li>
+    <app-emergency-return-report>
+    </app-emergency-return-report>
 
-            <button (click)="monthlyBudget()" class="btn btn-primary rounded-button">
-              <i class="fa fa-report"></i> Monthly Budget
-            </button>
-          </li>
-        </ul>
-      </div>
+    }
 
-      <div class="col-6 col-md-6 d-lg-none pt-2">
-        <button (click)="refreshData()" class="btn btn-primary rounded-button">
-          @if(sourceOrReason || minAmount || maxAmount){
-          <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 4H20L13 13V19L11 20V13L4 4Z" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round" />
-            <g transform="translate(12, 9)">
-              <circle cx="6" cy="6" r="6" fill="red" />
-              <line x1="3" y1="3" x2="9" y2="9" stroke="white" stroke-width="2" stroke-linecap="round" />
-              <line x1="9" y1="3" x2="3" y2="9" stroke="white" stroke-width="2" stroke-linecap="round" />
-            </g>
-          </svg>
-          Clear Filter
-          }
-          @else{
-          <i class="fa fa-refresh"></i> Refresh data
-          }
-        </button>
+    @case (TransactionTabs.EXPENSE_BUDGET) {
 
-      </div>
-    </div>
+    <app-budget></app-budget>
 
+    }
 
-    <div class="row">
+    }
 
-      @if(activeTab === TransactionTabs.EXPENSE_REPORT){
-      <div class="col-12 col-lg-6 mb-4">
-        <div class="card pb-2 ps-2 pe-2">
-          <app-transaction-pie-chart [reportData]="transactionReports"
-            [reportType]="reportType"></app-transaction-pie-chart>
-        </div>
-      </div>
-      <div class="col-12 col-lg-6 mb-4">
-        <div class="card pb-2 ps-2 pe-2">
-          <app-transaction-report-chart [reportData]="transactionReports"></app-transaction-report-chart>
-        </div>
-      </div>
-      }
-      @else if(activeTab === TransactionTabs.CATEGORY_WISE_REPORT){
-      <div class="col-12 col-lg-6 mb-4">
-        <div class="card pb-2 ps-2 pe-2">
-          <app-transaction-pie-chart [reportData]="categoryWiseReportResponse"
-            [reportType]="reportType"></app-transaction-pie-chart>
-        </div>
-      </div>
-      <div class="col-12 col-lg-6 mb-4">
-        <div class="card pb-2 ps-2 pe-2">
-          <app-transaction-report-chart [reportData]="categoryWiseReportResponse"
-            [reportType]="reportType"></app-transaction-report-chart>
-        </div>
-      </div>
-      }
-    </div>
+    <!-- ================= COMMON POPUPS ================= -->
+
+    <app-transaction-details [lastTransactionDate]="lastTransactionDate">
+    </app-transaction-details>
+
+    <app-confirmation-dialog (outputAction)="handleConfirmResult($event)">
+    </app-confirmation-dialog>
+
+    <button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup"
+      style="display:none">
+    </button>
+
   </div>
-  @if(activeTab === TransactionTabs.EXPENSE_BUDGET){
-  <app-budget></app-budget>
-  }
-  @if(activeTab === TransactionTabs.EXPENSE_LIST||
-  activeTab === TransactionTabs.EXPENSE_SUMMARY||
-  activeTab === TransactionTabs.BALANCE_SUMMARY||
-  activeTab === TransactionTabs.EXPENSE_REPORT||
-  activeTab === TransactionTabs.CATEGORY_WISE_REPORT||
-  activeTab === TransactionTabs.EMERGENCY_RETURN_REPORT||
-  activeTab === TransactionTabs.EXPENSE_REPORT
-  ){
-  <div class="mb-2">
-    <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-      [paginationSize]="1000" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
-      [allowPrint]="allowPrint" [allowAdd]="allowAdd" (addClicked)="transactionDetails('')"
-      [allowRefresh]="allowRefresh" (refreshClicked)="refreshData()" [gridName]="selectedTab"
-      [allowColumnFilters]="allowColumnFilters">
-    </app-tabulator-grid>
-  </div>
-  }
-  <app-transaction-details [lastTransactionDate]="lastTransactionDate"></app-transaction-details>
-  <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
-  <button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup"
-    style="display:none"></button>
+</div>

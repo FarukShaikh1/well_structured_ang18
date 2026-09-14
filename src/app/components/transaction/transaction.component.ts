@@ -1,1393 +1,507 @@
-import { CommonModule, DatePipe } from "@angular/common";
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from "@angular/core";
+
 import flatpickr from "flatpickr";
-import { CellComponent, ColumnDefinition } from "tabulator-tables";
+
 import {
   ActionConstant,
-  ApplicationConstantHtml,
   ApplicationConstants,
   ApplicationModules,
-  ApplicationTableConstants,
-  DdlConfig,
   LocalStorageConstants,
   NavigationURLs,
-  TransactionTabs,
-  UserConfig
+  TransactionTabs
 } from "../../../utils/application-constants";
+
 import { DateUtils } from "../../../utils/date-utils";
-import { CategoryWiseTransactionReportResponse } from "../../interfaces/category-wise-transaction-report-response";
-import { ExpenseFilterRequest } from "../../interfaces/expense-filter-request";
-import { TransactionReportResponse } from "../../interfaces/transaction-report-response";
+
 import { CacheService } from "../../services/cache/cache.service";
-import { ConfigurationService } from "../../services/configuration/configuration.service";
 import { GlobalService } from "../../services/global/global.service";
 import { LoaderService } from "../../services/loader/loader.service";
-import { LocalStorageService } from "../../services/local-storage/local-storage.service";
 import { TransactionService } from "../../services/transaction/transaction.service";
+
 import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
-import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
-import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { TransactionDetailsComponent } from "../transaction-details/transaction-details.component";
-import { TransactionPieChartComponent } from "../transaction-pie-chart/transaction-pie-chart.component";
-import { TransactionReportChartComponent } from "../transaction-report-chart/transaction-report-chart.component";
+import { TransactionDetailsComponent } from "./transaction-details/transaction-details.component";
 import { BudgetComponent } from "../budget/budget.component";
-export interface Task {
-  name: string;
-  completed: boolean;
-  subtasks?: Task[];
-}
+
+import { TransactionListComponent } from "./transaction-list/transaction-list.component";
+import { TransactionSummaryComponent } from "./transaction-summary/transaction-summary.component";
+import { TransactionBalanceComponent } from "./transaction-balance/transaction-balance.component";
+import { TransactionReportComponent } from "./transaction-report/transaction-report.component";
+import { CategoryWiseReportComponent } from "./category-wise-report/category-wise-report.component";
+import { EmergencyReturnReportComponent } from "./emergency-return-report/emergency-return-report.component";
+
+import { TransactionFilter } from "./../../interfaces/transaction-filter.model";
 
 @Component({
   selector: "app-transaction",
   standalone: true,
   imports: [
     CommonModule,
-    TabulatorGridComponent,
+    TransactionListComponent,
+    TransactionSummaryComponent,
+    TransactionBalanceComponent,
+    TransactionReportComponent,
+    CategoryWiseReportComponent,
+    EmergencyReturnReportComponent,
     TransactionDetailsComponent,
     ConfirmationDialogComponent,
-    TransactionReportChartComponent,
-    TransactionPieChartComponent,
     BudgetComponent
   ],
   templateUrl: "./transaction.component.html",
-  providers: [DatePipe, DateUtils],
-  styleUrls: ["./transaction.component.scss"],
+  styleUrls: ["./transaction.component.scss"]
 })
-export class TransactionComponent implements OnInit {
-  @ViewChild("searchInput") searchInput!: ElementRef;
-  @ViewChild("minInput") minInput!: any;
-  @ViewChild("maxInput") maxInput!: any;
-  @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
-  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
+export class TransactionComponent implements OnInit, OnDestroy {
+
+  @ViewChild("searchInput")
+  searchInput!: ElementRef<HTMLInputElement>;
+
+  @ViewChild("minInput")
+  minInput!: ElementRef<HTMLInputElement>;
+
+  @ViewChild("maxInput")
+  maxInput!: ElementRef<HTMLInputElement>;
+
   @ViewChild(TransactionDetailsComponent)
   transactionDetailsComponent!: TransactionDetailsComponent;
-  @ViewChild(ConfirmationDialogComponent, { static: false })
+
+  @ViewChild(ConfirmationDialogComponent)
   confirmationDialog!: ConfirmationDialogComponent;
 
-  public tableData: Record<string, unknown>[] = [];
-  public filteredTableData: Record<string, unknown>[] = [];
-  public columnConfig: ColumnDefinition[] = [];
-  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = true;
-  public allowPrint = true;
-  public allowAdd = true;
-  public allowRefresh = true;
-  public gridName = "Hi";
-  public filterColumns: ColumnDefinition[] = [];
-  public allowColumnFilters = true;
-  lastTransactionDate: Date = new Date();
-  NavigationURLs = NavigationURLs;
-  fromDate = DateUtils.GetDateBeforeDays(30);
-  toDate = DateUtils.GetDateBeforeDays(-30);
-  sourceOrReason: string = "";
-  minAmount: number = 0;
-  maxAmount: number = 0;
-  transactionGroupId: string = "";
-  activeComponent: string = NavigationURLs.EXPENSE_LIST;
-  activeTab: string = TransactionTabs.EXPENSE_LIST;
-  reportLastDate = "";
-  reportFirstDate = "";
-  transactionfilterRequest: ExpenseFilterRequest = {
-    fromDate: this.fromDate,
-    toDate: this.toDate,
-    minAmount: this.minAmount,
-    maxAmount: this.maxAmount,
-    sourceOrReason: ''
-  };
-  ActionConstant = ActionConstant;
-  accountColumns: any;
-  transactionReports: TransactionReportResponse[] = [];
-  categoryWiseReportResponse: CategoryWiseTransactionReportResponse[] = [];
-  columnList: string = '_col';
-  accountColumnList: string = '_AccountColumns';
-  reportType = "sourceWise";
-  selectedTab: string = TransactionTabs.EXPENSE_LIST;
   TransactionTabs = TransactionTabs;
+
+  activeTab: string = TransactionTabs.EXPENSE_LIST;
+
+  selectedTab: string = TransactionTabs.EXPENSE_LIST;
+
+  transactionGroupId = "";
+
+  lastTransactionDate: Date = new Date();
+
+  allowAdd = true;
+
+  reportType = ApplicationConstants.REPORT_TYPE_SOURCE_WISE;
+
+  filter: TransactionFilter = {
+    fromDate: DateUtils.GetDateBeforeDays(30),
+    toDate: DateUtils.GetDateBeforeDays(-30),
+    sourceOrReason: "",
+    minAmount: 0,
+    maxAmount: 0
+  };
+
+  private documentClickHandler!: (event: Event) => void;
+
   constructor(
     private transactionService: TransactionService,
-    private configService: ConfigurationService,
-    public datePipe: DatePipe,
-    public globalService: GlobalService,
     private loaderService: LoaderService,
-    private localStorageService: LocalStorageService,
     private cacheService: CacheService,
-  ) { }
+    public globalService: GlobalService
+  ) {}
 
-  ngOnInit() {
-    this.allowAdd = this.globalService.isAccessible(ActionConstant.ADD)
-    this.loadGrid();
-    this.globalService.reloadGrid$.subscribe((listName: string) => {
-      if (listName === ApplicationModules.EXPENSE) {
-        this.sourceOrReason = '';
-        this.loadGrid();
-      }
-    });
-    this.globalService.refreshList$.subscribe((listName: string) => {
-      if (listName === ApplicationModules.EXPENSE) {
-        this.applyFilters();
-      }
-    });
-  }
+  ngOnInit(): void {
 
-  ngAfterViewInit() {
-    this.refreshDateFields();
-  }
+    this.allowAdd =
+      this.globalService.isAccessible(ActionConstant.ADD);
 
-  columnConfiguration() {
-    if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
-      this.loadConfigForExpenseList();
-      return;
-    }
-    if (this.activeComponent === NavigationURLs.EXPENSE_REPORT || this.activeComponent === NavigationURLs.EMERGENCY_RETURN_REPORT) {
-      this.loadConfigForExpenseReportList();
-      return;
-    }
-    if (this.activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT) {
-      this.loadConfigForCategoryWiseReportList();
-      return;
-    }
+    this.globalService.reloadGrid$.subscribe(
+      (listName: string) => {
 
-    if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
-      this.loadConfigForExpenseSummaryList();
-    } else if (this.activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST) {
-      this.loadConfigForBalanceList();
-    }
-  }
+        if (listName === ApplicationModules.EXPENSE) {
 
-  loadConfigForExpenseList() {
-    this.columnConfig = [
-      {
-        title: "Transaction Date",
-        field: "transactionDate",
-        sorter: "alphanum",
-        formatter: this.dateFormatter.bind(this),
-        minWidth: 120,
-      },
-      {
-        title: "Category",
-        field: "subCategoryName",
-        sorter: "alphanum",
-        minWidth: 200,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search category"
-      },
-      {
-        title: "Get From/Paid To",
-        field: "sourceOrReason",
-        sorter: "alphanum",
-        formatter: this.getColorForText.bind(this),
-        minWidth: 200,
-        headerFilter: "input",
-        headerFilterPlaceholder: "search for source or reason"
-      },
-      {
-        title: "Description",
-        field: "description",
-        sorter: "alphanum",
-        minWidth: 400,
-        headerFilter: "input",
-        headerFilterPlaceholder: "search for description"
-      },
-      {
-        title: "Transaction By",
-        field: "accountName",
-        sorter: "alphanum",
-        minWidth: 150,
-        headerFilter: "input",
-        headerFilterPlaceholder: "search for Account"
-      },
-      {
-        title: "Debit",
-        field: "expense",
-        sorter: "alphanum",
-        formatter: this.debitAmountColorFormatter.bind(this),
-        bottomCalc: "sum",
-        bottomCalcFormatter: this.debitAmountColorFormatter.bind(this),
-        bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        minWidth: 120,
-        headerFilter: "number",
-        headerFilterPlaceholder: "search for debited amount"
-      },
-      {
-        title: "Credit",
-        field: "income",
-        sorter: "alphanum",
-        formatter: this.amountColorFormatter.bind(this),
-        bottomCalc: "sum",
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        minWidth: 120,
-        headerFilter: "number",
-        headerFilterPlaceholder: "search for credited amount"
-      },
-      {
-        title: "",
-        field: "",
-        maxWidth: 70,
-        formatter: this.globalService.hidebuttonFormatter.bind(this),
-        cellClick: (e, cell) => {
-          const transactionGroupId = cell.getRow().getData()["transactionGroupId"];
-          this.hideTransaction(transactionGroupId);
-        },
-        hozAlign: "center",
-        headerSort: false,
-        minWidth: 70,
-        print: false
-      },
-    ];
-    if (
-      this.globalService.isAccessible(ActionConstant.EDIT) ||
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
-      this.columnConfig.push({
-        title: "",
-        field: "option",
-        formatter: this.globalService.optionDotsFormatter.bind(this),
-        hozAlign: "center",
-        headerSort: false,
-        minWidth: 70,
-        maxWidth: 70,
-        print: false
-      });
-    }
-  }
+          this.clearFilters();
 
-  loadConfigForExpenseSummaryList() {
-    this.columnConfig = [
-      {
-        title: "Transaction Date",
-        field: "transactionDate",
-        sorter: "alphanum",
-        formatter: this.dateFormatter.bind(this),
-        minWidth: 120,
-      },
-      {
-        title: "Category",
-        field: "subCategoryName",
-        sorter: "alphanum",
-        minWidth: 200,
-                headerFilter: "input",
-        headerFilterPlaceholder: "Search category"
-
-      },
-      {
-        title: "Get From/Paid To",
-        field: "sourceOrReason",
-        sorter: "alphanum",
-        formatter: this.getColorForText.bind(this),
-        minWidth: 150,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search Source/Reason"
-      },
-      {
-        title: "Description",
-        field: "description",
-        sorter: "alphanum",
-        minWidth: 200,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search Description"
-      },
-    ];
-
-    if (this.tableData.length > 0) {
-      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList);
-      if (accountColumnList) {
-
-        for (const key of Object.keys(accountColumnList)) {
-          const isAmount = key.toLowerCase().includes("amount");
-          const isBalance = key.toLowerCase().includes("balance");
-          const isCategory = key.toLowerCase().includes("category");
-          if (!isCategory) {
-            this.columnConfig.push({
-              title: key,
-              field: `accountData.${key}`,
-              formatter: this.summaryAmountColorFormatter.bind(this),
-              hozAlign: "center",
-              headerHozAlign: "center",
-              cssClass: "amount-column",
-              bottomCalc: "sum",
-              bottomCalcFormatter: this.amountColorFormatter.bind(this),
-              bottomCalcFormatterParams: { symbol: "", precision: 2 },
-              minWidth: 120,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search aomunt"
-            });
-          }
+          // Child component reloads itself because
+          // its @Input filter object changes.
+          this.filter = {
+            ...this.filter
+          };
         }
       }
-    }
-    this.columnConfig.push({
-      title: "",
-      field: "",
-      minWidth: 50,
-      maxWidth: 70,
-      formatter: this.globalService.hidebuttonFormatter.bind(this),
-      cellClick: (e, cell) => {
-        const transactionGroupId = cell.getRow().getData()["transactionGroupId"];
-        this.hideTransaction(transactionGroupId);
-      },
-      headerSort: false,
-      print: false
-    });
-    if (
-      this.globalService.isAccessible(ActionConstant.EDIT) ||
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
-      this.columnConfig.push({
-        title: "",
-        field: "option",
-        minWidth: 50,
-        maxWidth: 70,
-        formatter: this.globalService.optionDotsFormatter.bind(this),
-        hozAlign: "center",
-        headerSort: false,
-        print: false
-      });
-    }
-  }
+    );
 
-  loadConfigForBalanceList() {
-    this.columnConfig = [
-      {
-        title: "Transaction Date",
-        field: "transactionDate",
-        sorter: "alphanum",
-        formatter: this.dateFormatter.bind(this),
-        minWidth: 120,
-      },
-    ];
+    this.globalService.refreshList$.subscribe(
+      (listName: string) => {
 
-    if (this.tableData.length > 0) {
-      const accountColumnList = this.cacheService.get<any[]>(this.activeComponent + this.accountColumnList);
-      if (accountColumnList) {
-        for (const key of Object.keys(accountColumnList)) {
-          const isAmount = key.toLowerCase().includes("amount");
-          const isBalance = key.toLowerCase().includes("balance");
-          const isCategory = key.toLowerCase().includes("category");
-          if (!key.toLowerCase().includes("category")) {
-            this.columnConfig.push({
-              title: key,
-              field: `accountData.${key}`,
-              formatter: this.summaryAmountColorFormatter.bind(this),
-              hozAlign: "center",
-              headerHozAlign: "center",
-              cssClass: "amount-column",
-              bottomCalc: "sum",
-              bottomCalcFormatter: this.amountColorFormatter.bind(this),
-              bottomCalcFormatterParams: { symbol: "", precision: 2 },
-              minWidth: 120,
-            });
-          }
+        if (listName === ApplicationModules.EXPENSE) {
+
+          this.filter = {
+            ...this.filter
+          };
         }
       }
-    }
-    this.columnConfig.push({
-      title: "",
-      field: "",
-      maxWidth: 70,
-      formatter: this.globalService.hidebuttonFormatter.bind(this),
-      cellClick: (e, cell) => {
-        const date = cell.getRow().getData()["transactionDate"];
-        this.hideTransactionByDate(date);
-      },
-      headerSort: false,
-      print: false
-    });
+    );
   }
 
-  loadConfigForExpenseReportList() {
-    this.columnConfig = [
-      {
-        title: "FirstDate",
-        field: "firstDate",
-        sorter: "alphanum",
-        minWidth: 100,
-        formatter: this.dateFormatter.bind(this),
-      },
-      {
-        title: "LastDate",
-        field: "lastDate",
-        sorter: "alphanum",
-        minWidth: 100,
-        formatter: this.dateFormatter.bind(this),
-      },
-      {
-        title: "Get From/Paid To",
-        field: "sourceOrReason",
-        sorter: "alphanum",
-        minWidth: 150,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search source/category"
-      },
-      {
-        title: "Description",
-        field: "description",
-        sorter: "alphanum",
-        minWidth: 600,
-        formatter: (cell) => {
-          const value = cell.getValue() || "";
-          return `<div class="text-wrap">${value}</div>`;
-        },
-        cssClass: "description-column",
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search description"
-      },
-      {
-        title: "TakenAmount",
-        field: "takenAmount",
-        sorter: "alphanum",
-        formatter: this.amountColorFormatter.bind(this),
-        headerHozAlign: "right",
-        hozAlign: "right",
-        bottomCalc: "sum",
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        cssClass: "amount-column",
-        minWidth: 120,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search amount"
-      },
-      {
-        title: "GivenAmount",
-        field: "givenAmount",
-        sorter: "alphanum",
-        formatter: this.amountColorFormatter.bind(this),
-        headerHozAlign: "right",
-        hozAlign: "right",
-        bottomCalc: "sum",
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        cssClass: "amount-column",
-        minWidth: 120,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search amount"
-      },
-      {
-        title: "TotalAmount",
-        field: "totalAmount",
-        sorter: "alphanum",
-        formatter: this.amountColorFormatter.bind(this),
-        headerHozAlign: "right",
-        hozAlign: "right",
-        bottomCalc: "sum",
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        cssClass: "amount-column",
-        minWidth: 120,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search amount"
-      },
-      {
-        title: "",
-        field: "",
-        minWidth: 50,
-        maxWidth: 70,
-        formatter: this.globalService.hidebuttonFormatter.bind(this),
-        cellClick: (e, cell) => {
-          const sourceOrReason = cell.getRow().getData()["sourceOrReason"];
-          this.hideTransactionBySource(sourceOrReason);
-        },
-        headerSort: false,
-        print: false
-      },
-      {
-        title: "",
-        field: "",
-        minWidth: 50,
-        maxWidth: 70,
-        formatter: (_cell) =>
-          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-        clickMenu: [
-          {
-            label: ApplicationConstantHtml.VIEW_LABLE,
-            action: (_e: any, cell: CellComponent) => {
-              const transactionData = cell.getRow().getData();
-              this.activeComponent = NavigationURLs.EXPENSE_LIST;
-              this.sourceOrReason = transactionData["sourceOrReason"];
-              this.loadGrid();
-            },
-          },
-          {
-            separator: true,
-          },
-          {
-            label: ApplicationConstantHtml.DELETE_LABLE,
-            action: (_e: any, cell: CellComponent) => {
-              const transactionData = cell.getRow().getData();
-              const transactionGroupId = transactionData["transactionGroupId"];
-              this.deleteTransaction(transactionGroupId);
-            },
-          },
-        ],
-        hozAlign: "left",
-        headerSort: false,
-        print: false
-      },
-    ];
+  ngAfterViewInit(): void {
+    this.initializeDatePickers();
+    this.initializeGlobalOptionsMenu();
   }
 
-  loadConfigForCategoryWiseReportList() {
-    this.columnConfig = [
-      {
-        title: "FirstDate",
-        field: "firstDate",
-        sorter: "alphanum",
-        minWidth: 100,
-        formatter: this.dateFormatter.bind(this),
-      },
-      {
-        title: "LastDate",
-        field: "lastDate",
-        sorter: "alphanum",
-        minWidth: 100,
-        formatter: this.dateFormatter.bind(this),
-      },
-      {
-        title: "Category",
-        field: "categoryName",
-        sorter: "alphanum",
-        minWidth: 250,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search category"
-      },
-      {
-        sorter: "alphanum",
-        title: "Budget Amount",
-        field: "budgetAmount",
-        minWidth: 150,
-        formatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
-        headerHozAlign: "right",
-        hozAlign: "right",
-        bottomCalc: "sum",
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search amount"
-      },
-      {
-        title: "Total Expense",
-        field: "totalExpense",
-        sorter: "alphanum",
-        headerHozAlign: "right",
-        hozAlign: "right",
-        bottomCalc: "sum",
-        formatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        cssClass: "amount-column",
-        minWidth: 150,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search amount"
-      },
-      {
-        title: "Remaining Budget",
-        field: "remainingBudget",
-        sorter: "alphanum",
-        headerHozAlign: "right",
-        hozAlign: "right",
-        bottomCalc: "sum",
-        formatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        cssClass: "amount-column",
-        minWidth: 150,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search amount"
-      },
-      {
-        title: "Is Over Spent",
-        field: "isOverSpent",
-        sorter: "alphanum",
-        headerHozAlign: "center",
-        hozAlign: "center",
-        formatter: this.overSpentFormatter.bind(this),
-        bottomCalcFormatter: this.overSpentFormatter.bind(this),
-        cssClass: "amount-column",
-        minWidth: 150,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search amount"
-      },
-      {
-        sorter: "alphanum",
-        title: "Get From/Paid To",
-        field: "sourceOrReason",
-        minWidth: 600,
-        formatter: (cell: any) => {
-          const value = cell.getValue() || "";
-          return `<div class="text-wrap">${value}</div>`;
-        },
-        cssClass: "description-column",
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search souce/reason"
-      },
-      {
-        title: "TakenAmount",
-        field: "takenAmount",
-        sorter: "alphanum",
-        formatter: this.amountColorFormatter.bind(this),
-        headerHozAlign: "right",
-        hozAlign: "right",
-        bottomCalc: "sum",
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        cssClass: "amount-column",
-        minWidth: 200,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search amount"
-      },
-      {
-        title: "GivenAmount",
-        field: "givenAmount",
-        sorter: "alphanum",
-        formatter: this.amountColorFormatter.bind(this),
-        headerHozAlign: "right",
-        hozAlign: "right",
-        bottomCalc: "sum",
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        cssClass: "amount-column",
-        minWidth: 150,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search amount"
-      },
-      {
-        title: "TotalAmount",
-        field: "totalAmount",
-        sorter: "alphanum",
-        formatter: this.amountColorFormatter.bind(this),
-        headerHozAlign: "right",
-        hozAlign: "right",
-        bottomCalc: "sum",
-        bottomCalcFormatter: this.amountColorFormatter.bind(this),
-        bottomCalcFormatterParams: { symbol: "", precision: 2 },
-        cssClass: "amount-column",
-        minWidth: 150,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search amount"
-      },
-      {
-        title: "",
-        field: "",
-        minWidth: 50,
-        maxWidth: 70,
-        formatter: this.globalService.hidebuttonFormatter.bind(this),
-        cellClick: (e: any, cell: any) => {
-          const subCategoryName = cell.getRow().getData()["categoryName"];
-          this.hideTransactionByCategory(subCategoryName);
-        },
-        headerSort: false,
-      },
-      {
-        title: "",
-        field: "",
-        minWidth: 50,
-        maxWidth: 70,
-        formatter: (_cell: any) =>
-          '<button class="action-buttons" title="More Actions" style="padding-right:100px;"><i class="bi bi-three-dots btn-link"></i></button>',
-        clickMenu: [
-          {
-            label: ApplicationConstantHtml.VIEW_LABLE,
-            action: (_e: any, cell: CellComponent) => {
-              const transactionData = cell.getRow().getData();
-              this.activeComponent = NavigationURLs.EXPENSE_LIST;
-              this.sourceOrReason = transactionData["sourceOrReason"];
-              this.loadGrid();
-            },
-          },
-          {
-            separator: true,
-          },
-          {
-            label: ApplicationConstantHtml.DELETE_LABLE,
-            action: (_e: any, cell: CellComponent) => {
-              const transactionData = cell.getRow().getData();
-              const transactionGroupId = transactionData["transactionGroupId"];
-              this.deleteTransaction(transactionGroupId);
-            },
-          },
-        ],
-        hozAlign: "left",
-        headerSort: false,
-        print: false
-      },
-    ];
-  }
+  ngOnDestroy(): void {
 
-  generateOptionsMenu(rowData: Record<string, any>) {
-    const menu = [];
-    if (this.globalService.isAccessible(ActionConstant.EDIT)) {
-      menu.push({
-        label: ApplicationConstantHtml.EDIT_LABLE,
-        action: () => {
-          this.transactionDetails(rowData['transactionGroupId']);
-        },
-      });
-    }
-    if (this.globalService.isAccessible(ActionConstant.DELETE)) {
-      menu.push({
-        label: ApplicationConstantHtml.DELETE_LABLE,
-        action: () => {
-          this.deleteTransaction(rowData['transactionGroupId']);
-        },
-      });
-    }
-    return menu;
-  }
-
-
-  hideTransaction(transactionGroupId: any) {
-    this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.transactionGroupId != transactionGroupId;
-    });
-  }
-
-  hideTransactionByDate(date: any) {
-    this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.transactionDate != date;
-    });
-  }
-
-  removeTransaction(transactionGroupId: any) {
-    this.tableData = this.tableData.filter((item: any) => {
-      return item.transactionGroupId != transactionGroupId;
-    });
-    this.filteredTableData = this.tableData;
-  }
-
-  hideTransactionBySource(sourceOrReason: any) {
-    this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.sourceOrReason != sourceOrReason;
-    });
-    this.transactionReports = this.filteredTableData;
-  }
-
-  hideTransactionByCategory(category: any) {
-    this.filteredTableData = this.filteredTableData.filter((item: any) => {
-      return item.categoryName != category;
-    });
-    this.categoryWiseReportResponse = this.filteredTableData;
-  }
-
-  dateFormatter(cell: CellComponent) {
-    const columnName = cell.getColumn().getField();
-    const transactionData = cell.getRow().getData();
-    const dateColumn = transactionData[columnName];
-    if (dateColumn) {
-      return `<span>${this.datePipe.transform(
-        dateColumn,
-        ApplicationConstants.GLOBAL_DATE_FORMAT
-      )}</span>`;
-    }
-    const nullDate = "";
-    return `<span>${nullDate}</span>`;
-  }
-
-  amountColorFormatter(cell: CellComponent) {
-    const columnName = cell.getColumn().getField();
-    const transactionData = cell.getRow().getData();
-    const columnValue = transactionData[columnName];
-    const formattedValue = new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-    }).format(columnValue);
-    if (columnValue > 0) {
-      return `<span style="color:#129D0A; font-weight:bold">${formattedValue}</span>`;
-    }
-    if (columnValue < 0) {
-      return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
-    }
-    return `<span></span>`;
-  }
-
-  overSpentFormatter(cell: CellComponent) {
-    const columnName = cell.getColumn().getField();
-    const transactionData = cell.getRow().getData();
-    const columnValue = transactionData[columnName];
-    if (columnValue) {
-      return `<span style="color:#FF0000; font-weight:bold">Overspent</span>`;
-    }
-    else {
-      return `<span style="color:#129D0A; font-weight:bold">Available</span>`;
-    }
-  }
-
-  debitAmountColorFormatter(cell: CellComponent) {
-    const columnName = cell.getColumn().getField();
-    const transactionData = cell.getRow().getData();
-    const columnValue = transactionData[columnName];
-    const formattedValue = new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-    }).format(columnValue);
-    if (columnValue !== 0) {
-      return `<span style="color:#FF0000; font-weight:bold">${formattedValue}</span>`;
-    }
-    return `<span></span>`;
-  }
-
-  summaryAmountColorFormatter(cell: CellComponent) {
-    const cellValue = cell.getValue();
-    const transactionData = cell.getRow().getData();
-    const field = cell.getColumn().getField();
-
-
-    const formattedValue = new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-    }).format(cellValue);
-
-
-    if (!transactionData || !transactionData['accountData'] || (typeof cellValue !== 'number' && cellValue !== null && cellValue !== undefined)) {
-      return `<span>${formattedValue}</span>`;
-    }
-
-    const amountKeyMatch = field.match(/accountData\.([^.]+)_Amount/i);
-    const balanceKeyMatch = field.match(/accountData\.([^.]+)_Balance/i);
-    if (amountKeyMatch) {
-      if (cellValue === 0) {
-        return `<span></span>`;
-      }
-      const accountBase = amountKeyMatch[1];
-      const categoryField = `${accountBase}_Category`;
-      const category = transactionData['accountData'][categoryField];
-
-      if (category === 'Income') {
-        return `<span style="color: var(--success-color); font-weight:bold">${formattedValue}</span>`;
-      } else if (category === 'Expense') {
-        return `<span style="color: var(--danger-color); font-weight:bold">${formattedValue}</span>`;
-      }
-    }
-    if (balanceKeyMatch) {
-      if (cellValue == null) {
-        return `<span></span>`;
-      }
-      if (cellValue > 0) {
-        return `<span style="color: var(--success-color); font-weight:bold">${formattedValue}</span>`;
-      }
-      return `<span style="color: var(--danger-color); font-weight:bold">${formattedValue}</span>`;
-    }
-    return `<span></span>`;
-  }
-
-  getColorForText(cell: CellComponent): any {
-    const transactionData = cell.getRow().getData();
-    const columnValue = transactionData["description"];
-    const sourceValue = transactionData["sourceOrReason"];
-
-    if (columnValue?.toLowerCase().includes("emergency")) {
-      return `<span style="color: var(--danger-color); font-weight:bold">${sourceValue}</span>`;
-    } else if (columnValue?.toLowerCase().includes("return")) {
-      return `<span style="color: var(--success-color); font-weight:bold">${sourceValue}</span>`;
-    } else if (columnValue?.toLowerCase().includes("recharge")) {
-      return `<span style="color: var(--theme-accent-orange); font-weight:bold">${sourceValue}</span>`;
-    } else {
-      return `<span style="color: var(--theme-text); font-weight:bold">${sourceValue}</span>`;
-    }
-  }
-
-  removeGridFromLocalStorage() {
-    localStorage.removeItem(NavigationURLs.EXPENSE_LIST);
-    localStorage.removeItem(NavigationURLs.EXPENSE_LIST + '_col');
-
-    localStorage.removeItem(NavigationURLs.EXPENSE_SUMMARY_LIST);
-    localStorage.removeItem(NavigationURLs.EXPENSE_SUMMARY_LIST + '_col');
-
-    localStorage.removeItem(NavigationURLs.EXPENSE_REPORT);
-    localStorage.removeItem(NavigationURLs.EXPENSE_REPORT + '_col');
-
-    localStorage.removeItem(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
-    localStorage.removeItem(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT + '_col');
-
-    localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
-    localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST + '_col');
-
-    localStorage.removeItem(NavigationURLs.EMERGENCY_RETURN_REPORT);
-    localStorage.removeItem(NavigationURLs.EMERGENCY_RETURN_REPORT + '_col');
-  }
-
-  refreshDateFields() {
-    flatpickr("#fromDate", {
-      dateFormat: "d/m/Y",
-      defaultDate: (() => {
-        let date = DateUtils.strFormatToDDMMYYYY(this.fromDate);
-        return date;
-      })(),
-      onChange: (selectedDates, dateStr) => {
-        let fromDate = dateStr;
-        if (!dateStr) {
-          const fromDate = DateUtils.GetDateBeforeDays(30)
-        }
-        this.filterGridByFromDate(fromDate);
-      },
-    });
-
-    flatpickr("#toDate", {
-      dateFormat: "d/m/Y",
-      defaultDate: DateUtils.strFormatToDDMMYYYY(this.toDate),
-      onChange: (selectedDates, dateStr) => {
-        if (!dateStr) {
-          const today = DateUtils.GetDateBeforeDays(0);
-          dateStr = today;
-        }
-        this.filterGridByToDate(dateStr);
-      },
-    });
-
-    document.addEventListener('click', (event: Event) => {
-      const target = event.target as HTMLElement;
-      if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
-        const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
-        const rowId = button.getAttribute('data-row-id');
-        if (rowId) {
-          const rowData = this.tableData.find((row) => row['transactionGroupId'] == rowId);
-          if (rowData) {
-            const menuOptions = this.generateOptionsMenu(rowData);
-            this.globalService.showGlobalDropdownMenu(button, menuOptions);
-          }
-        }
-        event.stopPropagation();
-      } else {
-        const globalMenu = document.getElementById('globalDropdownMenu');
-        if (globalMenu) globalMenu.remove();
-      }
-    });
-    this.setTransactionSuggestions();
-    this.setTransactionCategories();
-  }
-
-  applyFilters() {
-    if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
-      this.filteredTableData = this.tableData.filter((item: any) => {
-        const searchText =
-          item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
-          item.subCategoryName?.toLowerCase().includes(this.sourceOrReason) ||
-          item.description?.toLowerCase().includes(this.sourceOrReason);
-        const minAmountCondition =
-          this.minAmount == 0 ||
-          (item.expense !== 0 && Math.abs(item.expense) >= this.minAmount) ||
-          (item.income !== 0 && Math.abs(item.income) >= this.minAmount);
-        const maxAmountCondition =
-          this.maxAmount == 0 ||
-          (item.expense !== 0 && Math.abs(item.expense) <= this.maxAmount) ||
-          (item.income !== 0 && Math.abs(item.income) <= this.maxAmount);
-        return searchText && minAmountCondition && maxAmountCondition;
-      });
-    } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
-      const searchValue = this.sourceOrReason?.toLowerCase() || "";
-
-      this.filteredTableData = this.tableData.filter((item: any) => {
-
-        // 🔎 TEXT SEARCH
-        const searchText =
-          item.sourceOrReason?.toLowerCase().includes(searchValue) ||
-          item.subCategoryName?.toLowerCase().includes(this.sourceOrReason) ||
-          item.description?.toLowerCase().includes(searchValue);
-
-        // 🧮 DYNAMIC ACCOUNT AMOUNTS
-        const accountValues: number[] = item.accountData
-          ? Object.values(item.accountData).map((val: any) => Number(val))
-          : [];
-
-        // 🔽 MIN AMOUNT FILTER
-        const minAmountCondition =
-          this.minAmount == 0 ||
-          accountValues.some(v => v !== 0 && Math.abs(v) >= this.minAmount);
-
-        // 🔼 MAX AMOUNT FILTER
-        const maxAmountCondition =
-          this.maxAmount == 0 ||
-          accountValues.some(v => v !== 0 && Math.abs(v) <= this.maxAmount);
-
-        return searchText && minAmountCondition && maxAmountCondition;
-      });
-    } else if (this.activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST) {
-
-      this.filteredTableData = this.tableData.filter((item: any) => {
-        // 🧮 DYNAMIC ACCOUNT AMOUNTS
-        const accountValues: number[] = item.accountData
-          ? Object.values(item.accountData).map((val: any) => Number(val))
-          : [];
-
-        // 🔽 MIN AMOUNT FILTER
-        const minAmountCondition =
-          this.minAmount == 0 ||
-          accountValues.some(v => v !== 0 && Math.abs(v) >= this.minAmount);
-
-        // 🔼 MAX AMOUNT FILTER
-        const maxAmountCondition =
-          this.maxAmount == 0 ||
-          accountValues.some(v => v !== 0 && Math.abs(v) <= this.maxAmount);
-
-        return minAmountCondition && maxAmountCondition;
-      });
-    } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
-      this.filteredTableData = this.tableData?.filter((item: any) => {
-        const searchText =
-          item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
-          item.description?.toLowerCase().includes(this.sourceOrReason);
-        const minAmountCondition =
-          this.minAmount == 0 ||
-          (item.givenAmount !== null && item.givenAmount !== 0 && Math.abs(item.givenAmount) >= this.minAmount) ||
-          (item.totalAmount !== null && item.totalAmount !== 0 && Math.abs(item.totalAmount) >= this.minAmount) ||
-          (item.takenAmount !== null && item.takenAmount !== 0 && Math.abs(item.takenAmount) >= this.minAmount);
-        const maxAmountCondition =
-          this.maxAmount == 0 ||
-          (item.givenAmount !== null && item.givenAmount !== 0 && Math.abs(item.givenAmount) <= this.maxAmount) ||
-          (item.totalAmount !== null && item.totalAmount !== 0 && Math.abs(item.totalAmount) <= this.maxAmount) ||
-          (item.takenAmount !== null && item.takenAmount !== 0 && Math.abs(item.takenAmount) <= this.maxAmount);
-        return searchText && minAmountCondition && maxAmountCondition;
-      });
-      this.transactionReports = this.filteredTableData;
-    } else if (this.activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT) {
-      this.filteredTableData = this.tableData.filter((item: any) => {
-        const searchText =
-          item.sourceOrReason?.toLowerCase().includes(this.sourceOrReason) ||
-          item.categoryName?.toLowerCase().includes(this.sourceOrReason) ||
-          item.description?.toLowerCase().includes(this.sourceOrReason);
-        const minAmountCondition =
-          this.minAmount == 0 ||
-          (item.givenAmount !== null && item.givenAmount !== 0 && Math.abs(item.givenAmount) >= this.minAmount) ||
-          (item.totalAmount !== null && item.totalAmount !== 0 && Math.abs(item.totalAmount) >= this.minAmount) ||
-          (item.takenAmount !== null && item.takenAmount !== 0 && Math.abs(item.takenAmount) >= this.minAmount);
-        const maxAmountCondition =
-          this.maxAmount == 0 ||
-          (item.givenAmount !== null && item.givenAmount !== 0 && Math.abs(item.givenAmount) <= this.maxAmount) ||
-          (item.totalAmount !== null && item.totalAmount !== 0 && Math.abs(item.totalAmount) <= this.maxAmount) ||
-          (item.takenAmount !== null && item.takenAmount !== 0 && Math.abs(item.takenAmount) <= this.maxAmount);
-        return searchText && minAmountCondition && maxAmountCondition;
-      });
-      this.categoryWiseReportResponse = this.filteredTableData;
-    }
-  }
-
-  getLatestTransactionDate(): any {
-    if (!this.filteredTableData || this.filteredTableData.length === 0) {
-      return new Date();
-    }
-    return this.filteredTableData[0]["transactionDate"];
-  }
-
-  goToList(listType: string) {
-    debugger;
-    this.refreshDateFields();
-    switch (listType) {
-      case TransactionTabs.EXPENSE_LIST:
-        this.selectedTab = TransactionTabs.EXPENSE_LIST;
-        this.activeComponent = NavigationURLs.EXPENSE_LIST;
-        this.loadGrid();
-        this.applyFilters();
-        break;
-      case TransactionTabs.EXPENSE_SUMMARY:
-        this.selectedTab = TransactionTabs.EXPENSE_SUMMARY;
-        this.activeComponent = NavigationURLs.EXPENSE_SUMMARY_LIST;
-        this.loadGrid();
-        this.applyFilters();
-        break;
-      case TransactionTabs.BALANCE_SUMMARY:
-        this.selectedTab = TransactionTabs.BALANCE_SUMMARY;
-        this.activeComponent = NavigationURLs.EXPENSE_BALANCE_LIST;
-        this.loadGrid();
-        this.applyFilters();
-        break;
-      case TransactionTabs.EXPENSE_REPORT:
-        this.selectedTab = TransactionTabs.EXPENSE_REPORT;
-        this.reportType = ApplicationConstants.REPORT_TYPE_SOURCE_WISE;
-        this.activeComponent = NavigationURLs.EXPENSE_REPORT;
-        this.loadGrid();
-        this.applyFilters();
-        break;
-      case TransactionTabs.EXPENSE_BUDGET:
-        this.selectedTab = TransactionTabs.EXPENSE_BUDGET;
-        this.activeComponent = NavigationURLs.BUDGET;
-        // this.loadGrid();
-        // this.applyFilters();
-        break;
-      case TransactionTabs.CATEGORY_WISE_REPORT:
-        this.selectedTab = TransactionTabs.CATEGORY_WISE_REPORT;
-        this.reportType = ApplicationConstants.REPORT_TYPE_CATEGORY_WISE;
-        this.activeComponent = NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT;
-        this.loadGrid();
-        this.applyFilters();
-        break;
-      case TransactionTabs.EMERGENCY_RETURN_REPORT:
-        this.selectedTab = TransactionTabs.EMERGENCY_RETURN_REPORT;
-        this.reportType = ApplicationConstants.EMERGENCY_RETURN_REPORT;
-        this.activeComponent = NavigationURLs.EMERGENCY_RETURN_REPORT;
-        this.loadGrid();
-        this.applyFilters();
-        break;
-    }
-  }
-
-  monthlyBudget() {
-    this.selectedTab = TransactionTabs.EXPENSE_BUDGET;
-    this.activeComponent = NavigationURLs.BUDGET;
-    // this.loadGrid();
-    // this.applyFilters();
-  }
-
-  refreshData() {
-    this.cacheService.clear(NavigationURLs.EXPENSE_LIST);
-    this.cacheService.clear(NavigationURLs.EXPENSE_SUMMARY_LIST);
-    this.cacheService.clear(NavigationURLs.EXPENSE_BALANCE_LIST);
-    this.cacheService.clear(NavigationURLs.EXPENSE_REPORT);
-    this.cacheService.clear(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
-    this.cacheService.clear(NavigationURLs.EMERGENCY_RETURN_REPORT);
-    this.sourceOrReason = "";
-    this.minAmount = 0;
-    this.maxAmount = 0;
-    if (this.searchInput) {
-      this.searchInput.nativeElement.value = "";
-    }
-    if (this.minInput) {
-      this.minInput.nativeElement.value = "";
-    }
-    if (this.maxInput) {
-      this.maxInput.nativeElement.value = "";
-    }
-    this.loadGrid();
-
-  }
-
-  loadGrid() {
-    this.loaderService.showLoader('Loading transactions...');
-    const cachedData = this.cacheService.get<any[]>(this.activeComponent);
-    if (cachedData) {
-      this.tableData = cachedData;
-      this.filteredTableData = cachedData;
-      this.transactionReports = cachedData;
-      this.categoryWiseReportResponse = cachedData;
-      this.columnConfiguration();
-      this.loaderService.hideLoader();
-      this.applyFilters();
-      return;
-    }
-    else {
-      this.transactionfilterRequest = {
-        fromDate: this.fromDate,
-        toDate: this.toDate,
-        minAmount: this.minAmount ?? 0,
-        maxAmount: this.maxAmount ?? 0,
-        sourceOrReason: this.sourceOrReason ?? ''
-      };
-    }
-    if (this.activeComponent === NavigationURLs.EXPENSE_LIST) {
-      this.transactionService
-        .getTransactionList(this.transactionfilterRequest)
-        .subscribe({
-          next: (res: any) => {
-            this.tableData = res.data;
-            this.filteredTableData = res.data;
-            this.cacheService.set(this.activeComponent, res.data);
-            this.lastTransactionDate = this.getLatestTransactionDate();
-            this.columnConfiguration();
-            this.loaderService.hideLoader();
-          },
-          error: (error: any) => {
-            this.loaderService.hideLoader();
-          },
-        });
-    } else if (this.activeComponent === NavigationURLs.EXPENSE_SUMMARY_LIST) {
-      this.transactionService
-        .getTransactionSummaryList(this.transactionfilterRequest)
-        .subscribe({
-          next: (res: any) => {
-            this.tableData = res.data;
-            this.filteredTableData = res.data;
-            this.accountColumns = res.data[0]?.accountData;
-            this.cacheService.set(this.activeComponent + this.accountColumnList, res.data[0]?.accountData);
-            this.cacheService.set(this.activeComponent, res.data);
-            this.lastTransactionDate = this.getLatestTransactionDate();
-            this.columnConfiguration();
-            this.loaderService.hideLoader();
-          },
-          error: (error: any) => {
-            console.error("error : ", error);
-            this.loaderService.hideLoader();
-          },
-        });
-    } else if (this.activeComponent === NavigationURLs.EXPENSE_BALANCE_LIST) {
-      this.transactionService
-        .getBalanceList(this.transactionfilterRequest)
-        .subscribe({
-          next: (res: any) => {
-            this.tableData = res.data;
-            this.filteredTableData = res.data;
-            this.accountColumns = res.data[0]?.accountData;
-            this.cacheService.set(this.activeComponent + this.accountColumnList, res.data[0]?.accountData);
-            this.cacheService.set(this.activeComponent, res.data);
-            this.lastTransactionDate = this.getLatestTransactionDate();
-            this.columnConfiguration();
-            this.loaderService.hideLoader();
-          },
-          error: (error: any) => {
-            console.error("error : ", error);
-            this.loaderService.hideLoader();
-          },
-        });
-    } else if (this.activeComponent === NavigationURLs.EXPENSE_REPORT) {
-      this.transactionService
-        .getTransactionReportList(this.transactionfilterRequest)
-        .subscribe({
-          next: (res: any) => {
-            this.transactionReports = res.data;
-            this.tableData = res.data;
-            this.filteredTableData = res.data;
-            this.lastTransactionDate = this.getLatestTransactionDate();
-            this.cacheService.set(this.activeComponent, res.data);
-            this.columnConfiguration();
-            this.loaderService.hideLoader();
-          },
-          error: (error: any) => {
-            console.error("error : ", error);
-            this.loaderService.hideLoader();
-          },
-        });
-    } else if (this.activeComponent === NavigationURLs.EMERGENCY_RETURN_REPORT) {
-      this.transactionService
-        .getEmergencyReturnReportList()
-        .subscribe({
-          next: (res: any) => {
-            this.transactionReports = res.data;
-            this.tableData = res.data;
-            this.filteredTableData = res.data;
-            this.lastTransactionDate = this.getLatestTransactionDate();
-            this.cacheService.set(this.activeComponent, res.data);
-            this.columnConfiguration();
-            this.loaderService.hideLoader();
-          },
-          error: (error: any) => {
-            console.error("error : ", error);
-            this.loaderService.hideLoader();
-          },
-        });
-    } else if (this.activeComponent === NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT) {
-
-      this.transactionService
-        .getCategoryWiseReportList(this.transactionfilterRequest)
-        .subscribe({
-          next: (res: any) => {
-            this.tableData = res.data;
-            this.filteredTableData = res.data;
-            this.cacheService.set(this.activeComponent, res.data);
-            this.loaderService.hideLoader();
-          },
-          error: (error: any) => {
-            console.error("error : ", error);
-            this.loaderService.hideLoader();
-          },
-        });
-    }
-    else {
-      this.loaderService.hideLoader();
-    }
-  }
-
-  clearGridCache(): void {
-    this.cacheService.clear(this.activeComponent);
-  }
-  transactionDetails(data: any) {
-    this.transactionDetailsComponent.openDetailsPopup(data);
-    setTimeout(() => {
-      const btn = document.querySelector('#openDetailsButton') as HTMLElement | null;
-      if (btn) btn.click();
-      else console.error('openDetailsButton not found');
-    }, 120);
-  }
-
-  deleteTransaction(transactionGroupId: string) {
-    if (transactionGroupId) {
-      this.transactionGroupId = transactionGroupId;
-      this.confirmationDialog.openConfirmationPopup(
-        "Confirmation",
-        "Are you sure you want to delete this transaction? This action cannot be undone."
+    if (this.documentClickHandler) {
+      document.removeEventListener(
+        "click",
+        this.documentClickHandler
       );
     }
   }
 
-  handleConfirmResult(isConfirmed: boolean) {
-    if (isConfirmed) {
-      this.loaderService.showLoader('Deleting transaction...');
-      this.transactionService.deleteTransaction(this.transactionGroupId).subscribe({
-        next: (res: any) => {
-          this.removeTransaction(this.transactionGroupId);
+  /**
+   * Change active transaction tab.
+   */
+  goToTab(tab: string): void {
+
+    this.activeTab = tab;
+    this.selectedTab = tab;
+
+    switch (tab) {
+
+      case TransactionTabs.EXPENSE_REPORT:
+
+        this.reportType =
+          ApplicationConstants.REPORT_TYPE_SOURCE_WISE;
+
+        break;
+
+      case TransactionTabs.CATEGORY_WISE_REPORT:
+
+        this.reportType =
+          ApplicationConstants.REPORT_TYPE_CATEGORY_WISE;
+
+        break;
+
+      case TransactionTabs.EMERGENCY_RETURN_REPORT:
+
+        this.reportType =
+          ApplicationConstants.EMERGENCY_RETURN_REPORT;
+
+        break;
+    }
+  }
+
+  monthlyBudget(): void {
+
+    this.activeTab =
+      TransactionTabs.EXPENSE_BUDGET;
+
+    this.selectedTab =
+      TransactionTabs.EXPENSE_BUDGET;
+  }
+
+  /**
+   * From date filter.
+   */
+  filterGridByFromDate(date: string): void {
+
+    this.filter = {
+      ...this.filter,
+      fromDate: DateUtils.CorrectedDate(date)
+    };
+
+    this.clearGridCache();
+  }
+
+  /**
+   * To date filter.
+   */
+  filterGridByToDate(date: string): void {
+
+    this.filter = {
+      ...this.filter,
+      toDate: DateUtils.CorrectedDate(date)
+    };
+
+    this.clearGridCache();
+  }
+
+  /**
+   * Search filter.
+   */
+  filterGridBySearch(event: Event): void {
+
+    const value =
+      (event.target as HTMLInputElement)?.value
+        ?.toLowerCase() ?? "";
+
+    this.filter = {
+      ...this.filter,
+      sourceOrReason: value
+    };
+  }
+
+  /**
+   * Minimum amount filter.
+   */
+  filterGridByMinAmount(event: Event): void {
+
+    const value =
+      (event.target as HTMLInputElement)?.value ?? "";
+
+    this.filter = {
+      ...this.filter,
+      minAmount: Number(value) || 0
+    };
+  }
+
+  /**
+   * Maximum amount filter.
+   */
+  filterGridByMaxAmount(event: Event): void {
+
+    const value =
+      (event.target as HTMLInputElement)?.value ?? "";
+
+    this.filter = {
+      ...this.filter,
+      maxAmount: Number(value) || 0
+    };
+  }
+
+  /**
+   * Refresh current tab.
+   */
+  refreshData(): void {
+
+    this.cacheService.clear(
+      NavigationURLs.EXPENSE_LIST
+    );
+
+    this.cacheService.clear(
+      NavigationURLs.EXPENSE_SUMMARY_LIST
+    );
+
+    this.cacheService.clear(
+      NavigationURLs.EXPENSE_BALANCE_LIST
+    );
+
+    this.cacheService.clear(
+      NavigationURLs.EXPENSE_REPORT
+    );
+
+    this.cacheService.clear(
+      NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT
+    );
+
+    this.cacheService.clear(
+      NavigationURLs.EMERGENCY_RETURN_REPORT
+    );
+
+    this.clearFilters();
+
+    this.filter = {
+      ...this.filter
+    };
+  }
+
+  private clearFilters(): void {
+
+    this.filter = {
+      ...this.filter,
+      sourceOrReason: "",
+      minAmount: 0,
+      maxAmount: 0
+    };
+
+    if (this.searchInput) {
+      this.searchInput.nativeElement.value = "";
+    }
+
+    if (this.minInput) {
+      this.minInput.nativeElement.value = "";
+    }
+
+    if (this.maxInput) {
+      this.maxInput.nativeElement.value = "";
+    }
+  }
+
+  private clearGridCache(): void {
+
+    this.cacheService.clear(
+      NavigationURLs.EXPENSE_LIST
+    );
+
+    this.cacheService.clear(
+      NavigationURLs.EXPENSE_SUMMARY_LIST
+    );
+
+    this.cacheService.clear(
+      NavigationURLs.EXPENSE_BALANCE_LIST
+    );
+
+    this.cacheService.clear(
+      NavigationURLs.EXPENSE_REPORT
+    );
+
+    this.cacheService.clear(
+      NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT
+    );
+  }
+
+  /**
+   * Open transaction details popup.
+   */
+  transactionDetails(transactionGroupId: string): void {
+
+    this.transactionDetailsComponent
+      ?.openDetailsPopup(transactionGroupId);
+
+    setTimeout(() => {
+
+      const button =
+        document.querySelector(
+          "#openDetailsButton"
+        ) as HTMLElement | null;
+
+      button?.click();
+
+    }, 120);
+  }
+
+  /**
+   * Delete transaction.
+   */
+  deleteTransaction(transactionGroupId: string): void {
+
+    if (!transactionGroupId) {
+      return;
+    }
+
+    this.transactionGroupId =
+      transactionGroupId;
+
+    this.confirmationDialog.openConfirmationPopup(
+      "Confirmation",
+      "Are you sure you want to delete this transaction? This action cannot be undone."
+    );
+  }
+
+  /**
+   * Confirmation callback.
+   */
+  handleConfirmResult(isConfirmed: boolean): void {
+
+    if (!isConfirmed) {
+      return;
+    }
+
+    this.loaderService.showLoader(
+      "Deleting transaction..."
+    );
+
+    this.transactionService
+      .deleteTransaction(this.transactionGroupId)
+      .subscribe({
+
+        next: () => {
+
           this.loaderService.hideLoader();
+
+          this.refreshData();
         },
+
         error: (error: any) => {
-          console.error("error : ", error);
+
+          console.error(
+            "Error deleting transaction:",
+            error
+          );
+
           this.loaderService.hideLoader();
-        },
+        }
       });
-    }
   }
 
-  filterGridByFromDate(date: any) {
-    this.fromDate = DateUtils.CorrectedDate(date);
-    this.removeGridFromLocalStorage();
-    this.loadGrid();
-  }
+  /**
+   * Initialize date pickers.
+   */
+  private initializeDatePickers(): void {
 
-  filterGridByToDate(date: any) {
-    this.toDate = DateUtils.CorrectedDate(date);
-    this.removeGridFromLocalStorage();
-    this.loadGrid();
-  }
+    flatpickr("#fromDate", {
 
-  filterGridByMaxAmount(data: any) {
-    this.maxAmount = data.target.value;
-    if (this.sourceOrReason || this.minAmount || this.maxAmount) {
-      this.applyFilters();
-    } else {
-      this.loadGrid();
-    }
-  }
+      dateFormat: "d/m/Y",
 
-  filterGridByMinAmount(data: any) {
-    this.minAmount = data.target.value;
-    if (this.sourceOrReason || this.minAmount || this.maxAmount) {
-      this.applyFilters();
-    } else {
-      this.loadGrid();
-    }
-  }
+      defaultDate:
+        DateUtils.strFormatToDDMMYYYY(
+          this.filter.fromDate
+        ),
 
-  filterGridBySearch(data: any) {
-    this.sourceOrReason = data?.target?.value?.toLowerCase();
-    if (this.sourceOrReason || this.minAmount || this.maxAmount) {
-      this.applyFilters();
-    } else {
-      this.loadGrid();
-    }
-  }
+      onChange: (
+        selectedDates,
+        dateStr
+      ) => {
 
-  setTransactionSuggestions() {
+        const value =
+          dateStr ||
+          DateUtils.GetDateBeforeDays(30);
 
-    const suggestions = this.cacheService.get<any[]>(DdlConfig.COMMON_SUGGESTIONS);
-    if (suggestions) {
-      return;
-    }
-    this.transactionService.getTransactionSuggestionList().subscribe({
-      next: (res: any) => {
-        this.localStorageService.setTransactionSuggestions(res.data);
-      },
-      error: (error: any) => {
-        console.error("error : ", error);
-      },
+        this.filterGridByFromDate(value);
+      }
+    });
+
+    flatpickr("#toDate", {
+
+      dateFormat: "d/m/Y",
+
+      defaultDate:
+        DateUtils.strFormatToDDMMYYYY(
+          this.filter.toDate
+        ),
+
+      onChange: (
+        selectedDates,
+        dateStr
+      ) => {
+
+        const value =
+          dateStr ||
+          DateUtils.GetDateBeforeDays(0);
+
+        this.filterGridByToDate(value);
+      }
     });
   }
 
-  setTransactionCategories() {
+  /**
+   * Existing global three-dot menu support.
+   */
+  private initializeGlobalOptionsMenu(): void {
 
-    const suggestions = this.cacheService.get<any[]>(DdlConfig.TRANSACTION_CATEGORY);
-    if (suggestions) {
-      return;
-    }
-    this.configService.getActiveConfigList(String(localStorage.getItem(LocalStorageConstants.USERID)), UserConfig.TRANSACTION_CATEGORY).subscribe({
-      next: (res: any) => {
-        this.localStorageService.setTransactionCategories(res.data);
-      },
-      error: (error: any) => {
-        console.error("error : ", error);
-      },
-    });
+    this.documentClickHandler =
+      (event: Event) => {
+
+        const target =
+          event.target as HTMLElement;
+
+        if (
+          target.closest(
+            ".OPTIONS_MENU_THREE_DOTS"
+          )
+        ) {
+
+          event.stopPropagation();
+
+          return;
+        }
+
+        const globalMenu =
+          document.getElementById(
+            "globalDropdownMenu"
+          );
+
+        globalMenu?.remove();
+      };
+
+    document.addEventListener(
+      "click",
+      this.documentClickHandler
+    );
   }
 }

@@ -32,19 +32,20 @@ import {
   DdlConfig,
   LocalStorageConstants,
   NavigationURLs
-} from "../../../utils/application-constants";
-import { DateUtils } from "../../../utils/date-utils";
-import { TransactionRequest } from "../../interfaces/transaction-request";
-import { GlobalService } from "../../services/global/global.service";
-import { LoaderService } from "../../services/loader/loader.service";
-import { LocalStorageService } from "../../services/local-storage/local-storage.service";
-import { TransactionService } from "../../services/transaction/transaction.service";
-import { ToasterComponent } from "../shared/toaster/toaster.component";
+} from "../../../../utils/application-constants";
+import { DateUtils } from "../../../../utils/date-utils";
+import { TransactionRequest } from "../../../interfaces/transaction-request";
+import { GlobalService } from "../../../services/global/global.service";
+import { LoaderService } from "../../../services/loader/loader.service";
+import { LocalStorageService } from "../../../services/local-storage/local-storage.service";
+import { TransactionService } from "../../../services/transaction/transaction.service";
+import { ToasterComponent } from "../../shared/toaster/toaster.component";
 
 @Component({
   selector: "app-transaction-details",
   standalone: true,
   imports: [ReactiveFormsModule, ToasterComponent, CommonModule],
+  providers:[DatePipe],
   templateUrl: "./transaction-details.component.html",
   styleUrls: ["./transaction-details.component.scss"],
 })

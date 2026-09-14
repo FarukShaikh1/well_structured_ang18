@@ -1,0 +1,17 @@
+<div class="mb-2">
+
+  <app-tabulator-grid
+    [tableData]="filteredTableData"
+    [columnConfig]="columnConfig"
+    [height]="'320px'"
+    [paginationSize]="paginationSize"
+    [filterColumns]="filterColumns"
+    [allowCSVExport]="allowCSVExport"
+    [allowPrint]="allowPrint"
+    [allowRefresh]="allowRefresh"
+    [allowColumnFilters]="allowColumnFilters"
+    [gridName]="'Emergency Return Report'"
+    (refreshClicked)="refreshData()">
+  </app-tabulator-grid>
+
+</div>

@@ -1,0 +1,19 @@
+<div class="mb-2">
+
+  <app-tabulator-grid
+    [tableData]="filteredTableData"
+    [columnConfig]="columnConfig"
+    [height]="'320px'"
+    [paginationSize]="paginationSize"
+    [filterColumns]="filterColumns"
+    [allowCSVExport]="allowCSVExport"
+    [allowPrint]="allowPrint"
+    [allowAdd]="allowAdd"
+    [allowRefresh]="allowRefresh"
+    [allowColumnFilters]="allowColumnFilters"
+    [gridName]="'Transaction List'"
+    (addClicked)="addTransaction()"
+    (refreshClicked)="refreshData()">
+  </app-tabulator-grid>
+
+</div>
