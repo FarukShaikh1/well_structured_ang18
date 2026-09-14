@@ -1,0 +1,113 @@
+<div class="main-body">
+
+  <!-- =========================================================
+       PERSONAL PLANS TABS
+       ========================================================= -->
+  <div class="app-tabs">
+
+    <!-- Routine -->
+    <button
+      type="button"
+      class="app-tab"
+      [class.active]="activeTab === 'routine'"
+      (click)="setActiveTab('routine')">
+
+      <i class="bi bi-calendar-check"></i>
+
+      <span>Routine</span>
+
+    </button>
+
+
+    <!-- Budget -->
+    <button
+      type="button"
+      class="app-tab"
+      [class.active]="activeTab === 'budget'"
+      (click)="setActiveTab('budget')">
+
+      <i class="bi bi-wallet2"></i>
+
+      <span>Budget</span>
+
+    </button>
+
+
+    <!-- Credentials -->
+    <button
+      type="button"
+      class="app-tab"
+      [class.active]="activeTab === 'credentials'"
+      (click)="setActiveTab('credentials')">
+
+      <i class="bi bi-key"></i>
+
+      <span>Credentials</span>
+
+    </button>
+
+
+    <!-- Food Menu -->
+    <button
+      type="button"
+      class="app-tab"
+      [class.active]="activeTab === 'food-menu'"
+      (click)="setActiveTab('food-menu')">
+
+      <i class="bi bi-egg-fried"></i>
+
+      <span>Food Menu</span>
+
+    </button>
+
+  </div>
+
+
+  <!-- =========================================================
+       ROUTINE
+       ========================================================= -->
+  <div
+    class="personal-plan-tab-content"
+    *ngIf="activeTab === 'routine'">
+
+    <app-routine></app-routine>
+
+  </div>
+
+
+  <!-- =========================================================
+       BUDGET
+       ========================================================= -->
+  <div
+    class="personal-plan-tab-content"
+    *ngIf="activeTab === 'budget'">
+
+    <app-budget></app-budget>
+
+  </div>
+
+
+  <!-- =========================================================
+       CREDENTIALS
+       ========================================================= -->
+  <div
+    class="personal-plan-tab-content"
+    *ngIf="activeTab === 'credentials'">
+
+    <app-credentials></app-credentials>
+
+  </div>
+
+
+  <!-- =========================================================
+       FOOD MENU
+       ========================================================= -->
+  <div
+    class="personal-plan-tab-content"
+    *ngIf="activeTab === 'food-menu'">
+
+    <app-food-menu></app-food-menu>
+
+  </div>
+
+</div>

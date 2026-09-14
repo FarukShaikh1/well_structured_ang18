@@ -89,11 +89,12 @@ export const TransactionTabs = {
     EMERGENCY_RETURN_REPORT: 'Emergency and Return Report',
 }
 
-export const CollectionTabs = {
-    GALLERY_VIEW: 'Gallery View',
-    SUMMARY_VIEW: 'Summary View',
-    DATA_VIEW: 'Data View',
-    NEWS_VIEW: 'News View',
+export enum CollectionTabs {
+  GALLERY_VIEW = 'Gallery',
+  SUMMARY_VIEW = 'Summary',
+  DATA_VIEW = 'Data',
+  NEWS_VIEW = 'Article in News',
+  OWNER_VIEW = 'About Owner'
 }
 
 export const DdlConfig = {

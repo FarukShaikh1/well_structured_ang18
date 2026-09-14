@@ -84,6 +84,7 @@ export class TransactionComponent implements OnInit {
   maxAmount: number = 0;
   transactionGroupId: string = "";
   activeComponent: string = NavigationURLs.EXPENSE_LIST;
+  activeTab: string = TransactionTabs.EXPENSE_LIST;
   reportLastDate = "";
   reportFirstDate = "";
   transactionfilterRequest: ExpenseFilterRequest = {
@@ -1066,6 +1067,7 @@ export class TransactionComponent implements OnInit {
   }
 
   goToList(listType: string) {
+    debugger;
     this.refreshDateFields();
     switch (listType) {
       case TransactionTabs.EXPENSE_LIST:
@@ -1149,7 +1151,6 @@ export class TransactionComponent implements OnInit {
   loadGrid() {
     this.loaderService.showLoader('Loading transactions...');
     const cachedData = this.cacheService.get<any[]>(this.activeComponent);
-    // const reportCachedData = this.cacheService.get<any[]>(this.reportActiveComponent);
     if (cachedData) {
       this.tableData = cachedData;
       this.filteredTableData = cachedData;

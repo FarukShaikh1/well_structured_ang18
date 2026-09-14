@@ -12,7 +12,7 @@ import { DayComponent } from "./components/day/day.component";
 import { DocumentsComponent } from "./components/documents/documents.component";
 import { MyProfileComponent } from "./components/my-profile/my-profile.component";
 import { RoutineComponent } from "./components/routine/routine.component";
-import { SelfDataComponent } from "./components/self-data/self-data.component";
+import { SelfDataComponent } from "./components/personal-plans/personal-plans.component";
 import { SettingsComponent } from "./components/settings/settings.component";
 import { TransactionComponent } from "./components/transaction/transaction.component";
 

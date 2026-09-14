@@ -20,6 +20,7 @@ import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { UserDetailsComponent } from '../user-details/user-details.component';
 import { UserRegistrationApprovalComponent } from '../user-registration-approval/user-registration-approval.component';
+import { UserPermissionComponent } from '../user-permission/user-permission.component';
 @Component({
   selector: 'app-user-list',
   standalone: true,
@@ -30,7 +31,8 @@ import { UserRegistrationApprovalComponent } from '../user-registration-approval
     DayDetailsComponent,
     TabulatorGridComponent,
     ConfirmationDialogComponent,
-    UserRegistrationApprovalComponent
+    UserRegistrationApprovalComponent,
+    UserPermissionComponent
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
@@ -63,7 +65,7 @@ export class UserListComponent implements OnInit {
   sourceOrReason: any;
   id: string = '';
   cacheKey: string = NavigationURLs.USER_LIST;
-
+  activeTab: 'users' | 'permissions' | 'approval' = 'approval';
   constructor(
     private userService: UserService,
     public globalService: GlobalService,

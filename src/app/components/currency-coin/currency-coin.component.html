@@ -1,221 +1,460 @@
 <div class="main-body">
-  <div class="d-flex" style="flex-wrap: wrap;">
-    <div appearance="outline" class="form-field">
-      <button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup"
-        style="display:none"></button>
-      <button (click)="setView('gallery')" class="btn btn-primary rounded-button">
-        <i class="bi bi-images"></i> Gallery
+  <div class="app-tabs-container">
+    <div class="app-tabs">
+      <!-- Gallery -->
+      <button type="button" class="app-tab" [class.active]="viewMode === 'gallery'" (click)="setView('gallery')">
+
+        <i class="bi bi-images"></i>
+        <span>Gallery</span>
       </button>
-      <button (click)="setView('summary')" class="btn btn-primary rounded-button">
-        <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
-          <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          <line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          <line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-        Summary
-      </button>
-      <button (click)="setView('grid')" class="btn btn-primary rounded-button">
+
+      <!-- Data -->
+      <button type="button" class="app-tab" [class.active]="viewMode === 'grid'" (click)="setView('grid')">
+
         <svg class="icon-24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+
           <path
             d="M6 4H18C18.5523 4 19 4.44772 19 5V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V5C5 4.44772 5.44772 4 6 4Z"
             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
           <line x1="8" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
           <line x1="8" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
           <line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
           <line x1="8" y1="16" x2="16" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
           <line x1="8" y1="19" x2="16" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
         </svg>
-        Data
+
+        <span>Data</span>
       </button>
 
-      <button (click)="setView('news')" class="btn btn-primary rounded-button">
+      <!-- Summary -->
+      <button type="button" class="app-tab" [class.active]="viewMode === 'summary'" (click)="setView('summary')">
+
+        <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+          <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" />
+
+          <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
+          <line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
+          <line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+
+        </svg>
+
+        <span>Summary</span>
+      </button>
+
+
+      <!-- Article in News -->
+      <button type="button" class="app-tab" [class.active]="viewMode === 'news'" (click)="setView('news')">
+
         <i class="bi bi-newspaper"></i>
-        Article in news
+        <span>Article in News</span>
       </button>
 
-      <button (click)="redirectToOwnersProfile()" class="btn btn-primary rounded-button">
-        <i class="fa fa-info-circle"></i> About Owner
+      <!-- About Owner -->
+      <button type="button" class="app-tab" [class.active]="viewMode === 'owner'" (click)="setView('owner')">
+
+        <i class="bi bi-person-badge"></i>
+        <span>About Owner</span>
       </button>
-      <div class="btn btn-primary rounded-button d-inline-flex d-md-none">
+
+      <!-- Mobile item count -->
+      <div class="app-tab-count d-md-none">
         {{ filteredCoinList.length }} items found
       </div>
+
     </div>
-  </div>
-  <div class="row pb-2" *ngIf="viewMode !== 'news'">
-    <div class="col-6 col-md-4 col-lg-4">
-      <div appearance="outline" class="form-field">
-        <label>Select Type</label>
-        <button
-          class="form-select form-control form-control-lg text-dark bg-transparent styled-select  scrollable-button text-start"
-          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          {{ lableForTypeDropDown }}
-        </button>
-        <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
-          <li>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllTypeCheck($event)"
-                [checked]="selectedType.length === typeList?.length" />
-              <label class="form-check-label" for="selectAll">All</label>
-            </div>
-          </li>
-          @for(item of typeList; track $index){
-          <li>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" [id]="item.id"
-                [checked]="selectedType.includes(item.listItemName)"
-                (change)="toggleTypeCheck($event, item.listItemName)" />
-              <label class="form-check-label" [for]="item.id">
-                {{ item.listItemDescription }}
-              </label>
-            </div>
-          </li>
-          }
-        </ul>
-      </div>
-    </div>
-    <div class="col-6 col-md-4 col-lg-4">
-      <div appearance="outline">
-        <label>Search</label>
-        <input #searchInput (input)="filterGridSearchText($event)"
-          class="form-control form-control-lg text-dark bg-transparent"
-          placeholder="Type something to filter the records" />
-      </div>
-    </div>
-    <div class="col-4 col-sm-4 col-md-4 col-lg-4 d-md-inline-flex d-none align-items-end justify-content-end">
-      <div class="btn btn-primary">
-        {{ filteredCoinList.length }} items found
-      </div>
-    </div>
-  </div>
-  <div class="row pb-2" *ngIf="viewMode === 'grid'">
-    <div class="mb-2">
-      <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-        [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
-        [allowPrint]="allowPrint" [allowAdd]="allowAdd" (addClicked)="currencyCoinDetails('')"
-        [allowRefresh]="allowRefresh" (refreshClicked)="reloadData()" [gridName]="selectedTab" [allowColumnFilters]="allowColumnFilters">
-      </app-tabulator-grid>
-    </div>
-  </div>
 
 
-  <div class="row pb-2" *ngIf="viewMode === 'summary'">
-    <div class="mb-2">
-      <app-tabulator-grid [tableData]="filteredSummaryTableData" [columnConfig]="summaryTableColumnConfig"
-        [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="summaryTableColumnConfig"
-        [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [allowAdd]="allowAdd"
-        (addClicked)="currencyCoinDetails('')" [allowRefresh]="allowRefresh" (refreshClicked)="reloadData()"
-        [gridName]="selectedTab"  [allowColumnFilters]="allowColumnFilters">
-      </app-tabulator-grid>
-    </div>
-  </div>
+    <div class="row pb-2" *ngIf="viewMode === 'gallery'">
 
-  <div class="row " *ngIf="viewMode === 'gallery'">
-    <div class="gallery-grid">
-      <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'"
-        *ngFor="let coin of filteredCoinList">
-        <img [src]="coin.thumbnailPathSasUrl" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)"
-          [alt]="coin.coinNoteName" (click)="openFullscreenImage(coin.imagePathSasUrl)" />
+      <!-- Type -->
+      <div class="col-6 col-md-4 col-lg-4">
+
+        <div class="form-field">
+
+          <label>Select Type</label>
+
+          <button
+            class="form-select form-control form-control-lg text-dark bg-transparent styled-select scrollable-button text-start"
+            type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+
+            {{ lableForTypeDropDown }}
+
+          </button>
+
+          <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
+
+            <li>
+
+              <div class="form-check">
+
+                <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllTypeCheck($event)"
+                  [checked]="selectedType.length === typeList?.length" />
+
+                <label class="form-check-label" for="selectAll">
+
+                  All
+
+                </label>
+
+              </div>
+
+            </li>
+
+            @for(item of typeList; track $index) {
+
+            <li>
+
+              <div class="form-check">
+
+                <input type="checkbox" class="form-check-input" [id]="item.id"
+                  [checked]="selectedType.includes(item.listItemName)"
+                  (change)="toggleTypeCheck($event, item.listItemName)" />
+
+                <label class="form-check-label" [for]="item.id">
+
+                  {{ item.listItemDescription }}
+
+                </label>
+
+              </div>
+
+            </li>
+
+            }
+
+          </ul>
+
+        </div>
+
+      </div>
+
+
+      <!-- Search -->
+      <div class="col-6 col-md-4 col-lg-4">
+
+        <div>
+
+          <label>Search</label>
+
+          <input #searchInput type="text" (input)="filterGridSearchText($event)"
+            class="form-control form-control-lg text-dark bg-transparent"
+            placeholder="Type something to filter the records" />
+
+        </div>
+
+      </div>
+
+
+      <!-- Count -->
+      <div class="col-4 col-sm-4 col-md-4 col-lg-4 d-md-inline-flex d-none align-items-end justify-content-end">
+
+        <div class="btn btn-primary">
+
+          {{ filteredCoinList.length }} items found
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================================================
+       DATA TAB
+       ========================================================= -->
+    <div class="row pb-2" *ngIf="viewMode === 'grid'">
+
+      <div class="mb-2">
+
+        <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
+          [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
+          [allowPrint]="allowPrint" [allowAdd]="allowAdd" (addClicked)="currencyCoinDetails('')"
+          [allowRefresh]="allowRefresh" (refreshClicked)="reloadData()" [gridName]="selectedTab"
+          [allowColumnFilters]="allowColumnFilters">
+
+        </app-tabulator-grid>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================================================
+       SUMMARY TAB
+       ========================================================= -->
+    <div class="row pb-2" *ngIf="viewMode === 'summary'">
+
+      <div class="mb-2">
+
+        <app-tabulator-grid [tableData]="filteredSummaryTableData" [columnConfig]="summaryTableColumnConfig"
+          [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="summaryTableColumnConfig"
+          [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [allowAdd]="allowAdd"
+          (addClicked)="currencyCoinDetails('')" [allowRefresh]="allowRefresh" (refreshClicked)="reloadData()"
+          [gridName]="selectedTab" [allowColumnFilters]="allowColumnFilters">
+
+        </app-tabulator-grid>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================================================
+       GALLERY TAB
+       ========================================================= -->
+    <div class="row" *ngIf="viewMode === 'gallery'">
+
+      <div class="gallery-grid">
+
+        <div class="gallery-item" [ngClass]="coin.currencyCoinType.toLowerCase().includes('coin') ? 'coin' : 'note'"
+          *ngFor="let coin of filteredCoinList">
+
+          <img [src]="coin.thumbnailPathSasUrl" loading="lazy" class="gallery-img blur-load" (load)="removeBlur($event)"
+            [alt]="coin.coinNoteName" (click)="openFullscreenImage(coin.imagePathSasUrl)" />
+
+          <div class="gallery-caption">
+
+            <h5>
+
+              {{ coin.coinNoteName }} -
+              {{ coin.countryName }}
+              {{ coin.printedYear ? '-' + coin.printedYear : '' }}
+
+            </h5>
+
+            <p style="margin-bottom: 0;">
+
+              {{ coin.description | truncate:70 }}
+
+            </p>
+
+            <button (click)="currencyCoinDetails(coin.id)" class="btn btn-primary rounded-button">
+
+              <i class="fa fa-eye"></i>
+              Details
+
+            </button>
+
+            @if(globalService.isAccessible(ActionConstant.DELETE) && !coin.isVerified) {
+
+            <button (click)="approveCurrencyCoin(coin.id)" class="btn btn-primary rounded-button">
+
+              <i class="fa fa-check"></i>
+              Approve
+
+            </button>
+
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================================================
+       ARTICLE IN NEWS TAB
+       ========================================================= -->
+    <div class="row mt-4" *ngIf="viewMode === 'news'">
+
+      <div class="gallery-item">
+
+        <img [src]="basePath + 'news/newssakal22feb16.png'" alt="image missing" class="blur-load"
+          (load)="removeBlur($event)" />
+
         <div class="gallery-caption">
-          <h5>
-            {{ coin.coinNoteName }} -
-            {{ coin.countryName }}
-            {{ coin.printedYear ? '-' + coin.printedYear : '' }}</h5>
-          <p style="margin-bottom: 0;">{{ coin.description|truncate:70 }}</p>
-          <button (click)="currencyCoinDetails(coin.id)" class="btn btn-primary rounded-button">
-            <i class="fa fa-eye"></i> Details
+
+          <h3>
+            मंगळवार, 23 February 2016, सकाळ Today अमरावती
+          </h3>
+
+        </div>
+
+      </div>
+
+
+      <div class="gallery-item p-4">
+
+        <img [src]="basePath + 'news/newsdeshonnati11apr17.png'" alt="image missing" class="blur-load"
+          (load)="removeBlur($event)" />
+
+        <div class="gallery-caption">
+
+          <h3>
+            मंगळवार, 11 एप्रिल 2017, देशोन्नती जिल्हा Rdx अमरावती
+          </h3>
+
+        </div>
+
+      </div>
+
+
+      <div class="gallery-item p-4">
+
+        <img [src]="basePath + 'news/newsDivyamarathi10apr17.png'" alt="image missing" class="blur-load"
+          (load)="removeBlur($event)" />
+
+        <div class="gallery-caption">
+
+          <h3>
+            सोमवार, 10 एप्रिल 2017, दैनिक दिव्य मराठी अमरावती, Page No.3
+          </h3>
+
+        </div>
+
+      </div>
+
+
+      <div class="gallery-item p-4">
+
+        <img [src]="basePath + 'news/newssakal10feb17.png'" alt="image missing" class="blur-load"
+          (load)="removeBlur($event)" />
+
+        <div class="gallery-caption">
+
+          <h3>
+            सोमवार, 10 एप्रिल 2017, सकाळ Today अमरावती, Page No. 3
+          </h3>
+
+        </div>
+
+      </div>
+
+
+      <div class="gallery-item p-4">
+
+        <img [src]="basePath + 'news/newsVruttakesari11apr17.png'" alt="image missing" class="blur-load"
+          (load)="removeBlur($event)" />
+
+        <div class="gallery-caption">
+
+          <h3>
+            मंगळवार, 11 एप्रिल 2017, वृत्त केसरी ग्रामीण, Page No.13
+          </h3>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================================================
+       ABOUT OWNER TAB
+       ========================================================= -->
+    <div class="row" *ngIf="viewMode === 'owner'">
+
+      <div class="col-12">
+
+        <div class="app-tab-content">
+
+          <app-my-profile></app-my-profile>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================================================
+       COMMON COMPONENTS
+       ========================================================= -->
+
+    <app-currency-details></app-currency-details>
+
+    <app-toaster></app-toaster>
+
+    <app-confirmation-dialog (outputAction)="handleConfirmResult($event)">
+    </app-confirmation-dialog>
+
+
+    <!-- =========================================================
+       FULLSCREEN IMAGE VIEWER
+       ========================================================= -->
+
+    <div class="modal fade" id="imageViewerModal" tabindex="-1">
+
+      <div class="modal-dialog modal-fullscreen">
+
+        <div class="modal-content fullscreen-modal-bg">
+
+          <!-- Close -->
+          <button type="button" class="close-btn" data-bs-dismiss="modal">
+
+            ✕
+
           </button>
-          @if(globalService.isAccessible(ActionConstant.DELETE) && !coin.isVerified){
-          <button (click)="approveCurrencyCoin(coin.id)" class="btn btn-primary rounded-button">
-            <i class="fa fa-check"></i> Approve
+
+
+          <!-- Previous -->
+          <button class="nav-arrow left-arrow" (click)="prevImage()">
+
+            <i class="fa fa-chevron-left"></i>
+
           </button>
-          }
+
+
+          <!-- Next -->
+          <button class="nav-arrow right-arrow" (click)="nextImage()">
+
+            <i class="fa fa-chevron-right"></i>
+
+          </button>
+
+
+          <!-- Zoom -->
+          <div class="zoom-controls">
+
+            <button (click)="zoomIn()">
+              <i class="fa fa-search-plus"></i>
+            </button>
+
+            <button (click)="zoomOut()">
+              <i class="fa fa-search-minus"></i>
+            </button>
+
+            <button (click)="resetZoom()">
+              <i class="fa fa-compress"></i>
+            </button>
+
+          </div>
+
+
+          <!-- Image -->
+          <div #imageContainer class="modal-body p-0 d-flex justify-content-center align-items-center"
+            (touchstart)="touchStart($event)" (touchmove)="touchMove($event)" (touchend)="touchEnd()">
+
+            <img [src]="filteredCoinList[currentIndex]?.imagePathSasUrl" class="fullscreen-img" alt="Preview Image"
+              [style.transform]="transformStyle">
+
+          </div>
+
+
+          <!-- Thumbnail Strip -->
+          <div class="thumbnail-strip">
+
+            <img *ngFor="let item of filteredCoinList; index as i" [src]="item.thumbnailPathSasUrl"
+              [class.active-thumb]="currentIndex === i" (click)="jumpTo(i)" [alt]="item.coinNoteName">
+
+          </div>
 
         </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="row mt-4" *ngIf="viewMode === 'news'">
-    <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newssakal22feb16.png'" alt="image missing" class="blur-load"
-        (load)="removeBlur($event)" />
-      <div class="gallery-caption">
-        <h3>मंगळवार, 23 February 2016, सकाळ Today अमरावती</h3>
       </div>
+
     </div>
 
-    <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newsdeshonnati11apr17.png'" alt="image missing" class="blur-load"
-        (load)="removeBlur($event)" />
-      <div class="gallery-caption">
-        <h3>मंगळवार, 11 एप्रिल 2017, देशोन्नती जिल्हा Rdx अमरावती </h3>
-      </div>
-    </div>
-
-    <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newsDivyamarathi10apr17.png'" alt="image missing" class="blur-load"
-        (load)="removeBlur($event)" />
-      <div class="gallery-caption">
-        <h3>सोमवार, 10 एप्रिल 2017, दैनिक दिव्य मराठी अमरावती, Page No.3</h3>
-      </div>
-    </div>
-
-    <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newssakal10feb17.png'" alt="image missing" class="blur-load"
-        (load)="removeBlur($event)" />
-      <div class="gallery-caption">
-        <h3>सोमवार, 10 एप्रिल 2017, सकाळ Today अमरावती, Page No. 3</h3>
-      </div>
-    </div>
-
-    <div class="gallery-item p-4">
-      <img [src]="basePath + 'news/newsVruttakesari11apr17.png'" alt="image missing" class="blur-load"
-        (load)="removeBlur($event)" />
-      <div class="gallery-caption">
-        <h3>मंगळवार, 11 एप्रिल 2017, वृत्त केसरी ग्रामीण, Page No.13</h3>
-      </div>
-    </div>
-  </div>
-
-  <app-currency-details></app-currency-details>
-  <app-toaster></app-toaster>
-  <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
-
-  <!-- Fullscreen Image Viewer Modal -->
-  <div class="modal fade" id="imageViewerModal" tabindex="-1">
-    <div class="modal-dialog modal-fullscreen">
-      <div class="modal-content fullscreen-modal-bg">
-
-        <!-- Close Button -->
-        <button type="button" class="close-btn" data-bs-dismiss="modal">
-          ✕
-        </button>
-
-        <!-- Left Arrow -->
-        <button class="nav-arrow left-arrow" (click)="prevImage()">
-          <i class="fa fa-chevron-left"></i>
-        </button>
-        <!-- Right Arrow -->
-        <button class="nav-arrow right-arrow" (click)="nextImage()">
-          <i class="fa fa-chevron-right"></i>
-        </button>
-        <!-- Zoom Buttons -->
-        <div class="zoom-controls">
-          <button (click)="zoomIn()"><i class="fa fa-search-plus"></i></button>
-          <button (click)="zoomOut()"><i class="fa fa-search-minus"></i></button>
-          <button (click)="resetZoom()"><i class="fa fa-compress"></i></button>
-        </div>
-        <div #imageContainer (touchstart)="touchStart($event)" (touchmove)="touchMove($event)" (touchend)="touchEnd()"
-          class="modal-body p-0 d-flex justify-content-center align-items-center">
-          <img [src]="filteredCoinList[currentIndex]?.imagePathSasUrl" class="fullscreen-img" alt="Preview Image"
-            [style.transform]="transformStyle">
-        </div>
-        <!-- Thumbnail Strip -->
-        <div class="thumbnail-strip">
-          <img *ngFor="let item of filteredCoinList; index as i" [src]="item.thumbnailPathSasUrl"
-            [class.active-thumb]="currentIndex === i" (click)="jumpTo(i)">
-        </div>
-      </div>
-    </div>
   </div>

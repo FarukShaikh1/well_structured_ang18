@@ -15,6 +15,7 @@ import { PrintService } from "../../services/print/print.service";
   templateUrl: './routine.component.html',
   styleUrls: ['../budget/budget.component.css']
 })
+
 export class RoutineComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   dateUtils = DateUtils;
