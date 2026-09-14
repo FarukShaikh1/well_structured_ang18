@@ -93,7 +93,7 @@
       <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
         [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
         [allowPrint]="allowPrint" [allowAdd]="allowAdd" (addClicked)="currencyCoinDetails('')"
-        [allowRefresh]="allowRefresh" (refreshClicked)="reloadData()" [gridName]="selectedTab">
+        [allowRefresh]="allowRefresh" (refreshClicked)="reloadData()" [gridName]="selectedTab" [allowColumnFilters]="allowColumnFilters">
       </app-tabulator-grid>
     </div>
   </div>
@@ -105,7 +105,7 @@
         [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="summaryTableColumnConfig"
         [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [allowAdd]="allowAdd"
         (addClicked)="currencyCoinDetails('')" [allowRefresh]="allowRefresh" (refreshClicked)="reloadData()"
-        [gridName]="selectedTab">
+        [gridName]="selectedTab"  [allowColumnFilters]="allowColumnFilters">
       </app-tabulator-grid>
     </div>
   </div>

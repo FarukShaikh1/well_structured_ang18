@@ -121,19 +121,37 @@ export class UserListComponent implements OnInit {
         title: 'Name',
         field: 'firstName',
         sorter: 'string',
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search name"
       },
-      { title: 'Email Id', field: 'emailAddress', sorter: 'string' },
+      {
+        title: 'Email Id',
+        field: 'emailAddress',
+        sorter: 'string',
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search name"
+      },
       {
         title: "Mobile Number",
         field: "mobileNumber",
         sorter: "alphanum",
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search email"
       },
-      { title: 'Role', field: 'roleName', sorter: 'string' },
+      {
+        title: 'Role', 
+        field: 'roleName',
+        sorter: 'string', 
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search role"
+      },
       {
         title: 'Status',
         field: 'isLocked',
         sorter: 'string',
         formatter: this.globalService.isLockedFormatter.bind(this),
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search status"
       },
       {
         title: "",
@@ -146,7 +164,7 @@ export class UserListComponent implements OnInit {
         },
         hozAlign: "center",
         headerSort: false,
-        print: false
+        print: false,
       },
     ];
     if (

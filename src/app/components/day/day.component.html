@@ -157,7 +157,8 @@
   <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
     [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
     [isLoading]="isGridLoading" [loadingText]="'Loading days...'" [allowPrint]="allowPrint"
-    [allowAdd]="allowAdd" (addClicked)="openDetailsPopup('')" [allowRefresh]="allowRefresh" (refreshClicked)="refreshData()" [gridName]="'Special Occasions'">
+    [allowAdd]="allowAdd" (addClicked)="openDetailsPopup('')" [allowRefresh]="allowRefresh" 
+    (refreshClicked)="refreshData()" [gridName]="'Special Occasions'" [allowColumnFilters]="allowColumnFilters">
   </app-tabulator-grid>
 </div>
 <app-day-details></app-day-details>

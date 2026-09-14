@@ -50,7 +50,8 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   @Input() noMatchingDataMessage = "No Matching Data";
   @Input() isLoading: boolean = false;
   @Input() loadingText: string = "Loading data...";
-@Input() gridName: string = '';
+  @Input() gridName: string = '';
+  @Input() allowColumnFilters = false;
   public filterForm!: FormGroup;
 
 
@@ -73,8 +74,6 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-
-
     if (changes["filterColumns"]) {
       this.createFilterForm();
     }
@@ -89,11 +88,11 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   }
 
   onAddClick(): void {
-  this.addClicked.emit();
-}
+    this.addClicked.emit();
+  }
   onRefreshClick(): void {
-  this.refreshClicked.emit();
-}
+    this.refreshClicked.emit();
+  }
 
   private createFilterForm(): void {
     this.filterForm = new FormGroup({
@@ -139,31 +138,46 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     this.myTable?.clearFilter(true);
   }
 
+  private getColumnDefinitions(): PrintColumnDefinition[] {
+  return this.columnConfig.map((column) => {
+
+    // Skip action columns / columns without a field
+     if (!column.field || !this.allowColumnFilters) {
+      return column;
+    }
+
+    return {
+      ...column,
+
+      // headerFilter: "input",
+      headerFilterLiveFilter: true,
+      // headerFilterPlaceholder: "Search...",
+      headerFilterFunc: "like"
+    };
+  });
+}
   private drawTable(changes: SimpleChanges): void {
     if (this.gridClosing || !this.columnConfig) {
       return;
     }
 
     if (!this.myTable) {
-
       this.myTable = new TabulatorFull(this.tableDiv, {
-
         data: this.tableData || [],
         reactiveData: true,
-        columns: this.columnConfig,
+
+        // Add column-wise filters
+        columns: this.getColumnDefinitions(),
         layout: "fitColumns",
+        
         // responsiveLayout: "collapse",
         height: "530",
         maxHeight: "100%",
-
         pagination: true,
         paginationMode: "local",
         paginationSize: this.paginationSize,
-
         paginationSizeSelector: [2, 5, 10, 20, 50, 100, 500, true],
         paginationButtonCount: 4,
-
-
 
         paginationCounter: function (
           pageSize,
@@ -181,8 +195,6 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         },
 
         movableColumns: true,
-
-
         // selectableRange: 1, 
         selectableRangeColumns: false,
         selectableRangeRows: false,
@@ -225,7 +237,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
       this.updatePaginationVisibility();
     } else {
       if (changes["columnConfig"]) {
-        this.myTable.setColumns(this.columnConfig);
+        this.myTable.setColumns(this.getColumnDefinitions());
       }
       if (changes["tableData"]) {
         this.myTable.setData(this.tableData).then(() => {

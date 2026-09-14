@@ -59,6 +59,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
   public allowRefresh = true;
   public filterColumns: PrintColumnDefinition[] = [];
   public viewMode: 'grid' | 'gallery' | 'summary' | 'news' = 'gallery';
+  public allowColumnFilters = true;
   loading = false;
   selectedTab: string = CollectionTabs.GALLERY_VIEW;
   currentIndex = 0;

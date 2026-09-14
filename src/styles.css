@@ -907,9 +907,9 @@ header.public-page-bg .notification-btn .bi-bell {
   border-radius: 0%;
 }
 
-input {
+input, number {
   font-size: 14px;
-  background-color: transparent;
+  border-radius: 5px;
 }
 
 .rounded-button {
@@ -1297,7 +1297,7 @@ select option {
 }
 
 .dropdown-menu {
-  padding: 0 10px 0 10px;
+  padding: 0 0 0 0;
   overflow: hidden;
   max-height: 300px;
   overflow-y: auto;
@@ -2405,7 +2405,6 @@ textarea {
   }
 
   .grid-action-btn {
-    width: 100%;
     min-height: 38px;
   }
 

@@ -57,6 +57,8 @@ export class DayComponent implements OnInit, OnDestroy {
   public allowAdd = true;
   public allowRefresh = true;
   public filterColumns: PrintColumnDefinition[] = [];
+  public allowColumnFilters = true;
+
   private cacheKey = NavigationURLs.DAY_LIST;
   isGridLoading: boolean = false;
   ActionConstant = ActionConstant;
@@ -190,7 +192,7 @@ export class DayComponent implements OnInit, OnDestroy {
         printFormatter: (row: any) => {
           const date = row["specialOccasionDate"];
           return `<span>${this.datePipe.transform(date, "dd-MMM")}</span>`;
-        }
+        },
       },
       {
         title: "Person Name",
@@ -205,41 +207,53 @@ export class DayComponent implements OnInit, OnDestroy {
         field: "personName",
         sorter: "string",
         minWidth: 150,
-        printWidth: '10%'
+        printWidth: '10%',
+                headerFilter: "input",
+        headerFilterPlaceholder: "Search name"
       },
       {
         title: "Relation",
         field: "relationName",
         minWidth: 120,
-        printWidth: '10%'
+        printWidth: '10%',
+                headerFilter: "input",
+        headerFilterPlaceholder: "Search relation"
       },
       {
         title: "Email Id",
         field: "emailId",
         sorter: "alphanum",
         minWidth: 200,
-        printWidth: '10%'
+        printWidth: '10%',
+                headerFilter: "input",
+        headerFilterPlaceholder: "Search email"
       },
       {
         title: "Mobile Number",
         field: "mobileNumber",
         sorter: "alphanum",
         minWidth: 120,
-        printWidth: '10%'
+        printWidth: '10%',
+                headerFilter: "input",
+        headerFilterPlaceholder: "Search mobile"
       },
       {
         title: "Address",
         field: "address",
         sorter: "alphanum",
         minWidth: 200,
-        printWidth: '20%'
+        printWidth: '20%',
+                headerFilter: "input",
+        headerFilterPlaceholder: "Search name"
       },
       {
         title: "Day Type",
         field: "dayType",
         sorter: "alphanum",
         minWidth: 120,
-        printWidth: '5%'
+        printWidth: '5%',
+                headerFilter: "input",
+        headerFilterPlaceholder: "Search name"
       },
       {
         title: "Pic",

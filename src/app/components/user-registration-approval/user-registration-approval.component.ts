@@ -110,22 +110,28 @@ export class UserRegistrationApprovalComponent implements OnInit {
             {
                 title: 'Name',
                 field: 'name',
-                sorter: 'string'
+                sorter: 'string',
+                headerFilter: "input",
+                headerFilterPlaceholder: "Search name"
             },
 
             {
                 title: 'Email',
                 field: 'email',
-                sorter: 'string'
+                sorter: 'string',
+                headerFilter: "input",
+                headerFilterPlaceholder: "Search email"
             },
-
             {
                 title: 'Mobile',
                 field: 'mobileNumber',
                 sorter: 'string',
                 formatter: (cell) => {
                     return cell.getValue() || '-';
-                }
+                },
+                            headerFilter: "input",
+        headerFilterPlaceholder: "Search mobile"
+
             },
 
             {

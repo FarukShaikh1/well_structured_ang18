@@ -74,7 +74,7 @@ export class TransactionComponent implements OnInit {
   public allowRefresh = true;
   public gridName = "Hi";
   public filterColumns: ColumnDefinition[] = [];
-
+  public allowColumnFilters = true;
   lastTransactionDate: Date = new Date();
   NavigationURLs = NavigationURLs;
   fromDate = DateUtils.GetDateBeforeDays(30);
@@ -167,6 +167,8 @@ export class TransactionComponent implements OnInit {
         field: "subCategoryName",
         sorter: "alphanum",
         minWidth: 200,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search category"
       },
       {
         title: "Get From/Paid To",
@@ -174,18 +176,24 @@ export class TransactionComponent implements OnInit {
         sorter: "alphanum",
         formatter: this.getColorForText.bind(this),
         minWidth: 200,
+        headerFilter: "input",
+        headerFilterPlaceholder: "search for source or reason"
       },
       {
         title: "Description",
         field: "description",
         sorter: "alphanum",
         minWidth: 400,
+        headerFilter: "input",
+        headerFilterPlaceholder: "search for description"
       },
       {
         title: "Transaction By",
         field: "accountName",
         sorter: "alphanum",
         minWidth: 150,
+        headerFilter: "input",
+        headerFilterPlaceholder: "search for Account"
       },
       {
         title: "Debit",
@@ -196,6 +204,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatter: this.debitAmountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         minWidth: 120,
+        headerFilter: "number",
+        headerFilterPlaceholder: "search for debited amount"
       },
       {
         title: "Credit",
@@ -206,6 +216,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         minWidth: 120,
+        headerFilter: "number",
+        headerFilterPlaceholder: "search for credited amount"
       },
       {
         title: "",
@@ -253,6 +265,9 @@ export class TransactionComponent implements OnInit {
         field: "subCategoryName",
         sorter: "alphanum",
         minWidth: 200,
+                headerFilter: "input",
+        headerFilterPlaceholder: "Search category"
+
       },
       {
         title: "Get From/Paid To",
@@ -260,12 +275,16 @@ export class TransactionComponent implements OnInit {
         sorter: "alphanum",
         formatter: this.getColorForText.bind(this),
         minWidth: 150,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search Source/Reason"
       },
       {
         title: "Description",
         field: "description",
         sorter: "alphanum",
         minWidth: 200,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search Description"
       },
     ];
 
@@ -289,6 +308,8 @@ export class TransactionComponent implements OnInit {
               bottomCalcFormatter: this.amountColorFormatter.bind(this),
               bottomCalcFormatterParams: { symbol: "", precision: 2 },
               minWidth: 120,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search aomunt"
             });
           }
         }
@@ -394,6 +415,8 @@ export class TransactionComponent implements OnInit {
         field: "sourceOrReason",
         sorter: "alphanum",
         minWidth: 150,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search source/category"
       },
       {
         title: "Description",
@@ -405,6 +428,8 @@ export class TransactionComponent implements OnInit {
           return `<div class="text-wrap">${value}</div>`;
         },
         cssClass: "description-column",
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search description"
       },
       {
         title: "TakenAmount",
@@ -418,6 +443,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
         minWidth: 120,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search amount"
       },
       {
         title: "GivenAmount",
@@ -431,6 +458,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
         minWidth: 120,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search amount"
       },
       {
         title: "TotalAmount",
@@ -444,6 +473,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
         minWidth: 120,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search amount"
       },
       {
         title: "",
@@ -515,6 +546,8 @@ export class TransactionComponent implements OnInit {
         field: "categoryName",
         sorter: "alphanum",
         minWidth: 250,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search category"
       },
       {
         sorter: "alphanum",
@@ -526,6 +559,8 @@ export class TransactionComponent implements OnInit {
         headerHozAlign: "right",
         hozAlign: "right",
         bottomCalc: "sum",
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search amount"
       },
       {
         title: "Total Expense",
@@ -539,6 +574,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
         minWidth: 150,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search amount"
       },
       {
         title: "Remaining Budget",
@@ -552,6 +589,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
         minWidth: 150,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search amount"
       },
       {
         title: "Is Over Spent",
@@ -563,6 +602,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatter: this.overSpentFormatter.bind(this),
         cssClass: "amount-column",
         minWidth: 150,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search amount"
       },
       {
         sorter: "alphanum",
@@ -574,6 +615,8 @@ export class TransactionComponent implements OnInit {
           return `<div class="text-wrap">${value}</div>`;
         },
         cssClass: "description-column",
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search souce/reason"
       },
       {
         title: "TakenAmount",
@@ -587,6 +630,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
         minWidth: 200,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search amount"
       },
       {
         title: "GivenAmount",
@@ -600,6 +645,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
         minWidth: 150,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search amount"
       },
       {
         title: "TotalAmount",
@@ -613,6 +660,8 @@ export class TransactionComponent implements OnInit {
         bottomCalcFormatterParams: { symbol: "", precision: 2 },
         cssClass: "amount-column",
         minWidth: 150,
+        headerFilter: "input",
+        headerFilterPlaceholder: "Search amount"
       },
       {
         title: "",

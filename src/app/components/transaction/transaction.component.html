@@ -199,7 +199,7 @@
   <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
     [paginationSize]="1000" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint"
     [allowAdd]="allowAdd" (addClicked)="transactionDetails('')" [allowRefresh]="allowRefresh"
-    (refreshClicked)="refreshData()" [gridName]="selectedTab">
+    (refreshClicked)="refreshData()" [gridName]="selectedTab" [allowColumnFilters]="allowColumnFilters">
   </app-tabulator-grid>
 </div>
 }
