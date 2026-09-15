@@ -1,29 +1,38 @@
-<div class="d-flex gap-2" style="flex-wrap: wrap;">
-    @if(isSuperAdmin)
-    {
-    <div class="col-8 col-sm-8 col-md-6 col-lg-6 col-xl-5 mb-3">
-        <select id="roleSelect" class="form-select form-control-lg text-dark bg-transparent"
-            (change)="changeUser($event)">
-            <option value="">Select User</option>
-            @for(item of userList;track $index){
-            <option value="{{ item.id }}">{{ item.firstName + ' ' +item.lastName }}</option>
-            }
-        </select>
+<div class="app-tabs-container">
+    <!-- Tabs -->
+    <div class="app-tabs">
+        <button type="button" class="app-tab" [class.active]="activeTab === 'accounts'"
+            (click)="activeTab = 'accounts'">
+            <i class="bi bi-person-check"></i>
+            <span>accounts</span>
+        </button>
+
+        <button type="button" class="app-tab" [class.active]="activeTab === 'occasionType'"
+            (click)="activeTab = 'occasionType'">
+            <i class="bi bi-people"></i>
+            <span>occasionType</span>
+        </button>
+
+        <button type="button" class="app-tab" [class.active]="activeTab === 'relations'"
+            (click)="activeTab = 'relations'">
+            <i class="bi bi-shield-lock"></i>
+            <span>relations</span>
+        </button>
+        <button type="button" class="app-tab" [class.active]="activeTab === 'transactionCategories'"
+            (click)="activeTab = 'transactionCategories'">
+            <i class="bi bi-shield-lock"></i>
+            <span>transactionCategories</span>
+        </button>
     </div>
-    }
-    <button id="openConfigDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#configDetailsPopup"
-        style="display: none">
-    </button>
-</div>
-<div class="row">
-    <div class="col-lg-6">
+
+
+    <!-- Tab Content -->
+    <div class="app-tab-content">
+
+        <!-- Available Users -->
+        @if (activeTab === 'accounts') {
         @if(globalService.isAccessible(ActionConstant.ADD) ||
         globalService.isAccessible(ActionConstant.EDIT)){
-        <!-- <button class="btn btn-primary" type="button" (click)="openDetailsPopup('',UserConfig.ACCOUNT)"
-            data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
-            <i class="fa fa-plus"></i>
-            Add Account
-        </button> -->
         }
         <app-tabulator-grid [tableData]="filteredAccountTableData" [columnConfig]="accountColumnConfig"
             [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
@@ -32,15 +41,10 @@
             (addClicked)="openDetailsPopup('',UserConfig.ACCOUNT)" [allowRefresh]="allowRefresh"
             (refreshClicked)="refreshData()" [gridName]="UserConfig.ACCOUNT">
         </app-tabulator-grid>
-    </div>
-    <div class="col-lg-6">
+        }
+        @if (activeTab === 'occasionType') {
         @if(globalService.isAccessible(ActionConstant.ADD) ||
         globalService.isAccessible(ActionConstant.EDIT)){
-        <!-- <button class="btn btn-primary" type="button" (click)="openDetailsPopup('',UserConfig.OCCASION_TYPE)"
-            data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
-            <i class="fa fa-plus"></i>
-            Add Occasion Type
-        </button> -->
         }
         <app-tabulator-grid [tableData]="filteredOccasionTypeTableData" [columnConfig]="occasionTypeColumnConfig"
             [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
@@ -49,16 +53,11 @@
             (addClicked)="openDetailsPopup('',UserConfig.OCCASION_TYPE)" [allowRefresh]="allowRefresh"
             (refreshClicked)="refreshData()" [gridName]="UserConfig.OCCASION_TYPE">
         </app-tabulator-grid>
-    </div>
-    <div class="col-lg-6">
+        }
+        @if (activeTab === 'relations') {
         @if (globalService.isAccessible(ActionConstant.ADD) ||
         globalService.isAccessible(ActionConstant.EDIT))
         {
-        <!-- <button class="btn btn-primary" type="button" (click)="openDetailsPopup('',UserConfig.RELATION)"
-            data-bs-toggle="modal" data-bs-target="#configDetailsPopup">
-            <i class="fa fa-plus"></i>
-            Add Relation
-        </button> -->
         }
         <app-tabulator-grid [tableData]="filteredRelationTableData" [columnConfig]="relationColumnConfig"
             [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
@@ -67,17 +66,11 @@
             (addClicked)="openDetailsPopup('',UserConfig.RELATION)" [allowRefresh]="allowRefresh"
             (refreshClicked)="refreshData()" [gridName]="UserConfig.RELATION">
         </app-tabulator-grid>
-    </div>
-    <div class="col-lg-6">
+        }
+        @if (activeTab === 'transactionCategories') {
         @if (globalService.isAccessible(ActionConstant.ADD) ||
         globalService.isAccessible(ActionConstant.EDIT))
         {
-        <!-- <button class="btn btn-primary d-none" type="button"
-            (click)="openDetailsPopup('',UserConfig.TRANSACTION_CATEGORY)" data-bs-toggle="modal"
-            data-bs-target="#configDetailsPopup">
-            <i class="fa fa-plus"></i>
-            Add Transaction Category
-        </button> -->
         }
         <app-tabulator-grid [tableData]="filteredTransactionCategoryTableData"
             [columnConfig]="transactionCategoryColumnConfig" [height]="'320px'" [paginationSize]="paginationSize"
@@ -86,8 +79,9 @@
             [allowAdd]="allowAdd" (addClicked)="openDetailsPopup('',UserConfig.TRANSACTION_CATEGORY)"
             [allowRefresh]="allowRefresh" (refreshClicked)="refreshData()" [gridName]="UserConfig.TRANSACTION_CATEGORY">
         </app-tabulator-grid>
+        }
+        <app-configuration-details [selectedUserId]="selectedUserId"></app-configuration-details>
+        <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
+        <app-toaster></app-toaster>
     </div>
 </div>
-<app-configuration-details [selectedUserId]="selectedUserId"></app-configuration-details>
-<app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
-<app-toaster></app-toaster>

@@ -30,6 +30,7 @@ export class SettingsComponent {
   public allowAdd = true;
   public allowRefresh = true;
   public filterColumns: ColumnDefinition[] = [];
+  activeTab: 'accounts' | 'occasionType' | 'relations' | 'transactionCategories'= 'occasionType';
   searchText: string = '';
   noDataMessage = UIStrings.COMMON.NO_DATA;
   noMatchingDataMessage = UIStrings.COMMON.NO_DATA;
