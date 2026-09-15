@@ -38,6 +38,8 @@ export class TransactionSummaryComponent
 
   @Input()
   filter!: TransactionFilter;
+  @Input()
+  allowAdd = true;
 
   tableData: any[] = [];
 

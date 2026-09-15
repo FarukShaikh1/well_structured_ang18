@@ -11,7 +11,9 @@
     [allowRefresh]="allowRefresh"
     [allowColumnFilters]="allowColumnFilters"
     [gridName]="'Transaction Summary'"
-    (refreshClicked)="refreshData()">
+    (refreshClicked)="refreshData()"
+    [allowAdd]="allowAdd"
+    >
   </app-tabulator-grid>
 
 </div>
