@@ -15,19 +15,17 @@
             </div>
         </div>
     </div>
-
-
     <!-- ONLY THIS SECTION WILL PRINT -->
     <div id="budget-print">
         <h2 class="print-title print-only">Budget Management</h2>
-        <table border="0" width="100%" style="border-collapse: collapse;">
+        <table class="w-100">
             <tr>
 
                 <th class="print-20">Pay To</th>
                 <th class="print-20">Purpose</th>
                 <th class="print-20">Category</th>
                 <th class="print-10">Amount (₹)</th>
-                <th class="print-hide">Action</th>
+                <th class="print-hide w-10">Action</th>
             </tr>
             <tr *ngFor="let b of filteredBudgets">
                 <td>
@@ -74,16 +72,20 @@
                     {{ b.amount }}
                     }
                 </td>
-                <td class="d-flex gap-2 justify-content-center print-hide">
-                    @if(selectedId === b.id && isEdit){
-                    <button (click)="save()">
-                        💾{{ isEdit ? '' : '' }}
-                    </button>
-                    }
-                    @else{
-                    <button class="edit" (click)="edit(b)"><i class="bi bi-pencil"></i></button>
-                    }
-                    <button class="delete" (click)="delete(b.id!)"><i class="bi bi-trash"></i></button>
+                <td class="print-hide">
+                    <div class="d-flex gap-2 justify-content-center">
+                        @if(selectedId === b.id && isEdit){
+                        <button (click)="save()" title="Save" class="btn btn-outline-success ">💾</button>
+                        <button (click)="reset()" title="Cancel" class="btn btn-outline-warning ">
+                            ✖
+                        </button>
+                        }
+                        @else{
+                        <button (click)="edit(b)" class="btn btn-outline-warning "><i class="bi bi-pencil"></i></button>
+                        }
+                        <button (click)="delete(b.id!)" class="btn btn-outline-danger "><i
+                                class="bi bi-trash"></i></button>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -93,7 +95,7 @@
             </tr>
         </table>
         <br>
-        <table class="print-hide">
+        <table class="print-hide w-100">
             <tr>
                 <td>
                     <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo"
@@ -122,12 +124,15 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button (click)="save()">
-                        {{ isEdit ? 'Update' : 'Add' }}
-                    </button>
-                    <button class="reset ms-2" (click)="reset()">Clear</button>
+                    <div class="d-flex gap-2">
+                        <button (click)="save()" class="btn btn-outline-success grid-action-btn">
+                            {{ isEdit ? 'Update' : 'Add' }}
+                        </button>
+                        <button (click)="reset()" class="btn btn-outline-danger grid-action-btn">Clear</button>
+                    </div>
                 </td>
             </tr>
         </table>
     </div>
-    <app-toaster class="print-hide"></app-toaster>
+</div>
+<app-toaster class="print-hide"></app-toaster>

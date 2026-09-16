@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { Budget } from '../../interfaces/budget';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -56,7 +56,9 @@ export class BudgetComponent implements OnInit {
   loadBudgets() {
     this.budgetService.getBudgetByUser()
       .subscribe(res => {
-        this.budgets = res; this.filteredBudgets = res;
+        this.budgets = res;
+        this.filteredBudgets = res;
+        this.total = this.filteredBudgets.reduce((sum, x) => sum + (x.amount || 0), 0);
       });
   }
 
@@ -78,7 +80,7 @@ export class BudgetComponent implements OnInit {
       }
       this.budgetService.updateBudget(this.model)
         .subscribe({
-          next: (res:any) => {
+          next: (res: any) => {
             this.isEdit = false;
             this.toaster.showMessage('Budget entry updated successfully', 'success');
             this.loadBudgets();
@@ -96,7 +98,7 @@ export class BudgetComponent implements OnInit {
       this.model.id = null;
       this.budgetService.addBudget(this.model)
         .subscribe({
-          next: (res:any) => {
+          next: (res: any) => {
             this.toaster.showMessage('Budget entry added successfully', 'success');
 
             this.reset();
@@ -149,7 +151,7 @@ export class BudgetComponent implements OnInit {
       // const amount = item.amount?.toLowerCase().includes(this.searchText);
       return (payTo || purpose || category);
     });
-    this.total =  this.filteredBudgets.reduce((sum, x) => sum + (x.amount || 0), 0);
+    this.total = this.filteredBudgets.reduce((sum, x) => sum + (x.amount || 0), 0);
   }
 
 }

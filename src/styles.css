@@ -400,6 +400,13 @@ body.dark-mode .tabulator .tabulator-footer .tabulator-page-counter label {
   border-color: var(--warning-color);
 }
 
+.amount {
+  text-align: right;
+}
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
 .notification {
   line-height: 1;
   font-size: 0.5rem;
