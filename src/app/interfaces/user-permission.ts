@@ -9,4 +9,5 @@ export interface UserPermission {
     download: boolean;
     upload: boolean;
     approve: boolean;
+    reject: boolean;
 }

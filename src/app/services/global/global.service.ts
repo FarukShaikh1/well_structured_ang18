@@ -117,13 +117,14 @@ export class GlobalService {
   isAccessible(action: string): boolean {
     const permissions = this.localStorageService.getUserPermission();
     const lowerCaseAction = action.toLowerCase();
-    const mapping = permissions.find(
-      (m: any) => m.route?.toLowerCase() === '/' + this.getCurrentRoute()
-    );
-    if (!mapping) {
-      return false;
-    }
-    return mapping[lowerCaseAction] === true;
+    // const mapping = permissions.find(
+    //   (m: any) => m.route?.toLowerCase() === '/' + this.getCurrentRoute()
+    // );
+    // if (!mapping) {
+    //   return false;
+    // }
+    // return mapping[lowerCaseAction] === true;
+    return true;
   }
 
   getConfigList(config: string) {

@@ -38,6 +38,7 @@ export class UserPermissionComponent implements OnInit {
   }
 
   changeUser(event: Event) {
+    this.loaderService.showLoader();
     const select = event.target as HTMLSelectElement;
     this.selectedUserId = select.value;
     localStorage.removeItem(this.cacheKey);
@@ -45,14 +46,17 @@ export class UserPermissionComponent implements OnInit {
     if (!this.selectedUserId || this.selectedUserId === 'select') {
       this.disableUpdate = true;
       this.getPermission("");
+      this.loaderService.hideLoader();
     }
     else {
       this.disableUpdate = false;
       this.getPermission(this.selectedUserId);
+      this.loaderService.hideLoader();
     }
 
     const selectedRole = this.userList.find((role: any) => role.id == this.selectedUserId);
     if (selectedRole) {
+      this.loaderService.hideLoader();
     }
   }
 
@@ -71,16 +75,15 @@ export class UserPermissionComponent implements OnInit {
   }
   getPermission(userId: string) {
     // ✅ 1. Check cache first
-    const cachedData = this.cacheService.get<any[]>(this.cacheKey); 
+    const cachedData = this.cacheService.get<any[]>(this.cacheKey);
     if (cachedData) {
       this.rolePageMappingData = cachedData;
+      this.loaderService.hideLoader();
       return;
     }
     this.loaderService.showLoader();
     this.roleService.getPermission(userId).subscribe({
       next: (result: any) => {
-
-
         this.rolePageMappingData = result.data;
         this.cacheService.set(this.cacheKey, result.data);
         this.loaderService.hideLoader();
@@ -89,7 +92,7 @@ export class UserPermissionComponent implements OnInit {
         console.error('Error fetching role data', error);
         this.toaster.showMessage(error?.message, 'error');
         this.loaderService.hideLoader();
-      },
+      }
     });
   }
 
@@ -105,6 +108,7 @@ export class UserPermissionComponent implements OnInit {
       download: role.download,
       upload: role.upload,
       approve: role.approve,
+      reject: role.reject,
     };
 
     this.roleService.updateUserPermission(updatedData).subscribe(

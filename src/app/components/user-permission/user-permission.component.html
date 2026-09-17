@@ -27,6 +27,7 @@
         <th class="permission">Download</th>
         <th class="permission">Upload</th>
         <th class="permission">Approve</th>
+        <th class="permission">Reject</th>
         @if(editable || !disableUpdate){
         <th class="permission"></th>
         }
@@ -58,6 +59,9 @@
         </td>
         <td class="permission">
           <input type="checkbox" [(ngModel)]="role.approve" [disabled]="!editable || disableUpdate" />
+        </td>
+        <td class="permission">
+          <input type="checkbox" [(ngModel)]="role.reject" [disabled]="!editable || disableUpdate" />
         </td>
         @if(editable || !disableUpdate){
         <td class="permission">
