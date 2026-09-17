@@ -93,6 +93,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   getModuleList() {
     this.moduleList = this.localStorageService.getLoggedInUserPermissions();
+    this.moduleList = this.moduleList.filter(x => x.route != "");
     if (this.moduleList?.length == 0) {
       this.globalService.getUserPermissionData().subscribe({
         next: (result) => {
@@ -252,12 +253,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   goToChangePasswordPage() {
     this.router.navigate([NavigationURLs.CHANGE_PASSWORD]);
   }
-
-  goToPlansPage() {
-    this.router.navigate([NavigationURLs.PLANS]);
-  }
-
-
 
   fetchAllSystemNotifications() {
     this.notificationService

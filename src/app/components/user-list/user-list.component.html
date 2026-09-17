@@ -16,6 +16,12 @@
       <i class="bi bi-shield-lock"></i>
       <span>User Permissions</span>
     </button>
+
+    <button type="button" class="app-tab" [class.active]="activeTab === 'settings'"
+      (click)="activeTab = 'settings'">
+      <i class="bi bi-shield-lock"></i>
+      <span>Settings</span>
+    </button>
   </div>
 
 
@@ -46,6 +52,13 @@
       <app-user-registration-approval></app-user-registration-approval>
     </div>
     }
+
+    @if (activeTab === 'settings') {
+    <div class="tab-component-wrapper">
+      <app-settings></app-settings>
+    </div>
+    }
+
   </div>
 </div>
 

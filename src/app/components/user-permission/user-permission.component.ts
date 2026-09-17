@@ -24,7 +24,7 @@ export class UserPermissionComponent implements OnInit {
   userList: any;
   disableUpdate: boolean = false;
   editable: boolean = false;
-  cacheKey: string = 'UserPermission';
+  cacheKey: string = 'UserPermissions';
   selectedUserId: string = '';
   constructor(private userService: UserService, private roleService: RoleService, private loaderService: LoaderService, private cacheService: CacheService,
     public globalService: GlobalService) { }

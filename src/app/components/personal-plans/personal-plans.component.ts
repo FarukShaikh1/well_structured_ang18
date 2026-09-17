@@ -28,7 +28,7 @@ export class SelfDataComponent {
   /**
    * Active tab
    */
-  activeTab: 'routine' | 'budget' | 'credentials' | 'food-menu' = 'routine';
+  activeTab: 'routine' | 'budget' | 'credentials' | 'food-menu' = 'food-menu';
 
 
   /**
