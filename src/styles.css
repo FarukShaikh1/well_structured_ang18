@@ -2765,23 +2765,21 @@ textarea {
 /* ---------------------------------------------------------
    Mobile menu header
    --------------------------------------------------------- */
-
 .mobile-menu-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-height: 56px;
-
-  padding: 8px 12px;
-
-  background-color: var(--header-bg);
-  color: var(--header-text);
-
-  border-bottom: 1px solid var(--theme-border);
-
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 56px;
+  padding: 8px 12px;
+
+  background: var(--header-bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  color: var(--header-text);
 }
 
 /* Back button */
@@ -2823,7 +2821,6 @@ textarea {
 
 /* Header title */
 .mobile-header-space {
-  flex: 1 1 auto;
   min-width: 0;
 
   text-align: center;
@@ -2842,7 +2839,7 @@ textarea {
 
 /* Keeps title centered even with back button */
 .mobile-menu-header::after {
-  content: "";
+  /* content: ""; */
   width: 40px;
   height: 40px;
 
@@ -2888,6 +2885,10 @@ textarea {
     background-color 0.2s ease,
     border-color 0.2s ease,
     transform 0.15s ease;
+}
+
+.mobile-menu-item:hover {
+  transform: translateX(2px);
 }
 
 .mobile-menu-item:hover {
