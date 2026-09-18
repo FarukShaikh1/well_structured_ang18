@@ -2752,3 +2752,252 @@ textarea {
     font-size: 15px;
   }
 }
+
+/* =========================================================
+   MOBILE MENU PAGE
+   Dedicated menu shown only on mobile devices
+   ========================================================= */
+
+.mobile-menu-page {
+  display: none;
+}
+
+/* ---------------------------------------------------------
+   Mobile menu header
+   --------------------------------------------------------- */
+
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 56px;
+
+  padding: 8px 12px;
+
+  background-color: var(--header-bg);
+  color: var(--header-text);
+
+  border-bottom: 1px solid var(--theme-border);
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Back button */
+.mobile-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  padding: 0;
+
+  background: transparent;
+  color: var(--header-text);
+
+  border: none;
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  flex: 0 0 auto;
+}
+
+.mobile-back-btn i,
+.mobile-back-btn svg {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+.mobile-back-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.mobile-back-btn:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Header title */
+.mobile-header-space {
+  flex: 1 1 auto;
+  min-width: 0;
+
+  text-align: center;
+
+  color: var(--header-text);
+
+  font-size: 18px;
+  font-weight: 600;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  padding: 0 10px;
+}
+
+/* Keeps title centered even with back button */
+.mobile-menu-header::after {
+  content: "";
+  width: 40px;
+  height: 40px;
+
+  flex: 0 0 auto;
+}
+
+/* ---------------------------------------------------------
+   Menu content
+   --------------------------------------------------------- */
+
+.mobile-menu-content {
+  width: 100%;
+  max-width: 100%;
+
+  padding: 12px;
+
+  overflow-x: hidden;
+}
+
+/* ---------------------------------------------------------
+   Menu item
+   --------------------------------------------------------- */
+
+.mobile-menu-item {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  min-height: 52px;
+
+  margin-bottom: 8px;
+  padding: 12px 14px;
+
+  background-color: var(--theme-card-bg);
+  color: var(--theme-text);
+
+  border: 1px solid var(--theme-border);
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.mobile-menu-item:hover {
+  background-color: var(--theme-secondary-bg);
+}
+
+.mobile-menu-item:active {
+  transform: scale(0.99);
+}
+
+/* Menu item title */
+.mobile-menu-title {
+  flex: 1 1 auto;
+  min-width: 0;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  color: var(--theme-text);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Chevron / right icon */
+.mobile-menu-item i,
+.mobile-menu-item svg {
+  flex: 0 0 auto;
+
+  margin-left: 12px;
+
+  font-size: 16px;
+
+  color: var(--theme-text);
+}
+
+/* ---------------------------------------------------------
+   Mobile only
+   --------------------------------------------------------- */
+
+@media (max-width: 767.98px) {
+
+  .mobile-menu-page {
+    display: flex;
+
+    flex-direction: column;
+
+    width: 100%;
+    min-height: 100vh;
+
+    background-color: var(--theme-bg);
+    color: var(--theme-text);
+  }
+
+}
+
+/* ---------------------------------------------------------
+   Tablet/Desktop
+   Mobile menu must not be visible
+   --------------------------------------------------------- */
+
+@media (min-width: 768px) {
+
+  .mobile-menu-page {
+    display: none !important;
+  }
+
+}
+/* =========================================================
+   MOBILE MENU - DARK MODE
+   ========================================================= */
+
+body.dark-mode .mobile-menu-page {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+body.dark-mode .mobile-menu-item {
+  background-color: var(--surface-1);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+body.dark-mode .mobile-menu-item:hover {
+  background-color: var(--theme-secondary-bg);
+}
+
+body.dark-mode .mobile-menu-title,
+body.dark-mode .mobile-menu-item i,
+body.dark-mode .mobile-menu-item svg {
+  color: var(--theme-text);
+}
+@media (min-width: 993px) {
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .grid-actions {
+    flex: 0 1 auto;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .grid-action-btn {
+    flex: 0 0 auto;
+    min-width: max-content;
+    width: auto;
+    white-space: nowrap;
+  }
+
+}
