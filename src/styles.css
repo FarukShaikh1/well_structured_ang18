@@ -117,7 +117,6 @@ h4.modal-title, h2.section-header {
   color: var(--theme-heading-color);
 }
 
-.btn-danger,
 .btn-primary {
   background-color: var(--theme-primary);
   color: var(--header-text);
@@ -126,7 +125,6 @@ h4.modal-title, h2.section-header {
   padding: 0.5rem 1.25rem;
 }
 
-.btn-danger:hover,
 .btn-primary:hover {
   background-color: var(--theme-primary-hover);
   color: var(--header-text);
@@ -405,6 +403,7 @@ body.dark-mode .tabulator .tabulator-footer .tabulator-page-counter label {
 }
 th, td {
   padding: 10px;
+  vertical-align: middle;
   border: 1px solid #ddd;
 }
 .notification {
@@ -1716,35 +1715,92 @@ body.dark-mode .grid-loader-overlay {
   font-weight: 500;
 }
 
-.grid-actions {
-  width: 100%;
+/* =========================================================
+   REUSABLE GRID HEADER & ACTION BUTTONS
+   ========================================================= */
+
+.grid-header {
   display: flex;
-  justify-content: flex-end !important;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  width: 100%;
+  margin-bottom: 10px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
+.grid-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--theme-heading-color);
+}
+
+/* Action button container */
+.grid-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 1 auto;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+/* Individual grid action button */
 .grid-action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  min-width: 90px;
+
+  /*
+     Do not allow the button to shrink below
+     its icon/text content.
+  */
+  flex: 0 0 auto;
+  min-width: max-content;
+  width: auto;
+
   height: 36px;
+  min-height: 36px;
+
+  padding: 6px 12px;
+
   font-size: 13px;
   font-weight: 500;
+  line-height: 1.2;
+
+  white-space: nowrap;
+
   border-radius: 6px;
-  transition: all 0.2s ease;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.grid-action-btn i {
+.grid-action-btn i,
+.grid-action-btn svg {
+  flex: 0 0 auto;
   font-size: 16px;
+  width: 16px;
+  height: 16px;
 }
 
 .grid-action-btn:hover {
   transform: translateY(-1px);
 }
 
+/* Prevent text/icon from being compressed */
+.grid-action-btn > span,
+.grid-action-btn > i,
+.grid-action-btn > svg {
+  flex-shrink: 0;
+}
 .grid-header {
   display: flex;
   justify-content: space-between;
@@ -1912,7 +1968,6 @@ body.dark-mode .grid-loader-overlay {
 
   .btn-danger {
     width: 100%;
-    margin-bottom: 10px;
   }
 
   header.public-page-bg {
@@ -2513,6 +2568,7 @@ textarea {
   }
 
   .grid-action-btn {
+    flex: 0 0 auto;       
     white-space: nowrap;
   }
 }

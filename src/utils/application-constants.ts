@@ -174,6 +174,7 @@ export const NavigationURLs = {
     PLANS: '/home/plans',
     CREDENTIALS: '/home/credentials',
     UNDER_DEVELOPMENT: '/site-under-development',
+    MOBILE_MENU : '/mobile-menu',
 
 };
 
@@ -204,6 +205,7 @@ export const RoutePath = {
     CREDENTIALS: 'credentials',
     UNDER_DEVELOPMENT: 'site-under-development',
     FAMILY_GRAPH: 'family-graph',
+    MOBILE_MENU : 'mobile-menu',
 };
 
 export const RoutePathTitles = {
@@ -233,6 +235,7 @@ export const RoutePathTitles = {
     CREDENTIALS: 'Credentials',
     UNDER_DEVELOPMENT: 'Site Under Development',
     FAMILY_GRAPH: 'Family Tree',
+    MOBILE_MENU : '/mobile-menu',
 };
 
 

@@ -342,7 +342,7 @@ export class GlobalService {
       user = JSON.parse(userString);
     }
     if (userId == "" || userId == "undefined") {
-      userId = user.id ?? user.userId ?? "";
+      userId = user?.id ?? user?.userId ?? "";
     }
 
     localStorage.setItem(LocalStorageConstants.USERID, userId);
@@ -360,7 +360,7 @@ export class GlobalService {
       user = JSON.parse(userString);
     }
     if (userId == "" || userId == "undefined") {
-      userId = user.id ?? user.userId ?? "";
+      userId = user?.id ?? user?.userId ?? "";
     }
 
     this.setConfigToLocalStorage(userId, UserConfig.ACCOUNT, DdlConfig.ACCOUNTS);
@@ -377,7 +377,7 @@ export class GlobalService {
       user = JSON.parse(userString);
     }
     if (userId == "" || userId == "undefined") {
-      userId = user.id ?? user.userId ?? "";
+      userId = user?.id ?? user?.userId ?? "";
     }
     if (user?.firstName) {
       this.setFamilyToLocalStorage(user?.firstName);

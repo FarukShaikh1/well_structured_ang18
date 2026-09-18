@@ -1,0 +1,41 @@
+<div class="mobile-menu-page">
+
+    <!-- Header -->
+    <div class="mobile-menu-header">
+
+        <button type="button" class="btn mobile-back-btn" (click)="goBack()" aria-label="Go back">
+
+            <i class="bi bi-arrow-left"></i>
+        </button>
+
+        <h5 class="mb-0">
+            Menu
+        </h5>
+
+        <div class="mobile-header-space"></div>
+
+    </div>
+
+
+    <!-- Menu Items -->
+    <div class="mobile-menu-content">
+
+        @for (mod of moduleList; track mod.route) {
+
+        <button type="button" class="mobile-menu-item" (click)="navigate(mod.route)" [ngClass]="{
+          'active-link': isActiveMenu(mod.route)
+        }">
+
+            <span class="mobile-menu-title">
+                {{ mod.moduleName }}
+            </span>
+
+            <i class="bi bi-chevron-right"></i>
+
+        </button>
+
+        }
+
+    </div>
+
+</div>

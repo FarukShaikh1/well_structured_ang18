@@ -17,17 +17,14 @@ import { SettingsComponent } from "./components/settings/settings.component";
 import { TransactionComponent } from "./components/transaction/transaction.component";
 
 import { authGuard } from "./guards/auth.guard";
-import { publicGuard } from "./guards/public.guard";
-import { FamilyGraphComponent } from "./components/family-graph/family-graph.component";
 import { LoginComponent } from "./components/login/login.component";
 import { SiteUnderDevelopmentComponent } from "./components/shared/site-under-development/site-under-development.component";
-import { DailyFoodPickerComponent } from "./components/daily-food-picker/daily-food-picker.component";
 import { FoodMenuComponent } from "./components/food-menu/food-menu.component";
 import { SignupComponent } from "./components/sign-up/sign-up.component";
 import { EmailVerificationComponent } from "./components/email-verification/email-verification.component";
 import { OTPVerificationComponent } from "./components/otp-verification/otp-verification.component";
-import { UserRegistrationApprovalComponent } from "./components/user-registration-approval/user-registration-approval.component";
 import { ForgotPasswordComponent } from "./components/forgot-password/forgot-password.component";
+import { MobileMenuComponent } from "./components/mobile-menu/mobile-menu.component";
 
 export const routes: Routes = [
   {
@@ -218,6 +215,10 @@ export const routes: Routes = [
   {
     path: RoutePath.UNDER_DEVELOPMENT,
     component: SiteUnderDevelopmentComponent
+  },
+  {
+    path: RoutePath.MOBILE_MENU,
+    component: MobileMenuComponent
   },
   {
     path: "**",

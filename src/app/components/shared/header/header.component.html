@@ -1,153 +1,253 @@
 <header
   class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm position-sticky top-0 z-3 print-hide">
+  <!-- Left side: Welcome / User Name -->
   <div class="d-flex align-items-center flex-shrink-0">
-    @if(alreadyLoggedIn){
+    @if(alreadyLoggedIn) {
     <div>
       Hello {{ localStorageService.getLoggedInUserData()?.firstName + ' ' +
       localStorageService.getLoggedInUserData()?.lastName }}!
     </div>
     }
-    @else{
+    @else {
     Welcome to FMS Collection
     }
   </div>
+
+  <!-- Right side -->
   <div class="d-flex align-items-center flex-grow-1 justify-content-end flex-wrap">
-    <!-- Mobile Menu Toggle -->
-    @if(alreadyLoggedIn){
-    <button class="btn border shadow-sm d-md-none ms-2" type="button" (click)="toggleMenu()"
-      aria-label="Toggle navigation">
-      <svg *ngIf="!isMenuOpen" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-        stroke-width="2" stroke-linecap="round">
+
+    @if(alreadyLoggedIn) {
+
+    <!-- ========================================= -->
+    <!-- MOBILE MENU BUTTON (< md) -->
+    <!-- ========================================= -->
+
+    <button class="btn border shadow-sm d-md-none ms-2" type="button" (click)="openMobileMenu()"
+      aria-label="Open navigation menu">
+      <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round">
         <path d="M2 4h12M2 8h12M2 12h12" />
       </svg>
 
-      <!-- Close icon -->
-      <svg *ngIf="isMenuOpen" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-        stroke-width="2" stroke-linecap="round">
-        <path d="M3 3l10 10M13 3L3 13" />
-      </svg>
     </button>
-    <!-- Header right-side icons and modules -->
+    <!-- ========================================= -->
+    <!-- HEADER MODULES + NOTIFICATION -->
+    <!-- TABLET AND DESKTOP (md+) -->
+    <!-- ========================================= -->
     <div class="d-flex align-items-center me-3 flex-shrink-0">
+      <!-- Module Navigation -->
       <div class="d-none d-md-flex align-items-center flex-wrap">
-        @for(mod of moduleList; track $index){
-        <button (click)="navigate(mod.route)" class="font-weight-bold p-2 txt-btn "
-          [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
+        @for(mod of moduleList; track $index) {
+        <button type="button" (click)="navigate(mod.route)" class="font-weight-bold p-2 txt-btn" [ngClass]="{
+                'active-link': isActiveMenu(mod.route)
+             }">
           {{ mod.moduleName }}
         </button>
         }
       </div>
 
+      <!-- ========================================= -->
+      <!-- NOTIFICATION -->
+      <!-- ========================================= -->
+
       @if(showNotificationIcon()) {
-      <!-- Notification Dropdown -->
       <div class="dropdown me-2 ms-2">
         <button class="btn p-0 position-relative" type="button" id="notificationDropdown" data-bs-toggle="dropdown"
           aria-expanded="false" data-bs-auto-close="outside">
           <i class="bi bi-bell fs-5"></i>
-          @if (notificationTotalUnreadCount > 0) {
+          @if(notificationTotalUnreadCount > 0) {
+
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
             {{ notificationTotalUnreadCount }}
+
           </span>
+
           }
+
         </button>
 
-        <!-- Use position-absolute on small screens -->
+
+        <!-- Notification Dropdown -->
         <ul class="dropdown-menu dropdown-menu-end shadow-lg mt-2 w-auto w-md-auto"
-          aria-labelledby="notificationDropdown"
-          style="min-width: 320px; max-height: 400px; overflow-y: auto; right: 0; left: auto;">
+          aria-labelledby="notificationDropdown" style="
+                min-width: 320px;
+                max-height: 400px;
+                overflow-y: auto;
+                right: 0;
+                left: auto;
+              ">
+
           <li class="dropdown-header d-flex justify-content-between align-items-center sticky-top bg-white">
+
             <strong>Notifications</strong>
-            <button type="button" class="btn-close" aria-label="Close"
-              (click)="closeSystemNotificationList()">✕</button>
+
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemNotificationList()">
+
+              ✕
+
+            </button>
+
           </li>
+
 
           <li>
             <hr class="dropdown-divider" />
           </li>
 
-          @if (notifications.length === 0) {
-          <li class="text-center p-2 text-muted">No notifications</li>
-          } @else {
-          @for (notification of notifications; track $index) {
+
+          @if(notifications.length === 0) {
+
+          <li class="text-center p-2 text-muted">
+            No notifications
+          </li>
+
+          }
+          @else {
+
+          @for(notification of notifications; track $index) {
+
           <li>
+
             <a class="dropdown-item d-flex flex-column" href="javascript:void(0)"
               (click)="markSystemNotificationAsRead(notification)">
-              <div>{{ notification.notificationMessage }}</div>
-              <small class="text-muted">{{ getRelativeTime(notification.createdOn) }}</small>
+
+              <div>
+                {{ notification.notificationMessage }}
+              </div>
+
+              <small class="text-muted">
+                {{ getRelativeTime(notification.createdOn) }}
+              </small>
+
             </a>
+
           </li>
+
           }
+
+
           <li>
             <hr class="dropdown-divider" />
           </li>
+
+
           <li class="text-center">
-            <button class="dropdown-item text-primary fw-semibold" (click)="viewAllSystemNotifications()">
+
+            <button type="button" class="dropdown-item text-primary fw-semibold" (click)="viewAllSystemNotifications()">
+
               View All
+
             </button>
+
           </li>
+
           }
+
         </ul>
+
       </div>
+
       }
+
     </div>
 
-    <!-- Profile Dropdown -->
+
+    <!-- ========================================= -->
+    <!-- PROFILE DROPDOWN -->
+    <!-- ========================================= -->
+
     <div class="dropdown flex-shrink-0 me-2">
+
       <button class="btn p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-bs-auto-close="true">
+
         <div class="profile-circle">
+
           @if(thumbnailUrl && thumbnailUrl.length > 0) {
-          <img [src]="thumbnailUrl" class="profile-circle" alt="Hello" [alt]="userNameInitials">
+
+          <img [src]="thumbnailUrl" class="profile-circle" alt="Profile" [alt]="userNameInitials" />
+
           }
-          @else{
-          <span title="{{ loggedInUserName }}">{{ userNameInitials }}</span>
+          @else {
+
+          <span title="{{ loggedInUserName }}">
+            {{ userNameInitials }}
+          </span>
+
           }
+
         </div>
+
       </button>
 
+
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+
         <li>
+
           <a class="dropdown-item" (click)="goToChangePasswordPage()">
+
             <i class="bi bi-pencil-square"></i>
             &nbsp;Change Password
+
           </a>
+
         </li>
+
+
         <li>
+
           <a class="dropdown-item" (click)="logout()" data-bs-toggle="modal" data-bs-target="#confirmBox">
+
             <i class="bi bi-box-arrow-right"></i>
             &nbsp;Log Out
+
           </a>
+
         </li>
+
       </ul>
+
     </div>
+
     }
-    @else{
+
+    @else {
+
+    <!-- ========================================= -->
+    <!-- PUBLIC HEADER -->
+    <!-- ========================================= -->
+
     <div class="grid-actions">
 
       <button type="button" class="btn btn-outline-success grid-action-btn" (click)="navigate(NavigationURLs.SIGNUP)"
         title="SIGN UP">
+
         <i class="bi bi-file-earmark-excel"></i>
+
         <span>SIGN UP</span>
+
       </button>
+
+
       <button type="button" class="btn btn-outline-success grid-action-btn" (click)="navigate(NavigationURLs.LOGIN)"
         title="LOGIN">
+
         <i class="bi bi-file-earmark-pdf"></i>
+
         <span>LOGIN</span>
+
       </button>
+
     </div>
+
     }
 
   </div>
+
 </header>
-<div class="public-page-bg d-md-none" [class.d-none]="!isMenuOpen">
-  <div class="container-fluid py-2">
-    <div class="d-flex flex-column gap-1">
-      @for(mod of moduleList; track $index){
-      <button (click)="navigate(mod.route); toggleMenu()" class="btn btn-link text-start txt-btn px-2"
-        [ngClass]="{ 'active-link': isActiveMenu(mod.route) }">
-        {{ mod.moduleName }}
-      </button>
-      }
-    </div>
-  </div>
-</div>
-<app-confirm-box (confirmResult)="handleConfirmResult($event)"></app-confirm-box>
+
+
+<!-- Confirmation Dialog -->
+<app-confirm-box (confirmResult)="handleConfirmResult($event)">
+</app-confirm-box>
