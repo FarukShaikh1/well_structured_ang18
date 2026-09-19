@@ -2989,7 +2989,6 @@ body.dark-mode .mobile-menu-item svg {
   }
 
   .grid-actions {
-    flex: 0 1 auto;
     justify-content: flex-end;
     flex-wrap: wrap;
   }
