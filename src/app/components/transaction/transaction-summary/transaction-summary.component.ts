@@ -1,8 +1,10 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges
 } from "@angular/core";
 
@@ -41,6 +43,14 @@ export class TransactionSummaryComponent
   @Input()
   allowAdd = true;
 
+  @Output()
+  openTransaction =
+    new EventEmitter<string>();
+
+  @Output()
+  deleteTransactionEvent =
+    new EventEmitter<string>();
+
   tableData: any[] = [];
 
   filteredTableData: any[] = [];
@@ -64,7 +74,7 @@ export class TransactionSummaryComponent
     private cacheService: CacheService,
     private loaderService: LoaderService,
     public globalService: GlobalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
 
@@ -114,13 +124,13 @@ export class TransactionSummaryComponent
 
     const request:
       ExpenseFilterRequest = {
-        fromDate: this.filter.fromDate,
-        toDate: this.filter.toDate,
-        minAmount: this.filter.minAmount ?? 0,
-        maxAmount: this.filter.maxAmount ?? 0,
-        sourceOrReason:
-          this.filter.sourceOrReason ?? ""
-      };
+      fromDate: this.filter.fromDate,
+      toDate: this.filter.toDate,
+      minAmount: this.filter.minAmount ?? 0,
+      maxAmount: this.filter.maxAmount ?? 0,
+      sourceOrReason:
+        this.filter.sourceOrReason ?? ""
+    };
 
     this.transactionService
       .getTransactionSummaryList(request)
@@ -144,7 +154,7 @@ export class TransactionSummaryComponent
 
           this.cacheService.set(
             NavigationURLs.EXPENSE_SUMMARY_LIST +
-              "_AccountColumns",
+            "_AccountColumns",
             accountData
           );
 
@@ -197,8 +207,8 @@ export class TransactionSummaryComponent
         const accountValues =
           item.accountData
             ? Object.values(item.accountData)
-                .map((x: any) => Number(x))
-                .filter(x => !isNaN(x))
+              .map((x: any) => Number(x))
+              .filter(x => !isNaN(x))
             : [];
 
         const minMatch =
@@ -388,8 +398,8 @@ export class TransactionSummaryComponent
     return `
       <span style="
         color:${value > 0
-          ? "var(--success-color)"
-          : "var(--danger-color)"};
+        ? "var(--success-color)"
+        : "var(--danger-color)"};
         font-weight:bold">
         ${formatted}
       </span>
@@ -432,7 +442,7 @@ export class TransactionSummaryComponent
 
       const category =
         data.accountData[
-          `${match[1]}_Category`
+        `${match[1]}_Category`
         ];
 
       if (category === "Income") {
@@ -477,4 +487,29 @@ export class TransactionSummaryComponent
       </span>
     `;
   }
+
+  addTransaction(): void {
+    debugger;
+    this.openTransaction.emit("");
+  }
+
+  editTransaction(
+    transactionGroupId: string
+  ): void {
+
+    this.openTransaction.emit(
+      transactionGroupId
+    );
+  }
+
+  deleteTransaction(
+    transactionGroupId: string
+  ): void {
+
+    this.deleteTransactionEvent.emit(
+      transactionGroupId
+    );
+  }
+
+
 }

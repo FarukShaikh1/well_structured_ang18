@@ -13,7 +13,8 @@
     [gridName]="'Transaction Summary'"
     (refreshClicked)="refreshData()"
     [allowAdd]="allowAdd"
-    >
+    (addClicked)="addTransaction()"
+(refreshClicked)="refreshData()"    >
   </app-tabulator-grid>
 
 </div>

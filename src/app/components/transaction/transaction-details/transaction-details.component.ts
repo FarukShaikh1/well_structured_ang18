@@ -45,7 +45,7 @@ import { ToasterComponent } from "../../shared/toaster/toaster.component";
   selector: "app-transaction-details",
   standalone: true,
   imports: [ReactiveFormsModule, ToasterComponent, CommonModule],
-  providers:[DatePipe],
+  providers: [DatePipe],
   templateUrl: "./transaction-details.component.html",
   styleUrls: ["./transaction-details.component.scss"],
 })
@@ -239,11 +239,12 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
             this.commonSuggestionList = res.data;
             this.localStorageService.setTransactionSuggestions(res.data);
             this.getListValues();
-
+            this.loaderService.hideLoader();
           }
         },
         error: (error: any) => {
           console.error("error : ", error);
+          this.loaderService.hideLoader();
         },
       });
     }

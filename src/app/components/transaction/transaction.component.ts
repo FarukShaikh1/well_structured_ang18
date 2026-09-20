@@ -102,7 +102,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
     private loaderService: LoaderService,
     private cacheService: CacheService,
     public globalService: GlobalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
 
@@ -349,7 +349,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * Open transaction details popup.
    */
   transactionDetails(transactionGroupId: string): void {
-
+    debugger;
     this.transactionDetailsComponent
       ?.openDetailsPopup(transactionGroupId);
 

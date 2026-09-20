@@ -244,7 +244,7 @@ export class TransactionListComponent
   }
 
   addTransaction(): void {
-
+debugger;
     this.openTransaction.emit("");
   }
 

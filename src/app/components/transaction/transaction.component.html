@@ -167,7 +167,8 @@
 
     @case (TransactionTabs.EXPENSE_SUMMARY) {
 
-    <app-transaction-summary [filter]="filter">
+    <app-transaction-summary [filter]="filter" [allowAdd]="allowAdd" (openTransaction)="transactionDetails($event)"
+      (deleteTransactionEvent)="deleteTransaction($event)">
     </app-transaction-summary>
 
     }
