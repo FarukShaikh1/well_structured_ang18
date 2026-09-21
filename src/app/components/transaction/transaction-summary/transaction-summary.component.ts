@@ -191,7 +191,6 @@ export class TransactionSummaryComponent
 
     this.filteredTableData =
       this.tableData.filter((item: any) => {
-
         const textMatch =
           !search ||
           item.sourceOrReason

@@ -49,8 +49,8 @@ export const ButtonLabels = {
 };
 
 export const ApplicationTableConstants = {
-    DEFAULT_RECORDS_PER_PAGE: 10,
-    PAGE_SIZE_OPTIONS: [5, 10, 15, 20, 50, 100, 'Select All'],
+    DEFAULT_RECORDS_PER_PAGE: 1000,
+    PAGE_SIZE_OPTIONS: [5, 10, 15, 20, 50, 100, 500, 1000, 'Select All'],
 };
 
 export const ToasterConfigs = {

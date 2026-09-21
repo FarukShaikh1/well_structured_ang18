@@ -79,7 +79,7 @@ export class TransactionListComponent
     private cacheService: CacheService,
     private loaderService: LoaderService,
     public globalService: GlobalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
 
@@ -129,13 +129,13 @@ export class TransactionListComponent
 
     const request:
       ExpenseFilterRequest = {
-        fromDate: this.filter.fromDate,
-        toDate: this.filter.toDate,
-        minAmount: this.filter.minAmount ?? 0,
-        maxAmount: this.filter.maxAmount ?? 0,
-        sourceOrReason:
-          this.filter.sourceOrReason ?? ""
-      };
+      fromDate: this.filter.fromDate,
+      toDate: this.filter.toDate,
+      minAmount: this.filter.minAmount ?? 0,
+      maxAmount: this.filter.maxAmount ?? 0,
+      sourceOrReason:
+        this.filter.sourceOrReason ?? ""
+    };
 
     this.transactionService
       .getTransactionList(request)
@@ -244,7 +244,6 @@ export class TransactionListComponent
   }
 
   addTransaction(): void {
-debugger;
     this.openTransaction.emit("");
   }
 
@@ -384,30 +383,21 @@ debugger;
         ActionConstant.DELETE
       )
     ) {
-
       this.columnConfig.push({
-
         title: "",
         field: "option",
-
         formatter:
           this.globalService.optionDotsFormatter.bind(
             this.globalService
           ),
-
         hozAlign: "center",
         headerSort: false,
-
         minWidth: 70,
         maxWidth: 70,
-
         print: false,
-
         cellClick: (_e, cell) => {
-
           const data =
             cell.getRow().getData();
-
           this.editTransaction(
             data["transactionGroupId"]
           );
@@ -434,8 +424,8 @@ debugger;
     return `
       <span>
         ${new Intl.DateTimeFormat(
-          "en-IN"
-        ).format(new Date(value))}
+      "en-IN"
+    ).format(new Date(value))}
       </span>
     `;
   }

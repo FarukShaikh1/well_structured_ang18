@@ -349,7 +349,6 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * Open transaction details popup.
    */
   transactionDetails(transactionGroupId: string): void {
-    debugger;
     this.transactionDetailsComponent
       ?.openDetailsPopup(transactionGroupId);
 
