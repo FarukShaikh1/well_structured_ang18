@@ -6,6 +6,12 @@
       <h5 class="grid-title">
         {{ gridName }}
       </h5>
+      @if (allowAdd) {
+      <button type="button" class="btn btn-outline-info grid-action-btn" title="Add" (click)="onAddClick()">
+        <i class="fa fa-plus"></i>
+        <span>Add</span>
+      </button>
+      }
       @if (allowRefresh) {
       <button type="button" class="btn btn-outline-warning grid-action-btn" title="Refresh data with database"
         (click)="onRefreshClick()">
@@ -14,12 +20,6 @@
       </button>
       }
 
-      @if (allowAdd) {
-      <button type="button" class="btn btn-outline-info grid-action-btn" title="Add" (click)="onAddClick()">
-        <i class="fa fa-plus"></i>
-        <span>Add</span>
-      </button>
-      }
       @if(allowCSVExport){
       <button type="button" class="btn btn-outline-success grid-action-btn" (click)="exportTableData()"
         title="Export to Excel">
