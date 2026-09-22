@@ -9,6 +9,7 @@ import {
 import { ColumnDefinition } from "tabulator-tables";
 
 import {
+  ApplicationModules,
   ApplicationTableConstants,
   NavigationURLs
 } from "../../../../utils/application-constants";
@@ -62,13 +63,18 @@ export class TransactionBalanceComponent
     private cacheService: CacheService,
     private loaderService: LoaderService,
     public globalService: GlobalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
 
     this.initialized = true;
 
     this.loadGrid();
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.EXPENSE) {
+        this.loadGrid();
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -112,13 +118,13 @@ export class TransactionBalanceComponent
 
     const request:
       ExpenseFilterRequest = {
-        fromDate: this.filter.fromDate,
-        toDate: this.filter.toDate,
-        minAmount: this.filter.minAmount ?? 0,
-        maxAmount: this.filter.maxAmount ?? 0,
-        sourceOrReason:
-          this.filter.sourceOrReason ?? ""
-      };
+      fromDate: this.filter.fromDate,
+      toDate: this.filter.toDate,
+      minAmount: this.filter.minAmount ?? 0,
+      maxAmount: this.filter.maxAmount ?? 0,
+      sourceOrReason:
+        this.filter.sourceOrReason ?? ""
+    };
 
     this.transactionService
       .getBalanceList(request)
@@ -139,7 +145,7 @@ export class TransactionBalanceComponent
 
           this.cacheService.set(
             NavigationURLs.EXPENSE_BALANCE_LIST +
-              "_AccountColumns",
+            "_AccountColumns",
             this.tableData[0]?.accountData
           );
 
@@ -176,8 +182,8 @@ export class TransactionBalanceComponent
         const values =
           item.accountData
             ? Object.values(item.accountData)
-                .map((x: any) => Number(x))
-                .filter(x => !isNaN(x))
+              .map((x: any) => Number(x))
+              .filter(x => !isNaN(x))
             : [];
 
         const minMatch =
@@ -337,8 +343,8 @@ export class TransactionBalanceComponent
     return `
       <span style="
         color:${value > 0
-          ? "var(--success-color)"
-          : "var(--danger-color)"};
+        ? "var(--success-color)"
+        : "var(--danger-color)"};
         font-weight:bold">
         ${formatted}
       </span>
@@ -372,8 +378,8 @@ export class TransactionBalanceComponent
     return `
       <span style="
         color:${Number(value) > 0
-          ? "var(--success-color)"
-          : "var(--danger-color)"};
+        ? "var(--success-color)"
+        : "var(--danger-color)"};
         font-weight:bold">
         ${formatted}
       </span>

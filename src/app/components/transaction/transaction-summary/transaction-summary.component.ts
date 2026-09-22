@@ -11,6 +11,7 @@ import {
 import { ColumnDefinition } from "tabulator-tables";
 
 import {
+  ApplicationModules,
   ApplicationTableConstants,
   NavigationURLs
 } from "../../../../utils/application-constants";
@@ -81,6 +82,12 @@ export class TransactionSummaryComponent
     this.initialized = true;
 
     this.loadGrid();
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.EXPENSE) {
+        this.loadGrid();
+      }
+    });
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -488,7 +495,6 @@ export class TransactionSummaryComponent
   }
 
   addTransaction(): void {
-    debugger;
     this.openTransaction.emit("");
   }
 

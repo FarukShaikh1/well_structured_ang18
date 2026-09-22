@@ -208,7 +208,7 @@ export class DayComponent implements OnInit, OnDestroy {
         sorter: "string",
         minWidth: 150,
         printWidth: '10%',
-                headerFilter: "input",
+        headerFilter: "input",
         headerFilterPlaceholder: "Search name"
       },
       {
@@ -216,7 +216,7 @@ export class DayComponent implements OnInit, OnDestroy {
         field: "relationName",
         minWidth: 120,
         printWidth: '10%',
-                headerFilter: "input",
+        headerFilter: "input",
         headerFilterPlaceholder: "Search relation"
       },
       {
@@ -225,7 +225,7 @@ export class DayComponent implements OnInit, OnDestroy {
         sorter: "alphanum",
         minWidth: 200,
         printWidth: '10%',
-                headerFilter: "input",
+        headerFilter: "input",
         headerFilterPlaceholder: "Search email"
       },
       {
@@ -234,7 +234,7 @@ export class DayComponent implements OnInit, OnDestroy {
         sorter: "alphanum",
         minWidth: 120,
         printWidth: '10%',
-                headerFilter: "input",
+        headerFilter: "input",
         headerFilterPlaceholder: "Search mobile"
       },
       {
@@ -243,7 +243,7 @@ export class DayComponent implements OnInit, OnDestroy {
         sorter: "alphanum",
         minWidth: 200,
         printWidth: '20%',
-                headerFilter: "input",
+        headerFilter: "input",
         headerFilterPlaceholder: "Search name"
       },
       {
@@ -252,7 +252,7 @@ export class DayComponent implements OnInit, OnDestroy {
         sorter: "alphanum",
         minWidth: 120,
         printWidth: '5%',
-                headerFilter: "input",
+        headerFilter: "input",
         headerFilterPlaceholder: "Search name"
       },
       {

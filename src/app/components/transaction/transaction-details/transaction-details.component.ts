@@ -559,6 +559,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
             this.isSaving = false;
             this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
             this.addTransactionSuggestion(request);
+            this.loaderService.hideLoader();
             return res.data;
           }
         },
@@ -586,6 +587,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
             this.isSaving = false;
             this.globalService.triggerGridReload(ApplicationModules.EXPENSE);
             this.addTransactionSuggestion(request);
+            this.loaderService.hideLoader();
             return res.data;
           }
         },

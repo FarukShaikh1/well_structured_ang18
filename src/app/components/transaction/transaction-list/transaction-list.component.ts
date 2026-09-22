@@ -13,6 +13,7 @@ import { ColumnDefinition } from "tabulator-tables";
 import {
   ActionConstant,
   ApplicationConstants,
+  ApplicationModules,
   ApplicationTableConstants,
   NavigationURLs
 } from "../../../../utils/application-constants";
@@ -86,6 +87,12 @@ export class TransactionListComponent
     this.initialized = true;
 
     this.loadGrid();
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.EXPENSE) {
+        this.loadGrid();
+      }
+    });
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -120,9 +127,9 @@ export class TransactionListComponent
 
       this.loadColumnConfiguration();
 
-      this.loaderService.hideLoader();
 
       this.applyFilters();
+      this.loaderService.hideLoader();
 
       return;
     }
