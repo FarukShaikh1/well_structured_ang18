@@ -169,7 +169,7 @@ export class ConfigurationDetailsComponent {
             .click();
 
           this.loaderService.hideLoader();
-          this.globalService.triggerGridReload(ApplicationModules.USER);
+          this.globalService.triggerGridReload(ApplicationModules.USERS);
         } else {
           this.toaster.showMessage(result?.message, 'error', 8000);
           this.loaderService.hideLoader();

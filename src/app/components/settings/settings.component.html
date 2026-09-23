@@ -19,28 +19,34 @@
 
     <!-- Tabs -->
     <div class="app-tabs">
+        @if(accountModulePermissions.view){
         <button type="button" class="app-tab" [class.active]="activeTab === 'accounts'"
             (click)="activeTab = 'accounts'">
             <i class="bi bi-person-check"></i>
             <span>Accounts</span>
         </button>
-
+        }
+        @if(occasionTypePermissions.view){
         <button type="button" class="app-tab" [class.active]="activeTab === 'occasionType'"
             (click)="activeTab = 'occasionType'">
             <i class="bi bi-people"></i>
             <span>Occasion Type</span>
         </button>
-
+        }
+        @if(relationsPermissions.view){
         <button type="button" class="app-tab" [class.active]="activeTab === 'relations'"
             (click)="activeTab = 'relations'">
             <i class="bi bi-shield-lock"></i>
             <span>Relations</span>
         </button>
+        }
+        @if(transactionCategoriesPermissions.view){
         <button type="button" class="app-tab" [class.active]="activeTab === 'transactionCategories'"
             (click)="activeTab = 'transactionCategories'">
             <i class="bi bi-shield-lock"></i>
             <span>Transaction Categories</span>
         </button>
+        }
     </div>
 
 
@@ -48,7 +54,7 @@
     <div class="app-tab-content">
 
         <!-- Available Users -->
-        @if (activeTab === 'accounts') {
+        @if (activeTab === 'accounts' && accountModulePermissions.view) {
         @if(globalService.isAccessible(ActionConstant.ADD) ||
         globalService.isAccessible(ActionConstant.EDIT)){
         }
@@ -60,7 +66,7 @@
             (refreshClicked)="refreshData()" [gridName]="UserConfig.ACCOUNT">
         </app-tabulator-grid>
         }
-        @if (activeTab === 'occasionType') {
+        @if (activeTab === 'occasionType' && occasionTypePermissions.view) {
         @if(globalService.isAccessible(ActionConstant.ADD) ||
         globalService.isAccessible(ActionConstant.EDIT)){
         }
@@ -72,7 +78,7 @@
             (refreshClicked)="refreshData()" [gridName]="UserConfig.OCCASION_TYPE">
         </app-tabulator-grid>
         }
-        @if (activeTab === 'relations') {
+        @if (activeTab === 'relations' && relationsPermissions.view) {
         @if (globalService.isAccessible(ActionConstant.ADD) ||
         globalService.isAccessible(ActionConstant.EDIT))
         {
@@ -85,7 +91,7 @@
             (refreshClicked)="refreshData()" [gridName]="UserConfig.RELATION">
         </app-tabulator-grid>
         }
-        @if (activeTab === 'transactionCategories') {
+        @if (activeTab === 'transactionCategories' && transactionCategoriesPermissions.view) {
         @if (globalService.isAccessible(ActionConstant.ADD) ||
         globalService.isAccessible(ActionConstant.EDIT))
         {

@@ -102,7 +102,7 @@ export const routes: Routes = [
                 .then(m => m.UserListComponent),
 
             data: {
-              moduleName: ApplicationModules.USER
+              moduleName: ApplicationModules.USERS
             }
           },
           // {

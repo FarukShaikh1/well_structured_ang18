@@ -90,11 +90,11 @@ export const TransactionTabs = {
 }
 
 export enum CollectionTabs {
-  GALLERY_VIEW = 'Gallery',
-  SUMMARY_VIEW = 'Summary',
-  DATA_VIEW = 'Data',
-  NEWS_VIEW = 'Article in News',
-  OWNER_VIEW = 'About Owner'
+    GALLERY_VIEW = 'Gallery',
+    SUMMARY_VIEW = 'Summary',
+    DATA_VIEW = 'Data',
+    NEWS_VIEW = 'Article in News',
+    OWNER_VIEW = 'About Owner'
 }
 
 export const DdlConfig = {
@@ -174,7 +174,7 @@ export const NavigationURLs = {
     PLANS: '/home/plans',
     CREDENTIALS: '/home/credentials',
     UNDER_DEVELOPMENT: '/site-under-development',
-    MOBILE_MENU : '/mobile-menu',
+    MOBILE_MENU: '/mobile-menu',
 
 };
 
@@ -205,7 +205,7 @@ export const RoutePath = {
     CREDENTIALS: 'credentials',
     UNDER_DEVELOPMENT: 'site-under-development',
     FAMILY_GRAPH: 'family-graph',
-    MOBILE_MENU : 'mobile-menu',
+    MOBILE_MENU: 'mobile-menu',
 };
 
 export const RoutePathTitles = {
@@ -235,7 +235,7 @@ export const RoutePathTitles = {
     CREDENTIALS: 'Credentials',
     UNDER_DEVELOPMENT: 'Site Under Development',
     FAMILY_GRAPH: 'Family Tree',
-    MOBILE_MENU : '/mobile-menu',
+    MOBILE_MENU: '/mobile-menu',
 };
 
 
@@ -368,32 +368,25 @@ export const Messages = {
 };
 
 export const ApplicationModules = {
-    EXPENSE: 'Transaction',
-    DAY: 'Day',
+    EXPENSES: 'Expenses',
+    DAY: 'Occasions',
     COIN_NOTE_COLLECTION: 'Coin Note Collection',
-    USER: 'AUTH',
+    USERS: 'Users',
     DOCUMENT: 'Documents',
     USER_PERMISSIONS: 'userPermissions',
     SETTINGS: 'Settings',
-    PENDING_APPROVAL:'Pending Approval',
-// USERS:'Users',
-// EXPENSES:'Expenses',
-// Documents
-// Settings
-// PendingUsers
-// ActiveUsers
-// UserPermissions
-// Accounts
-// OccasionTypes
-// Relations
-// TransactionCategories
-// FoodMenu
-// DailyRoutine
-// MonthlyBudget
-// Credentials
-// Occasions
-// Family
-// Role
+    PENDING_USERS: 'PendingUsers',
+    ACCOUNTS: 'Accounts',
+    ACTIVE_USERS: 'ActiveUsers',
+    OCCASION_TYPES: ' OccasionTypes',
+    RELATIONS: 'Relations',
+    TRANSACTION_CATEGORIES: 'TransactionCategories',
+    FOOD_MENU: 'FoodMenu',
+    DAILY_ROUTINE: 'DailyRoutine',
+    MONTHLY_BUDGET: 'MonthlyBudget',
+    CREDENTIALS: 'Credentials',
+    FAMILY: 'Family',
+    ROLE: 'Role'
 };
 
 export const ActionConstant = {

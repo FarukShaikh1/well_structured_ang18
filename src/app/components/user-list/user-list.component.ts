@@ -89,21 +89,22 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activeUserModulePermissions = this.globalService.getModulePermission(ApplicationModules.USER);
+    debugger;
+    this.activeUserModulePermissions = this.globalService.getModulePermission(ApplicationModules.USERS);
 
-    this.pendingApprovalsModulePermissions = this.globalService.getModulePermission(ApplicationModules.PENDING_APPROVAL);
+    this.pendingApprovalsModulePermissions = this.globalService.getModulePermission(ApplicationModules.PENDING_USERS);
     this.permissionModulePermissions = this.globalService.getModulePermission(ApplicationModules.USER_PERMISSIONS);
     this.settingsModulePermissions = this.globalService.getModulePermission(ApplicationModules.SETTINGS);
     this.columnConfiguration();
 
     this.loadGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
-      if (listName === ApplicationModules.USER) {
+      if (listName === ApplicationModules.USERS) {
         this.loadGrid();
       }
     });
     this.globalService.refreshList$.subscribe((listName: string) => {
-      if (listName === ApplicationModules.USER) {
+      if (listName === ApplicationModules.USERS) {
         this.applySearch();
       }
     });

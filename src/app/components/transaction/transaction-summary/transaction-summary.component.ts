@@ -83,7 +83,7 @@ export class TransactionSummaryComponent
 
     this.loadGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
-      if (listName === ApplicationModules.EXPENSE) {
+      if (listName === ApplicationModules.EXPENSES) {
         this.loadGrid();
       }
     });

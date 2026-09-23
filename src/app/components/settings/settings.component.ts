@@ -87,6 +87,10 @@ export class SettingsComponent {
   selectedId: string = '';
   selectedConfig: string = '';
   selectedUserId: string = '';
+  accountModulePermissions: any;
+  occasionTypePermissions: any;
+  relationsPermissions: any;
+  transactionCategoriesPermissions: any;
 
   constructor(
     private configurationService: ConfigurationService,
@@ -98,6 +102,10 @@ export class SettingsComponent {
   ) { }
 
   ngOnInit() {
+    this.accountModulePermissions = this.globalService.getModulePermission(ApplicationModules.ACCOUNTS);
+    this.occasionTypePermissions = this.globalService.getModulePermission(ApplicationModules.OCCASION_TYPES);
+    this.relationsPermissions = this.globalService.getModulePermission(ApplicationModules.RELATIONS);
+    this.transactionCategoriesPermissions = this.globalService.getModulePermission(ApplicationModules.TRANSACTION_CATEGORIES);
     var data = this.localStorageService.getLoggedInUserData();
     this.selectedUserId = data?.id;
     if (data.roleName === 'Super Admin') {

@@ -112,7 +112,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
     this.globalService.reloadGrid$.subscribe(
       (listName: string) => {
 
-        if (listName === ApplicationModules.EXPENSE) {
+        if (listName === ApplicationModules.EXPENSES) {
 
           this.clearFilters();
 
@@ -128,7 +128,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
     this.globalService.refreshList$.subscribe(
       (listName: string) => {
 
-        if (listName === ApplicationModules.EXPENSE) {
+        if (listName === ApplicationModules.EXPENSES) {
 
           this.filter = {
             ...this.filter
