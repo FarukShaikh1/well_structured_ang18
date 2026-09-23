@@ -79,7 +79,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // Module
   // =========================================
 
-  moduleList:any;// ModuleResponse[] = [];
+  moduleList: any;// ModuleResponse[] = [];
 
   // =========================================
   // Profile
@@ -145,24 +145,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.moduleList = this.localStorageService.getLoggedInUserPermissions() || [];
 
-    this.moduleList = this.moduleList.filter((x:any) => x.route !== "" && x.view);
+    this.moduleList = this.moduleList.filter((x: any) => x.route !== "" && x.view);
 
     let allPermissions = this.localStorageService.getUserPermission();
-    debugger;
-
 
     if (this.moduleList?.length === 0) {
 
-      this.globalService
-        .getUserPermissionData()
+      this.globalService.getUserPermissionData()
         .subscribe({
-
           next: (result) => {
-
-            console.log(
-              "Permission result:",
-              result
-            );
+            console.log("Permission result:", result);
 
             this.moduleList = this.localStorageService.getLoggedInUserPermissions() || [];
 
