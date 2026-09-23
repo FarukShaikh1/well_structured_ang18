@@ -25,12 +25,12 @@ export class SettingsComponent {
   @ViewChild(ConfigurationDetailsComponent) configDetailsComponent!: ConfigurationDetailsComponent;
   @ViewChild('searchInput') searchInput!: ElementRef;
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = true;
+  public allowCSVExport = false;
   public allowPrint = true;
-  public allowAdd = true;
+  public allowAdd = false;
   public allowRefresh = true;
   public filterColumns: ColumnDefinition[] = [];
-  activeTab: 'accounts' | 'occasionType' | 'relations' | 'transactionCategories'= 'occasionType';
+  activeTab: 'accounts' | 'occasionType' | 'relations' | 'transactionCategories' = 'occasionType';
   searchText: string = '';
   noDataMessage = UIStrings.COMMON.NO_DATA;
   noMatchingDataMessage = UIStrings.COMMON.NO_DATA;

@@ -2,25 +2,16 @@
 
 
   <!-- ================= TABS ================= -->
-
   <div class="app-tabs">
-
     <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EXPENSE_LIST"
       (click)="goToTab(TransactionTabs.EXPENSE_LIST)">
-
       <i class="fa fa-list"></i>
-
       <span>Transaction List</span>
-
     </button>
-
     <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.EXPENSE_SUMMARY"
       (click)="goToTab(TransactionTabs.EXPENSE_SUMMARY)">
-
       <i class="fa fa-table"></i>
-
       <span>Transaction Summary</span>
-
     </button>
 
     <button type="button" class="app-tab" [class.active]="activeTab === TransactionTabs.BALANCE_SUMMARY"
@@ -67,159 +58,98 @@
       <span>Monthly Budget</span>
 
     </button>
-
   </div>
   <div class="table-container mb-4">
     <div class="container-fluid">
-
       @if (
       activeTab !== TransactionTabs.EMERGENCY_RETURN_REPORT &&
       activeTab !== TransactionTabs.EXPENSE_BUDGET
       ) {
-
       <div class="row pb-2 pt-2" style="flex-wrap: wrap;">
-
         <!-- From Date -->
         <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
-
           From Date:
-
           <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="fromDate" />
-
         </div>
-
         <!-- To Date -->
         <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
-
           To Date:
-
           <input class="form-control form-control-lg text-dark bg-transparent" type="date" id="toDate" />
-
         </div>
-
         <!-- Minimum Amount -->
         <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
-
           <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-
             <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round" />
-
           </svg>
-
           Min Amount
-
           <input #minInput class="form-control form-control-lg text-dark bg-transparent" type="text"
             placeholder="Min Amount" (input)="filterGridByMinAmount($event)"
             (keydown)="globalService.validateAmount($event)" />
-
         </div>
-
         <!-- Maximum Amount -->
         <div class="col-6 col-sm-3 col-md-3 col-lg-2 pt-2">
-
           <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-
             <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round" />
-
           </svg>
-
           Max Amount
-
           <input #maxInput class="form-control form-control-lg text-dark bg-transparent" type="text"
             placeholder="Max Amount" (input)="filterGridByMaxAmount($event)"
             (keydown)="globalService.validateAmount($event)" />
-
         </div>
-
         <!-- Search -->
         <div class="col-6 col-sm-6 col-md-6 col-lg-2 pt-2">
-
           <svg class="icon-24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-
             <path d="M4 4H20L13 13V19L11 20V13L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round" />
-
           </svg>
-
           Get From/Paid To
-
           <input #searchInput class="form-control form-control-lg text-dark bg-transparent" type="text"
             placeholder="Search Something" (keyup)="filterGridBySearch($event)" />
-
         </div>
-
       </div>
       }
     </div>
     <!-- ================= TAB CONTENT ================= -->
-
     @switch (activeTab) {
-
     @case (TransactionTabs.EXPENSE_LIST) {
-
     <app-transaction-list [filter]="filter" [allowAdd]="allowAdd" (openTransaction)="transactionDetails($event)"
       (deleteTransactionEvent)="deleteTransaction($event)">
     </app-transaction-list>
-
     }
-
     @case (TransactionTabs.EXPENSE_SUMMARY) {
-
     <app-transaction-summary [filter]="filter" [allowAdd]="allowAdd" (openTransaction)="transactionDetails($event)"
       (deleteTransactionEvent)="deleteTransaction($event)">
     </app-transaction-summary>
-
     }
-
     @case (TransactionTabs.BALANCE_SUMMARY) {
-
     <app-transaction-balance [filter]="filter">
     </app-transaction-balance>
-
     }
-
     @case (TransactionTabs.EXPENSE_REPORT) {
-
     <app-transaction-report [filter]="filter" [reportType]="reportType">
     </app-transaction-report>
-
     }
-
     @case (TransactionTabs.CATEGORY_WISE_REPORT) {
-
     <app-category-wise-report [filter]="filter" [reportType]="reportType">
     </app-category-wise-report>
-
     }
-
     @case (TransactionTabs.EMERGENCY_RETURN_REPORT) {
-
     <app-emergency-return-report>
     </app-emergency-return-report>
-
     }
-
     @case (TransactionTabs.EXPENSE_BUDGET) {
-
     <app-budget></app-budget>
-
     }
-
     }
-
     <!-- ================= COMMON POPUPS ================= -->
-
     <app-transaction-details [lastTransactionDate]="lastTransactionDate">
     </app-transaction-details>
-
     <app-confirmation-dialog (outputAction)="handleConfirmResult($event)">
     </app-confirmation-dialog>
-
     <button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup"
       style="display:none">
     </button>
-
   </div>
 </div>

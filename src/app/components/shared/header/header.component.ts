@@ -9,12 +9,10 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { formatDistanceToNow } from "date-fns";
-
 import { GlobalService } from "../../../services/global/global.service";
 import { LocalStorageService } from "../../../services/local-storage/local-storage.service";
 import { LogoutService } from "../../../services/logout/logout.service";
 import { NotificationService } from "../../../services/notification/notification.service";
-
 import {
   ActionConstant,
   ApplicationConstants,
@@ -23,7 +21,6 @@ import {
   NavigationURLs,
   RoutePathTitles
 } from "../../../../utils/application-constants";
-
 import { ModuleResponse } from "../../../interfaces/module-response";
 import { SystemNotifications } from "../../../interfaces/system-notifications";
 import { ConfirmBoxComponent } from "../confirm-box/confirm-box.component";
@@ -46,61 +43,43 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild(ConfirmBoxComponent)
   confirmationPopupComponent!: ConfirmBoxComponent;
 
-
   // =========================================
   // Notification
   // =========================================
 
   showNotifications = false;
-
   NOTIFICATION_INITIAL_PAGE_NO = 1;
   NOTIFICATION_INITIAL_PAGE_SIZE = 5;
-
   notifications: SystemNotifications[] = [];
-
   notificationTotalUnreadCount: number = 0;
-
   showNotificationList: boolean = false;
-
   notificationsCount: number = 0;
-
 
   // =========================================
   // Application
   // =========================================
 
   Modules = ApplicationModules;
-
   ActionConstant = ActionConstant;
-
   NavigationURLs = NavigationURLs;
-
   roles = ApplicationRoles;
-
   ApplicationRoles = ApplicationRoles;
-
 
   // =========================================
   // Login / User
   // =========================================
 
   loginDisplay = false;
-
   alreadyLoggedIn: boolean = true;
-
   loggedInUsername: string = "";
-
   loggedInUserName: string = "";
-
   userNameInitials: string = "";
-
 
   // =========================================
   // Module
   // =========================================
 
-  moduleList: ModuleResponse[] = [];
-
+  moduleList:any;// ModuleResponse[] = [];
 
   // =========================================
   // Profile
@@ -110,16 +89,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     "../../../assets/icons/user1icon.png";
 
   thumbnailUrl: string = "";
-
   ImageUrl: string = "";
-
 
   // =========================================
   // Other
   // =========================================
 
   isDarkMode: boolean = false;
-
 
   constructor(
     private router: Router,
@@ -135,9 +111,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         this.alreadyLoggedIn =
           this.localStorageService.isAuthenticated();
-
       });
-
   }
 
 
@@ -146,28 +120,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // =========================================
 
   async ngOnInit() {
-
     this.setLoginDisplay();
-
-    this.alreadyLoggedIn =
-      this.localStorageService.isAuthenticated();
-
-    this.loggedInUserName =
-      this.getLoggedInUserName();
-
-    this.userNameInitials =
-      this.getUserNameInitials();
-
-    this.thumbnailUrl =
-      this.localStorageService
-        .getLoggedInUserData()
-        ?.thumbnailPathSasUrl || "";
-
-    this.ImageUrl =
-      this.localStorageService
-        .getLoggedInUserData()
-        ?.imagePathSasUrl || "";
-
+    this.alreadyLoggedIn = this.localStorageService.isAuthenticated();
+    this.loggedInUserName = this.getLoggedInUserName();
+    this.userNameInitials = this.getUserNameInitials();
+    this.thumbnailUrl = this.localStorageService.getLoggedInUserData()?.thumbnailPathSasUrl || "";
+    this.ImageUrl = this.localStorageService.getLoggedInUserData()?.imagePathSasUrl || "";
     await this.getModuleList();
   }
 
@@ -185,14 +143,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   getModuleList() {
 
-    this.moduleList =
-      this.localStorageService
-        .getLoggedInUserPermissions() || [];
+    this.moduleList = this.localStorageService.getLoggedInUserPermissions() || [];
 
-    this.moduleList =
-      this.moduleList.filter(
-        x => x.route !== ""
-      );
+    this.moduleList = this.moduleList.filter((x:any) => x.route !== "" && x.view);
+
+    let allPermissions = this.localStorageService.getUserPermission();
+    debugger;
 
 
     if (this.moduleList?.length === 0) {
@@ -208,42 +164,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
               result
             );
 
-            this.moduleList =
-              this.localStorageService
-                .getLoggedInUserPermissions() || [];
+            this.moduleList = this.localStorageService.getLoggedInUserPermissions() || [];
 
-            this.moduleList =
-              this.moduleList.filter(
-                (module: any) => {
-
-                  // Expenses require View + Add
-                  if (
-                    module.moduleName ===
-                    RoutePathTitles.EXPENSES
-                  ) {
-
-                    return (
-                      module.view === true &&
-                      module.add === true
-                    );
-
-                  }
-
-                  // Other modules require View
-                  return module.view === true;
-
-                }
-              );
-
+            this.moduleList = this.moduleList.filter((module: any) => {
+              // Expenses require View + Add
+              if (module.moduleName === RoutePathTitles.EXPENSES) {
+                return (module.view === true && module.add === true);
+              }
+              // Other modules require View
+              return module.view === true;
+            }
+            );
           },
 
           error: (error) => {
-
-            console.error(
-              "Permission error:",
-              error
-            );
-
+            console.error("Permission error:", error);
           },
 
           complete: () => {

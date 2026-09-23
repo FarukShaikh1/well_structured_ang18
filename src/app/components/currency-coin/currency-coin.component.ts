@@ -6,11 +6,8 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-
 import { CellComponent } from 'tabulator-tables';
-
 import { API_URL } from '../../../utils/api-url';
-
 import {
   ActionConstant,
   ApplicationConstantHtml,
@@ -21,36 +18,27 @@ import {
   NavigationURLs,
   UIStrings
 } from '../../../utils/application-constants';
-
 import { TruncatePipe } from '../../common/truncate.pipe';
-
 import { AssetService } from '../../services/asset/asset.service';
 import { CacheService } from '../../services/cache/cache.service';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
-
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component';
 import { MyProfileComponent } from '../my-profile/my-profile.component';
-
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-
 import {
   PrintColumnDefinition,
   TabulatorGridComponent
 } from '../shared/tabulator-grid/tabulator-grid.component';
-
 import { ToasterComponent } from '../shared/toaster/toaster.component';
-
+import { ModulePermission } from '../../interfaces/module-permission';
 
 @Component({
   selector: 'app-currency-coin',
-
   standalone: true,
-
   templateUrl: './currency-coin.component.html',
-
   imports: [
     CommonModule,
     TabulatorGridComponent,
@@ -60,116 +48,77 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
     TruncatePipe,
     MyProfileComponent
   ],
-
   styleUrls: ['./currency-coin.component.scss']
 })
 export class CurrencyCoinComponent implements OnInit, OnDestroy {
-
   @ViewChild(ToasterComponent)
   toaster!: ToasterComponent;
-
   @ViewChild(CurrencyCoinDetailsComponent)
   currencyCoinDetailsComponent!: CurrencyCoinDetailsComponent;
-
   @ViewChild(ConfirmationDialogComponent, { static: false })
   confirmationDialog!: ConfirmationDialogComponent;
-
   @ViewChild("searchInput")
   searchInput!: ElementRef;
-
 
   /* =========================================================
      FILTERS
      ========================================================= */
 
   selectedCountry: string[] = [];
-
   selectedType: string[] = [];
-
   typeList: any;
-
   filteredTypeList: any;
-
   lableForCountryDropDown: string = '';
-
   lableForTypeDropDown: string = '';
-
 
   /* =========================================================
      CONSTANTS
      ========================================================= */
 
   ActionConstant = ActionConstant;
-
   basePath: string = API_URL.ATTACHMENT;
-
 
   /* =========================================================
      SEARCH
      ========================================================= */
 
   searchText: string = '';
-
-
   /* =========================================================
      DETAILS
      ========================================================= */
-
   id: string = '';
-
   assetId: string = '';
-
   fullscreenImage: string = "";
-
 
   /* =========================================================
      TABLE DATA
      ========================================================= */
 
   public tableData: Record<string, unknown>[] = [];
-
   public filteredTableData: Record<string, unknown>[] = [];
-
   public filteredCoinList: any[] = [];
-
   public columnConfig: PrintColumnDefinition[] = [];
-
 
   /* =========================================================
      SUMMARY DATA
      ========================================================= */
-
   public summaryTableData: Record<string, unknown>[] = [];
-
   public filteredSummaryTableData: Record<string, unknown>[] = [];
-
   public summaryTableColumnConfig: PrintColumnDefinition[] = [];
-
 
   /* =========================================================
      TABLE SETTINGS
      ========================================================= */
-
-  public paginationSize =
-    ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-
+  public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   public allowCSVExport = true;
-
   public allowPrint = true;
-
   public allowAdd = false;
-
   public allowRefresh = true;
-
   public filterColumns: PrintColumnDefinition[] = [];
-
   public allowColumnFilters = true;
-
-
   /* =========================================================
-     VIEW / TABS
-     ========================================================= */
-
+    VIEW / TABS
+    ========================================================= */
   public viewMode:
     | 'grid'
     | 'gallery'
@@ -178,147 +127,101 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
     | 'owner'
     = 'gallery';
 
-
-  public selectedTab: string =
-    CollectionTabs.GALLERY_VIEW;
-
+  public selectedTab: string = CollectionTabs.GALLERY_VIEW;
 
   /* =========================================================
      LOADING
      ========================================================= */
-
   loading = false;
-
 
   /* =========================================================
      IMAGE VIEWER
      ========================================================= */
-
   currentIndex = 0;
-
   scale = 1;
-
   transformStyle = "scale(1)";
-
   slideInterval: any;
-
   touchStartX = 0;
-
   touchEndX = 0;
-
+  permissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
 
   /* =========================================================
      CONSTRUCTOR
      ========================================================= */
-
   constructor(
     private currencyCoinService: CurrencyCoinService,
-
     private _assetService: AssetService,
-
     private localStorageService: LocalStorageService,
-
     public globalService: GlobalService,
-
     private cacheService: CacheService,
-
     private loaderService: LoaderService
   ) { }
-
 
   /* =========================================================
      INITIALIZATION
      ========================================================= */
-
   async ngOnInit() {
-
     this.allowAdd =
       this.globalService.isAccessible(ActionConstant.ADD);
-
     this.loaderService.showLoader(
       UIStrings.LOADERS.LOADING_CURRENCY_DATA
     );
-
     this.columnConfiguration();
-
 
     this.typeList =
       this.localStorageService.getCommonListItems(
         DdlConfig.COIN_TYPES
       );
 
-
     if (!this.typeList || this.typeList.length === 0) {
-
       this.globalService.setValuesInLocalStorage();
-
       setTimeout(() => {
-
         this.typeList =
           this.localStorageService.getCommonListItems(
             DdlConfig.COIN_TYPES
           );
-
       }, 1000);
     }
 
-
     this.globalService.reloadGrid$.subscribe(
       (listName: string) => {
-
         if (
           listName ===
           ApplicationModules.COIN_NOTE_COLLECTION
         ) {
-
           this.loadGrid();
-
           this.applyFilters();
         }
-
       }
     );
 
-
     this.globalService.refreshList$.subscribe(() => { });
 
-
     await this.loadGrid();
-
     this.LoadSummaryGrid();
-
   }
-
 
   /* =========================================================
      IMAGE BLUR
      ========================================================= */
-
   removeBlur(event: Event) {
-
     const img =
       event.target as HTMLImageElement;
-
     img.classList.remove('blur-load');
   }
-
 
   /* =========================================================
      FULLSCREEN IMAGE
      ========================================================= */
-
   openFullscreenImage(imageUrl: string) {
-
     this.currentIndex =
       this.filteredCoinList.findIndex(
         x => x.imagePathSasUrl === imageUrl
       );
 
-
     if (this.currentIndex === -1) {
       this.currentIndex = 0;
     }
-
 
     const modal =
       new (window as any).bootstrap.Modal(
@@ -327,35 +230,25 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         )
       );
 
-
     this.resetZoom();
-
     modal.show();
-
     this.enableKeyboard();
   }
 
-
   nextImage() {
-
     if (!this.filteredCoinList.length) {
       return;
     }
-
     this.currentIndex =
       (this.currentIndex + 1) %
       this.filteredCoinList.length;
-
     this.resetZoom();
   }
 
-
   prevImage() {
-
     if (!this.filteredCoinList.length) {
       return;
     }
-
     this.currentIndex =
       (
         this.currentIndex -
@@ -363,127 +256,90 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         this.filteredCoinList.length
       ) %
       this.filteredCoinList.length;
-
     this.resetZoom();
   }
-
 
   jumpTo(index: number) {
-
     this.currentIndex = index;
-
     this.resetZoom();
   }
-
 
   /* =========================================================
      ZOOM
      ========================================================= */
-
   zoomIn() {
-
     this.scale += 0.1;
-
     this.transformStyle =
       `scale(${this.scale})`;
   }
 
 
   zoomOut() {
-
     if (this.scale > 0.2) {
       this.scale -= 0.1;
     }
-
     this.transformStyle =
       `scale(${this.scale})`;
   }
 
-
   resetZoom() {
-
     this.scale = 0.8;
-
     this.transformStyle =
       "scale(0.8)";
   }
 
-
   /* =========================================================
      MOBILE SWIPE
      ========================================================= */
-
   touchStart(event: any) {
-
     this.touchStartX =
       event.changedTouches[0].screenX;
   }
 
-
   touchMove(event: any) {
-
     this.touchEndX =
       event.changedTouches[0].screenX;
   }
 
-
   touchEnd() {
-
     if (
       this.touchEndX <
       this.touchStartX - 50
     ) {
-
       this.nextImage();
-
     }
-
 
     if (
       this.touchEndX >
       this.touchStartX + 50
     ) {
-
       this.prevImage();
-
     }
   }
-
 
   /* =========================================================
      KEYBOARD
      ========================================================= */
-
   enableKeyboard() {
-
     document.onkeydown = (e: any) => {
-
       if (e.key === "ArrowRight") {
         this.nextImage();
       }
-
       if (e.key === "ArrowLeft") {
         this.prevImage();
       }
-
       if (e.key === "Escape") {
-
         document
           .getElementById("imageViewerModal")
           ?.click();
-
       }
-
     };
   }
-
 
   /* =========================================================
      SLIDESHOW
      ========================================================= */
-
   startSlideshow() {
-
     this.slideInterval =
       setInterval(
         () => this.nextImage(),
@@ -491,67 +347,47 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
       );
   }
 
-
   stopSlideshow() {
-
     clearInterval(this.slideInterval);
   }
-
 
   /* =========================================================
      DEFAULT RARE COINS
      ========================================================= */
-
   selectDefaultRareCoins() {
-
     this.selectedType = [];
-
     this.selectedType.push(
       'Indian Rare Coin'
     );
-
     this.lableForTypeDropDown =
       'Indian Rare Coin';
-
     this.applyFilters();
   }
-
 
   /* =========================================================
      RELOAD
      ========================================================= */
-
   async reloadData() {
-
     localStorage.removeItem(
       NavigationURLs.CURRENCY_LIST
     );
-
     localStorage.removeItem(
       NavigationURLs.CURRENCY_SUMMARY
     );
-
     localStorage.removeItem(
       NavigationURLs.CURRENCY_GALLERY
     );
 
-
     this.LoadSummaryGrid();
-
     await this.loadGrid();
-
     this.applyFilters();
   }
-
 
   /* =========================================================
      COLUMN CONFIGURATION
      ========================================================= */
-
   columnConfiguration() {
-
     this.columnConfig = [
-
       {
         title: UIStrings.COLUMN_TITLES.COIN_NOTE_NAME,
         field: "coinNoteName",
@@ -560,9 +396,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         printWidth: "10%",
         headerFilter: "input",
         headerFilterPlaceholder: "Search name"
-
       },
-
       {
         title: UIStrings.COLUMN_TITLES.COUNTRY,
         field: "countryName",
@@ -571,9 +405,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         printWidth: "10%",
         headerFilter: "input",
         headerFilterPlaceholder: "Search country"
-
       },
-
       {
         title: UIStrings.COLUMN_TITLES.REAL_VALUE,
         field: "actualValue",
@@ -588,9 +420,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         printWidth: "10%",
         headerFilter: "number",
         headerFilterPlaceholder: "Search by value"
-
       },
-
       {
         title: UIStrings.COLUMN_TITLES.INDIAN_VALUE,
         field: "indianValue",
@@ -606,9 +436,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         printWidth: "10%",
         headerFilter: "number",
         headerFilterPlaceholder: "Search by indian value"
-
       },
-
       {
         title: UIStrings.COLUMN_TITLES.OTHER_DETAILS,
         field: "description",
@@ -618,7 +446,6 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         headerFilter: "input",
         headerFilterPlaceholder: "Search by description"
       },
-
       {
         title: 'ExtractedText',
         field: "extractedText",
@@ -626,7 +453,6 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         minWidth: 200,
         printWidth: "20%"
       },
-
       {
         title: "GeneratedDescription",
         field: "generatedDescription",
@@ -634,80 +460,58 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         minWidth: 200,
         print: false
       },
-
       {
         title: UIStrings.COLUMN_TITLES.PIC,
         field: "thumbnailPath",
-
         formatter:
           this.globalService.blobThumbnailFormatter.bind(
             this.globalService
           ),
-
         printFormatter: (row: any) => {
-
           const thumbnailPath =
             row["thumbnailPathSasUrl"];
-
           if (thumbnailPath) {
-
             return `
-              <div class="print-thumbnail-wrapper">
-                <img
-                  src="${thumbnailPath}"
-                  class="print-thumbnail-img" />
-              </div>
-            `;
+             <div class="print-thumbnail-wrapper">
+               <img
+                 src="${thumbnailPath}"
+                 class="print-thumbnail-img" />
+             </div>
+           `;
           }
-
           return "";
         },
-
         cellClick: (e, cell) => {
-
           const collectionCoinId =
             cell.getRow().getData()["id"];
-
           this.currencyCoinDetails(
             collectionCoinId
           );
         },
-
         minWidth: 70,
-
         maxWidth: 100,
-
         printWidth: "10%"
       },
-
       {
         title: "",
         field: "",
         minWidth: 50,
         maxWidth: 70,
-
         formatter:
           this.globalService.hidebuttonFormatter.bind(
             this.globalService
           ),
-
         cellClick: (e, cell) => {
-
           const collectionCoinId =
             cell.getRow().getData()["id"];
-
           this.hideCollectionCoin(
             collectionCoinId
           );
         },
-
         headerSort: false,
-
         print: false
       }
-
     ];
-
 
     if (
       this.globalService.isAccessible(
@@ -717,37 +521,25 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         ActionConstant.DELETE
       )
     ) {
-
       this.columnConfig.push({
-
         title: "",
         field: "option",
-
         minWidth: 50,
         maxWidth: 70,
-
         formatter:
           this.globalService.threeDotsFormatter.bind(
             this.globalService
           ),
-
         hozAlign: "center",
-
         headerSort: false,
-
         print: false
-
       });
-
     }
-
 
     /* =====================================================
        SUMMARY COLUMNS
        ===================================================== */
-
     this.summaryTableColumnConfig = [
-
       {
         title: UIStrings.COLUMN_TITLES.COUNTRY,
         field: "countryName",
@@ -757,147 +549,106 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
         headerFilter: "input",
         headerFilterPlaceholder: "Search by country name"
       },
-
       {
         title: UIStrings.COLUMN_TITLES.CURRENCY,
         field: "currencyName",
         sorter: "alphanum",
-
         formatter: (cell) => {
-
           const data =
             cell.getRow().getData();
-
           return `${data['currencyCode']} (${data['currencySymbol']}) - ${data['currencyName']}`;
-
         },
-
         minWidth: 180,
         headerFilter: "input",
         headerFilterPlaceholder: "Search by currency"
-
       },
-
       {
         title: UIStrings.COLUMN_TITLES.COINS,
         field: "numberOfCoins",
         sorter: "alphanum",
-
         headerHozAlign: "center",
         hozAlign: "center",
         vertAlign: 'middle',
-
         bottomCalc: "sum",
-
         minWidth: 100,
-
         printAlign: 'center',
         headerFilter: "number",
         headerFilterPlaceholder: "Search by number of coins"
-
       },
-
       {
         title: UIStrings.COLUMN_TITLES.NOTES,
         field: "numberOfNotes",
         sorter: "alphanum",
-
         headerHozAlign: "center",
         hozAlign: "center",
-
         bottomCalc: "sum",
-
         minWidth: 100,
-
         printAlign: 'center',
         headerFilter: "number",
         headerFilterPlaceholder: "Search by number of notes"
       },
-
       {
         title: UIStrings.COLUMN_TITLES.TOTAL,
         field: "total",
         sorter: "alphanum",
-
         headerHozAlign: "center",
         hozAlign: "center",
-
         bottomCalc: "sum",
-
         minWidth: 120,
-
         printAlign: 'center',
         headerFilter: "number",
         headerFilterPlaceholder: "Search by number of coins & Notes"
       },
-
       {
         title: "",
         field: "",
-
         minWidth: 50,
         maxWidth: 70,
-
         formatter:
           this.globalService.hidebuttonFormatter.bind(
             this.globalService
           ),
-
         cellClick: (e, cell) => {
-
           const countryName =
             cell.getRow().getData()[
             "countryName"
             ];
-
           this.hideFromSummary(
             countryName
           );
         },
-
         headerSort: false,
-
         print: false
       }
-
     ];
   }
-
 
   /* =========================================================
      AFTER VIEW INIT
      ========================================================= */
-
   ngAfterViewInit() {
-
     document.addEventListener(
       'click',
       (event: Event) => {
-
         const target =
           event.target as HTMLElement;
-
 
         if (
           target.closest(
             '.OPTIONS_MENU_THREE_DOTS'
           )
         ) {
-
           const button =
             target.closest(
               '.OPTIONS_MENU_THREE_DOTS'
             ) as HTMLElement;
-
 
           const rowId =
             button.getAttribute(
               'data-row-id'
             );
 
-
           if (rowId) {
-
             const rowData =
               this.tableData.find(
                 row => row['id'] == rowId

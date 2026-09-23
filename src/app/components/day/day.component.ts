@@ -22,6 +22,8 @@ import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confi
 import { PrintColumnDefinition, TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { AssetService } from "../../services/asset/asset.service";
+import { PermissionService } from "../../services/permission/permission.service";
+import { ModulePermission } from "../../interfaces/module-permission";
 
 export interface Task {
   name: string;
@@ -52,9 +54,10 @@ export class DayComponent implements OnInit, OnDestroy {
   public filteredTableData: Record<string, unknown>[] = [];
   public columnConfig: PrintColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = true;
+  public allowCSVExport = false;
   public allowPrint = true;
-  public allowAdd = true;
+  public allowAdd = false;
+  public allowEdit = false;
   public allowRefresh = true;
   public filterColumns: PrintColumnDefinition[] = [];
   public allowColumnFilters = true;
@@ -84,6 +87,7 @@ export class DayComponent implements OnInit, OnDestroy {
   assetId: string = '';
   showTodaysOccasion: boolean = false;
   displayDay = false;
+  permissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
   constructor(
     private _dayService: DayService,
     private _assetService: AssetService,
@@ -93,11 +97,13 @@ export class DayComponent implements OnInit, OnDestroy {
     private loaderService: LoaderService,
     public configService: ConfigurationService,
     private cacheService: CacheService,
-    public datePipe: DatePipe
-  ) { }
+    public datePipe: DatePipe) { }
 
   ngOnInit() {
-    this.allowAdd = this.globalService.isAccessible(ActionConstant.ADD);
+    this.permissions = this.globalService.getModulePermission(ApplicationModules.DAY);
+    this.allowAdd = this.permissions.add;
+    this.allowEdit = this.permissions.edit;
+    this.allowCSVExport = this.permissions.download;
     this.monthList = this.localStorageService.getCommonListItems(DdlConfig.MONTHS);
 
     this.occasionTypeList = this.localStorageService.getConfigList(DdlConfig.OCCASION_TYPES);

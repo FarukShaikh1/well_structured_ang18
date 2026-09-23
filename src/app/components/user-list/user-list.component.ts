@@ -22,6 +22,8 @@ import { UserDetailsComponent } from '../user-details/user-details.component';
 import { UserRegistrationApprovalComponent } from '../user-registration-approval/user-registration-approval.component';
 import { UserPermissionComponent } from '../user-permission/user-permission.component';
 import { SettingsComponent } from '../settings/settings.component';
+import { ModulePermission } from '../../interfaces/module-permission';
+
 @Component({
   selector: 'app-user-list',
   standalone: true,
@@ -47,9 +49,10 @@ export class UserListComponent implements OnInit {
   public tableData: Record<string, unknown>[] = [];
   public columnConfig: ColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = true;
+  public allowCSVExport = false;
   public allowPrint = true;
   public allowAdd = false;
+  public allowEdit = false;
   public allowRefresh = true;
   public gridName = "Hi";
   public filterColumns: ColumnDefinition[] = [];
@@ -67,7 +70,11 @@ export class UserListComponent implements OnInit {
   sourceOrReason: any;
   id: string = '';
   cacheKey: string = NavigationURLs.USER_LIST;
-  activeTab: 'users' | 'permissions' | 'approval'|'settings' = 'approval';
+  activeTab: 'users' | 'permissions' | 'approval' | 'settings' = 'approval';
+  activeUserModulePermissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
+  pendingApprovalsModulePermissions:any;
+  settingsModulePermissions: any;
+  permissionModulePermissions: any;
   constructor(
     private userService: UserService,
     public globalService: GlobalService,
@@ -82,7 +89,11 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.allowAdd = this.globalService.isAccessible(ActionConstant.ADD)
+    this.activeUserModulePermissions = this.globalService.getModulePermission(ApplicationModules.USER);
+
+    this.pendingApprovalsModulePermissions = this.globalService.getModulePermission(ApplicationModules.PENDING_APPROVAL);
+    this.permissionModulePermissions = this.globalService.getModulePermission(ApplicationModules.USER_PERMISSIONS);
+    this.settingsModulePermissions = this.globalService.getModulePermission(ApplicationModules.SETTINGS);
     this.columnConfiguration();
 
     this.loadGrid();

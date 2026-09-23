@@ -34,7 +34,7 @@ export class UserRegistrationApprovalComponent implements OnInit {
     public tableData: Record<string, unknown>[] = [];
     public columnConfig: ColumnDefinition[] = [];
     public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-    public allowCSVExport = true;
+    public allowCSVExport = false;
     public allowPrint = true;
     public filterColumns: ColumnDefinition[] = [];
 
@@ -129,9 +129,8 @@ export class UserRegistrationApprovalComponent implements OnInit {
                 formatter: (cell) => {
                     return cell.getValue() || '-';
                 },
-                            headerFilter: "input",
-        headerFilterPlaceholder: "Search mobile"
-
+                headerFilter: "input",
+                headerFilterPlaceholder: "Search mobile"
             },
 
             {

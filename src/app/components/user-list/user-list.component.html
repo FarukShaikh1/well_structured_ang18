@@ -1,27 +1,35 @@
 <div class="app-tabs-container">
   <!-- Tabs -->
   <div class="app-tabs">
+    @if(pendingApprovalsModulePermissions.view)
+    {
     <button type="button" class="app-tab" [class.active]="activeTab === 'approval'" (click)="activeTab = 'approval'">
       <i class="bi bi-person-check"></i>
       <span>Pending Approval</span>
     </button>
-
+    }
+    @if(activeUserModulePermissions.view)
+    {
     <button type="button" class="app-tab" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">
       <i class="bi bi-people"></i>
       <span>Active Users</span>
     </button>
-
+    }
+    @if(permissionModulePermissions.view)
+    {
     <button type="button" class="app-tab" [class.active]="activeTab === 'permissions'"
       (click)="activeTab = 'permissions'">
       <i class="bi bi-shield-lock"></i>
       <span>User Permissions</span>
     </button>
-
-    <button type="button" class="app-tab" [class.active]="activeTab === 'settings'"
-      (click)="activeTab = 'settings'">
+    }
+    @if(settingsModulePermissions.view)
+    {
+    <button type="button" class="app-tab" [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">
       <i class="bi bi-shield-lock"></i>
       <span>Settings</span>
     </button>
+    }
   </div>
 
 
@@ -29,7 +37,7 @@
   <div class="app-tab-content">
 
     <!-- Available Users -->
-    @if (activeTab === 'users') {
+    @if (activeTab === 'users' && activeUserModulePermissions.view) {
     <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'200px'"
       [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport"
       [isLoading]="isGridLoading" [loadingText]="'Loading users...'" [allowPrint]="allowPrint" [allowAdd]="allowAdd"
@@ -40,20 +48,20 @@
 
 
     <!-- User Permissions -->
-    @if (activeTab === 'permissions') {
+    @if (activeTab === 'permissions' && permissionModulePermissions.view) {
     <div class="tab-component-wrapper">
       <app-user-permission></app-user-permission>
     </div>
     }
 
     <!-- Users For Approval -->
-    @if (activeTab === 'approval') {
+    @if (activeTab === 'approval' && pendingApprovalsModulePermissions.view) {
     <div class="tab-component-wrapper">
       <app-user-registration-approval></app-user-registration-approval>
     </div>
     }
 
-    @if (activeTab === 'settings') {
+    @if (activeTab === 'settings' && settingsModulePermissions.view) {
     <div class="tab-component-wrapper">
       <app-settings></app-settings>
     </div>

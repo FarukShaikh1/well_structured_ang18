@@ -12,6 +12,8 @@ import { ConfigurationService } from "../configuration/configuration.service";
 import { LocalStorageService } from "../local-storage/local-storage.service";
 import { RoleService } from "../role/role.service";
 import { FamilyService } from "../family/family.service";
+import { ModulePermission } from "../../interfaces/module-permission";
+import { PermissionService } from "../permission/permission.service";
 
 @Injectable({
   providedIn: "root",
@@ -23,6 +25,7 @@ export class GlobalService {
     private configurationService: ConfigurationService,
     private roleService: RoleService,
     private familyService: FamilyService,
+    private permissionService: PermissionService,
     private router: Router
 
   ) { }
@@ -39,6 +42,13 @@ export class GlobalService {
   refreshList$ = this.applyFilterSubject.asObservable();
   reloadBanner$ = this.reloadBannerOnSubject.asObservable();
 
+  getModulePermission(moduleName: string): ModulePermission {
+    return this.permissionService.getModulePermission(moduleName);
+  }
+  
+  hasPermission(moduleName: string, permission: keyof ModulePermission): boolean {
+    return this.permissionService.hasPermission(moduleName, permission);
+  }
 
   triggerGridReload(moduleName: string) {
     this.reloadGridSubject.next(moduleName);

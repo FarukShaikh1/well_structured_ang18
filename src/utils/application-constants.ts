@@ -375,6 +375,25 @@ export const ApplicationModules = {
     DOCUMENT: 'Documents',
     USER_PERMISSIONS: 'userPermissions',
     SETTINGS: 'Settings',
+    PENDING_APPROVAL:'Pending Approval',
+// USERS:'Users',
+// EXPENSES:'Expenses',
+// Documents
+// Settings
+// PendingUsers
+// ActiveUsers
+// UserPermissions
+// Accounts
+// OccasionTypes
+// Relations
+// TransactionCategories
+// FoodMenu
+// DailyRoutine
+// MonthlyBudget
+// Credentials
+// Occasions
+// Family
+// Role
 };
 
 export const ActionConstant = {
