@@ -112,7 +112,6 @@ export class TransactionListComponent
   }
 
   generateOptionsMenu(rowData: Record<string, any>) {
-    debugger;
     const menu = [];
     if (this.expensePermissions.edit) {
       menu.push({
