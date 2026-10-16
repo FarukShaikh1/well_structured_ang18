@@ -55,9 +55,6 @@
 
         <!-- Available Users -->
         @if (activeTab === 'accounts' && accountModulePermissions.view) {
-        @if(globalService.isAccessible(ActionConstant.ADD) ||
-        globalService.isAccessible(ActionConstant.EDIT)){
-        }
         <app-tabulator-grid [tableData]="filteredAccountTableData" [columnConfig]="accountColumnConfig"
             [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
             [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isAccountGridLoading"
@@ -67,9 +64,6 @@
         </app-tabulator-grid>
         }
         @if (activeTab === 'occasionType' && occasionTypePermissions.view) {
-        @if(globalService.isAccessible(ActionConstant.ADD) ||
-        globalService.isAccessible(ActionConstant.EDIT)){
-        }
         <app-tabulator-grid [tableData]="filteredOccasionTypeTableData" [columnConfig]="occasionTypeColumnConfig"
             [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
             [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isOccasionTypeGridLoading"
@@ -79,10 +73,6 @@
         </app-tabulator-grid>
         }
         @if (activeTab === 'relations' && relationsPermissions.view) {
-        @if (globalService.isAccessible(ActionConstant.ADD) ||
-        globalService.isAccessible(ActionConstant.EDIT))
-        {
-        }
         <app-tabulator-grid [tableData]="filteredRelationTableData" [columnConfig]="relationColumnConfig"
             [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
             [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isRelationGridLoading"
@@ -92,10 +82,6 @@
         </app-tabulator-grid>
         }
         @if (activeTab === 'transactionCategories' && transactionCategoriesPermissions.view) {
-        @if (globalService.isAccessible(ActionConstant.ADD) ||
-        globalService.isAccessible(ActionConstant.EDIT))
-        {
-        }
         <app-tabulator-grid [tableData]="filteredTransactionCategoryTableData"
             [columnConfig]="transactionCategoryColumnConfig" [height]="'320px'" [paginationSize]="paginationSize"
             [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint"

@@ -61,13 +61,9 @@
                   data-bs-dismiss="modal">
                   Cancel
                 </button>
-
-                @if(globalService.isAccessible(ActionConstant.ADD) ||
-                globalService.isAccessible(ActionConstant.EDIT)){
                 <button class="btn btn-primary rounded-button" type="submit" [disabled]="configForm.invalid">
                   Save
                 </button>
-                }
               </div>
             </div>
           </div>

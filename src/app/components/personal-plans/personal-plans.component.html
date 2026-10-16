@@ -6,45 +6,49 @@
   <div class="app-tabs">
 
     <!-- Food Menu -->
+    @if(foodMenuModulePermissions.view){
     <button type="button" class="app-tab" [class.active]="activeTab === 'food-menu'"
       (click)="setActiveTab('food-menu')">
       <i class="bi bi-egg-fried"></i>
       <span>Food Menu</span>
     </button>
-
+    }
     <!-- Routine -->
+    @if(dailyRoutineModulePermissions.view){
     <button type="button" class="app-tab" [class.active]="activeTab === 'routine'" (click)="setActiveTab('routine')">
       <i class="bi bi-calendar-check"></i>
       <span>Daily Routine</span>
-
     </button>
-
+    }
 
     <!-- Budget -->
+    @if(monthlyBudgetModulePermissions.view){
     <button type="button" class="app-tab" [class.active]="activeTab === 'budget'" (click)="setActiveTab('budget')">
       <i class="bi bi-wallet2"></i>
       <span>Monthly Budget</span>
     </button>
-
+    }
     <!-- Credentials -->
+    @if(credentialModulePermissions.view){
     <button type="button" class="app-tab" [class.active]="activeTab === 'credentials'"
       (click)="setActiveTab('credentials')">
       <i class="bi bi-key"></i>
       <span>Important Credentials</span>
     </button>
+    }
   </div>
 
   <!-- =========================================================
        ROUTINE
        ========================================================= -->
-  <div class="personal-plan-tab-content" *ngIf="activeTab === 'routine'">
+  <div class="personal-plan-tab-content" *ngIf="activeTab === 'routine' && dailyRoutineModulePermissions.view">
     <app-routine></app-routine>
   </div>
 
   <!-- =========================================================
        BUDGET
        ========================================================= -->
-  <div class="personal-plan-tab-content" *ngIf="activeTab === 'budget'">
+  <div class="personal-plan-tab-content" *ngIf="activeTab === 'budget' && monthlyBudgetModulePermissions.view">
     <app-budget></app-budget>
   </div>
 
@@ -52,7 +56,7 @@
   <!-- =========================================================
        CREDENTIALS
        ========================================================= -->
-  <div class="personal-plan-tab-content" *ngIf="activeTab === 'credentials'">
+  <div class="personal-plan-tab-content" *ngIf="activeTab === 'credentials' && credentialModulePermissions.view">
     <app-credentials></app-credentials>
   </div>
 
@@ -60,7 +64,7 @@
   <!-- =========================================================
        FOOD MENU
        ========================================================= -->
-  <div class="personal-plan-tab-content" *ngIf="activeTab === 'food-menu'">
+  <div class="personal-plan-tab-content" *ngIf="activeTab === 'food-menu' && foodMenuModulePermissions.view">
     <app-food-menu></app-food-menu>
   </div>
 </div>

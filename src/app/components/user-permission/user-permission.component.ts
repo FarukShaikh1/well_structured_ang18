@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActionConstant, Messages } from '../../../utils/application-constants';
+import { ApplicationModules, Messages } from '../../../utils/application-constants';
 import { UserPermission } from '../../interfaces/user-permission';
 import { CacheService } from '../../services/cache/cache.service';
 import { GlobalService } from '../../services/global/global.service';
@@ -23,16 +23,16 @@ export class UserPermissionComponent implements OnInit {
   rolePageMappingData: UserPermission[] = [];
   userList: any;
   disableUpdate: boolean = false;
-  editable: boolean = false;
   cacheKey: string = 'UserPermissions';
   selectedUserId: string = '';
+  permissionModulePermissions:any;
   constructor(private userService: UserService, private roleService: RoleService, private loaderService: LoaderService, private cacheService: CacheService,
     public globalService: GlobalService) { }
 
   ngOnInit() {
+    this.permissionModulePermissions = this.globalService.getModulePermission(ApplicationModules.USER_PERMISSIONS);
     this.loaderService.showLoader();
     this.getUserList();
-    this.editable = this.globalService.isAccessible(ActionConstant.EDIT)
     this.disableUpdate = true;
     this.getPermission("");
   }

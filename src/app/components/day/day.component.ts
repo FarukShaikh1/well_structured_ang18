@@ -22,7 +22,6 @@ import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confi
 import { PrintColumnDefinition, TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
 import { ToasterComponent } from "../shared/toaster/toaster.component";
 import { AssetService } from "../../services/asset/asset.service";
-import { PermissionService } from "../../services/permission/permission.service";
 import { ModulePermission } from "../../interfaces/module-permission";
 
 export interface Task {
@@ -54,10 +53,7 @@ export class DayComponent implements OnInit, OnDestroy {
   public filteredTableData: Record<string, unknown>[] = [];
   public columnConfig: PrintColumnDefinition[] = [];
   public paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-  public allowCSVExport = false;
   public allowPrint = true;
-  public allowAdd = false;
-  public allowEdit = false;
   public allowRefresh = true;
   public filterColumns: PrintColumnDefinition[] = [];
   public allowColumnFilters = true;
@@ -71,7 +67,6 @@ export class DayComponent implements OnInit, OnDestroy {
   isToday: boolean = false;
   isTomorrow: boolean = false;
   isYesterday: boolean = false;
-  daySelected: number[] = [];
   searchText: string = "";
   lableForMonthDropDown = "";
   lableForMonthDropDownIds = "";
@@ -85,13 +80,11 @@ export class DayComponent implements OnInit, OnDestroy {
   selectedRelationType: string[] = [];
   id: string = '';
   assetId: string = '';
-  showTodaysOccasion: boolean = false;
   displayDay = false;
-  permissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
+  occasionTypePermissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
   constructor(
     private _dayService: DayService,
     private _assetService: AssetService,
-
     public localStorageService: LocalStorageService,
     public globalService: GlobalService,
     private loaderService: LoaderService,
@@ -100,10 +93,7 @@ export class DayComponent implements OnInit, OnDestroy {
     public datePipe: DatePipe) { }
 
   ngOnInit() {
-    this.permissions = this.globalService.getModulePermission(ApplicationModules.DAY);
-    this.allowAdd = this.permissions.add;
-    this.allowEdit = this.permissions.edit;
-    this.allowCSVExport = this.permissions.download;
+    this.occasionTypePermissions = this.globalService.getModulePermission(ApplicationModules.DAY);
     this.monthList = this.localStorageService.getCommonListItems(DdlConfig.MONTHS);
 
     this.occasionTypeList = this.localStorageService.getConfigList(DdlConfig.OCCASION_TYPES);
@@ -310,21 +300,16 @@ export class DayComponent implements OnInit, OnDestroy {
         print: false
       },
     ];
-    if (
-      this.globalService.isAccessible(ActionConstant.EDIT) ||
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
-      this.columnConfig.push({
-        title: "",
-        field: "option",
-        minWidth: 50,
-        maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),
-        hozAlign: "center",
-        headerSort: false,
-        print: false
-      });
-    }
+    this.columnConfig.push({
+      title: "",
+      field: "option",
+      minWidth: 50,
+      maxWidth: 70,
+      formatter: this.globalService.threeDotsFormatter.bind(this),
+      hozAlign: "center",
+      headerSort: false,
+      print: false
+    });
   }
 
   dateFormatter(cell: CellComponent) {
@@ -361,7 +346,7 @@ export class DayComponent implements OnInit, OnDestroy {
 
   generateOptionsMenu(rowData: Record<string, any>) {
     const menu = [];
-    if (this.globalService.isAccessible(ActionConstant.EDIT)) {
+    if (this.occasionTypePermissions.edit) {
       menu.push({
         label: ApplicationConstantHtml.EDIT_LABLE,
         action: () => {
@@ -369,7 +354,7 @@ export class DayComponent implements OnInit, OnDestroy {
         },
       });
     }
-    if (this.globalService.isAccessible(ActionConstant.DELETE)) {
+    if (this.occasionTypePermissions.delete) {
       menu.push({
         label: ApplicationConstantHtml.DELETE_LABLE,
         action: () => {

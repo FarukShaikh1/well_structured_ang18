@@ -45,7 +45,7 @@ export class GlobalService {
   getModulePermission(moduleName: string): ModulePermission {
     return this.permissionService.getModulePermission(moduleName);
   }
-  
+
   hasPermission(moduleName: string, permission: keyof ModulePermission): boolean {
     return this.permissionService.hasPermission(moduleName, permission);
   }
@@ -122,19 +122,6 @@ export class GlobalService {
   getCurrentRoute(): string {
     const tree = this.router.parseUrl(this.router.url);
     return tree.root.children['primary']?.segments.map(it => it.path)?.join('/')?.toLowerCase() || '';
-  }
-
-  isAccessible(action: string): boolean {
-    const permissions = this.localStorageService.getUserPermission();
-    const lowerCaseAction = action.toLowerCase();
-    // const mapping = permissions.find(
-    //   (m: any) => m.route?.toLowerCase() === '/' + this.getCurrentRoute()
-    // );
-    // if (!mapping) {
-    //   return false;
-    // }
-    // return mapping[lowerCaseAction] === true;
-    return true;
   }
 
   getConfigList(config: string) {

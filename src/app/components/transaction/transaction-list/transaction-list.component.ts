@@ -11,14 +11,12 @@ import {
 import { ColumnDefinition } from "tabulator-tables";
 
 import {
-  ActionConstant,
-  ApplicationConstants,
+  ApplicationConstantHtml,
   ApplicationModules,
   ApplicationTableConstants,
   NavigationURLs
 } from "../../../../utils/application-constants";
 
-import { DateUtils } from "../../../../utils/date-utils";
 
 import { ExpenseFilterRequest } from "../../../interfaces/expense-filter-request";
 
@@ -30,6 +28,7 @@ import { TransactionService } from "../../../services/transaction/transaction.se
 import { TabulatorGridComponent } from "../../shared/tabulator-grid/tabulator-grid.component";
 
 import { TransactionFilter } from "./../../../interfaces/transaction-filter.model";
+import { ModulePermission } from "../../../interfaces/module-permission";
 
 @Component({
   selector: "app-transaction-list",
@@ -43,38 +42,26 @@ import { TransactionFilter } from "./../../../interfaces/transaction-filter.mode
 export class TransactionListComponent
   implements OnInit, OnChanges {
 
-  @Input()
-  filter!: TransactionFilter;
+  @Input() filter!: TransactionFilter;
 
-  @Input()
-  allowAdd = true;
+  @Input() allowAdd = true;
 
-  @Output()
-  openTransaction =
-    new EventEmitter<string>();
+  @Output() openTransaction = new EventEmitter<string>();
 
-  @Output()
-  deleteTransactionEvent =
-    new EventEmitter<string>();
+  @Output() deleteTransactionEvent = new EventEmitter<string>();
 
   tableData: any[] = [];
-
   filteredTableData: any[] = [];
-
   columnConfig: ColumnDefinition[] = [];
-
   filterColumns: ColumnDefinition[] = [];
-
-  paginationSize =
-    ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
-
+  paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
   allowCSVExport = true;
   allowPrint = true;
   allowRefresh = true;
   allowColumnFilters = true;
+  expensePermissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
 
   private initialized = false;
-
   constructor(
     private transactionService: TransactionService,
     private cacheService: CacheService,
@@ -83,28 +70,67 @@ export class TransactionListComponent
   ) { }
 
   ngOnInit(): void {
-
+    this.expensePermissions = this.globalService.getModulePermission(ApplicationModules.DAY);
     this.initialized = true;
-
     this.loadGrid();
     this.globalService.reloadGrid$.subscribe((listName: string) => {
       if (listName === ApplicationModules.EXPENSES) {
         this.loadGrid();
       }
     });
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-
     if (
       this.initialized &&
       changes["filter"] &&
       !changes["filter"].firstChange
     ) {
-
       this.applyFilters();
     }
+  }
+
+  ngAfterViewInit() {
+    document.addEventListener('click', (event: Event) => {
+      const target = event.target as HTMLElement;
+      if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+        const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
+        const rowId = button.getAttribute('data-row-id');
+        if (rowId) {
+          const rowData = this.tableData.find((row) => row['id'] == rowId);
+          if (rowData) {
+            const menuOptions = this.generateOptionsMenu(rowData);
+            this.globalService.showGlobalDropdownMenu(button, menuOptions);
+          }
+        }
+        event.stopPropagation();
+      } else {
+        const globalMenu = document.getElementById('globalDropdownMenu');
+        if (globalMenu) globalMenu.remove();
+      }
+    });
+  }
+
+  generateOptionsMenu(rowData: Record<string, any>) {
+    debugger;
+    const menu = [];
+    if (this.expensePermissions.edit) {
+      menu.push({
+        label: ApplicationConstantHtml.EDIT_LABLE,
+        action: () => {
+          this.editTransaction(rowData['transactionGroupId']);
+        },
+      });
+    }
+    if (this.expensePermissions.delete) {
+      menu.push({
+        label: ApplicationConstantHtml.DELETE_LABLE,
+        action: () => {
+          this.deleteTransaction(rowData['id']);
+        },
+      });
+    }
+    return menu;
   }
 
   loadGrid(): void {
@@ -149,104 +175,40 @@ export class TransactionListComponent
       .subscribe({
 
         next: (res: any) => {
-
-          this.tableData =
-            res?.data ?? [];
-
-          this.filteredTableData =
-            [...this.tableData];
-
-          this.cacheService.set(
-            NavigationURLs.EXPENSE_LIST,
-            this.tableData
-          );
-
+          this.tableData = res?.data ?? [];
+          this.filteredTableData = [...this.tableData];
+          this.cacheService.set(NavigationURLs.EXPENSE_LIST, this.tableData);
           this.loadColumnConfiguration();
-
           this.loaderService.hideLoader();
-
           this.applyFilters();
         },
 
         error: (error: any) => {
-
-          console.error(
-            "Transaction list error:",
-            error
-          );
-
+          console.error("Transaction list error:", error);
           this.loaderService.hideLoader();
         }
       });
   }
 
   applyFilters(): void {
-
-    const search =
-      this.filter?.sourceOrReason
-        ?.toLowerCase() ?? "";
-
-    const min =
-      Number(this.filter?.minAmount) || 0;
-
-    const max =
-      Number(this.filter?.maxAmount) || 0;
-
-    this.filteredTableData =
-      this.tableData.filter((item: any) => {
-
-        const source =
-          item.sourceOrReason
-            ?.toLowerCase() ?? "";
-
-        const category =
-          item.subCategoryName
-            ?.toLowerCase() ?? "";
-
-        const description =
-          item.description
-            ?.toLowerCase() ?? "";
-
-        const textMatch =
-          !search ||
-          source.includes(search) ||
-          category.includes(search) ||
-          description.includes(search);
-
-        const expense =
-          Number(item.expense) || 0;
-
-        const income =
-          Number(item.income) || 0;
-
-        const minMatch =
-          min === 0 ||
-          (expense !== 0 &&
-            Math.abs(expense) >= min) ||
-          (income !== 0 &&
-            Math.abs(income) >= min);
-
-        const maxMatch =
-          max === 0 ||
-          (expense !== 0 &&
-            Math.abs(expense) <= max) ||
-          (income !== 0 &&
-            Math.abs(income) <= max);
-
-        return (
-          textMatch &&
-          minMatch &&
-          maxMatch
-        );
-      });
+    const search = this.filter?.sourceOrReason?.toLowerCase() ?? "";
+    const min = Number(this.filter?.minAmount) || 0;
+    const max = Number(this.filter?.maxAmount) || 0;
+    this.filteredTableData = this.tableData.filter((item: any) => {
+      const source = item.sourceOrReason?.toLowerCase() ?? "";
+      const category = item.subCategoryName?.toLowerCase() ?? "";
+      const description = item.description?.toLowerCase() ?? "";
+      const textMatch = !search || source.includes(search) || category.includes(search) || description.includes(search);
+      const expense = Number(item.expense) || 0;
+      const income = Number(item.income) || 0;
+      const minMatch = min === 0 || (expense !== 0 && Math.abs(expense) >= min) || (income !== 0 && Math.abs(income) >= min);
+      const maxMatch = max === 0 || (expense !== 0 && Math.abs(expense) <= max) || (income !== 0 && Math.abs(income) <= max);
+      return (textMatch && minMatch && maxMatch);
+    });
   }
 
   refreshData(): void {
-
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_LIST
-    );
-
+    this.cacheService.clear(NavigationURLs.EXPENSE_LIST);
     this.loadGrid();
   }
 
@@ -254,28 +216,16 @@ export class TransactionListComponent
     this.openTransaction.emit("");
   }
 
-  editTransaction(
-    transactionGroupId: string
-  ): void {
-
-    this.openTransaction.emit(
-      transactionGroupId
-    );
+  editTransaction(transactionGroupId: string): void {
+    this.openTransaction.emit(transactionGroupId);
   }
 
-  deleteTransaction(
-    transactionGroupId: string
-  ): void {
-
-    this.deleteTransactionEvent.emit(
-      transactionGroupId
-    );
+  deleteTransaction(transactionGroupId: string): void {
+    this.deleteTransactionEvent.emit(transactionGroupId);
   }
 
   loadColumnConfiguration(): void {
-
     this.columnConfig = [
-
       {
         title: "Transaction Date",
         field: "transactionDate",
@@ -367,62 +317,30 @@ export class TransactionListComponent
           ),
         cellClick: (_e, cell) => {
 
-          const id =
-            cell.getRow()
-              .getData()["transactionGroupId"];
-
-          this.filteredTableData =
-            this.filteredTableData.filter(
-              item =>
-                item.transactionGroupId != id
-            );
+          const id = cell.getRow().getData()["transactionGroupId"];
+          this.filteredTableData = this.filteredTableData.filter(item => item.transactionGroupId != id);
         },
         headerSort: false,
         print: false
       }
     ];
 
-    if (
-      this.globalService.isAccessible(
-        ActionConstant.EDIT
-      ) ||
-      this.globalService.isAccessible(
-        ActionConstant.DELETE
-      )
-    ) {
-      this.columnConfig.push({
-        title: "",
-        field: "option",
-        formatter:
-          this.globalService.optionDotsFormatter.bind(
-            this.globalService
-          ),
-        hozAlign: "center",
-        headerSort: false,
-        minWidth: 70,
-        maxWidth: 70,
-        print: false,
-        cellClick: (_e, cell) => {
-          const data =
-            cell.getRow().getData();
-          this.editTransaction(
-            data["transactionGroupId"]
-          );
-        }
-      });
-    }
+    this.columnConfig.push({
+      title: "",
+      field: "option",
+      formatter: this.globalService.threeDotsFormatter.bind(this),
+      hozAlign: "center",
+      headerSort: false,
+      minWidth: 70,
+      maxWidth: 70,
+      print: false,
+    });
   }
 
   dateFormatter(cell: any): string {
-
-    const field =
-      cell.getColumn().getField();
-
-    const data =
-      cell.getRow().getData();
-
-    const value =
-      data[field];
+    const field = cell.getColumn().getField();
+    const data = cell.getRow().getData();
+    const value = data[field];
 
     if (!value) {
       return "";
@@ -438,9 +356,7 @@ export class TransactionListComponent
   }
 
   amountColorFormatter(cell: any): string {
-
-    const value =
-      Number(cell.getValue()) || 0;
+    const value = Number(cell.getValue()) || 0;
 
     const formatted =
       new Intl.NumberFormat("en-IN", {
@@ -475,8 +391,7 @@ export class TransactionListComponent
 
   debitAmountColorFormatter(cell: any): string {
 
-    const value =
-      Number(cell.getValue()) || 0;
+    const value = Number(cell.getValue()) || 0;
 
     if (value === 0) {
       return "";
@@ -499,17 +414,10 @@ export class TransactionListComponent
 
   getColorForText(cell: any): string {
 
-    const data =
-      cell.getRow().getData();
-
-    const description =
-      data["description"]?.toLowerCase() ?? "";
-
-    const source =
-      data["sourceOrReason"] ?? "";
-
+    const data = cell.getRow().getData();
+    const description = data["description"]?.toLowerCase() ?? "";
+    const source = data["sourceOrReason"] ?? "";
     if (description.includes("emergency")) {
-
       return `
         <span style="
           color:var(--danger-color);
@@ -520,7 +428,6 @@ export class TransactionListComponent
     }
 
     if (description.includes("return")) {
-
       return `
         <span style="
           color:var(--success-color);
@@ -531,7 +438,6 @@ export class TransactionListComponent
     }
 
     if (description.includes("recharge")) {
-
       return `
         <span style="
           color:var(--theme-accent-orange);

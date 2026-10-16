@@ -243,26 +243,14 @@
               Details
 
             </button>
-
-            @if(globalService.isAccessible(ActionConstant.DELETE) && !coin.isVerified) {
-
             <button (click)="approveCurrencyCoin(coin.id)" class="btn btn-primary rounded-button">
-
               <i class="fa fa-check"></i>
               Approve
-
             </button>
-
-            }
-
           </div>
-
         </div>
-
       </div>
-
     </div>
-
 
     <!-- =========================================================
        ARTICLE IN NEWS TAB
@@ -355,109 +343,71 @@
        ABOUT OWNER TAB
        ========================================================= -->
     <div class="row" *ngIf="viewMode === 'owner'">
-
       <div class="col-12">
-
         <div class="app-tab-content">
-
           <app-my-profile></app-my-profile>
-
         </div>
-
       </div>
-
     </div>
-
 
     <!-- =========================================================
        COMMON COMPONENTS
        ========================================================= -->
-
     <app-currency-details></app-currency-details>
-
     <app-toaster></app-toaster>
-
     <app-confirmation-dialog (outputAction)="handleConfirmResult($event)">
     </app-confirmation-dialog>
-
 
     <!-- =========================================================
        FULLSCREEN IMAGE VIEWER
        ========================================================= -->
 
     <div class="modal fade" id="imageViewerModal" tabindex="-1">
-
       <div class="modal-dialog modal-fullscreen">
-
         <div class="modal-content fullscreen-modal-bg">
-
           <!-- Close -->
           <button type="button" class="close-btn" data-bs-dismiss="modal">
-
             ✕
-
           </button>
-
 
           <!-- Previous -->
           <button class="nav-arrow left-arrow" (click)="prevImage()">
-
             <i class="fa fa-chevron-left"></i>
-
           </button>
-
 
           <!-- Next -->
           <button class="nav-arrow right-arrow" (click)="nextImage()">
-
             <i class="fa fa-chevron-right"></i>
-
           </button>
-
 
           <!-- Zoom -->
           <div class="zoom-controls">
-
             <button (click)="zoomIn()">
               <i class="fa fa-search-plus"></i>
             </button>
-
             <button (click)="zoomOut()">
               <i class="fa fa-search-minus"></i>
             </button>
-
             <button (click)="resetZoom()">
               <i class="fa fa-compress"></i>
             </button>
-
           </div>
-
 
           <!-- Image -->
           <div #imageContainer class="modal-body p-0 d-flex justify-content-center align-items-center"
             (touchstart)="touchStart($event)" (touchmove)="touchMove($event)" (touchend)="touchEnd()">
-
             <img [src]="filteredCoinList[currentIndex]?.imagePathSasUrl" class="fullscreen-img" alt="Preview Image"
               [style.transform]="transformStyle">
-
           </div>
-
 
           <!-- Thumbnail Strip -->
           <div class="thumbnail-strip">
-
             <img *ngFor="let item of filteredCoinList; index as i" [src]="item.thumbnailPathSasUrl"
               [class.active-thumb]="currentIndex === i" (click)="jumpTo(i)" [alt]="item.coinNoteName">
-
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
-
   <button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup"
-  style="display:none"></button>
+    style="display:none"></button>

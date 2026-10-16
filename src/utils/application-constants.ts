@@ -378,7 +378,7 @@ export const ApplicationModules = {
     PENDING_USERS: 'PendingUsers',
     ACCOUNTS: 'Accounts',
     ACTIVE_USERS: 'ActiveUsers',
-    OCCASION_TYPES: ' OccasionTypes',
+    OCCASION_TYPES: 'OccasionTypes',
     RELATIONS: 'Relations',
     TRANSACTION_CATEGORIES: 'TransactionCategories',
     FOOD_MENU: 'FoodMenu',

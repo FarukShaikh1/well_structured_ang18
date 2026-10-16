@@ -161,8 +161,6 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      INITIALIZATION
      ========================================================= */
   async ngOnInit() {
-    this.allowAdd =
-      this.globalService.isAccessible(ActionConstant.ADD);
     this.loaderService.showLoader(
       UIStrings.LOADERS.LOADING_CURRENCY_DATA
     );
@@ -513,28 +511,21 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
       }
     ];
 
-    if (
-      this.globalService.isAccessible(
-        ActionConstant.EDIT
-      ) ||
-      this.globalService.isAccessible(
-        ActionConstant.DELETE
-      )
-    ) {
-      this.columnConfig.push({
-        title: "",
-        field: "option",
-        minWidth: 50,
-        maxWidth: 70,
-        formatter:
-          this.globalService.threeDotsFormatter.bind(
-            this.globalService
-          ),
-        hozAlign: "center",
-        headerSort: false,
-        print: false
-      });
-    }
+
+    this.columnConfig.push({
+      title: "",
+      field: "option",
+      minWidth: 50,
+      maxWidth: 70,
+      formatter:
+        this.globalService.threeDotsFormatter.bind(
+          this.globalService
+        ),
+      hozAlign: "center",
+      headerSort: false,
+      print: false
+    });
+
 
     /* =====================================================
        SUMMARY COLUMNS
@@ -702,59 +693,41 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
     const menu: any[] = [];
 
 
-    if (
-      this.globalService.isAccessible(
-        ActionConstant.EDIT
-      )
-    ) {
 
-      menu.push({
+    menu.push({
 
-        label:
-          ApplicationConstantHtml.EDIT_LABLE,
+      label:
+        ApplicationConstantHtml.EDIT_LABLE,
 
-        action: () => {
+      action: () => {
 
-          this.currencyCoinDetails(
-            rowData['id']
-          );
+        this.currencyCoinDetails(
+          rowData['id']
+        );
 
-        }
+      }
 
-      });
-
-    }
+    });
 
 
-    if (
-      this.globalService.isAccessible(
-        ActionConstant.DELETE
-      )
-    ) {
+    menu.push({
 
-      menu.push({
+      label:
+        ApplicationConstantHtml.DELETE_LABLE,
 
-        label:
-          ApplicationConstantHtml.DELETE_LABLE,
+      action: () => {
 
-        action: () => {
+        this.deleteCurrencyCoin(
+          rowData['id'],
+          rowData['assetId']
+        );
 
-          this.deleteCurrencyCoin(
-            rowData['id'],
-            rowData['assetId']
-          );
+      }
 
-        }
-
-      });
-
-    }
+    });
 
 
     if (
-      this.globalService.isAccessible(
-        ActionConstant.DELETE
-      ) &&
       !rowData['isVerified']
     ) {
 

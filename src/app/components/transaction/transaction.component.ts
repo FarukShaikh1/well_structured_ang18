@@ -105,17 +105,10 @@ export class TransactionComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-
-    this.allowAdd =
-      this.globalService.isAccessible(ActionConstant.ADD);
-
     this.globalService.reloadGrid$.subscribe(
       (listName: string) => {
-
         if (listName === ApplicationModules.EXPENSES) {
-
           this.clearFilters();
-
           // Child component reloads itself because
           // its @Input filter object changes.
           this.filter = {

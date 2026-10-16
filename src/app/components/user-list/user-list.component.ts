@@ -72,7 +72,7 @@ export class UserListComponent implements OnInit {
   cacheKey: string = NavigationURLs.USER_LIST;
   activeTab: 'users' | 'permissions' | 'approval' | 'settings' = 'approval';
   activeUserModulePermissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
-  pendingApprovalsModulePermissions:any;
+  pendingApprovalsModulePermissions: any;
   settingsModulePermissions: any;
   permissionModulePermissions: any;
   constructor(
@@ -89,7 +89,6 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit() {
-    debugger;
     this.activeUserModulePermissions = this.globalService.getModulePermission(ApplicationModules.USERS);
 
     this.pendingApprovalsModulePermissions = this.globalService.getModulePermission(ApplicationModules.PENDING_USERS);
@@ -183,38 +182,29 @@ export class UserListComponent implements OnInit {
         print: false,
       },
     ];
-    if (
-      this.globalService.isAccessible(ActionConstant.EDIT) ||
-      this.globalService.isAccessible(ActionConstant.DELETE)
-    ) {
-      this.columnConfig.push({
-        title: "",
-        field: "option",
-        maxWidth: 70,
-        formatter: this.globalService.threeDotsFormatter.bind(this),
-        hozAlign: "center",
-        headerSort: false,
-        print: false
-      });
-    }
+    this.columnConfig.push({
+      title: "",
+      field: "option",
+      maxWidth: 70,
+      formatter: this.globalService.threeDotsFormatter.bind(this),
+      hozAlign: "center",
+      headerSort: false,
+      print: false
+    });
   }
 
   generateOptionsMenu(rowData: Record<string, any>): Array<{ label: string; action: () => void; }> {
     const menu: Array<{ label: string; action: () => void; }> = [];
-    if (this.globalService.isAccessible(ActionConstant.EDIT)) {
-      menu.push({
-        label: ApplicationConstantHtml.EDIT_LABLE, action: () => {
-          this.openDayDetailsPopup(rowData['id']);
-        }
-      });
-    }
-    if (this.globalService.isAccessible(ActionConstant.DELETE)) {
-      menu.push({
-        label: ApplicationConstantHtml.DELETE_LABLE, action: () => {
-          this.deactivateUser(rowData['id'], true);
-        }
-      });
-    }
+    menu.push({
+      label: ApplicationConstantHtml.EDIT_LABLE, action: () => {
+        this.openDayDetailsPopup(rowData['id']);
+      }
+    });
+    menu.push({
+      label: ApplicationConstantHtml.DELETE_LABLE, action: () => {
+        this.deactivateUser(rowData['id'], true);
+      }
+    });
     return menu;
   }
   viewUserProfile(id: string | null | undefined) {

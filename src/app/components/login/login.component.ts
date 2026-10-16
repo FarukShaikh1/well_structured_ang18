@@ -84,6 +84,8 @@ export class LoginComponent implements OnDestroy {
             this.loaderService.hideLoader();
             return;
           }
+          this.globalService.getUserPermissionData();
+          
           if (this.data != null && this.data?.userName != null && this.data?.userName?.length > 0
           ) {
             if (this.data.isOtpRequired) {
