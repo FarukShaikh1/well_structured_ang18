@@ -414,9 +414,9 @@ export class TransactionListComponent
   getColorForText(cell: any): string {
 
     const data = cell.getRow().getData();
-    const description = data["description"]?.toLowerCase() ?? "";
+    const purpose = data["purpose"]?.toLowerCase() ?? "";
     const source = data["sourceOrReason"] ?? "";
-    if (description.includes("emergency")) {
+    if (purpose.includes("emergency")) {
       return `
         <span style="
           color:var(--danger-color);
@@ -426,7 +426,7 @@ export class TransactionListComponent
       `;
     }
 
-    if (description.includes("return")) {
+    if (purpose.includes("return")) {
       return `
         <span style="
           color:var(--success-color);
@@ -436,7 +436,7 @@ export class TransactionListComponent
       `;
     }
 
-    if (description.includes("recharge")) {
+    if (purpose.includes("recharge")) {
       return `
         <span style="
           color:var(--theme-accent-orange);
