@@ -11,6 +11,7 @@ import {
 import { ColumnDefinition } from "tabulator-tables";
 
 import {
+  ApplicationConstantHtml,
   ApplicationModules,
   ApplicationTableConstants,
   NavigationURLs
@@ -26,6 +27,7 @@ import { TransactionService } from "../../../services/transaction/transaction.se
 import { TabulatorGridComponent } from "../../shared/tabulator-grid/tabulator-grid.component";
 
 import { TransactionFilter } from "./../../../interfaces/transaction-filter.model";
+import { ModulePermission } from "../../../interfaces/module-permission";
 
 @Component({
   selector: "app-transaction-summary",
@@ -69,6 +71,7 @@ export class TransactionSummaryComponent
   allowColumnFilters = true;
 
   private initialized = false;
+  expensePermissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
 
   constructor(
     private transactionService: TransactionService,
@@ -78,7 +81,7 @@ export class TransactionSummaryComponent
   ) { }
 
   ngOnInit(): void {
-
+    this.expensePermissions = this.globalService.getModulePermission(ApplicationModules.DAY);
     this.initialized = true;
 
     this.loadGrid();
@@ -100,6 +103,48 @@ export class TransactionSummaryComponent
 
       this.applyFilters();
     }
+  }
+
+  ngAfterViewInit() {
+    document.addEventListener('click', (event: Event) => {
+      const target = event.target as HTMLElement;
+      if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+        const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
+        const rowId = button.getAttribute('data-row-id');
+        if (rowId) {
+          const rowData = this.tableData.find((row) => row['id'] == rowId);
+          if (rowData) {
+            const menuOptions = this.generateOptionsMenu(rowData);
+            this.globalService.showGlobalDropdownMenu(button, menuOptions);
+          }
+        }
+        event.stopPropagation();
+      } else {
+        const globalMenu = document.getElementById('globalDropdownMenu');
+        if (globalMenu) globalMenu.remove();
+      }
+    });
+  }
+
+  generateOptionsMenu(rowData: Record<string, any>) {
+    const menu = [];
+    if (this.expensePermissions.edit) {
+      menu.push({
+        label: ApplicationConstantHtml.EDIT_LABLE,
+        action: () => {
+          this.editTransaction(rowData['transactionGroupId']);
+        },
+      });
+    }
+    if (this.expensePermissions.delete) {
+      menu.push({
+        label: ApplicationConstantHtml.DELETE_LABLE,
+        action: () => {
+          this.deleteTransaction(rowData['id']);
+        },
+      });
+    }
+    return menu;
   }
 
   loadGrid(): void {
@@ -339,51 +384,38 @@ export class TransactionSummaryComponent
     }
 
     this.columnConfig.push({
-
       title: "",
       field: "",
-
       minWidth: 50,
       maxWidth: 70,
-
-      formatter:
-        this.globalService.hidebuttonFormatter.bind(
-          this.globalService
-        ),
-
+      formatter: this.globalService.hidebuttonFormatter.bind(this.globalService),
       cellClick: (_e, cell) => {
-
-        const id =
-          cell.getRow()
-            .getData()["transactionGroupId"];
-
-        this.filteredTableData =
-          this.filteredTableData.filter(
-            item =>
-              item.transactionGroupId != id
-          );
+        const id = cell.getRow().getData()["transactionGroupId"];
+        this.filteredTableData = this.filteredTableData.filter(item => item.transactionGroupId != id);
       },
-
       headerSort: false,
       print: false
     });
+    this.columnConfig.push({
+      title: "",
+      field: "option",
+      formatter: this.globalService.threeDotsFormatter.bind(this),
+      hozAlign: "center",
+      headerSort: false,
+      minWidth: 70,
+      maxWidth: 70,
+      print: false,
+    });
+
   }
 
   dateFormatter(cell: any): string {
-
-    const field =
-      cell.getColumn().getField();
-
-    const value =
-      cell.getRow().getData()[field];
-
+    const field = cell.getColumn().getField();
+    const value = cell.getRow().getData()[field];
     if (!value) {
       return "";
     }
-
-    return new Intl.DateTimeFormat(
-      "en-IN"
-    ).format(new Date(value));
+    return new Intl.DateTimeFormat("en-IN").format(new Date(value));
   }
 
   amountColorFormatter(cell: any): string {
