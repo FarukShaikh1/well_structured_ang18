@@ -242,7 +242,7 @@ export class GlobalService {
       if (!option?.label?.trim()) return;
 
       const menuItem = document.createElement('li');
-      menuItem.innerHTML = `<a class="dropdown-item" href="#">${option.label}</a>`;
+      menuItem.innerHTML = `${option.label}`;
       menuItem.addEventListener('click', (event) => {
         event.preventDefault();
         option.action();

@@ -139,23 +139,23 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   }
 
   private getColumnDefinitions(): PrintColumnDefinition[] {
-  return this.columnConfig.map((column) => {
+    return this.columnConfig.map((column) => {
 
-    // Skip action columns / columns without a field
-     if (!column.field || !this.allowColumnFilters) {
-      return column;
-    }
+      // Skip action columns / columns without a field
+      if (!column.field || !this.allowColumnFilters) {
+        return column;
+      }
 
-    return {
-      ...column,
+      return {
+        ...column,
 
-      // headerFilter: "input",
-      headerFilterLiveFilter: true,
-      // headerFilterPlaceholder: "Search...",
-      headerFilterFunc: "like"
-    };
-  });
-}
+        // headerFilter: "input",
+        headerFilterLiveFilter: true,
+        // headerFilterPlaceholder: "Search...",
+        headerFilterFunc: "like"
+      };
+    });
+  }
   private drawTable(changes: SimpleChanges): void {
     if (this.gridClosing || !this.columnConfig) {
       return;
@@ -169,7 +169,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         // Add column-wise filters
         columns: this.getColumnDefinitions(),
         layout: "fitColumns",
-        
+
         // responsiveLayout: "collapse",
         height: "530",
         maxHeight: "100%",
@@ -285,7 +285,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   }
 
   printGrid(): void {
-    if (!this.tableData || this.tableData.length === 0) {
+    if (!this.myTable) {
       return;
     }
 
@@ -298,10 +298,20 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
       return;
     }
 
+    // Get ONLY the rows that match the currently applied filters.
+    // This is different from this.tableData, which contains the original data.
+    const filteredRows = this.myTable
+      .getRows("active")
+      .map((row) => row.getData());
+
+    if (filteredRows.length === 0) {
+      return;
+    }
+
     const printWindow = window.open(
-      '',
-      '_blank',
-      'width=1200,height=800'
+      "",
+      "_blank",
+      "width=1200,height=800"
     );
 
     if (!printWindow) {
@@ -314,8 +324,8 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
     const headers = printableColumns
       .map((column: PrintColumnDefinition) => {
-        const width = column.printWidth ?? 'auto';
-        const align = column.printAlign ?? 'center';
+        const width = column.printWidth ?? "auto";
+        const align = column.printAlign ?? "center";
 
         return `
         <th
@@ -324,36 +334,34 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
             text-align: ${align};
           "
         >
-          ${column.title ?? ''}
+          ${column.title ?? ""}
         </th>
       `;
       })
-      .join('');
-
+      .join("");
 
     // ============================
     // Generate table rows
     // ============================
 
-    const rows = this.tableData
+    const rows = filteredRows
       .map((row: any) => {
 
         const cells = printableColumns
           .map((column: PrintColumnDefinition) => {
 
-            const width = column.printWidth ?? 'auto';
-            const align = column.printAlign ?? 'left';
+            const width = column.printWidth ?? "auto";
+            const align = column.printAlign ?? "left";
 
             let formattedValue: string;
 
             // Use custom print formatter if available
             if (column.printFormatter) {
               formattedValue = column.printFormatter(row);
-            }
-            else {
+            } else {
               const value = column.field
                 ? row[column.field]
-                : '';
+                : "";
 
               formattedValue = this.formatPrintValue(value);
             }
@@ -365,16 +373,15 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
                 text-align: ${align};
               "
             >
-              ${formattedValue ?? ''}
+              ${formattedValue ?? ""}
             </td>
           `;
           })
-          .join('');
+          .join("");
 
         return `<tr>${cells}</tr>`;
       })
-      .join('');
-
+      .join("");
 
     // ============================
     // Print document
@@ -471,7 +478,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
 
       <body>
 
-        <h2>Report</h2>
+        <h2>${this.gridName || "Report"}</h2>
 
         <table>
           <thead>
@@ -497,6 +504,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
       printWindow.close();
     }, 300);
   }
+
   public applySearch(searchText: string): void {
     this.myTable?.setFilter((row) => {
 

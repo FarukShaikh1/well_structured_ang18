@@ -240,8 +240,8 @@ export class TransactionListComponent
         sorter: "alphanum",
         minWidth: 200,
         headerFilter: "input",
-        headerFilterPlaceholder:
-          "Search category"
+        headerFilterPlaceholder: "Search category",
+        print: false
       },
 
       {
