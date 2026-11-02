@@ -1082,7 +1082,7 @@ input, number {
 }
 
 .dropdown-menu li .dropdown-item {
-  padding: 5px 5px;
+  padding: 10px 10px !important;
 }
 
 .tabulator-cell .dropdown-menu li {
