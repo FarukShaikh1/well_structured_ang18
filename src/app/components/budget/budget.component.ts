@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Budget } from '../../interfaces/budget';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -6,15 +6,14 @@ import { BudgetService } from '../../services/budget/budget.service';
 import { ConfigurationService } from '../../services/configuration/configuration.service';
 import { LocalStorageConstants, UserConfig } from '../../../utils/application-constants';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
-import { PrintService } from "../../services/print/print.service";
-
+import { PrintService } from '../../services/print/print.service';
 
 @Component({
   selector: 'app-budget',
   templateUrl: './budget.component.html',
   standalone: true,
   imports: [CommonModule, FormsModule, ToasterComponent],
-  styleUrls: ['./budget.component.css']
+  styleUrls: ['./budget.component.css'],
 })
 export class BudgetComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
@@ -31,7 +30,7 @@ export class BudgetComponent implements OnInit {
     purpose: '',
     categoryId: '',
     categoryName: '',
-    amount: 0
+    amount: 0,
   };
 
   isEdit = false;
@@ -39,33 +38,34 @@ export class BudgetComponent implements OnInit {
   searchText: string = '';
   total: number = 0;
 
-  constructor(private budgetService: BudgetService, private configService: ConfigurationService, private printService: PrintService) { }
+  constructor(
+    private budgetService: BudgetService,
+    private configService: ConfigurationService,
+    private printService: PrintService,
+  ) {}
 
   ngOnInit(): void {
     this.loadBudgets();
     this.loadCategories();
   }
   printBudget(): void {
-    this.printService.printElement(
-      'budget-print'
-    );
+    this.printService.printElement('budget-print');
   }
 
-
-
   loadBudgets() {
-    this.budgetService.getBudgetByUser()
-      .subscribe(res => {
-        this.budgets = res;
-        this.filteredBudgets = res;
-        this.total = this.filteredBudgets.reduce((sum, x) => sum + (x.amount || 0), 0);
-      });
+    this.budgetService.getBudgetByUser().subscribe((res) => {
+      this.budgets = res;
+      this.filteredBudgets = res;
+      this.total = this.filteredBudgets.reduce((sum, x) => sum + (x.amount || 0), 0);
+    });
   }
 
   loadCategories() {
-    this.configService.getActiveConfigList(this.userId, UserConfig.TRANSACTION_CATEGORY).subscribe((res: any) => {
-      this.categories = res?.data;
-    });
+    this.configService
+      .getActiveConfigList(this.userId, UserConfig.TRANSACTION_CATEGORY)
+      .subscribe((res: any) => {
+        this.categories = res?.data;
+      });
   }
 
   save() {
@@ -74,41 +74,42 @@ export class BudgetComponent implements OnInit {
       return;
     }
     if (this.isEdit) {
-      if (this.budgets.find(b => b.id === this.model.id) == undefined) {
+      if (this.budgets.find((b) => b.id === this.model.id) == undefined) {
         this.toaster.showMessage('Budget entry not found for update', 'error');
         return;
       }
-      this.budgetService.updateBudget(this.model)
-        .subscribe({
-          next: (res: any) => {
-            this.isEdit = false;
-            this.toaster.showMessage('Budget entry updated successfully', 'success');
-            this.loadBudgets();
-            this.reset();
-          },
-          error: (err) => {
-            console.error('Update failed', err);
-          }
-        });
+      this.budgetService.updateBudget(this.model).subscribe({
+        next: (res: any) => {
+          this.isEdit = false;
+          this.toaster.showMessage('Budget entry updated successfully', 'success');
+          this.loadBudgets();
+          this.reset();
+        },
+        error: (err) => {
+          console.error('Update failed', err);
+        },
+      });
     } else {
-      if (this.budgets.find(b => b.payTo === this.model.payTo && b.categoryId === this.model.categoryId) != undefined) {
+      if (
+        this.budgets.find(
+          (b) => b.payTo === this.model.payTo && b.categoryId === this.model.categoryId,
+        ) != undefined
+      ) {
         this.toaster.showMessage('Duplicate budget entry found', 'error');
         return;
       }
       this.model.id = null;
-      this.budgetService.addBudget(this.model)
-        .subscribe({
-          next: (res: any) => {
-            this.toaster.showMessage('Budget entry added successfully', 'success');
+      this.budgetService.addBudget(this.model).subscribe({
+        next: (res: any) => {
+          this.toaster.showMessage('Budget entry added successfully', 'success');
 
-            this.reset();
-            this.loadBudgets();
-
-          },
-          error: (err) => {
-            console.error('Add failed', err);
-          }
-        });
+          this.reset();
+          this.loadBudgets();
+        },
+        error: (err) => {
+          console.error('Add failed', err);
+        },
+      });
     }
   }
 
@@ -121,11 +122,10 @@ export class BudgetComponent implements OnInit {
   delete(id: string) {
     if (!confirm('Delete this entry?')) return;
 
-    this.budgetService.deleteBudget(id)
-      .subscribe(() => {
-        this.toaster.showMessage('Budget entry deleted successfully', 'success');
-        this.loadBudgets();
-      });
+    this.budgetService.deleteBudget(id).subscribe(() => {
+      this.toaster.showMessage('Budget entry deleted successfully', 'success');
+      this.loadBudgets();
+    });
   }
 
   reset() {
@@ -135,12 +135,11 @@ export class BudgetComponent implements OnInit {
       categoryId: '',
       amount: 0,
       id: null,
-      userId: ''
+      userId: '',
     };
     this.isEdit = false;
     this.selectedId = '';
   }
-
 
   search(textBox: any) {
     this.searchText = textBox?.target?.value?.toLowerCase();
@@ -149,9 +148,8 @@ export class BudgetComponent implements OnInit {
       const purpose = item.purpose?.toLowerCase().includes(this.searchText);
       const category = item.categoryName?.toLowerCase().includes(this.searchText);
       // const amount = item.amount?.toLowerCase().includes(this.searchText);
-      return (payTo || purpose || category);
+      return payTo || purpose || category;
     });
     this.total = this.filteredBudgets.reduce((sum, x) => sum + (x.amount || 0), 0);
   }
-
 }

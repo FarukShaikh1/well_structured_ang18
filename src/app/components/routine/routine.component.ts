@@ -1,21 +1,20 @@
-import { CommonModule } from "@angular/common";
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { DateUtils } from "../../../utils/date-utils";
-import { Routine } from "../../interfaces/routine";
-import { RoutineService } from "../../services/routine/routine.service";
-import { ToasterComponent } from "../shared/toaster/toaster.component";
-import { LocalStorageConstants } from "../../../utils/application-constants";
-import { PrintService } from "../../services/print/print.service";
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { DateUtils } from '../../../utils/date-utils';
+import { Routine } from '../../interfaces/routine';
+import { RoutineService } from '../../services/routine/routine.service';
+import { ToasterComponent } from '../shared/toaster/toaster.component';
+import { LocalStorageConstants } from '../../../utils/application-constants';
+import { PrintService } from '../../services/print/print.service';
 
 @Component({
   selector: 'app-routine',
   standalone: true,
   imports: [CommonModule, FormsModule, ToasterComponent],
   templateUrl: './routine.component.html',
-  styleUrls: ['../budget/budget.component.css']
+  styleUrls: ['../budget/budget.component.css'],
 })
-
 export class RoutineComponent implements OnInit {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   dateUtils = DateUtils;
@@ -27,29 +26,32 @@ export class RoutineComponent implements OnInit {
     userId: this.userId,
     fromTime: '',
     toTime: '',
-    task: ''
+    task: '',
   };
   isEdit: boolean = false;
   selectedId: string = '';
   searchText: string = '';
-  constructor(private service: RoutineService, private printService: PrintService) { }
+  constructor(
+    private service: RoutineService,
+    private printService: PrintService,
+  ) {}
 
   ngOnInit() {
     this.loadData();
   }
 
   loadData() {
-    this.service.getRoutineByUser().subscribe(res => {
+    this.service.getRoutineByUser().subscribe((res) => {
       this.routines = res;
       this.filteredRoutines = res;
-      this.filteredRoutines.forEach(r => r.duration = this.calculateDurationInMinutes(r.fromTime, r.toTime));
+      this.filteredRoutines.forEach(
+        (r) => (r.duration = this.calculateDurationInMinutes(r.fromTime, r.toTime)),
+      );
     });
   }
 
   printRoutine(): void {
-    this.printService.printElement(
-      'routine-print'
-    );
+    this.printService.printElement('routine-print');
   }
 
   calculateDuration(from: string, to: string): string {
@@ -94,7 +96,7 @@ export class RoutineComponent implements OnInit {
       userId: '',
       fromTime: '',
       toTime: '',
-      task: ''
+      task: '',
     };
     this.isEdit = false;
     this.selectedId = '';
@@ -103,11 +105,10 @@ export class RoutineComponent implements OnInit {
   delete(id: string) {
     if (!confirm('Delete this entry?')) return;
 
-    this.service.deleteRoutine(id)
-      .subscribe(() => {
-        this.toaster.showMessage('Routine entry deleted successfully', 'success');
-        this.loadData();
-      });
+    this.service.deleteRoutine(id).subscribe(() => {
+      this.toaster.showMessage('Routine entry deleted successfully', 'success');
+      this.loadData();
+    });
   }
 
   save(row: Routine) {
@@ -123,7 +124,7 @@ export class RoutineComponent implements OnInit {
       return;
     }
     if (this.isEdit) {
-      if (this.routines.find(r => r.id === row.id) == undefined) {
+      if (this.routines.find((r) => r.id === row.id) == undefined) {
         this.toaster.showMessage('Routine entry not found for update', 'error');
         return;
       }
@@ -132,20 +133,21 @@ export class RoutineComponent implements OnInit {
         this.toaster.showMessage('Routine entry updated successfully', 'success');
         this.loadData();
         this.reset();
-
       });
     } else {
-      if (this.routines.find(r => r.fromTime === row.fromTime && r.toTime === row.toTime) != undefined) {
+      if (
+        this.routines.find((r) => r.fromTime === row.fromTime && r.toTime === row.toTime) !=
+        undefined
+      ) {
         this.toaster.showMessage('Same routine timing entry found', 'error');
         return;
       }
       row.id = null!;
-      this.service.addRoutine(row)
-        .subscribe(() => {
-          this.toaster.showMessage('Routine entry added successfully', 'success');
-          this.loadData();
-          this.reset();
-        });
+      this.service.addRoutine(row).subscribe(() => {
+        this.toaster.showMessage('Routine entry added successfully', 'success');
+        this.loadData();
+        this.reset();
+      });
     }
   }
   getTotal() {
@@ -159,8 +161,7 @@ export class RoutineComponent implements OnInit {
     this.searchText = textBox?.target?.value?.toLowerCase();
     this.filteredRoutines = this.routines.filter((item: any) => {
       const task = item.task?.toLowerCase().includes(this.searchText);
-      return (task);
+      return task;
     });
   }
-
 }

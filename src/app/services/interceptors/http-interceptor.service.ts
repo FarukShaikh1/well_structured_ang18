@@ -3,21 +3,12 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest
+  HttpRequest,
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  BehaviorSubject,
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  filter,
-  switchMap,
-  take
-} from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { NavigationURLs } from '../../../utils/application-constants';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { UserService } from '../user/user.service';
@@ -32,10 +23,7 @@ export class HttpInterceptorService implements HttpInterceptor {
   private isRefreshing = false;
   private readonly refreshToken$ = new BehaviorSubject<string | null>(null);
 
-  intercept(
-    request: HttpRequest<unknown>,
-    next: HttpHandler
-  ): Observable<HttpEvent<unknown>> {
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Attach access token to every outbound request (except refresh-token itself)
     const accessToken = this.localStorageService.getLoggedInUserData()?.accessToken;
     request = this.addAuthHeader(request, accessToken);
@@ -46,19 +34,16 @@ export class HttpInterceptorService implements HttpInterceptor {
           return this.handle401(request, next);
         }
         return throwError(() => error);
-      })
+      }),
     );
   }
 
   // ── Private helpers ──────────────────────────────────────────────────────────
 
-  private addAuthHeader(
-    request: HttpRequest<unknown>,
-    token?: string
-  ): HttpRequest<unknown> {
+  private addAuthHeader(request: HttpRequest<unknown>, token?: string): HttpRequest<unknown> {
     if (!token) return request;
     return request.clone({
-      setHeaders: { Authorization: `Bearer ${token}` }
+      setHeaders: { Authorization: `Bearer ${token}` },
     });
   }
 
@@ -68,14 +53,14 @@ export class HttpInterceptorService implements HttpInterceptor {
    */
   private handle401(
     request: HttpRequest<unknown>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
     if (this.isRefreshing) {
       // Wait for the ongoing refresh to complete, then replay
       return this.refreshToken$.pipe(
         filter((token): token is string => token !== null),
         take(1),
-        switchMap(token => next.handle(this.addAuthHeader(request, token)))
+        switchMap((token) => next.handle(this.addAuthHeader(request, token))),
       );
     }
 
@@ -90,7 +75,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     }
 
     return this.userService.refreshToken(storedRefreshToken).pipe(
-      switchMap(response => {
+      switchMap((response) => {
         this.isRefreshing = false;
         const newAccessToken: string = response?.data?.accessToken ?? '';
 
@@ -99,25 +84,23 @@ export class HttpInterceptorService implements HttpInterceptor {
         this.localStorageService.setLoggedInUserData({
           ...userData,
           accessToken: newAccessToken,
-          refreshToken: response?.data?.refreshToken ?? storedRefreshToken
+          refreshToken: response?.data?.refreshToken ?? storedRefreshToken,
         });
 
         this.refreshToken$.next(newAccessToken);
         return next.handle(this.addAuthHeader(request, newAccessToken));
       }),
-      catchError(refreshError => {
+      catchError((refreshError) => {
         this.isRefreshing = false;
         this.logout();
         return throwError(() => refreshError);
-      })
+      }),
     );
   }
 
   private isAuthEndpoint(url: string): boolean {
     return (
-      url.includes('/user/login') ||
-      url.includes('/user/refresh-token') ||
-      url.includes('/otp/')
+      url.includes('/user/login') || url.includes('/user/refresh-token') || url.includes('/otp/')
     );
   }
 

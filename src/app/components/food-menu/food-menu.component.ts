@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 import { FoodMenu } from '../../interfaces/food-menu';
-import { FoodMenuService } from '../../services/food-menu.service/food-menu.service'
+import { FoodMenuService } from '../../services/food-menu.service/food-menu.service';
 
 import { LocalStorageConstants } from '../../../utils/application-constants';
 import { PrintService } from '../../services/print/print.service';
@@ -14,15 +14,10 @@ import { PrintService } from '../../services/print/print.service';
   selector: 'app-food-menu',
   templateUrl: './food-menu.component.html',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ToasterComponent
-  ],
-  styleUrls: ['./food-menu.component.css']
+  imports: [CommonModule, FormsModule, ToasterComponent],
+  styleUrls: ['./food-menu.component.css'],
 })
 export class FoodMenuComponent implements OnInit {
-
   @ViewChild(ToasterComponent)
   toaster!: ToasterComponent;
 
@@ -36,28 +31,20 @@ export class FoodMenuComponent implements OnInit {
   selectedPrintSection: string | null = null;
   isNonVeg: boolean = false;
   printFoodMenu(): void {
-
-    this.printService.printElement(
-      'food-menu-print'
-    );
+    this.printService.printElement('food-menu-print');
   }
 
   // =========================
   // USER
   // =========================
 
-  userId =
-    localStorage
-      .getItem(LocalStorageConstants.USERID)
-      ?.toString() || '';
-
+  userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
 
   // =========================
   // MODEL
   // =========================
 
   model: FoodMenu = this.getEmptyModel();
-
 
   // =========================
   // UI STATE
@@ -69,26 +56,17 @@ export class FoodMenuComponent implements OnInit {
 
   searchText = '';
 
-
   // =========================
   // DATE 1 - 31
   // =========================
 
-  menuDates: number[] = Array.from(
-    { length: 31 },
-    (_, i) => i + 1
-  );
-
+  menuDates: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
 
   // =========================
   // SEQUENCE
   // =========================
 
-  sequences: number[] = Array.from(
-    { length: 31 },
-    (_, i) => i + 1
-  );
-
+  sequences: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
 
   // =========================
   // FOOD OPTIONS
@@ -110,9 +88,8 @@ export class FoodMenuComponent implements OnInit {
     'Methi Paratha',
     'Besan Chilla',
     'Moong Dal Chilla',
-    'Vegetable Sandwich'
+    'Vegetable Sandwich',
   ];
-
 
   lunchItems: string[] = [
     'Varan Bhaat',
@@ -130,9 +107,8 @@ export class FoodMenuComponent implements OnInit {
     'Veg Pulao + Raita',
     'Veg Biryani + Raita',
     'Masala Khichdi + Curd',
-    'Matki Usal + Chapati'
+    'Matki Usal + Chapati',
   ];
-
 
   eveningBreakfastItems: string[] = [
     'Tea + Biscuits',
@@ -151,9 +127,8 @@ export class FoodMenuComponent implements OnInit {
     'Sprouts Chaat',
     'Fruit Chaat',
     'Grilled Sandwich',
-    'Boiled Eggs'
+    'Boiled Eggs',
   ];
-
 
   dinnerItems: string[] = [
     'Dal Khichdi + Curd',
@@ -172,15 +147,13 @@ export class FoodMenuComponent implements OnInit {
     'Moong Dal Chilla',
     'Besan Chilla',
     'Vegetable Daliya',
-    'Vegetable Soup + Sandwich'
+    'Vegetable Soup + Sandwich',
   ];
 
-
   constructor(
-    private foodMenuService: FoodMenuService, private printService: PrintService
-  ) {
-  }
-
+    private foodMenuService: FoodMenuService,
+    private printService: PrintService,
+  ) {}
 
   // =========================
   // INIT
@@ -199,14 +172,13 @@ export class FoodMenuComponent implements OnInit {
 
     // Reload menu based on selected food type
     this.loadFoodMenus(this.isNonVeg);
-}
+  }
 
   // =========================
   // EMPTY MODEL
   // =========================
 
   getEmptyModel(): FoodMenu {
-
     return {
       id: null,
       userId: this.userId,
@@ -215,107 +187,62 @@ export class FoodMenuComponent implements OnInit {
       breakfast: '',
       lunch: '',
       eveningBreakfast: '',
-      dinner: ''
+      dinner: '',
     };
-
   }
-
 
   // =========================
   // GET DATA FROM API
   // =========================
 
   loadFoodMenus(isNonVeg: boolean): void {
+    this.foodMenuService.getFoodMenuByUser(isNonVeg).subscribe({
+      next: (res: any) => {
+        this.foodMenus = res || [];
 
-    this.foodMenuService
-      .getFoodMenuByUser(isNonVeg)
-      .subscribe({
+        this.sortFoodMenus();
 
-        next: (res: any) => {
+        this.filteredFoodMenus = [...this.foodMenus];
+      },
 
-          this.foodMenus = res || [];
+      error: (err: Error) => {
+        console.error('Failed to load food menus', err);
 
-          this.sortFoodMenus();
-
-          this.filteredFoodMenus = [
-            ...this.foodMenus
-          ];
-
-        },
-
-        error: (err: Error) => {
-
-          console.error(
-            'Failed to load food menus',
-            err
-          );
-
-          this.toaster.showMessage(
-            'Failed to load food menu',
-            'error'
-          );
-
-        }
-
-      });
+        this.toaster.showMessage('Failed to load food menu', 'error');
+      },
+    });
   }
-
 
   // =========================
   // SORT
   // =========================
 
   sortFoodMenus(): void {
-
     this.foodMenus.sort((a, b) => {
-
       if (a.menuDate !== b.menuDate) {
-
         return a.menuDate - b.menuDate;
-
       }
 
       return a.sequence - b.sequence;
-
     });
-
   }
-
 
   // =========================
   // SAVE
   // =========================
 
   save(): void {
-
-    if (
-      !this.model.menuDate ||
-      this.model.menuDate < 1 ||
-      this.model.menuDate > 31
-    ) {
-
-      this.toaster.showMessage(
-        'Please select a valid date',
-        'error'
-      );
+    if (!this.model.menuDate || this.model.menuDate < 1 || this.model.menuDate > 31) {
+      this.toaster.showMessage('Please select a valid date', 'error');
 
       return;
     }
 
-
-    if (
-      !this.model.sequence ||
-      this.model.sequence < 1
-    ) {
-
-      this.toaster.showMessage(
-        'Please select sequence',
-        'error'
-      );
+    if (!this.model.sequence || this.model.sequence < 1) {
+      this.toaster.showMessage('Please select sequence', 'error');
 
       return;
     }
-
 
     if (
       !this.model.breakfast &&
@@ -323,73 +250,42 @@ export class FoodMenuComponent implements OnInit {
       !this.model.eveningBreakfast &&
       !this.model.dinner
     ) {
-
-      this.toaster.showMessage(
-        'Please select at least one meal',
-        'error'
-      );
+      this.toaster.showMessage('Please select at least one meal', 'error');
 
       return;
     }
-
 
     // =========================
     // UPDATE
     // =========================
 
     if (this.isEdit) {
-
-      const existing = this.foodMenus.find(
-        x => x.id === this.model.id
-      );
+      const existing = this.foodMenus.find((x) => x.id === this.model.id);
 
       if (!existing) {
-
-        this.toaster.showMessage(
-          'Food menu entry not found',
-          'error'
-        );
+        this.toaster.showMessage('Food menu entry not found', 'error');
 
         return;
       }
 
+      this.foodMenuService.updateFoodMenu(this.model).subscribe({
+        next: () => {
+          this.toaster.showMessage('Food menu updated successfully', 'success');
 
-      this.foodMenuService
-        .updateFoodMenu(this.model)
-        .subscribe({
+          this.reset();
 
-          next: () => {
+          this.loadFoodMenus(this.isNonVeg);
+        },
 
-            this.toaster.showMessage(
-              'Food menu updated successfully',
-              'success'
-            );
+        error: (err: Error) => {
+          console.error('Update failed', err);
 
-            this.reset();
-
-            this.loadFoodMenus(this.isNonVeg);
-
-          },
-
-          error: (err: Error) => {
-
-            console.error(
-              'Update failed',
-              err
-            );
-
-            this.toaster.showMessage(
-              'Failed to update food menu',
-              'error'
-            );
-
-          }
-
-        });
+          this.toaster.showMessage('Failed to update food menu', 'error');
+        },
+      });
 
       return;
     }
-
 
     // =========================
     // ADD
@@ -399,181 +295,93 @@ export class FoodMenuComponent implements OnInit {
 
     this.model.userId = this.userId;
 
+    this.foodMenuService.addFoodMenu(this.model).subscribe({
+      next: () => {
+        this.toaster.showMessage('Food menu added successfully', 'success');
 
-    this.foodMenuService
-      .addFoodMenu(this.model)
-      .subscribe({
+        this.reset();
 
-        next: () => {
+        this.loadFoodMenus(this.isNonVeg);
+      },
 
-          this.toaster.showMessage(
-            'Food menu added successfully',
-            'success'
-          );
+      error: (err: Error) => {
+        console.error('Add failed', err);
 
-          this.reset();
-
-          this.loadFoodMenus(this.isNonVeg);
-
-        },
-
-        error: (err: Error) => {
-
-          console.error(
-            'Add failed',
-            err
-          );
-
-          this.toaster.showMessage(
-            'Failed to add food menu',
-            'error'
-          );
-
-        }
-
-      });
+        this.toaster.showMessage('Failed to add food menu', 'error');
+      },
+    });
   }
-
 
   // =========================
   // EDIT
   // =========================
 
   edit(item: FoodMenu): void {
-
     this.model = {
-      ...item
+      ...item,
     };
 
     this.isEdit = true;
 
     this.selectedId = item.id || '';
-
   }
-
 
   // =========================
   // DELETE
   // =========================
 
   delete(id: string | null): void {
-
     if (!id) {
       return;
     }
 
-
-    if (
-      !confirm(
-        'Delete this food menu entry?'
-      )
-    ) {
-
+    if (!confirm('Delete this food menu entry?')) {
       return;
     }
 
+    this.foodMenuService.deleteFoodMenu(id).subscribe({
+      next: () => {
+        this.toaster.showMessage('Food menu deleted successfully', 'success');
+        this.reset();
+        this.loadFoodMenus(this.isNonVeg);
+      },
 
-    this.foodMenuService
-      .deleteFoodMenu(id)
-      .subscribe({
-        next: () => {
-          this.toaster.showMessage(
-            'Food menu deleted successfully',
-            'success'
-          );
-          this.reset();
-          this.loadFoodMenus(this.isNonVeg);
-        },
+      error: (err: Error) => {
+        console.error('Delete failed', err);
 
-        error: (err: Error) => {
-
-          console.error(
-            'Delete failed',
-            err
-          );
-
-          this.toaster.showMessage(
-            'Failed to delete food menu',
-            'error'
-          );
-
-        }
-
-      });
+        this.toaster.showMessage('Failed to delete food menu', 'error');
+      },
+    });
   }
-
 
   // =========================
   // RESET
   // =========================
 
   reset(): void {
-
-    this.model =
-      this.getEmptyModel();
+    this.model = this.getEmptyModel();
 
     this.isEdit = false;
 
     this.selectedId = '';
-
   }
-
 
   // =========================
   // SEARCH
   // =========================
 
   search(event: any): void {
+    this.searchText = event?.target?.value?.toLowerCase()?.trim() || '';
 
-    this.searchText =
-      event?.target?.value
-        ?.toLowerCase()
-        ?.trim() || '';
-
-
-    this.filteredFoodMenus =
-      this.foodMenus.filter(item => {
-
-        return (
-
-          item.menuDate
-            ?.toString()
-            .includes(this.searchText)
-
-          ||
-
-          item.sequence
-            ?.toString()
-            .includes(this.searchText)
-
-          ||
-
-          item.breakfast
-            ?.toLowerCase()
-            .includes(this.searchText)
-
-          ||
-
-          item.lunch
-            ?.toLowerCase()
-            .includes(this.searchText)
-
-          ||
-
-          item.eveningBreakfast
-            ?.toLowerCase()
-            .includes(this.searchText)
-
-          ||
-
-          item.dinner
-            ?.toLowerCase()
-            .includes(this.searchText)
-
-        );
-
-      });
-
+    this.filteredFoodMenus = this.foodMenus.filter((item) => {
+      return (
+        item.menuDate?.toString().includes(this.searchText) ||
+        item.sequence?.toString().includes(this.searchText) ||
+        item.breakfast?.toLowerCase().includes(this.searchText) ||
+        item.lunch?.toLowerCase().includes(this.searchText) ||
+        item.eveningBreakfast?.toLowerCase().includes(this.searchText) ||
+        item.dinner?.toLowerCase().includes(this.searchText)
+      );
+    });
   }
-
 }

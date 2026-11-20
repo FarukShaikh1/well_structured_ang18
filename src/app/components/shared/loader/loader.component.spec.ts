@@ -17,9 +17,9 @@ describe('LoaderComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-    imports: [LoaderComponent],
-    providers: [{ provide: LoaderService, useValue: loaderServiceMock }],
-}).compileComponents();
+      imports: [LoaderComponent],
+      providers: [{ provide: LoaderService, useValue: loaderServiceMock }],
+    }).compileComponents();
   });
 
   beforeEach(() => {

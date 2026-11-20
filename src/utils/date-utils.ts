@@ -1,22 +1,21 @@
-import { DatePipe } from "@angular/common";
+import { DatePipe } from '@angular/common';
 
 import { formatDate } from '@angular/common';
 export class DateUtils {
-  datePipe = new DatePipe("en-US");
+  datePipe = new DatePipe('en-US');
   formatTimestamp(date: Date | null | string, forChat?: boolean): string {
     const now = new Date();
     if (date === null) {
-      return "";
+      return '';
     }
 
     if (!(date instanceof Date)) {
       date = new Date(date);
     }
 
-
     if (isNaN(date.getTime())) {
-      console.error("Invalid date provided:", date);
-      return "";
+      console.error('Invalid date provided:', date);
+      return '';
     }
 
     const timeDiff = now.getTime() - new Date(date).getTime();
@@ -24,50 +23,38 @@ export class DateUtils {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const dateToCheck = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    );
-
+    const dateToCheck = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
     if (dateToCheck.getTime() === today.getTime()) {
       if (hours > 0) {
-        return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+        return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
       } else if (minutes > 0) {
-        return minutes === 1 ? "1 min ago" : `${minutes} mins ago`;
+        return minutes === 1 ? '1 min ago' : `${minutes} mins ago`;
       } else {
-        return "just now";
+        return 'just now';
       }
     } else if (forChat) {
-      return this.datePipe.transform(date, "hh:mm a") || "";
+      return this.datePipe.transform(date, 'hh:mm a') || '';
     }
-
 
     if (date.getFullYear() === now.getFullYear()) {
-      return this.datePipe.transform(date, "d MMM - hh:mm a") || "";
+      return this.datePipe.transform(date, 'd MMM - hh:mm a') || '';
     }
-    return this.datePipe.transform(date, "d MMM yyyy - hh:mm a") || "";
+    return this.datePipe.transform(date, 'd MMM yyyy - hh:mm a') || '';
   }
 
-
-  timeStampForChat(
-    date: Date | null | string,
-    divider: boolean = false
-  ): string {
+  timeStampForChat(date: Date | null | string, divider: boolean = false): string {
     if (date === null) {
-      return "";
+      return '';
     }
-
 
     if (!(date instanceof Date)) {
       date = new Date(date);
     }
 
-
     if (isNaN(date.getTime())) {
-      console.error("Invalid date provided:", date);
-      return "";
+      console.error('Invalid date provided:', date);
+      return '';
     }
 
     const now = new Date();
@@ -75,52 +62,37 @@ export class DateUtils {
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
 
-    const dateToCheck = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    );
-
+    const dateToCheck = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
     if (dateToCheck.getTime() === today.getTime() && divider) {
-      return "Today";
+      return 'Today';
+    } else if (dateToCheck.getTime() === today.getTime()) {
+      return `${this.datePipe.transform(date, 'hh:mm a')}`;
     }
-
-
-    else if (dateToCheck.getTime() === today.getTime()) {
-      return `${this.datePipe.transform(date, "hh:mm a")}`;
-    }
-
 
     if (dateToCheck.getTime() === yesterday.getTime()) {
-      return "Yesterday";
+      return 'Yesterday';
     }
-
 
     const lastWeek = new Date(today);
     lastWeek.setDate(today.getDate() - 7);
 
     if (dateToCheck > lastWeek) {
-      return date.toLocaleDateString("en-US", { weekday: "long" });
+      return date.toLocaleDateString('en-US', { weekday: 'long' });
     }
 
-
     if (date.getFullYear() !== now.getFullYear()) {
-      return date.toLocaleDateString("en-US", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
+      return date.toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
       });
     }
 
-
-    return date.toLocaleDateString("en-US", { day: "2-digit", month: "short" });
+    return date.toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
   }
 
-
-  static formatDateString(
-    dateString: string | null | undefined
-  ): string | null {
+  static formatDateString(dateString: string | null | undefined): string | null {
     if (!dateString) {
       return null;
     }
@@ -130,21 +102,16 @@ export class DateUtils {
       return null;
     }
 
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
     const year = date.getUTCFullYear();
     return `${year}-${month}-${day}`;
   }
 
-
-
   static formatDateToDateTime(inputDate: string): string {
-
-    const [month, day, year] = inputDate.split("/").map(Number);
-
+    const [month, day, year] = inputDate.split('/').map(Number);
 
     const date = new Date(year, month - 1, day);
-
 
     const isoDateTime = date.toISOString();
 
@@ -155,7 +122,6 @@ export class DateUtils {
     const date = new Date(inputDateStr);
 
     if (isNaN(date.getTime())) {
-
       const today = new Date();
       return DateUtils.DDMMYYYY(today);
     }
@@ -171,8 +137,8 @@ export class DateUtils {
 
   static formatStringDate(dateString: string) {
     const date = new Date(dateString);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
     const year = date.getFullYear();
 
     return `${day}/${month}/${year}`;
@@ -183,29 +149,18 @@ export class DateUtils {
   }
 
   static CorrectedDate(dateValue: any) {
-
-    const selectedDate1 = new Date(
-
-
-      dateValue);
+    const selectedDate1 = new Date(dateValue);
 
     if (!isNaN(selectedDate1.getTime())) {
-      const day = selectedDate1.getDate().toString().padStart(2, "0");
-      const month = (selectedDate1.getMonth() + 1)
-        .toString()
-        .padStart(2, "0");
+      const day = selectedDate1.getDate().toString().padStart(2, '0');
+      const month = (selectedDate1.getMonth() + 1).toString().padStart(2, '0');
       const year = selectedDate1.getFullYear();
-
 
       const returnDate = new Date(`${year}-${day}-${month}T00:00:00`);
       returnDate.setHours(0, 0, 0, 0);
       return DateUtils.IstDate(returnDate);
-
     } else {
-
-      const [day, month, year] = dateValue
-        .split("/")
-        .map(Number);
+      const [day, month, year] = dateValue.split('/').map(Number);
       const returnDate = new Date(new Date(year, month - 1, day));
       returnDate.setHours(0, 0, 0, 0);
       return DateUtils.IstDate(returnDate);
@@ -219,7 +174,12 @@ export class DateUtils {
     return DateUtils.IstDate(date);
   }
 
-  static checkDateFilter(occasionDateString: string, isToday: boolean, isYesterday: boolean, isTomorrow: boolean): boolean {
+  static checkDateFilter(
+    occasionDateString: string,
+    isToday: boolean,
+    isYesterday: boolean,
+    isTomorrow: boolean,
+  ): boolean {
     if (!occasionDateString) return false;
 
     const occasionDate = new Date(occasionDateString);
@@ -238,20 +198,12 @@ export class DateUtils {
     tom.setDate(today.getDate() + 1);
 
     // Check if month + day matches
-    const isTodayMatch =
-      isToday &&
-      occDay === today.getDate() &&
-      occMonth === today.getMonth();
+    const isTodayMatch = isToday && occDay === today.getDate() && occMonth === today.getMonth();
 
     const isYesterdayMatch =
-      isYesterday &&
-      occDay === yDay.getDate() &&
-      occMonth === yDay.getMonth();
+      isYesterday && occDay === yDay.getDate() && occMonth === yDay.getMonth();
 
-    const isTomorrowMatch =
-      isTomorrow &&
-      occDay === tom.getDate() &&
-      occMonth === tom.getMonth();
+    const isTomorrowMatch = isTomorrow && occDay === tom.getDate() && occMonth === tom.getMonth();
 
     // If no filter selected → allow all
     if (!isToday && !isYesterday && !isTomorrow) return true;
@@ -270,10 +222,8 @@ export class DateUtils {
   }
 
   static amPmFormat(time: string): string {
-  const date = new Date(`1970-01-01T${time}`);
-  return formatDate(date, 'hh:mm a', 'en-US')!;
-  // return this.datePipe.transform(date, 'hh:mm a')!;
-}
-
-
+    const date = new Date(`1970-01-01T${time}`);
+    return formatDate(date, 'hh:mm a', 'en-US')!;
+    // return this.datePipe.transform(date, 'hh:mm a')!;
+  }
 }

@@ -5,7 +5,7 @@ export class CacheService {
   set(key: string, data: any): void {
     const payload = {
       data,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
     localStorage.setItem(key, JSON.stringify(payload));
   }

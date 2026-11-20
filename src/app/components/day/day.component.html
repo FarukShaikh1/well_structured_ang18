@@ -4,113 +4,150 @@
       <div appearance="outline" class="form-field">
         <button
           class="form-select form-control form-control-lg text-dark bg-transparent styled-select scrollable-button text-start"
-          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          {{ lableForMonthDropDown!=""?lableForMonthDropDown: "Select Month" }}
+          type="button"
+          id="dropdownMenuButton"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ lableForMonthDropDown != '' ? lableForMonthDropDown : 'Select Month' }}
         </button>
 
         <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
           <li>
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllMonthCheck($event)"
-                [checked]="selectedMonths.length === monthList?.length" />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="selectAll"
+                (change)="toggleAllMonthCheck($event)"
+                [checked]="selectedMonths.length === monthList?.length"
+              />
               <label class="form-check-label" for="selectAll">All</label>
             </div>
           </li>
-          @for(item of monthList;track $index){
-          <li>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" [id]="item.listItemName"
-                [checked]="selectedMonths.includes(item.listItemName)"
-                (change)="toggleMonthCheck($event, item.listItemName,item.sequenceNumber )" />
-              <label class="form-check-label" [for]="item.listItemName">
-                {{ item.listItemDescription }}
-              </label>
-            </div>
-          </li>
+          @for (item of monthList; track $index) {
+            <li>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="item.listItemName"
+                  [checked]="selectedMonths.includes(item.listItemName)"
+                  (change)="toggleMonthCheck($event, item.listItemName, item.sequenceNumber)"
+                />
+                <label class="form-check-label" [for]="item.listItemName">
+                  {{ item.listItemDescription }}
+                </label>
+              </div>
+            </li>
           }
         </ul>
       </div>
     </div>
-    <div class="col-4 col-md-3 col-lg  pt-2">
+    <div class="col-4 col-md-3 col-lg pt-2">
       <div appearance="outline" class="form-field">
         <button
           class="form-select form-control form-control-lg text-dark bg-transparent styled-select scrollable-button text-start"
-          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          {{ lableForOccasionTypeDropDown!=""?lableForOccasionTypeDropDown:"Occasion Type" }}
+          type="button"
+          id="dropdownMenuButton"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ lableForOccasionTypeDropDown != '' ? lableForOccasionTypeDropDown : 'Occasion Type' }}
         </button>
 
         <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
-          @if(occasionTypeList?.length > 0)
-          {
-          <li>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="selectAll"
-                (change)="toggleAllOccasionTypeCheck($event)"
-                [checked]="selectedOccasionType.length === occasionTypeList?.length" />
-              <label class="form-check-label" for="selectAll">All</label>
-            </div>
-          </li>
+          @if (occasionTypeList?.length > 0) {
+            <li>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="selectAll"
+                  (change)="toggleAllOccasionTypeCheck($event)"
+                  [checked]="selectedOccasionType.length === occasionTypeList?.length"
+                />
+                <label class="form-check-label" for="selectAll">All</label>
+              </div>
+            </li>
+          } @else {
+            <li class="text-center p-2 text-muted">Please add from settings</li>
           }
-          @else{
-          <li class="text-center p-2 text-muted">Please add from settings</li>
-          }
-          @for(item of occasionTypeList;track $index){
-          <li>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" [id]="item.description"
-                [checked]="selectedOccasionType.includes(item.description)"
-                (change)="toggleOccasionTypeCheck($event, item.configurationName, item.id)" />
-              <label class="form-check-label" [for]="item.description">
-                {{ item.configurationName }}
-              </label>
-            </div>
-          </li>
+          @for (item of occasionTypeList; track $index) {
+            <li>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="item.description"
+                  [checked]="selectedOccasionType.includes(item.description)"
+                  (change)="toggleOccasionTypeCheck($event, item.configurationName, item.id)"
+                />
+                <label class="form-check-label" [for]="item.description">
+                  {{ item.configurationName }}
+                </label>
+              </div>
+            </li>
           }
         </ul>
       </div>
     </div>
-    <div class="col-4 col-md-3 col-lg  pt-2">
+    <div class="col-4 col-md-3 col-lg pt-2">
       <div appearance="outline" class="form-field">
         <button
           class="form-select form-control form-control-lg text-dark bg-transparent styled-select scrollable-button text-start"
-          type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          {{ lableForRelationTypeDropDown!=""?lableForRelationTypeDropDown:"Relation Type" }}
+          type="button"
+          id="dropdownMenuButton"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ lableForRelationTypeDropDown != '' ? lableForRelationTypeDropDown : 'Relation Type' }}
         </button>
 
         <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="dropdownMenuButton">
-          @if(relationList?.length > 0)
-          {
-          <li>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="selectAll" (change)="toggleAllRelationCheck($event)"
-                [checked]="selectedRelationType.length === relationList?.length" />
-              <label class="form-check-label" for="selectAll">All</label>
-            </div>
-          </li>
+          @if (relationList?.length > 0) {
+            <li>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="selectAll"
+                  (change)="toggleAllRelationCheck($event)"
+                  [checked]="selectedRelationType.length === relationList?.length"
+                />
+                <label class="form-check-label" for="selectAll">All</label>
+              </div>
+            </li>
+          } @else {
+            <li class="text-center p-2 text-muted">Please add from settings</li>
           }
-          @else{
-          <li class="text-center p-2 text-muted">Please add from settings</li>
-          }
-          @for(item of relationList;track $index){
-          <li>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" [id]="item.description"
-                [checked]="selectedRelationType.includes(item.description)"
-                (change)="toggleRelationCheck($event, item.description, item.id)" />
-              <label class="form-check-label" [for]="item.description">
-                {{ item.configurationName }}
-              </label>
-            </div>
-          </li>
+          @for (item of relationList; track $index) {
+            <li>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="item.description"
+                  [checked]="selectedRelationType.includes(item.description)"
+                  (change)="toggleRelationCheck($event, item.description, item.id)"
+                />
+                <label class="form-check-label" [for]="item.description">
+                  {{ item.configurationName }}
+                </label>
+              </div>
+            </li>
           }
         </ul>
       </div>
     </div>
-    <div class="col-8 col-md-3 col-lg  pt-2">
+    <div class="col-8 col-md-3 col-lg pt-2">
       <div appearance="outline">
-        <input #searchInput (input)="filterGridSearchText($event)"
+        <input
+          #searchInput
+          (input)="filterGridSearchText($event)"
           class="form-control form-control-lg text-dark bg-transparent"
-          placeholder="Type something to filter the records" />
+          placeholder="Type something to filter the records"
+        />
       </div>
     </div>
 
@@ -119,28 +156,31 @@
         <div class="form-check1 form-check-inline pt-4">
           <div class="date-filters">
             <div class="task-container">
-
               <!-- Parent Checkbox -->
               <label>
-                <input type="checkbox" [(ngModel)]="task.completed" (change)="toggleAll()">
+                <input type="checkbox" [(ngModel)]="task.completed" (change)="toggleAll()" />
                 {{ task.name }}
-              </label> &nbsp;
-              @if(!displayDay){
-              <i class="fa fa-plus" (click)="displayDay=true"></i>
+              </label>
+              &nbsp;
+              @if (!displayDay) {
+                <i class="fa fa-plus" (click)="displayDay = true"></i>
+              } @else {
+                <i class="fa fa-minus" (click)="displayDay = false"></i>
               }
-              @else{
-              <i class="fa fa-minus" (click)="displayDay=false"></i>
-              }
-              @if(displayDay){
-              <!-- Subtasks -->
-              <div class="subtasks">
-                <div *ngFor="let sub of task.subtasks; let i = index">
-                  <label>
-                    <input type="checkbox" [(ngModel)]="sub.completed" (change)="onSubtaskChange()">
-                    {{ sub.name }}
-                  </label>
+              @if (displayDay) {
+                <!-- Subtasks -->
+                <div class="subtasks">
+                  <div *ngFor="let sub of task.subtasks; let i = index">
+                    <label>
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="sub.completed"
+                        (change)="onSubtaskChange()"
+                      />
+                      {{ sub.name }}
+                    </label>
+                  </div>
                 </div>
-              </div>
               }
             </div>
           </div>
@@ -150,16 +190,33 @@
   </div>
 </div>
 <div class="mb-2">
-  <app-tabulator-grid [tableData]="filteredTableData" [columnConfig]="columnConfig" [height]="'320px'"
-    [paginationSize]="paginationSize" [filterColumns]="filterColumns" [allowCSVExport]="occasionTypePermissions.download"
-    [isLoading]="isGridLoading" [loadingText]="'Loading occasions...'" [allowPrint]="allowPrint" [allowAdd]="occasionTypePermissions.add"
-    (addClicked)="openDetailsPopup('')" [allowRefresh]="allowRefresh" (refreshClicked)="refreshData()"
-    [gridName]="'Special Occasions'" [allowColumnFilters]="allowColumnFilters">
+  <app-tabulator-grid
+    [tableData]="filteredTableData"
+    [columnConfig]="columnConfig"
+    [height]="'320px'"
+    [paginationSize]="paginationSize"
+    [filterColumns]="filterColumns"
+    [allowCSVExport]="occasionTypePermissions.download"
+    [isLoading]="isGridLoading"
+    [loadingText]="'Loading occasions...'"
+    [allowPrint]="allowPrint"
+    [allowAdd]="occasionTypePermissions.add"
+    (addClicked)="openDetailsPopup('')"
+    [allowRefresh]="allowRefresh"
+    (refreshClicked)="refreshData()"
+    [gridName]="'Special Occasions'"
+    [allowColumnFilters]="allowColumnFilters"
+  >
   </app-tabulator-grid>
 </div>
 <app-day-details></app-day-details>
 
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
 <app-toaster></app-toaster>
-<button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup"
-  style="display:none"></button>
+<button
+  id="openDetailsButton"
+  type="button"
+  data-bs-toggle="modal"
+  data-bs-target="#detailsPopup"
+  style="display: none"
+></button>

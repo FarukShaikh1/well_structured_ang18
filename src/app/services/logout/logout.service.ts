@@ -17,12 +17,12 @@ export class LogoutService {
     private globalService: GlobalService,
 
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth,
-    public authService: OktaAuthStateService
-  ) { }
+    public authService: OktaAuthStateService,
+  ) {}
 
   async logout() {
     console.log('logging out');
-    
+
     this.localStorageService.clear();
     sessionStorage.clear();
     this.router.navigate([NavigationURLs.LOGIN]);

@@ -12,11 +12,10 @@ import { LogoutService } from '../../../services/logout/logout.service';
 export class UnauthorisedErrorComponent implements OnInit {
   constructor(
     private logoutService: LogoutService,
-    private loaderService: LoaderService
-  ) { }
+    private loaderService: LoaderService,
+  ) {}
 
   ngOnInit() {
-    
     this.loaderService.hideLoader();
   }
 

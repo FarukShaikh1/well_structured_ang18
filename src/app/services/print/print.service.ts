@@ -1,27 +1,18 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PrintService {
-
   printElement(elementId: string): void {
-
-    const printContent =
-      document.getElementById(elementId);
+    const printContent = document.getElementById(elementId);
 
     if (!printContent) {
-      console.error(
-        `Print element with ID '${elementId}' was not found.`
-      );
+      console.error(`Print element with ID '${elementId}' was not found.`);
       return;
     }
 
-    const printWindow = window.open(
-      '',
-      '_blank',
-      'width=1200,height=800'
-    );
+    const printWindow = window.open('', '_blank', 'width=1200,height=800');
 
     if (!printWindow) {
       return;

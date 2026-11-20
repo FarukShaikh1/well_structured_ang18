@@ -26,19 +26,18 @@ describe('HomeComponent', () => {
     consoleLogSpy = spyOn(console, 'log');
 
     await TestBed.configureTestingModule({
-    imports: [CommonModule,
-        RouterModule,
-        ToasterComponent,
-        LoaderComponent,
-        FeedbackComponent],
-    providers: [
+      imports: [CommonModule, RouterModule, ToasterComponent, LoaderComponent, FeedbackComponent],
+      providers: [
         { provide: LoaderService, useValue: loaderService },
         { provide: SignalRService, useValue: signalRService },
-        { provide: GlobalService, useValue: jasmine.createSpyObj('GlobalService', ['isAccessible']) },
+        {
+          provide: GlobalService,
+          useValue: jasmine.createSpyObj('GlobalService', ['isAccessible']),
+        },
         { provide: Router, useValue: router },
         provideHttpClient(withInterceptorsFromDi()),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
@@ -50,89 +49,66 @@ describe('HomeComponent', () => {
   });
 
   it('ngOnInit(): should call hideLoader and getUnreadChatCountForNotification on ngOnInit', () => {
-    
     component.ngOnInit();
 
-    
     expect(loaderService.hideLoader).toHaveBeenCalled();
     expect(signalRService.getUnreadChatCountForNotification).toHaveBeenCalled();
   });
 
   it('clientList(): should call router.navigate with CLIENT_LIST URL on clientList', () => {
-    
     component.clientList();
 
-    
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.CLIENT_LIST]);
   });
 
   it('userList(): should call router.navigate with USER_LIST URL on userList', () => {
-    
     component.userList();
 
-    
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.USER_LIST]);
   });
 
   it('userPermissions(): should call router.navigate with ROLE_MODULE_MAPPING URL on user-permission list', () => {
-    
     component.userPermissions();
 
-    
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.ROLE_MODULE_MAPPING]);
   });
 
   it('goToPrograms(): should call router.navigate with PROGRAMS URL on programs list', () => {
-    
     component.goToPrograms();
 
-    
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.PROGRAMS]);
   });
 
   it('chatSystem(): should call router.navigate with chatSystem URL on chat list', () => {
-    
     component.chatSystem();
 
-    
     expect(router.navigate).toHaveBeenCalledWith([NavigationURLs.NAV_CHAT_PANEL]);
   });
 
   it('should set currentModuleName to "Home" and toggle displayFeedbackButton on FeedbackBtnClicked', () => {
-    
     component.displayFeedbackButton = true;
 
-    
     component.FeedbackBtnClicked();
 
-    
     expect(component.currentModuleName).toBe('Home');
-    expect(component.displayFeedbackButton).toBe(false); 
+    expect(component.displayFeedbackButton).toBe(false);
 
-    
     component.FeedbackBtnClicked();
 
-    
-    expect(component.displayFeedbackButton).toBe(true); 
+    expect(component.displayFeedbackButton).toBe(true);
   });
 
   it('should set displayFeedback to false on closeFeedback', () => {
-    
     component.displayFeedback = true;
 
-    
     component.closeFeedback();
 
-    
     expect(component.displayFeedback).toBe(false);
   });
 
   it('should log message on ngOnDestroy', () => {
-    
     component.ngOnDestroy();
 
-    
     expect(consoleLogSpy).toHaveBeenCalledWith('Home Page Destroyed');
   });
-
 });

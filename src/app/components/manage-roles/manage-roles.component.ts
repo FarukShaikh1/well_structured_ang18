@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { UserService } from '../../services/user/user.service
+import { UserService } from '../../services/user/user.service';
 import { GlobalService } from '../../services/global/global.service';
 import { HttpClient } from '@angular/common/http';
 import { RoleService } from '../../services/role/role.service';

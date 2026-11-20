@@ -1,11 +1,11 @@
-import { TransactionAccountSplit } from "./transaction-account-split";
+import { TransactionAccountSplit } from './transaction-account-split';
 
 export interface TransactionRequest {
-    transactionGroupId: string|null,
-    transactionDate: string,
-    sourceOrReason: string,
-    purpose: string,
-    transactionCategoryId: string,
-    description: string,
-    accountSplits: TransactionAccountSplit[]; 
+  transactionGroupId: string | null;
+  transactionDate: string;
+  sourceOrReason: string;
+  purpose: string;
+  transactionCategoryId: string;
+  description: string;
+  accountSplits: TransactionAccountSplit[];
 }

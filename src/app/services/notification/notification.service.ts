@@ -4,17 +4,16 @@ import { API_URL } from '../../../utils/api-url';
 import { HttpService } from '../rest/http.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotificationService {
-
   private notificationUpdated = new Subject<void>();
   notificationUpdated$ = this.notificationUpdated.asObservable();
 
   private unreadNotificationCount = new BehaviorSubject<number>(0);
   unreadNotificationCount$ = this.unreadNotificationCount.asObservable();
 
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService) {}
 
   notifyNotificationUpdate() {
     this.notificationUpdated.next();
@@ -25,13 +24,10 @@ export class NotificationService {
   }
 
   getAllNotifications(pageNo: number, pageSize: number): Observable<any> {
-    
     return this.httpService.get(API_URL.GET_ALL_ROLES + `${pageNo}&pagesize=${pageSize}`);
   }
 
   markAsRead(notificationId: string): Observable<any> {
-    
     return this.httpService.patch(API_URL.GET_ALL_ROLES + `${notificationId}`, {});
   }
-
 }

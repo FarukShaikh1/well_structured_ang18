@@ -5,20 +5,23 @@ export function applyPasswordPattern(value: string, shift = 5): string {
   const min = 32;
   const max = 126;
 
-  value = value.split('').map(c => {
-    const code = c.charCodeAt(0);
+  value = value
+    .split('')
+    .map((c) => {
+      const code = c.charCodeAt(0);
 
-    if (code < min || code > max) return c;
+      if (code < min || code > max) return c;
 
-    let shifted = code - shift;
-    if (shifted < min) {
-      shifted = max - (min - shifted - 1);
-    }
+      let shifted = code - shift;
+      if (shifted < min) {
+        shifted = max - (min - shifted - 1);
+      }
 
-    return String.fromCharCode(shifted);
-  }).join('');
+      return String.fromCharCode(shifted);
+    })
+    .join('');
 
-  let chars = value.split('').map(c => {
+  let chars = value.split('').map((c) => {
     if (c >= 'a' && c <= 'z') return c.toUpperCase();
     if (c >= 'A' && c <= 'Z') return c.toLowerCase();
     return c;
@@ -36,7 +39,6 @@ export function applyPasswordPattern(value: string, shift = 5): string {
   for (let i = 0; i < chars.length - 1; i += 2) {
     [chars[i], chars[i + 1]] = [chars[i + 1], chars[i]];
   }
-
 
   // // Restore odd character
   // if (lastChar) {

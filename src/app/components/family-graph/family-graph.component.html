@@ -1,5 +1,4 @@
 <div class="family-graph-page container-fluid py-3">
-
   <!-- Page header -->
   <div class="d-flex align-items-center justify-content-between mb-3">
     <h4 class="mb-0">Family Tree</h4>
@@ -7,8 +6,11 @@
       <button class="btn btn-sm btn-outline-primary" (click)="toggleAddPersonForm()">
         {{ showAddPersonForm ? 'Cancel' : '+ Add Person' }}
       </button>
-      <button class="btn btn-sm btn-outline-secondary" [disabled]="!selectedPerson"
-        (click)="toggleAddRelationshipForm()">
+      <button
+        class="btn btn-sm btn-outline-secondary"
+        [disabled]="!selectedPerson"
+        (click)="toggleAddRelationshipForm()"
+      >
         {{ showAddRelationshipForm ? 'Cancel' : '+ Add Relationship' }}
       </button>
     </div>
@@ -16,170 +18,233 @@
 
   <!-- ── Add Person Form ── -->
   @if (showAddPersonForm) {
-  <div class="card mb-3 border-primary">
-    <div class="card-header bg-primary text-white py-2 fw-semibold">Add New Person</div>
-    <div class="card-body">
-      <div class="row g-2">
-        <div class="col-md-3">
-          <input type="text" class="form-control form-control-sm" placeholder="First Name *"
-            [(ngModel)]="newPerson.firstName" />
-        </div>
-        <div class="col-md-3">
-          <input type="text" class="form-control form-control-sm" placeholder="Last Name *"
-            [(ngModel)]="newPerson.lastName" />
-        </div>
-        <div class="col-md-2">
-          <input type="date" class="form-control form-control-sm" [(ngModel)]="newPerson.dateOfBirth" />
-        </div>
-        <div class="col-md-2">
-          <select class="form-select form-select-sm" [(ngModel)]="newPerson.gender">
-            <option value="">Gender</option>
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <button class="btn btn-sm btn-primary w-100" [disabled]="isSavingPerson" (click)="savePerson()">
-            {{ isSavingPerson ? 'Saving...' : 'Save' }}
-          </button>
-        </div>
-        <div class="col-12">
-          <input type="text" class="form-control form-control-sm" placeholder="Notes (optional)"
-            [(ngModel)]="newPerson.notes" />
+    <div class="card mb-3 border-primary">
+      <div class="card-header bg-primary text-white py-2 fw-semibold">Add New Person</div>
+      <div class="card-body">
+        <div class="row g-2">
+          <div class="col-md-3">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="First Name *"
+              [(ngModel)]="newPerson.firstName"
+            />
+          </div>
+          <div class="col-md-3">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="Last Name *"
+              [(ngModel)]="newPerson.lastName"
+            />
+          </div>
+          <div class="col-md-2">
+            <input
+              type="date"
+              class="form-control form-control-sm"
+              [(ngModel)]="newPerson.dateOfBirth"
+            />
+          </div>
+          <div class="col-md-2">
+            <select class="form-select form-select-sm" [(ngModel)]="newPerson.gender">
+              <option value="">Gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button
+              class="btn btn-sm btn-primary w-100"
+              [disabled]="isSavingPerson"
+              (click)="savePerson()"
+            >
+              {{ isSavingPerson ? 'Saving...' : 'Save' }}
+            </button>
+          </div>
+          <div class="col-12">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="Notes (optional)"
+              [(ngModel)]="newPerson.notes"
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
   }
 
   <!-- ── Add Relationship Form ── -->
   @if (showAddRelationshipForm) {
-  <div class="card mb-3 border-secondary">
-    <div class="card-header bg-secondary text-white py-2 fw-semibold">Add Relationship</div>
-    <div class="card-body" style="overflow:visible">
-      <div class="row g-3 align-items-start">
-
-        <!-- Person (to) typeahead -->
-        <div class="col-md-3 ">
-          <div class="typeahead-wrap">
-            @if (relToSelected) {
-            <div class="d-flex align-items-center gap-1">
-              <span class="badge bg-success-subtle text-success-emphasis px-2 py-1 fs-6">
-                {{ relToSelected.fullName }}
-              </span>
-              <button type="button" class="btn-close" style="font-size:0.55rem" (click)="clearRelTo()"
-                title="Clear"></button>
-            </div>
-            } @else {
-            <input type="text" class="form-control form-control-sm" placeholder="Type 2+ chars to search..."
-              [(ngModel)]="relToQuery" (input)="onRelToInput()" (blur)="dismissRelToResults()" />
-            @if (relToSearching) {
-            <div class="small text-muted mt-1 ps-1">Searching...</div>
-            }
-            @if (relToResults.length > 0) {
-            <ul class="typeahead-dropdown list-group shadow">
-              @for (p of relToResults; track p.personId) {
-              <li class="list-group-item list-group-item-action py-1 px-2" (mousedown)="selectRelTo(p)">
-                <strong>{{ p.fullName }}</strong>
-                @if (p.dateOfBirth) {
-                <small class="text-muted ms-1">{{ p.dateOfBirth | date:'dd-MMM-yyyy' }}</small>
+    <div class="card mb-3 border-secondary">
+      <div class="card-header bg-secondary text-white py-2 fw-semibold">Add Relationship</div>
+      <div class="card-body" style="overflow: visible">
+        <div class="row g-3 align-items-start">
+          <!-- Person (to) typeahead -->
+          <div class="col-md-3">
+            <div class="typeahead-wrap">
+              @if (relToSelected) {
+                <div class="d-flex align-items-center gap-1">
+                  <span class="badge bg-success-subtle text-success-emphasis px-2 py-1 fs-6">
+                    {{ relToSelected.fullName }}
+                  </span>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    style="font-size: 0.55rem"
+                    (click)="clearRelTo()"
+                    title="Clear"
+                  ></button>
+                </div>
+              } @else {
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  placeholder="Type 2+ chars to search..."
+                  [(ngModel)]="relToQuery"
+                  (input)="onRelToInput()"
+                  (blur)="dismissRelToResults()"
+                />
+                @if (relToSearching) {
+                  <div class="small text-muted mt-1 ps-1">Searching...</div>
                 }
-              </li>
+                @if (relToResults.length > 0) {
+                  <ul class="typeahead-dropdown list-group shadow">
+                    @for (p of relToResults; track p.personId) {
+                      <li
+                        class="list-group-item list-group-item-action py-1 px-2"
+                        (mousedown)="selectRelTo(p)"
+                      >
+                        <strong>{{ p.fullName }}</strong>
+                        @if (p.dateOfBirth) {
+                          <small class="text-muted ms-1">{{
+                            p.dateOfBirth | date: 'dd-MMM-yyyy'
+                          }}</small>
+                        }
+                      </li>
+                    }
+                  </ul>
+                }
               }
-            </ul>
-            }
-            }
+            </div>
+          </div>
+
+          <div class="col-md-1 align-items-center">is</div>
+          <!-- Relationship type -->
+          <div class="col-md-3">
+            <select
+              class="form-select form-select-sm"
+              [(ngModel)]="newRelationship.relationshipType"
+            >
+              <option value="">Select relation...</option>
+              @for (rt of relationshipTypes; track rt) {
+                <option [value]="rt">{{ rt }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="col-md-1 justify-content-center">of</div>
+
+          <!-- Person (from) typeahead -->
+          <div class="col-md-3">
+            <div class="typeahead-wrap">
+              @if (relFromSelected) {
+                <div class="d-flex align-items-center gap-1">
+                  <span class="badge bg-primary-subtle text-primary-emphasis px-2 py-1 fs-6">
+                    {{ relFromSelected.fullName }}
+                  </span>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    style="font-size: 0.55rem"
+                    (click)="clearRelFrom()"
+                    title="Clear"
+                  ></button>
+                </div>
+              } @else {
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  placeholder="Type 2+ chars to search..."
+                  [(ngModel)]="relFromQuery"
+                  (input)="onRelFromInput()"
+                  (blur)="dismissRelFromResults()"
+                />
+                @if (relFromSearching) {
+                  <div class="small text-muted mt-1 ps-1">Searching...</div>
+                }
+                @if (relFromResults.length > 0) {
+                  <ul class="typeahead-dropdown list-group shadow">
+                    @for (p of relFromResults; track p.personId) {
+                      <li
+                        class="list-group-item list-group-item-action py-1 px-2"
+                        (mousedown)="selectRelFrom(p)"
+                      >
+                        <strong>{{ p.fullName }}</strong>
+                        @if (p.dateOfBirth) {
+                          <small class="text-muted ms-1">{{
+                            p.dateOfBirth | date: 'dd-MMM-yyyy'
+                          }}</small>
+                        }
+                      </li>
+                    }
+                  </ul>
+                }
+              }
+            </div>
+          </div>
+
+          <!-- Save -->
+          <div class="col-md-1 d-flex align-items-end pb-1">
+            <button
+              class="btn btn-sm btn-secondary w-100"
+              [disabled]="isSavingRelationship"
+              (click)="saveRelationship()"
+            >
+              {{ isSavingRelationship ? '...' : 'Save' }}
+            </button>
           </div>
         </div>
-
-        <div class="col-md-1 align-items-center">
-          is
-        </div>
-        <!-- Relationship type -->
-        <div class="col-md-3">
-          <select class="form-select form-select-sm" [(ngModel)]="newRelationship.relationshipType">
-            <option value="">Select relation...</option>
-            @for (rt of relationshipTypes; track rt) {
-            <option [value]="rt">{{ rt }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="col-md-1 justify-content-center">
-          of
-        </div>
-
-        <!-- Person (from) typeahead -->
-        <div class="col-md-3">
-          <div class="typeahead-wrap">
-            @if (relFromSelected) {
-            <div class="d-flex align-items-center gap-1">
-              <span class="badge bg-primary-subtle text-primary-emphasis px-2 py-1 fs-6">
-                {{ relFromSelected.fullName }}
-              </span>
-              <button type="button" class="btn-close" style="font-size:0.55rem" (click)="clearRelFrom()"
-                title="Clear"></button>
-            </div>
-            } @else {
-            <input type="text" class="form-control form-control-sm" placeholder="Type 2+ chars to search..."
-              [(ngModel)]="relFromQuery" (input)="onRelFromInput()" (blur)="dismissRelFromResults()" />
-            @if (relFromSearching) {
-            <div class="small text-muted mt-1 ps-1">Searching...</div>
-            }
-            @if (relFromResults.length > 0) {
-            <ul class="typeahead-dropdown list-group shadow">
-              @for (p of relFromResults; track p.personId) {
-              <li class="list-group-item list-group-item-action py-1 px-2" (mousedown)="selectRelFrom(p)">
-                <strong>{{ p.fullName }}</strong>
-                @if (p.dateOfBirth) {
-                <small class="text-muted ms-1">{{ p.dateOfBirth | date:'dd-MMM-yyyy' }}</small>
-                }
-              </li>
-              }
-            </ul>
-            }
-            }
-          </div>
-        </div>
-
-        <!-- Save -->
-        <div class="col-md-1 d-flex align-items-end pb-1">
-          <button class="btn btn-sm btn-secondary w-100" [disabled]="isSavingRelationship" (click)="saveRelationship()">
-            {{ isSavingRelationship ? '...' : 'Save' }}
-          </button>
-        </div>
-
       </div>
     </div>
-  </div>
   }
 
   <!-- ── Search bar ── -->
   <div class="d-flex gap-3 mb-2 small text-muted">
-    <div class="card-body py-1" style="overflow:visible">
+    <div class="card-body py-1" style="overflow: visible">
       <div class="row g-2 align-items-center">
-
         <div class="col-md-5">
           <div class="typeahead-wrap">
             <div class="input-group input-group-sm">
-              <input type="text" class="form-control" placeholder="Search person by name to view their family tree..."
-                [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" (blur)="dismissMainResults()" />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search person by name to view their family tree..."
+                [(ngModel)]="searchQuery"
+                (keyup.enter)="onSearch()"
+                (blur)="dismissMainResults()"
+              />
               <button class="btn btn-primary" [disabled]="isSearching" (click)="onSearch()">
                 {{ isSearching ? '...' : 'Search' }}
               </button>
             </div>
             @if (searchResults.length > 0) {
-            <ul class="typeahead-dropdown list-group shadow">
-              @for (person of searchResults; track person.personId) {
-              <li class="list-group-item list-group-item-action py-1 px-2" (mousedown)="selectPerson(person)"
-                style="cursor:pointer">
-                <strong>{{ person.fullName }}</strong>
-                @if (person.dateOfBirth) {
-                <small class="text-muted ms-2">{{ person.dateOfBirth | date:'dd-MMM-yyyy' }}</small>
+              <ul class="typeahead-dropdown list-group shadow">
+                @for (person of searchResults; track person.personId) {
+                  <li
+                    class="list-group-item list-group-item-action py-1 px-2"
+                    (mousedown)="selectPerson(person)"
+                    style="cursor: pointer"
+                  >
+                    <strong>{{ person.fullName }}</strong>
+                    @if (person.dateOfBirth) {
+                      <small class="text-muted ms-2">{{
+                        person.dateOfBirth | date: 'dd-MMM-yyyy'
+                      }}</small>
+                    }
+                  </li>
                 }
-              </li>
-              }
-            </ul>
+              </ul>
             }
           </div>
         </div>
@@ -192,14 +257,18 @@
         </div>
 
         @if (selectedPerson) {
-        <div class="col-md-5">
-          <button class="btn btn-sm btn-outline-primary me-2" (click)="loadGraph(selectedPerson!.personId)">
-            Reload Graph
-          </button>
-          <span class="text-muted small">Root: <strong>{{ selectedPerson.fullName }}</strong></span>
-        </div>
+          <div class="col-md-5">
+            <button
+              class="btn btn-sm btn-outline-primary me-2"
+              (click)="loadGraph(selectedPerson!.personId)"
+            >
+              Reload Graph
+            </button>
+            <span class="text-muted small"
+              >Root: <strong>{{ selectedPerson.fullName }}</strong></span
+            >
+          </div>
         }
-
       </div>
     </div>
   </div>
@@ -215,15 +284,15 @@
   <!-- ── Graph canvas ── -->
   <div class="graph-wrapper border rounded">
     @if (isLoadingGraph) {
-    <div class="graph-overlay d-flex align-items-center justify-content-center">
-      <div class="spinner-border text-primary me-2" role="status"></div>
-      <span>Loading graph...</span>
-    </div>
+      <div class="graph-overlay d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary me-2" role="status"></div>
+        <span>Loading graph...</span>
+      </div>
     }
     @if (graphError) {
-    <div class="graph-overlay d-flex align-items-center justify-content-center">
-      <div class="alert alert-danger mb-0">{{ graphError }}</div>
-    </div>
+      <div class="graph-overlay d-flex align-items-center justify-content-center">
+        <div class="alert alert-danger mb-0">{{ graphError }}</div>
+      </div>
     }
     <!-- @if (!selectedPerson && !isLoadingGraph && !graphError) {
     <div class="graph-overlay d-flex align-items-center justify-content-center text-muted">
@@ -232,6 +301,5 @@
     } -->
     <div #graphCanvas class="graph-canvas"></div>
   </div>
-
 </div>
 <app-toaster></app-toaster>

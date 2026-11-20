@@ -21,18 +21,24 @@ describe('ResetPasswordComponent', () => {
 
   beforeEach(async () => {
     mockRouter = {
-      navigate: jasmine.createSpy('navigate')
+      navigate: jasmine.createSpy('navigate'),
     };
 
     mockActivatedRoute = {
       queryParamMap: of({
         get: (param: string) => {
-          if (param === 'token') { return 'mockToken'; }
-          if (param === 'email') { return 'mockEmail'; }
-          if (param === 'resetPassword') { return 'true'; }
+          if (param === 'token') {
+            return 'mockToken';
+          }
+          if (param === 'email') {
+            return 'mockEmail';
+          }
+          if (param === 'resetPassword') {
+            return 'true';
+          }
           return null;
-        }
-      })
+        },
+      }),
     };
 
     mockUserService = jasmine.createSpyObj('UserService', ['resetPassword']);
@@ -40,17 +46,16 @@ describe('ResetPasswordComponent', () => {
     mockToaster = jasmine.createSpyObj('ToasterComponent', ['showMessage']);
 
     await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, ResetPasswordComponent, ToasterComponent],
-    providers: [
+      imports: [ReactiveFormsModule, ResetPasswordComponent, ToasterComponent],
+      providers: [
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: UserService, useValue: mockUserService },
         LoaderService,
-        { provide: ToasterComponent, useValue: mockToaster } 
-        ,
-        provideHttpClient(withInterceptorsFromDi())
-    ]
-}).compileComponents();
+        { provide: ToasterComponent, useValue: mockToaster },
+        provideHttpClient(withInterceptorsFromDi()),
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ResetPasswordComponent);
     component = fixture.componentInstance;
@@ -65,19 +70,18 @@ describe('ResetPasswordComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  
   it('ngOnInit(): should initialize component and set properties on ngOnInit', () => {
     component.ngOnInit();
 
     expect(component.token).toBe('mockToken');
     expect(component.email).toBe('mockEmail');
     expect(component.isResetPassword).toBeTrue();
-    expect(mockRouter.navigate).not.toHaveBeenCalled(); 
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
   it('ngOnInit(): should navigate to /unauthorised if token or email is missing', () => {
     mockActivatedRoute.queryParamMap = of({
-      get: () => null 
+      get: () => null,
     });
 
     component.ngOnInit();
@@ -92,7 +96,6 @@ describe('ResetPasswordComponent', () => {
       const result = validator(control);
       expect(result).toBeNull();
     });
-
 
     it('should return null if control value does not contain disallowed characters', () => {
       const validator = component.disallowedCharactersValidator([' ', '#']);
@@ -118,7 +121,7 @@ describe('ResetPasswordComponent', () => {
 
   describe('onSubmit', () => {
     beforeEach(() => {
-      component.ngOnInit(); 
+      component.ngOnInit();
       component.resetPasswordForm.controls['newPassword'].setValue('ValidPassword123!');
       component.resetPasswordForm.controls['confirmPassword'].setValue('ValidPassword123!');
     });
@@ -139,14 +142,15 @@ describe('ResetPasswordComponent', () => {
         token: 'mockToken',
       });
       expect(spyToaster).toHaveBeenCalledWith('Password reset successful', 'success');
-      
     });
 
     it('should show error message on failed password reset', () => {
       const spyToaster = spyOn(component.toaster, 'showMessage').and.callThrough();
       const spyLoaderShow = spyOn(loaderService, 'showLoader').and.callThrough();
       const spyLoaderHide = spyOn(loaderService, 'hideLoader').and.callThrough();
-      mockUserService.resetPassword.and.returnValue(of({ success: false, message: 'Password reset failed' }));
+      mockUserService.resetPassword.and.returnValue(
+        of({ success: false, message: 'Password reset failed' }),
+      );
 
       component.onSubmit();
 
@@ -160,7 +164,9 @@ describe('ResetPasswordComponent', () => {
       const spyLoaderShow = spyOn(loaderService, 'showLoader').and.callThrough();
       const spyLoaderHide = spyOn(loaderService, 'hideLoader').and.callThrough();
 
-      const errorResponse = { error: { errors: { ConfirmPassword: 'Confirmation password does not match' } } };
+      const errorResponse = {
+        error: { errors: { ConfirmPassword: 'Confirmation password does not match' } },
+      };
       mockUserService.resetPassword.and.returnValue(throwError(errorResponse));
 
       component.onSubmit();
@@ -171,17 +177,14 @@ describe('ResetPasswordComponent', () => {
     });
 
     it('should call resetPassword on UserService and navigate on success after timeout', fakeAsync(() => {
-      
-      component.ngOnInit(); 
+      component.ngOnInit();
       component.resetPasswordForm.controls['newPassword'].setValue('ValidPassword123!');
       component.resetPasswordForm.controls['confirmPassword'].setValue('ValidPassword123!');
       mockUserService.resetPassword.and.returnValue(of({ success: true }));
 
-      
       component.onSubmit();
-      tick(); 
+      tick();
 
-      
       expect(mockLoaderService.showLoader).toHaveBeenCalled();
       expect(mockUserService.resetPassword).toHaveBeenCalledWith({
         password: 'ValidPassword123!',
@@ -191,27 +194,23 @@ describe('ResetPasswordComponent', () => {
       });
       expect(mockToaster.showMessage).toHaveBeenCalledWith('Password reset successful', 'success');
 
-      
-      tick(2000); 
+      tick(2000);
 
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
       expect(mockLoaderService.hideLoader).toHaveBeenCalled();
     }));
 
     it('should handle generic error response from the server', fakeAsync(() => {
-      
-      component.ngOnInit(); 
+      component.ngOnInit();
       component.resetPasswordForm.controls['newPassword'].setValue('ValidPassword123!');
       component.resetPasswordForm.controls['confirmPassword'].setValue('ValidPassword123!');
 
       const errorResponse = { message: 'An unexpected error occurred' };
       mockUserService.resetPassword.and.returnValue(throwError(errorResponse));
 
-      
       component.onSubmit();
-      tick(); 
+      tick();
 
-      
       expect(mockLoaderService.showLoader).toHaveBeenCalled();
       expect(mockUserService.resetPassword).toHaveBeenCalledWith({
         password: 'ValidPassword123!',
@@ -223,10 +222,9 @@ describe('ResetPasswordComponent', () => {
       expect(mockLoaderService.hideLoader).toHaveBeenCalled();
     }));
 
-
     it('should hide loader if form is invalid', () => {
       const spyLoaderShow = spyOn(loaderService, 'showLoader').and.callThrough();
-      component.resetPasswordForm.controls['newPassword'].setValue(''); 
+      component.resetPasswordForm.controls['newPassword'].setValue('');
 
       component.onSubmit();
 
@@ -239,5 +237,4 @@ describe('ResetPasswordComponent', () => {
     component.goBack();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
   });
-
 });

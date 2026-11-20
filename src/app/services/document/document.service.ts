@@ -1,27 +1,26 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs/internal/Observable";
-import { API_URL } from "../../../utils/api-url";
-import { LocalStorageConstants } from "../../../utils/application-constants";
-import { DocumentRequest } from "../../interfaces/document-request";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { API_URL } from '../../../utils/api-url';
+import { LocalStorageConstants } from '../../../utils/application-constants';
+import { DocumentRequest } from '../../interfaces/document-request';
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class DocumentService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   getDocumentList() {
     return this.http.get(API_URL.GET_DOCUMENT_List);
   }
 
   /**
-* Backend endpoint that returns a short-lived SAS URL or redirect URL for direct access to blob.
-* Using SAS makes preview and download fast and does not stream through backend.
-*/
-  getDownloadUrl(documentId: string, fileName:string): Observable<{ url: string }> {
+   * Backend endpoint that returns a short-lived SAS URL or redirect URL for direct access to blob.
+   * Using SAS makes preview and download fast and does not stream through backend.
+   */
+  getDownloadUrl(documentId: string, fileName: string): Observable<{ url: string }> {
     return this.http.get<{ url: string }>(
-      `${API_URL.GET_DOCUMENT_DOWNLOAD_SAS_URL}${documentId}`
+      `${API_URL.GET_DOCUMENT_DOWNLOAD_SAS_URL}${documentId}`,
       // `${API_URL.GET_DOCUMENT_DOWNLOAD_SAS_URL}${documentId}&fileName=${encodeURIComponent(fileName)}`
     );
   }
@@ -42,15 +41,10 @@ export class DocumentService {
   }
 
   deleteDocument(docId: string): Observable<any> {
-    return this.http.delete(
-      API_URL.DELETE_DOCUMENT +
-      docId
-    );
+    return this.http.delete(API_URL.DELETE_DOCUMENT + docId);
   }
 
   approveDocument(dayId: string): Observable<any> {
-    return this.http.get(
-      API_URL.APPROVE_SPECIAL_OCCASION +
-      dayId);
+    return this.http.get(API_URL.APPROVE_SPECIAL_OCCASION + dayId);
   }
 }

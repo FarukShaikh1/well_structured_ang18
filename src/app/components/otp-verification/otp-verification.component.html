@@ -6,12 +6,10 @@
     <h4 class="fw-bold">OTP Verification</h4>
   </div>
   <span class="otp-label mb-4"
-    >Enter OTP sent on <strong>{{ maskedEmail || "-" }}</strong></span
+    >Enter OTP sent on <strong>{{ maskedEmail || '-' }}</strong></span
   >
   <form [formGroup]="otpForm" (ngSubmit)="onVerifyOtp()">
     <div class="otp-inputs mt-2">
-      
-
       <input
         *ngFor="let controlName of otpForm.controls | keyvalue; let i = index"
         id="otp{{ i }}"
@@ -27,21 +25,20 @@
       />
     </div>
 
-    @if(invalidOtp){
-    <div class="text-danger invalid-otp-msg mt-2">
-      <small>Incorrect OTP.<br /></small>
-    </div>
+    @if (invalidOtp) {
+      <div class="text-danger invalid-otp-msg mt-2">
+        <small>Incorrect OTP.<br /></small>
+      </div>
     } @else {
       <div class="blank"></div>
     }
 
-
     <div class="timer-section mt-4">
-      @if(timerActive) {
-      <span class="resend-text">
-        OTP will expire in
-        <span class="timer-text"> {{ timerDisplay || "-" }} </span> minute(s)
-      </span>
+      @if (timerActive) {
+        <span class="resend-text">
+          OTP will expire in
+          <span class="timer-text"> {{ timerDisplay || '-' }} </span> minute(s)
+        </span>
       }
     </div>
 
@@ -57,20 +54,14 @@
     </div>
   </form>
 
-  @if(!timerActive) {
-  <span class="resend-text">
-    Did not receive OTP?
-    <button
-      type="button"
-      class="font-weight-bold text-link p-0"
-      (click)="onResendOtp()"
-    >
-      Resend OTP
-    </button>
-  </span>
+  @if (!timerActive) {
+    <span class="resend-text">
+      Did not receive OTP?
+      <button type="button" class="font-weight-bold text-link p-0" (click)="onResendOtp()">
+        Resend OTP
+      </button>
+    </span>
   }
-  
-  
 </div>
 
 <app-toaster></app-toaster>

@@ -36,7 +36,7 @@ import { ModulePermission } from '../../interfaces/module-permission';
     ConfirmationDialogComponent,
     UserRegistrationApprovalComponent,
     UserPermissionComponent,
-    SettingsComponent
+    SettingsComponent,
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
@@ -54,7 +54,7 @@ export class UserListComponent implements OnInit {
   public allowAdd = false;
   public allowEdit = false;
   public allowRefresh = true;
-  public gridName = "Hi";
+  public gridName = 'Hi';
   public filterColumns: ColumnDefinition[] = [];
   searchText: string = '';
   noDataMessage = 'No Data Exists.';
@@ -71,7 +71,16 @@ export class UserListComponent implements OnInit {
   id: string = '';
   cacheKey: string = NavigationURLs.USER_LIST;
   activeTab: 'users' | 'permissions' | 'approval' | 'settings' = 'approval';
-  activeUserModulePermissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
+  activeUserModulePermissions: ModulePermission = {
+    view: false,
+    add: false,
+    edit: false,
+    delete: false,
+    download: false,
+    upload: false,
+    approve: false,
+    reject: false,
+  };
   pendingApprovalsModulePermissions: any;
   settingsModulePermissions: any;
   permissionModulePermissions: any;
@@ -80,8 +89,8 @@ export class UserListComponent implements OnInit {
     public globalService: GlobalService,
     private loaderService: LoaderService,
     private cacheService: CacheService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   refreshData() {
     localStorage.removeItem(NavigationURLs.USER_LIST);
@@ -89,11 +98,19 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activeUserModulePermissions = this.globalService.getModulePermission(ApplicationModules.USERS);
+    this.activeUserModulePermissions = this.globalService.getModulePermission(
+      ApplicationModules.USERS,
+    );
 
-    this.pendingApprovalsModulePermissions = this.globalService.getModulePermission(ApplicationModules.PENDING_USERS);
-    this.permissionModulePermissions = this.globalService.getModulePermission(ApplicationModules.USER_PERMISSIONS);
-    this.settingsModulePermissions = this.globalService.getModulePermission(ApplicationModules.SETTINGS);
+    this.pendingApprovalsModulePermissions = this.globalService.getModulePermission(
+      ApplicationModules.PENDING_USERS,
+    );
+    this.permissionModulePermissions = this.globalService.getModulePermission(
+      ApplicationModules.USER_PERMISSIONS,
+    );
+    this.settingsModulePermissions = this.globalService.getModulePermission(
+      ApplicationModules.SETTINGS,
+    );
     this.columnConfiguration();
 
     this.loadGrid();
@@ -136,74 +153,76 @@ export class UserListComponent implements OnInit {
         title: 'Name',
         field: 'firstName',
         sorter: 'string',
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search name"
+        headerFilter: 'input',
+        headerFilterPlaceholder: 'Search name',
       },
       {
         title: 'Email Id',
         field: 'emailAddress',
         sorter: 'string',
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search name"
+        headerFilter: 'input',
+        headerFilterPlaceholder: 'Search name',
       },
       {
-        title: "Mobile Number",
-        field: "mobileNumber",
-        sorter: "alphanum",
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search email"
+        title: 'Mobile Number',
+        field: 'mobileNumber',
+        sorter: 'alphanum',
+        headerFilter: 'input',
+        headerFilterPlaceholder: 'Search email',
       },
       {
         title: 'Role',
         field: 'roleName',
         sorter: 'string',
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search role"
+        headerFilter: 'input',
+        headerFilterPlaceholder: 'Search role',
       },
       {
         title: 'Status',
         field: 'isLocked',
         sorter: 'string',
         formatter: this.globalService.isLockedFormatter.bind(this),
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search status"
+        headerFilter: 'input',
+        headerFilterPlaceholder: 'Search status',
       },
       {
-        title: "",
-        field: "",
+        title: '',
+        field: '',
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const id = cell.getRow().getData()["id"];
+          const id = cell.getRow().getData()['id'];
           this.hideUser(id);
         },
-        hozAlign: "center",
+        hozAlign: 'center',
         headerSort: false,
         print: false,
       },
     ];
     this.columnConfig.push({
-      title: "",
-      field: "option",
+      title: '',
+      field: 'option',
       maxWidth: 70,
       formatter: this.globalService.threeDotsFormatter.bind(this),
-      hozAlign: "center",
+      hozAlign: 'center',
       headerSort: false,
-      print: false
+      print: false,
     });
   }
 
-  generateOptionsMenu(rowData: Record<string, any>): Array<{ label: string; action: () => void; }> {
-    const menu: Array<{ label: string; action: () => void; }> = [];
+  generateOptionsMenu(rowData: Record<string, any>): Array<{ label: string; action: () => void }> {
+    const menu: Array<{ label: string; action: () => void }> = [];
     menu.push({
-      label: ApplicationConstantHtml.EDIT_LABLE, action: () => {
+      label: ApplicationConstantHtml.EDIT_LABLE,
+      action: () => {
         this.openDayDetailsPopup(rowData['id']);
-      }
+      },
     });
     menu.push({
-      label: ApplicationConstantHtml.DELETE_LABLE, action: () => {
+      label: ApplicationConstantHtml.DELETE_LABLE,
+      action: () => {
         this.deactivateUser(rowData['id'], true);
-      }
+      },
     });
     return menu;
   }
@@ -215,16 +234,15 @@ export class UserListComponent implements OnInit {
 
   deactivateUser(id: string, isdeactivate: boolean) {
     if (id) {
-
       if (isdeactivate) {
         this.confirmModalComponent.openConfirmationPopup(
           'Confirmation',
-          'Are you sure you want to deactivate this user? Once deactivated, the user will no longer be able to log in.'
+          'Are you sure you want to deactivate this user? Once deactivated, the user will no longer be able to log in.',
         );
       } else {
         this.confirmModalComponent.openConfirmationPopup(
           'Confirmation',
-          'Are you sure you want to reactivate this user?'
+          'Are you sure you want to reactivate this user?',
         );
       }
     } else {
@@ -233,7 +251,6 @@ export class UserListComponent implements OnInit {
 
   handleConfirmResult(result: boolean) {
     if (result) {
-
     }
   }
 
@@ -283,8 +300,7 @@ export class UserListComponent implements OnInit {
       let userStatus = '';
       if (row.isDeactivated) {
         userStatus = 'inactive';
-      }
-      else {
+      } else {
         userStatus = 'active';
       }
       const statusMatch = userStatus.includes(this.searchText);
@@ -303,7 +319,6 @@ export class UserListComponent implements OnInit {
       if (btn) btn.click();
       else console.error('userDetailsPopup not found');
     }, 120);
-
   }
 
   openDayDetailsPopup(id: string) {
@@ -313,7 +328,6 @@ export class UserListComponent implements OnInit {
       if (btn) btn.click();
       else console.error('openDetailsButton not found');
     }, 120);
-
   }
 
   filterGridBySearch(data: any) {

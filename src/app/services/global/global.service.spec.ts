@@ -19,9 +19,7 @@ describe('GlobalService', () => {
       'getUserPermission',
     ]);
 
-    const roleServiceSpy = jasmine.createSpyObj('RoleService', [
-      'getModulesMappedToLoggedinUser',
-    ]);
+    const roleServiceSpy = jasmine.createSpyObj('RoleService', ['getModulesMappedToLoggedinUser']);
 
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
@@ -36,7 +34,7 @@ describe('GlobalService', () => {
 
     service = TestBed.inject(GlobalService);
     localStorageService = TestBed.inject(
-      LocalStorageService
+      LocalStorageService,
     ) as jasmine.SpyObj<LocalStorageService>;
     roleService = TestBed.inject(RoleService) as jasmine.SpyObj<RoleService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
@@ -66,16 +64,12 @@ describe('GlobalService', () => {
 
   it('should fetch role data and set role module mapping', () => {
     const mockRoleData = [{ moduleName: 'TestModule', testAction: true }];
-    roleService.getLoggedInUserPermissions.and.returnValue(
-      of({ data: mockRoleData })
-    );
+    roleService.getLoggedInUserPermissions.and.returnValue(of({ data: mockRoleData }));
     localStorageService.setUserPermission.and.stub();
 
     service.getUserPermissionData().subscribe((result) => {
       expect(result).toBeTrue();
-      expect(localStorageService.setUserPermission).toHaveBeenCalledWith(
-        mockRoleData
-      );
+      expect(localStorageService.setUserPermission).toHaveBeenCalledWith(mockRoleData);
     });
   });
 
@@ -90,21 +84,21 @@ describe('GlobalService', () => {
   it('should return true for accessible module/action', () => {
     const mockRoleData = [
       {
-        'roleModuleMappingId': 0,
-        'moduleId': 2,
-        'view': true,
-        'add': false,
-        'edit': false,
-        'delete': false,
-        'download': false,
-        'upload': false,
-        'moduleName': 'Auth',
-        'description': null,
-        'createdBy': null,
-        'updatedBy': null,
-        'createdOn': null,
-        'updatedOn': null
-      }
+        roleModuleMappingId: 0,
+        moduleId: 2,
+        view: true,
+        add: false,
+        edit: false,
+        delete: false,
+        download: false,
+        upload: false,
+        moduleName: 'Auth',
+        description: null,
+        createdBy: null,
+        updatedBy: null,
+        createdOn: null,
+        updatedOn: null,
+      },
     ];
 
     localStorageService.getUserPermission.and.returnValue(mockRoleData);
@@ -116,7 +110,7 @@ describe('GlobalService', () => {
 
   it('should handle error in getRolePageMappingData and return false', () => {
     roleService.getLoggedInUserPermissions.and.returnValue(
-      of({ data: null }).pipe(catchError(() => of(false)))
+      of({ data: null }).pipe(catchError(() => of(false))),
     );
 
     service.getUserPermissionData().subscribe((result) => {
@@ -126,37 +120,36 @@ describe('GlobalService', () => {
 
   it('should emit module name when triggerGridReload is called', (done: DoneFn) => {
     const moduleName = 'Clients';
-    
+
     service.reloadGrid$.subscribe((emittedModuleName) => {
       expect(emittedModuleName).toBe(moduleName);
       done();
     });
-  
+
     service.triggerGridReload(moduleName);
   });
 
   it('should emit module name when triggerApplyFilter is called', (done: DoneFn) => {
     const moduleName = 'Clients';
-    
+
     service.refreshList$.subscribe((emittedModuleName) => {
       expect(emittedModuleName).toBe(moduleName);
       done();
     });
-  
+
     service.triggerApplyFilter(moduleName);
   });
 
   it('should handle error and return false in getRolePageMappingData', () => {
     const mockError = new Error('Test error');
-  
-    
+
     roleService.getLoggedInUserPermissions.and.returnValue(throwError(mockError));
-  
-    spyOn(console, 'error'); 
-  
+
+    spyOn(console, 'error');
+
     service.getUserPermissionData().subscribe((result) => {
-      expect(result).toBeFalse(); 
-      expect(console.error).toHaveBeenCalledWith('Error fetching role data', mockError.message); 
+      expect(result).toBeFalse();
+      expect(console.error).toHaveBeenCalledWith('Error fetching role data', mockError.message);
     });
   });
 });

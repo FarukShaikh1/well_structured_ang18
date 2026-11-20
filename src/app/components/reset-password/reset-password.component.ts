@@ -23,12 +23,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ToasterComponent,
-    LoaderComponent,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, ToasterComponent, LoaderComponent],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css'],
 })
@@ -65,24 +60,18 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
     private loaderService: LoaderService,
     public globalService: GlobalService,
     private localStorageService: LocalStorageService,
-    private titleService: Title
-  ) { }
+    private titleService: Title,
+  ) {}
 
   ngOnInit() {
     this.localStorageService.clear();
     this.route.queryParamMap.subscribe((params) => {
-      this.token = params.get('token')
-        ? decodeURIComponent(params.get('token') as string)
-        : null;
-      this.email = params.get('email')
-        ? decodeURIComponent(params.get('email') as string)
-        : null;
+      this.token = params.get('token') ? decodeURIComponent(params.get('token') as string) : null;
+      this.email = params.get('email') ? decodeURIComponent(params.get('email') as string) : null;
       const resetPasswordParam = params.get('iswelcome')
         ? decodeURIComponent(params.get('iswelcome') as string)
         : '';
-      this.personName = params.get('name')
-        ? decodeURIComponent(params.get('name') as string)
-        : '';
+      this.personName = params.get('name') ? decodeURIComponent(params.get('name') as string) : '';
 
       if (resetPasswordParam === 'true') {
         this.isResetPassword = false;
@@ -107,24 +96,22 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
           [
             Validators.required,
             Validators.minLength(ApplicationConstants.MIN_LENGTH_PASSWORD),
-            Validators.pattern(
-              ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_PASSWORD
-            ),
+            Validators.pattern(ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_PASSWORD),
             this.passwordNotContainingName(this.personName),
           ],
         ],
         confirmPassword: ['', [Validators.required]],
       },
-      { validators: this.passwordMatchValidator }
+      { validators: this.passwordMatchValidator },
     );
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   getPasswordLengthMessage(): string {
     return Messages.PASSWORD_LENGTH_MSG.replace(
       '{0}',
-      ApplicationConstants.MIN_LENGTH_PASSWORD.toString()
+      ApplicationConstants.MIN_LENGTH_PASSWORD.toString(),
     );
   }
 
@@ -136,14 +123,9 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (
-      password &&
-      confirmPassword &&
-      password.value !== confirmPassword.value
-    ) {
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
       confirmPassword?.setErrors({ passwordMismatch: true });
     } else {
-
       if (confirmPassword?.hasError('passwordMismatch')) {
         confirmPassword.setErrors(null);
       }
@@ -155,9 +137,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
       return () => null;
     }
 
-    const nameParts = fullname
-      .split(' ')
-      .filter((part) => part.trim().length > 0);
+    const nameParts = fullname.split(' ').filter((part) => part.trim().length > 0);
 
     return (control: AbstractControl): ValidationErrors | null => {
       const password = control.value || '';
@@ -166,9 +146,8 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
         return null;
       }
 
-
       const containsNamePart = nameParts.some((part) =>
-        password.toLowerCase().includes(part.toLowerCase())
+        password.toLowerCase().includes(part.toLowerCase()),
       );
 
       return containsNamePart ? { nameContains: true } : null;
@@ -189,15 +168,9 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
         next: (response) => {
           if (response.success) {
             if (this.isResetPassword) {
-              this.toaster.showMessage(
-                Messages.PASSWORD_RESET_SUCCESSFULLY,
-                'success'
-              );
+              this.toaster.showMessage(Messages.PASSWORD_RESET_SUCCESSFULLY, 'success');
             } else {
-              this.toaster.showMessage(
-                Messages.PASSWORD_CREATED_SUCCESSFULLY,
-                'success'
-              );
+              this.toaster.showMessage(Messages.PASSWORD_CREATED_SUCCESSFULLY, 'success');
             }
             setTimeout(() => {
               this.router.navigate(['/']);
@@ -207,10 +180,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
             if (this.isResetPassword) {
               console.error(Messages.PASSWORD_RESET_FAILED, response?.message);
             } else {
-              console.error(
-                Messages.PASSWORD_CREATION_FAILED,
-                response?.message
-              );
+              console.error(Messages.PASSWORD_CREATION_FAILED, response?.message);
             }
             this.toaster.showMessage(response?.message, 'error');
             this.loaderService.hideLoader();
@@ -218,14 +188,8 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
         },
         error: (error: any) => {
           if (error?.error?.errors?.ConfirmPassword) {
-            console.error(
-              Messages.PASSWORD_RESET_FAILED,
-              error?.error?.errors?.ConfirmPassword
-            );
-            this.toaster.showMessage(
-              error?.error?.errors?.ConfirmPassword,
-              'error'
-            );
+            console.error(Messages.PASSWORD_RESET_FAILED, error?.error?.errors?.ConfirmPassword);
+            this.toaster.showMessage(error?.error?.errors?.ConfirmPassword, 'error');
           } else {
             console.error(Messages.PASSWORD_RESET_FAILED, error);
             this.toaster.showMessage(error?.message, 'error');

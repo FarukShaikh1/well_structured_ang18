@@ -87,7 +87,7 @@ export class ExpenseAdjustmentComponent implements OnInit {
     this.getSourceOrReasonList("", "cash");
     this.getSourceOrReasonList("", "other");
   }
-  
+
 
   onSourceReasonChange(valueToFilter: any, accountType: string) {
     this.getSourceOrReasonList(valueToFilter.target.value, accountType);
@@ -138,7 +138,7 @@ export class ExpenseAdjustmentComponent implements OnInit {
   getSourceOrReasonList(searchText: string = "", accountType: string) {
     this.expenseService
       .getSourceOrReasonList("", "", searchText)
-      .subscribe((res:any) => {
+      .subscribe((res: any) => {
         if (accountType == "sbi") {
           this.sourceOrReasonListSbi = res.data;
         } else if (accountType == "cbi") {
@@ -181,7 +181,7 @@ export class ExpenseAdjustmentComponent implements OnInit {
   }
   getExpenseAdjustment(expenseId: number) {
     this.expenseService.adjustExpense(expenseId).subscribe((res: any) => {
-      this.patchValues(res:any);
+      this.patchValues(res);
     });
   }
 
@@ -232,7 +232,7 @@ export class ExpenseAdjustmentComponent implements OnInit {
 
     if (this.sbiValid || this.cbiValid || this.cashValid || this.otherValid) {
       if (!this.expenseAdjustmentForm.valid) {
-        
+
         return;
       } else {
         try {
@@ -261,19 +261,19 @@ export class ExpenseAdjustmentComponent implements OnInit {
             .adjustExpense(this.expenseAdjustmentForm.value)
             .subscribe((result) => {
               if (result) {
-                
+
               } else {
-                
+
                 return;
               }
             });
         } catch (error) {
-          
+
           console.error("Error in adding data : ", error);
         }
       }
     } else {
-      
+
       return;
     }
   }

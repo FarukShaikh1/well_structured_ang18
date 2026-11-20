@@ -5,12 +5,10 @@ import { API_URL } from '../../../utils/api-url';
 import { LocalStorageConstants } from '../../../utils/application-constants';
 import { CoinNoteCollectionRequest } from '../../interfaces/coin-note-collection-request';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CurrencyCoinService {
-
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient) {}
 
   getCurrencyCoinList(): Observable<any> {
     return this.http.get(API_URL.GET_COLLECTION_COIN_LIST);

@@ -11,9 +11,14 @@ describe('RoleService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [],
-    providers: [RoleService, HttpService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+      imports: [],
+      providers: [
+        RoleService,
+        HttpService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
+    });
     service = TestBed.inject(RoleService);
     httpMock = TestBed.inject(HttpTestingController);
   });
@@ -58,9 +63,7 @@ describe('RoleService', () => {
       expect(mapping).toEqual(mockMapping);
     });
 
-    const req = httpMock.expectOne(
-      `${API_URL.GET_ROLE_MODULE_MAPPING_BY_ROLE_ID}${roleId}`
-    );
+    const req = httpMock.expectOne(`${API_URL.GET_ROLE_MODULE_MAPPING_BY_ROLE_ID}${roleId}`);
     expect(req.request.method).toBe('GET');
     req.flush(mockMapping);
   });

@@ -5,17 +5,13 @@ import { SendOtpRequest, VerifyOtpRequest } from '../../interfaces/otp-request '
 import { HttpService } from '../rest/http.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OtpService {
+  constructor(private httpService: HttpService) {}
 
-  constructor(private httpService: HttpService) { }
-
-  sendOtp(sendOtpRequest: SendOtpRequest) : Observable<any>{
-    return this.httpService.post(
-      API_URL.SEND_OTP,
-      sendOtpRequest
-    );
+  sendOtp(sendOtpRequest: SendOtpRequest): Observable<any> {
+    return this.httpService.post(API_URL.SEND_OTP, sendOtpRequest);
   }
 
   verifyOtp(verifyOtpRequest: VerifyOtpRequest): Observable<any> {

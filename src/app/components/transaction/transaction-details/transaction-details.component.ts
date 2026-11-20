@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from "@angular/common";
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -7,7 +7,7 @@ import {
   OnInit,
   Renderer2,
   ViewChild,
-} from "@angular/core";
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -17,41 +17,36 @@ import {
   ValidationErrors,
   ValidatorFn,
   Validators,
-} from "@angular/forms";
-import flatpickr from "flatpickr";
-import { of, Subscription } from "rxjs";
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  tap,
-} from "rxjs/operators";
+} from '@angular/forms';
+import flatpickr from 'flatpickr';
+import { of, Subscription } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import {
   ApplicationConstants,
   ApplicationModules,
   DdlConfig,
   LocalStorageConstants,
-  NavigationURLs
-} from "../../../../utils/application-constants";
-import { DateUtils } from "../../../../utils/date-utils";
-import { TransactionRequest } from "../../../interfaces/transaction-request";
-import { GlobalService } from "../../../services/global/global.service";
-import { LoaderService } from "../../../services/loader/loader.service";
-import { LocalStorageService } from "../../../services/local-storage/local-storage.service";
-import { TransactionService } from "../../../services/transaction/transaction.service";
-import { ToasterComponent } from "../../shared/toaster/toaster.component";
+  NavigationURLs,
+} from '../../../../utils/application-constants';
+import { DateUtils } from '../../../../utils/date-utils';
+import { TransactionRequest } from '../../../interfaces/transaction-request';
+import { GlobalService } from '../../../services/global/global.service';
+import { LoaderService } from '../../../services/loader/loader.service';
+import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
+import { TransactionService } from '../../../services/transaction/transaction.service';
+import { ToasterComponent } from '../../shared/toaster/toaster.component';
 
 @Component({
-  selector: "app-transaction-details",
+  selector: 'app-transaction-details',
   standalone: true,
   imports: [ReactiveFormsModule, ToasterComponent, CommonModule],
   providers: [DatePipe],
-  templateUrl: "./transaction-details.component.html",
-  styleUrls: ["./transaction-details.component.scss"],
+  templateUrl: './transaction-details.component.html',
+  styleUrls: ['./transaction-details.component.scss'],
 })
 export class TransactionDetailsComponent implements OnInit, OnDestroy {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
-  @ViewChild("btnCloseDetailsPopup") btnCloseTransactionPopup!: ElementRef;
+  @ViewChild('btnCloseDetailsPopup') btnCloseTransactionPopup!: ElementRef;
   @Input() lastTransactionDate!: Date;
 
   transactionDetailsForm!: FormGroup;
@@ -77,15 +72,15 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   focusInDescription: boolean = false;
   isValidAmount: boolean = false;
   transactionRequest: TransactionRequest = {
-    transactionGroupId: "",
+    transactionGroupId: '',
     transactionDate: DateUtils.GetDateBeforeDays(30),
-    sourceOrReason: "",
-    purpose: "",
-    transactionCategoryId: "",
-    description: "",
+    sourceOrReason: '',
+    purpose: '',
+    transactionCategoryId: '',
+    description: '',
     accountSplits: [],
   };
-  loggedInUserId: string = "";
+  loggedInUserId: string = '';
   accountList: any[] = [];
 
   private subscriptions: Subscription = new Subscription();
@@ -98,16 +93,16 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     private loaderService: LoaderService,
     private renderer: Renderer2,
     private localStorageService: LocalStorageService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
   ) {
     this.transactionDetailsForm = this.fb.group({
-      transactionGroupId: "",
-      transactionDate: ["", Validators.required],
-      sourceOrReason: ["", Validators.required],
-      description: [""],
-      purpose: [""],
-      transactionCategory: [""],      // display name
-      transactionCategoryId: [""],    // store ID
+      transactionGroupId: '',
+      transactionDate: ['', Validators.required],
+      sourceOrReason: ['', Validators.required],
+      description: [''],
+      purpose: [''],
+      transactionCategory: [''], // display name
+      transactionCategoryId: [''], // store ID
     });
   }
 
@@ -121,25 +116,25 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   private setupFormListeners(): void {
     this.subscriptions.add(
-      this.transactionDetailsForm.controls["sourceOrReason"].valueChanges
+      this.transactionDetailsForm.controls['sourceOrReason'].valueChanges
         .pipe(debounceTime(300), distinctUntilChanged())
-        .subscribe((value) => this.onSourceReasonChange(value))
+        .subscribe((value) => this.onSourceReasonChange(value)),
     );
     this.subscriptions.add(
-      this.transactionDetailsForm.controls["purpose"].valueChanges
+      this.transactionDetailsForm.controls['purpose'].valueChanges
         .pipe(debounceTime(300), distinctUntilChanged())
-        .subscribe((value) => this.onPurposeChange(value))
+        .subscribe((value) => this.onPurposeChange(value)),
     );
     this.subscriptions.add(
-      this.transactionDetailsForm.controls["description"].valueChanges
+      this.transactionDetailsForm.controls['description'].valueChanges
         .pipe(debounceTime(300), distinctUntilChanged())
-        .subscribe((value) => this.onDescriptionChange(value))
+        .subscribe((value) => this.onDescriptionChange(value)),
     );
   }
 
   openDetailsPopup(transactionGroupId: string) {
     this.loaderService.showLoader();
-    this.loggedInUserId = localStorage.getItem("userId") || "";
+    this.loggedInUserId = localStorage.getItem('userId') || '';
     this.getTransactionCategoryList();
     this.loadAccountList();
     this.loadAccountFields();
@@ -147,18 +142,18 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     if (this.accountList.length && transactionGroupId) {
       this.getTransactionDetails(transactionGroupId);
     } else {
-      this.transactionDetailsForm.controls["transactionDate"].patchValue(
+      this.transactionDetailsForm.controls['transactionDate'].patchValue(
         this.datepipe.transform(
           this.lastTransactionDate,
-          ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT
-        )
+          ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT,
+        ),
       );
       this.loaderService.hideLoader();
     }
 
-    const model = document.getElementById("detailsPopup");
+    const model = document.getElementById('detailsPopup');
     if (model) {
-      this.renderer.setStyle(model, "display", "block");
+      this.renderer.setStyle(model, 'display', 'block');
     }
   }
 
@@ -172,32 +167,21 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   loadAccountFields() {
     for (const acc of this.accountList) {
       this.transactionDetailsForm.addControl(acc.id, new FormControl(0));
-      this.transactionDetailsForm.addControl(
-        "amount_" + acc.id,
-        new FormControl(0)
-      );
-      this.transactionDetailsForm.addControl(
-        "category_" + acc.id,
-        new FormControl(0)
-      );
+      this.transactionDetailsForm.addControl('amount_' + acc.id, new FormControl(0));
+      this.transactionDetailsForm.addControl('category_' + acc.id, new FormControl(0));
     }
   }
 
   atLeastOneValidAccountEntryValidator(accountIds: string[]): ValidatorFn {
     return (form: AbstractControl): ValidationErrors | null => {
       for (const id of accountIds) {
-        const amountControl = form.get("amount_" + id);
-        const categoryControl = form.get("category_" + id);
+        const amountControl = form.get('amount_' + id);
+        const categoryControl = form.get('category_' + id);
 
         const amount = Number(amountControl?.value ?? 0);
         const category = categoryControl?.value;
 
-        if (
-          amount > 0 &&
-          category != null &&
-          category !== "" &&
-          category !== 0
-        ) {
+        if (amount > 0 && category != null && category !== '' && category !== 0) {
           return null;
         }
       }
@@ -206,23 +190,21 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   closePopup() {
-    const model = document.getElementById("detailsPopup");
+    const model = document.getElementById('detailsPopup');
     if (model) {
-      this.renderer.setStyle(model, "display", "none");
+      this.renderer.setStyle(model, 'display', 'none');
     }
     this.transactionDetailsForm.reset();
   }
 
   ngAfterViewInit() {
-    flatpickr("#transactionDate", {
-      dateFormat: "d/m/Y",
+    flatpickr('#transactionDate', {
+      dateFormat: 'd/m/Y',
       defaultDate: new Date(),
     });
   }
 
-  validateAmountFields() {
-
-  }
+  validateAmountFields() {}
 
   getTransactionSuggestionList() {
     const cachedData = localStorage.getItem(LocalStorageConstants.COMMON_SUGGESTION_LIST);
@@ -243,7 +225,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
           }
         },
         error: (error: any) => {
-          console.error("error : ", error);
+          console.error('error : ', error);
           this.loaderService.hideLoader();
         },
       });
@@ -257,23 +239,16 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.transactionCategoryList = JSON.parse(cachedData);
       this.filteredTransactionCategoryList = this.transactionCategoryList;
       console.log('tihs.transactionCategoryList : ', this.transactionCategoryList);
-
     }
   }
 
   getListValues() {
     this.sourceOrReasonList = this.extractUniqueCapitalized(
       this.commonSuggestionList,
-      "sourceOrReason"
+      'sourceOrReason',
     );
-    this.purposeList = this.extractUniqueCapitalized(
-      this.commonSuggestionList,
-      "purpose"
-    );
-    this.descriptionList = this.extractUniqueCapitalized(
-      this.commonSuggestionList,
-      "description"
-    );
+    this.purposeList = this.extractUniqueCapitalized(this.commonSuggestionList, 'purpose');
+    this.descriptionList = this.extractUniqueCapitalized(this.commonSuggestionList, 'description');
   }
   addTransactionSuggestion(transactionRequest: TransactionRequest): void {
     if (!this.commonSuggestionList) {
@@ -283,7 +258,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       (suggestion) =>
         suggestion.sourceOrReason === transactionRequest.sourceOrReason &&
         suggestion.purpose === transactionRequest.purpose &&
-        suggestion.description === transactionRequest.description
+        suggestion.description === transactionRequest.description,
     );
 
     if (!isDuplicate) {
@@ -292,17 +267,16 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         purpose: transactionRequest.purpose,
         description: transactionRequest.description,
       });
-      localStorage.setItem(DdlConfig.COMMON_SUGGESTIONS, JSON.stringify(this.commonSuggestionList)
-      );
+      localStorage.setItem(DdlConfig.COMMON_SUGGESTIONS, JSON.stringify(this.commonSuggestionList));
     }
   }
 
   private capitalizeWords(text: string): string {
-    if (!text) return "";
+    if (!text) return '';
     return text
-      .split(" ")
+      .split(' ')
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
+      .join(' ');
   }
 
   private extractUniqueCapitalized(list: any[], key: string): string[] {
@@ -311,8 +285,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         list
           .map((item) => item[key]?.trim())
           .filter((value) => value)
-          .map((value) => this.capitalizeWords(value))
-      )
+          .map((value) => this.capitalizeWords(value)),
+      ),
     );
   }
 
@@ -320,70 +294,56 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     const filteredList = this.commonSuggestionList.filter(
       (option: any) =>
         option?.sourceOrReason &&
-        option.sourceOrReason.trim() !== "" &&
-        option.sourceOrReason.toLowerCase().includes(inputValue?.toLowerCase())
+        option.sourceOrReason.trim() !== '' &&
+        option.sourceOrReason.toLowerCase().includes(inputValue?.toLowerCase()),
     );
 
-    this.filteredSourceOrReasonList = this.extractUniqueCapitalized(
-      filteredList,
-      "sourceOrReason"
-    );
+    this.filteredSourceOrReasonList = this.extractUniqueCapitalized(filteredList, 'sourceOrReason');
     console.log('filteredSourceOrReasonList', this.filteredSourceOrReasonList);
 
-    this.filteredPurposeList = this.extractUniqueCapitalized(
-      filteredList,
-      "purpose"
-    );
+    this.filteredPurposeList = this.extractUniqueCapitalized(filteredList, 'purpose');
     console.log('filteredPurposeList', this.filteredPurposeList);
-    this.filteredDescriptionList = this.extractUniqueCapitalized(
-      filteredList,
-      "description"
-    );
+    this.filteredDescriptionList = this.extractUniqueCapitalized(filteredList, 'description');
     console.log('filteredDescriptionList', this.filteredDescriptionList);
   }
 
   selectSourceOrReason(inputValue: string): void {
-    this.transactionDetailsForm.controls["sourceOrReason"].patchValue(
-      inputValue
-    );
+    this.transactionDetailsForm.controls['sourceOrReason'].patchValue(inputValue);
 
     this.onSourceReasonChange(inputValue);
     this.focusInSource = false;
   }
 
   onDescriptionChange(inputValue: string) {
-    this.filteredDescriptionList = this.filterList(inputValue, "description");
+    this.filteredDescriptionList = this.filterList(inputValue, 'description');
   }
 
   selectDescription(selectedValue: string) {
-    this.transactionDetailsForm.controls["description"].patchValue(
-      selectedValue
-    );
+    this.transactionDetailsForm.controls['description'].patchValue(selectedValue);
     this.filteredDescriptionList = [];
   }
 
   onPurposeChange(inputValue: string) {
-    this.filteredPurposeList = this.filterList(inputValue, "purpose");
+    this.filteredPurposeList = this.filterList(inputValue, 'purpose');
   }
 
-
   selectPurpose(selectedValue: string) {
-    this.transactionDetailsForm.controls["purpose"].patchValue(selectedValue);
+    this.transactionDetailsForm.controls['purpose'].patchValue(selectedValue);
     this.filteredPurposeList = [];
   }
 
   onCategoryChange(event: any) {
     const inputValue = event.target.value.toLowerCase();
 
-    this.filteredTransactionCategoryList = this.transactionCategoryList.filter(
-      (option: any) => option?.configurationName.toLowerCase().includes(inputValue)
+    this.filteredTransactionCategoryList = this.transactionCategoryList.filter((option: any) =>
+      option?.configurationName.toLowerCase().includes(inputValue),
     );
     console.log('filteredTransactionCategoryList', this.filteredTransactionCategoryList);
   }
   selectCategory(option: any) {
     this.transactionDetailsForm.patchValue({
       transactionCategory: option.configurationName, // show name in input
-      transactionCategoryId: option.id               // save ID
+      transactionCategoryId: option.id, // save ID
     });
 
     this.focusInCategory = false; // close dropdown
@@ -398,13 +358,11 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
           this.loaderService.hideLoader();
         }),
         catchError((error) => {
-          this.showError(
-            error?.message || "Error fetching transaction details."
-          );
+          this.showError(error?.message || 'Error fetching transaction details.');
           this.loaderService.hideLoader();
           this.closePopup();
           return of(null);
-        })
+        }),
       )
       .subscribe();
   }
@@ -428,12 +386,11 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   patchValues(res: any) {
-
     this.transactionDetailsForm.patchValue({
       transactionGroupId: res.transactionGroupId,
       transactionDate: this.datepipe.transform(
         res.transactionDate,
-        ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT
+        ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT,
       ),
       sourceOrReason: res.sourceOrReason,
       purpose: res.purpose,
@@ -443,9 +400,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     });
     res.accountSplits?.forEach((split: any) => {
       const amountControl = this.transactionDetailsForm.get(split.accountId);
-      const categoryControl = this.transactionDetailsForm.get(
-        `category_${split.accountId}`
-      );
+      const categoryControl = this.transactionDetailsForm.get(`category_${split.accountId}`);
       if (amountControl && categoryControl) {
         amountControl.patchValue(split.amount ?? 0);
         categoryControl.patchValue(split.category);
@@ -454,9 +409,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   getCategoryNameById(id: any): string {
-    return this.transactionCategoryList
-      ?.find((x: any) => x.id === id)
-      ?.configurationName || '';
+    return this.transactionCategoryList?.find((x: any) => x.id === id)?.configurationName || '';
   }
   submitTransactionDetails() {
     this.loaderService.showLoader();
@@ -465,7 +418,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
     if (!this.transactionDetailsForm.valid) {
       this.isSaving = false;
-      this.showError("Please fill valid details.");
+      this.showError('Please fill valid details.');
       return;
     }
 
@@ -482,16 +435,13 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     const splits = this.buildSplits();
     if (splits.length === 0) {
       this.isSaving = false;
-      this.showError("Please enter valid amount for at least one account.");
+      this.showError('Please enter valid amount for at least one account.');
       return;
     }
 
     const request: TransactionRequest = {
-      transactionGroupId:
-        this.transactionDetailsForm.value.transactionGroupId || null,
-      transactionDate: DateUtils.IstDate(
-        this.transactionDetailsForm.value.transactionDate
-      ),
+      transactionGroupId: this.transactionDetailsForm.value.transactionGroupId || null,
+      transactionDate: DateUtils.IstDate(this.transactionDetailsForm.value.transactionDate),
       sourceOrReason: this.transactionDetailsForm.value.sourceOrReason,
       purpose: this.transactionDetailsForm.value.purpose,
       transactionCategoryId: this.transactionDetailsForm.value.transactionCategoryId,
@@ -502,50 +452,44 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.saveTransaction(request);
   }
 
-
   private ensureDescription() {
-    if (!this.transactionDetailsForm.value["description"]) {
-      this.transactionDetailsForm.value["description"] =
-        this.transactionDetailsForm.value["purpose"];
+    if (!this.transactionDetailsForm.value['description']) {
+      this.transactionDetailsForm.value['description'] =
+        this.transactionDetailsForm.value['purpose'];
     }
   }
 
-
   private correctTransactionDate() {
-    this.transactionDetailsForm.value["transactionDate"] =
-      DateUtils.CorrectedDate(
-        this.transactionDetailsForm.value["transactionDate"]
-      );
+    this.transactionDetailsForm.value['transactionDate'] = DateUtils.CorrectedDate(
+      this.transactionDetailsForm.value['transactionDate'],
+    );
   }
-
 
   private validateAccountEntries(): string | null {
     for (const acc of this.accountList) {
-      const category = this.transactionDetailsForm.value["category_" + acc.id];
+      const category = this.transactionDetailsForm.value['category_' + acc.id];
       const amount = this.transactionDetailsForm.value[acc.id];
       const hasAmount = !!amount && amount !== 0;
-      const hasCategory =
-        category !== null && category !== undefined && category !== 0;
+      const hasCategory = category !== null && category !== undefined && category !== 0;
 
       if (hasAmount && !hasCategory) {
-        return `Please select transaction category for ${acc.configurationName || "Unknown Account"
-          }`;
+        return `Please select transaction category for ${
+          acc.configurationName || 'Unknown Account'
+        }`;
       }
     }
     return null;
   }
 
-
   private buildSplits() {
-    return this.accountList.map((acc: any) => ({
-      accountId: acc.id,
-      category:
-        this.transactionDetailsForm.value["category_" + acc.id] || "expense",
-      amount: this.transactionDetailsForm.value[acc.id] || 0,
-    })).filter((split: any) => split.amount && split.amount > 0);
-
+    return this.accountList
+      .map((acc: any) => ({
+        accountId: acc.id,
+        category: this.transactionDetailsForm.value['category_' + acc.id] || 'expense',
+        amount: this.transactionDetailsForm.value[acc.id] || 0,
+      }))
+      .filter((split: any) => split.amount && split.amount > 0);
   }
-
 
   private saveTransaction(request: TransactionRequest) {
     const isUpdate = !!request.transactionGroupId;
@@ -553,7 +497,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.transactionService.updateTransaction(request).subscribe({
         next: (res: any) => {
           if (res && res.data) {
-            this.toaster.showMessage(res.message, "success");
+            this.toaster.showMessage(res.message, 'success');
             removeGridFromLocalStorage();
             this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
             this.isSaving = false;
@@ -566,24 +510,18 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         error: (error: any) => {
           this.isSaving = false;
           this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
-          this.toaster.showMessage(
-            error?.message, "error"
-          );
+          this.toaster.showMessage(error?.message, 'error');
           this.loaderService.hideLoader();
           return of(null);
-        }
-      })
+        },
+      });
     } else {
       this.transactionService.addTransaction(request).subscribe({
         next: (res: any) => {
           if (res && res.data) {
-            this.toaster.showMessage(
-              res.message, "success"
-            );
+            this.toaster.showMessage(res.message, 'success');
             removeGridFromLocalStorage();
-            this.renderer
-              .selectRootElement(this.btnCloseTransactionPopup?.nativeElement)
-              .click();
+            this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
             this.isSaving = false;
             this.globalService.triggerGridReload(ApplicationModules.EXPENSES);
             this.addTransactionSuggestion(request);
@@ -594,25 +532,21 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         error: (error: any) => {
           this.isSaving = false;
           this.renderer.selectRootElement(this.btnCloseTransactionPopup?.nativeElement).click();
-          this.toaster.showMessage(
-            error?.message, "error"
-          );
+          this.toaster.showMessage(error?.message, 'error');
           this.loaderService.hideLoader();
           return of(null);
-        }
+        },
       });
     }
   }
 
-
   private showError(message: string) {
     this.loaderService.hideLoader();
-    this.toaster.showMessage(message, "error");
+    this.toaster.showMessage(message, 'error');
   }
 
-
   toggleCategory(accountId: string, value: string) {
-    const key = "category_" + accountId;
+    const key = 'category_' + accountId;
     const current = this.transactionDetailsForm.get(key)?.value;
 
     if (current === value) {
@@ -630,8 +564,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     const filtered = this.commonSuggestionList.filter(
       (option: any) =>
         option?.[key] &&
-        option[key].trim() !== "" &&
-        option[key].toLowerCase().includes(inputValue.toLowerCase())
+        option[key].trim() !== '' &&
+        option[key].toLowerCase().includes(inputValue.toLowerCase()),
     );
 
     return Array.from(
@@ -639,8 +573,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         filtered
           .map((item) => item[key]?.trim())
           .filter((value) => value)
-          .map((value) => this.capitalizeWords(value))
-      )
+          .map((value) => this.capitalizeWords(value)),
+      ),
     );
   }
 }
@@ -657,4 +591,3 @@ function removeGridFromLocalStorage() {
   localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST);
   localStorage.removeItem(NavigationURLs.EXPENSE_BALANCE_LIST + '_col');
 }
-

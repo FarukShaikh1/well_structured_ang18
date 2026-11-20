@@ -17,10 +17,9 @@ interface DailyMeal {
   templateUrl: './daily-food-picker.component.html',
   standalone: true,
   imports: [CommonModule],
-  styleUrls: ['./daily-food-picker.component.css']
+  styleUrls: ['./daily-food-picker.component.css'],
 })
 export class DailyFoodPickerComponent {
-
   breakfastItems: FoodItem[] = [
     { name: 'Poha', category: 'Maharashtrian' },
     { name: 'Upma', category: 'South Indian' },
@@ -37,7 +36,7 @@ export class DailyFoodPickerComponent {
     { name: 'Methi Paratha', category: 'North Indian' },
     { name: 'Besan Chilla', category: 'Healthy' },
     { name: 'Moong Dal Chilla', category: 'Healthy' },
-    { name: 'Vegetable Sandwich', category: 'Quick' }
+    { name: 'Vegetable Sandwich', category: 'Quick' },
   ];
 
   lunchItems: FoodItem[] = [
@@ -56,7 +55,7 @@ export class DailyFoodPickerComponent {
     { name: 'Veg Pulao + Raita', category: 'Rice' },
     { name: 'Veg Biryani + Raita', category: 'Rice' },
     { name: 'Masala Khichdi + Curd', category: 'Comfort Food' },
-    { name: 'Matki Usal + Chapati', category: 'Maharashtrian' }
+    { name: 'Matki Usal + Chapati', category: 'Maharashtrian' },
   ];
 
   extraBreakfastItems: FoodItem[] = [
@@ -76,7 +75,7 @@ export class DailyFoodPickerComponent {
     { name: 'Sprouts Chaat', category: 'Healthy' },
     { name: 'Fruit Chaat', category: 'Healthy' },
     { name: 'Grilled Sandwich', category: 'Quick' },
-    { name: 'Boiled Eggs', category: 'Healthy' }
+    { name: 'Boiled Eggs', category: 'Healthy' },
   ];
 
   dinnerItems: FoodItem[] = [
@@ -96,26 +95,26 @@ export class DailyFoodPickerComponent {
     { name: 'Moong Dal Chilla', category: 'Light' },
     { name: 'Besan Chilla', category: 'Light' },
     { name: 'Vegetable Daliya', category: 'Healthy' },
-    { name: 'Vegetable Soup + Sandwich', category: 'Light' }
+    { name: 'Vegetable Soup + Sandwich', category: 'Light' },
   ];
 
   meals: DailyMeal[] = [
     {
       title: 'Breakfast',
-      icon: '🌅'
+      icon: '🌅',
     },
     {
       title: 'Lunch',
-      icon: '🍛'
+      icon: '🍛',
     },
     {
       title: 'Extra Breakfast',
-      icon: '☕'
+      icon: '☕',
     },
     {
       title: 'Dinner',
-      icon: '🌙'
-    }
+      icon: '🌙',
+    },
   ];
 
   getItems(title: string): FoodItem[] {
@@ -150,14 +149,14 @@ export class DailyFoodPickerComponent {
   }
 
   pickAllMeals(): void {
-    this.meals.forEach(meal => this.pickMeal(meal));
+    this.meals.forEach((meal) => this.pickMeal(meal));
   }
 
   getToday(): string {
     return new Date().toLocaleDateString('en-IN', {
       weekday: 'long',
       day: 'numeric',
-      month: 'long'
+      month: 'long',
     });
   }
 }

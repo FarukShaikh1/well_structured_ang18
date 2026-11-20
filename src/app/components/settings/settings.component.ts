@@ -1,24 +1,37 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CellComponent, ColumnDefinition } from 'tabulator-tables';
-import { ActionConstant, ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, UIStrings, UserConfig } from "../../../utils/application-constants";
-import { CacheService } from "../../services/cache/cache.service";
-import { ConfigurationService } from "../../services/configuration/configuration.service";
+import {
+  ActionConstant,
+  ApplicationConstantHtml,
+  ApplicationModules,
+  ApplicationTableConstants,
+  UIStrings,
+  UserConfig,
+} from '../../../utils/application-constants';
+import { CacheService } from '../../services/cache/cache.service';
+import { ConfigurationService } from '../../services/configuration/configuration.service';
 import { GlobalService } from '../../services/global/global.service';
-import { LoaderService } from "../../services/loader/loader.service";
+import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
-import { UserService } from "../../services/user/user.service";
+import { UserService } from '../../services/user/user.service';
 import { ConfigurationDetailsComponent } from '../configuration-details/configuration-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import { TabulatorGridComponent } from "../shared/tabulator-grid/tabulator-grid.component";
+import { TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, TabulatorGridComponent, ConfigurationDetailsComponent, ConfirmationDialogComponent, ToasterComponent],
+  imports: [
+    CommonModule,
+    TabulatorGridComponent,
+    ConfigurationDetailsComponent,
+    ConfirmationDialogComponent,
+    ToasterComponent,
+  ],
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent {
   @ViewChild(TabulatorGridComponent) tabulatorGrid!: TabulatorGridComponent;
@@ -98,21 +111,28 @@ export class SettingsComponent {
     private userService: UserService,
     private cacheService: CacheService,
     private loaderService: LoaderService,
-    private localStorageService: LocalStorageService
-  ) { }
+    private localStorageService: LocalStorageService,
+  ) {}
 
   ngOnInit() {
-    this.accountModulePermissions = this.globalService.getModulePermission(ApplicationModules.ACCOUNTS);
-    this.occasionTypePermissions = this.globalService.getModulePermission(ApplicationModules.OCCASION_TYPES);
-    this.relationsPermissions = this.globalService.getModulePermission(ApplicationModules.RELATIONS);
-    this.transactionCategoriesPermissions = this.globalService.getModulePermission(ApplicationModules.TRANSACTION_CATEGORIES);
+    this.accountModulePermissions = this.globalService.getModulePermission(
+      ApplicationModules.ACCOUNTS,
+    );
+    this.occasionTypePermissions = this.globalService.getModulePermission(
+      ApplicationModules.OCCASION_TYPES,
+    );
+    this.relationsPermissions = this.globalService.getModulePermission(
+      ApplicationModules.RELATIONS,
+    );
+    this.transactionCategoriesPermissions = this.globalService.getModulePermission(
+      ApplicationModules.TRANSACTION_CATEGORIES,
+    );
     var data = this.localStorageService.getLoggedInUserData();
     this.selectedUserId = data?.id;
     if (data.roleName === 'Super Admin') {
       this.isSuperAdmin = true;
       this.getUserList();
-    }
-    else {
+    } else {
       this.isSuperAdmin = false;
     }
     this.loadConfigGrid(this.selectedUserId, UserConfig.ACCOUNT);
@@ -135,23 +155,28 @@ export class SettingsComponent {
         const rowId = button.getAttribute('data-row-id');
         if (rowId) {
           const accountRowData = this.accountTableData.find((row) => row['id'] == rowId);
-          const categoryRowData = this.transactionCategoryTableData.find((row) => row['id'] == rowId);
+          const categoryRowData = this.transactionCategoryTableData.find(
+            (row) => row['id'] == rowId,
+          );
           const relationRowData = this.relationTableData.find((row) => row['id'] == rowId);
           const OccasionTypeRowData = this.occasionTypeTableData.find((row) => row['id'] == rowId);
           if (accountRowData) {
             const menuOptions = this.generateOptionsMenu(accountRowData, UserConfig.ACCOUNT);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
-          }
-          else if (categoryRowData) {
-            const menuOptions = this.generateOptionsMenu(categoryRowData, UserConfig.TRANSACTION_CATEGORY);
+          } else if (categoryRowData) {
+            const menuOptions = this.generateOptionsMenu(
+              categoryRowData,
+              UserConfig.TRANSACTION_CATEGORY,
+            );
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
-          }
-          else if (relationRowData) {
+          } else if (relationRowData) {
             const menuOptions = this.generateOptionsMenu(relationRowData, UserConfig.RELATION);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
-          }
-          else if (OccasionTypeRowData) {
-            const menuOptions = this.generateOptionsMenu(OccasionTypeRowData, UserConfig.OCCASION_TYPE);
+          } else if (OccasionTypeRowData) {
+            const menuOptions = this.generateOptionsMenu(
+              OccasionTypeRowData,
+              UserConfig.OCCASION_TYPE,
+            );
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           }
         }
@@ -191,9 +216,7 @@ export class SettingsComponent {
 
   openDetailsPopup(id: string, config: string) {
     setTimeout(() => {
-      const button = document.querySelector(
-        '#openConfigDetailsButton'
-      ) as HTMLElement | null;
+      const button = document.querySelector('#openConfigDetailsButton') as HTMLElement | null;
 
       button?.click();
     }, 100);
@@ -225,18 +248,15 @@ export class SettingsComponent {
         this.filteredAccountTableData = cachedData;
         this.accountTableData = cachedData;
         this.isAccountGridLoading = false;
-      }
-      else if (config === UserConfig.TRANSACTION_CATEGORY) {
+      } else if (config === UserConfig.TRANSACTION_CATEGORY) {
         this.filteredTransactionCategoryTableData = cachedData;
         this.transactionCategoryTableData = cachedData;
         this.isTransactionCategoryGridLoading = false;
-      }
-      else if (config === UserConfig.RELATION) {
+      } else if (config === UserConfig.RELATION) {
         this.filteredRelationTableData = cachedData;
         this.relationTableData = cachedData;
         this.isRelationGridLoading = false;
-      }
-      else if (config === UserConfig.OCCASION_TYPE) {
+      } else if (config === UserConfig.OCCASION_TYPE) {
         this.filteredOccasionTypeTableData = cachedData;
         this.occasionTypeTableData = cachedData;
         this.isOccasionTypeGridLoading = false;
@@ -251,18 +271,15 @@ export class SettingsComponent {
           this.filteredAccountTableData = result.data;
           this.accountTableData = result.data;
           this.isAccountGridLoading = false;
-        }
-        else if (config === UserConfig.TRANSACTION_CATEGORY) {
+        } else if (config === UserConfig.TRANSACTION_CATEGORY) {
           this.filteredTransactionCategoryTableData = result.data;
           this.transactionCategoryTableData = result.data;
           this.isTransactionCategoryGridLoading = false;
-        }
-        else if (config === UserConfig.RELATION) {
+        } else if (config === UserConfig.RELATION) {
           this.filteredRelationTableData = result.data;
           this.relationTableData = result.data;
           this.isRelationGridLoading = false;
-        }
-        else if (config === UserConfig.OCCASION_TYPE) {
+        } else if (config === UserConfig.OCCASION_TYPE) {
           this.filteredOccasionTypeTableData = result.data;
           this.occasionTypeTableData = result.data;
           this.isOccasionTypeGridLoading = false;
@@ -292,8 +309,8 @@ export class SettingsComponent {
       { title: UIStrings.COLUMN_TITLES.DESCRIPTION, field: 'description', sorter: 'string' },
       {
         title: UIStrings.COLUMN_TITLES.DISPLAY_ORDER,
-        field: "displayOrder",
-        sorter: "alphanum",
+        field: 'displayOrder',
+        sorter: 'alphanum',
       },
       {
         title: UIStrings.COLUMN_TITLES.STATUS,
@@ -302,27 +319,27 @@ export class SettingsComponent {
         formatter: this.globalService.statusFormatter.bind(this),
       },
       {
-        title: "",
-        field: "",
+        title: '',
+        field: '',
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const id = cell.getRow().getData()["id"];
+          const id = cell.getRow().getData()['id'];
           this.hideAccount(id);
         },
-        hozAlign: "center",
+        hozAlign: 'center',
         headerSort: false,
-        print: false
+        print: false,
       },
       {
-        title: "",
-        field: "option",
+        title: '',
+        field: 'option',
         maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),
-        hozAlign: "center",
+        hozAlign: 'center',
         headerSort: false,
-        print: false
-      }
+        print: false,
+      },
     ];
   }
 
@@ -336,8 +353,8 @@ export class SettingsComponent {
       { title: UIStrings.COLUMN_TITLES.DESCRIPTION, field: 'description', sorter: 'string' },
       {
         title: UIStrings.COLUMN_TITLES.DISPLAY_ORDER,
-        field: "displayOrder",
-        sorter: "alphanum",
+        field: 'displayOrder',
+        sorter: 'alphanum',
       },
       {
         title: UIStrings.COLUMN_TITLES.STATUS,
@@ -346,27 +363,27 @@ export class SettingsComponent {
         formatter: this.globalService.statusFormatter.bind(this),
       },
       {
-        title: "",
-        field: "",
+        title: '',
+        field: '',
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const id = cell.getRow().getData()["id"];
+          const id = cell.getRow().getData()['id'];
           this.hideTransactionCategory(id);
         },
-        hozAlign: "center",
+        hozAlign: 'center',
         headerSort: false,
-        print: false
+        print: false,
       },
       {
-        title: "",
-        field: "option",
+        title: '',
+        field: 'option',
         maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),
-        hozAlign: "center",
+        hozAlign: 'center',
         headerSort: false,
-        print: false
-      }
+        print: false,
+      },
     ];
   }
 
@@ -380,8 +397,8 @@ export class SettingsComponent {
       { title: UIStrings.COLUMN_TITLES.DESCRIPTION, field: 'description', sorter: 'string' },
       {
         title: UIStrings.COLUMN_TITLES.DISPLAY_ORDER,
-        field: "displayOrder",
-        sorter: "alphanum",
+        field: 'displayOrder',
+        sorter: 'alphanum',
       },
       {
         title: UIStrings.COLUMN_TITLES.STATUS,
@@ -390,28 +407,27 @@ export class SettingsComponent {
         formatter: this.globalService.statusFormatter.bind(this),
       },
       {
-        title: "",
-        field: "",
+        title: '',
+        field: '',
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const id = cell.getRow().getData()["id"];
+          const id = cell.getRow().getData()['id'];
           this.hideOccasionType(id);
         },
-        hozAlign: "center",
+        hozAlign: 'center',
         headerSort: false,
-        print: false
+        print: false,
       },
       {
-        title: "",
-        field: "option",
+        title: '',
+        field: 'option',
         maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),
-        hozAlign: "center",
+        hozAlign: 'center',
         headerSort: false,
-        print: false
-      }
-
+        print: false,
+      },
     ];
   }
 
@@ -425,8 +441,8 @@ export class SettingsComponent {
       { title: UIStrings.COLUMN_TITLES.DESCRIPTION, field: 'description', sorter: 'string' },
       {
         title: UIStrings.COLUMN_TITLES.DISPLAY_ORDER,
-        field: "displayOrder",
-        sorter: "alphanum",
+        field: 'displayOrder',
+        sorter: 'alphanum',
       },
       {
         title: UIStrings.COLUMN_TITLES.STATUS,
@@ -435,25 +451,25 @@ export class SettingsComponent {
         formatter: this.globalService.statusFormatter.bind(this),
       },
       {
-        title: "",
-        field: "",
+        title: '',
+        field: '',
         maxWidth: 70,
         formatter: this.globalService.hidebuttonFormatter.bind(this),
         cellClick: (e, cell) => {
-          const id = cell.getRow().getData()["id"];
+          const id = cell.getRow().getData()['id'];
           this.hideRelation(id);
         },
-        hozAlign: "center",
+        hozAlign: 'center',
         headerSort: false,
       },
       {
-        title: "",
-        field: "option",
+        title: '',
+        field: 'option',
         maxWidth: 70,
         formatter: this.globalService.threeDotsFormatter.bind(this),
-        hozAlign: "center",
+        hozAlign: 'center',
         headerSort: false,
-      }
+      },
     ];
   }
 
@@ -470,9 +486,11 @@ export class SettingsComponent {
   }
 
   hideTransactionCategory(userId: any) {
-    this.filteredTransactionCategoryTableData = this.filteredTransactionCategoryTableData.filter((item: any) => {
-      return item.id != userId;
-    });
+    this.filteredTransactionCategoryTableData = this.filteredTransactionCategoryTableData.filter(
+      (item: any) => {
+        return item.id != userId;
+      },
+    );
   }
 
   hideRelation(userId: any) {
@@ -498,29 +516,20 @@ export class SettingsComponent {
     this.loadConfigGrid(this.selectedUserId, UserConfig.TRANSACTION_CATEGORY);
   }
 
-  unlockUser(userId: number) {
+  unlockUser(userId: number) {}
 
-  }
-
-  editUser(userId: number) {
-
-  }
-  deleteUser(userId: number) {
-
-  }
-  editRole(roleId: number) {
-
-  }
-  deleteRole(roleId: number) {
-  }
+  editUser(userId: number) {}
+  deleteUser(userId: number) {}
+  editRole(roleId: number) {}
+  deleteRole(roleId: number) {}
 
   deleteItem(id: string, config: string) {
     if (id) {
       this.selectedId = id;
       this.selectedConfig = config;
       this.confirmationDialog.openConfirmationPopup(
-        "Confirmation",
-        "Are you sure you want to delete? This action cannot be undone."
+        'Confirmation',
+        'Are you sure you want to delete? This action cannot be undone.',
       );
     }
   }
@@ -528,35 +537,35 @@ export class SettingsComponent {
   handleConfirmResult(isConfirmed: boolean) {
     if (isConfirmed) {
       this.loaderService.showLoader('Deleting ...');
-      this.configurationService.deleteConfiguration(this.selectedId, this.selectedConfig).subscribe({
-        next: (res: any) => {
-          this.toaster.showMessage(res.message, res.success ? "success" : "error");
-          this.loaderService.hideLoader();
-          if (res.success) {
-            localStorage.removeItem(this.selectedConfig);
-            this.loadConfigGrid(this.selectedUserId, this.selectedConfig);
-          }
-        },
-        error: (error: any) => {
-          console.error("error : ", error);
-          this.loaderService.hideLoader();
-        },
-      });
+      this.configurationService
+        .deleteConfiguration(this.selectedId, this.selectedConfig)
+        .subscribe({
+          next: (res: any) => {
+            this.toaster.showMessage(res.message, res.success ? 'success' : 'error');
+            this.loaderService.hideLoader();
+            if (res.success) {
+              localStorage.removeItem(this.selectedConfig);
+              this.loadConfigGrid(this.selectedUserId, this.selectedConfig);
+            }
+          },
+          error: (error: any) => {
+            console.error('error : ', error);
+            this.loaderService.hideLoader();
+          },
+        });
     }
   }
-
 
   deactivateItem(id: string, config: string) {
     this.configurationService.deactivateConfiguration(id, config).subscribe({
       next: (result: any) => {
         this.loadConfigGrid(this.selectedUserId, config);
-        this.toaster.showMessage("Record deativated successfully.", "success");
+        this.toaster.showMessage('Record deativated successfully.', 'success');
       },
       error: (error: any) => {
         console.error('Error fetching user list', error);
       },
     });
-
   }
 
   getUserList() {
@@ -582,8 +591,7 @@ export class SettingsComponent {
     const select = event.target as HTMLSelectElement;
     this.selectedUserId = select.value;
     if (!this.selectedUserId) {
-    }
-    else {
+    } else {
       this.loadConfigGrid(this.selectedUserId, UserConfig.ACCOUNT);
       this.loadConfigGrid(this.selectedUserId, UserConfig.TRANSACTION_CATEGORY);
       this.loadConfigGrid(this.selectedUserId, UserConfig.OCCASION_TYPE);

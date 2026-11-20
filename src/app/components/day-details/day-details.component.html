@@ -1,9 +1,21 @@
-<div class="modal fade modal-xl" id="detailsPopup" data-bs-backdrop="static" data-bs-keyboard="false">
+<div
+  class="modal fade modal-xl"
+  id="detailsPopup"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Add Day</h4>
-        <button #btnCloseDetailsPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal">✕</button>
+        <button
+          #btnCloseDetailsPopup
+          class="btn-close"
+          (click)="closePopup()"
+          data-bs-dismiss="modal"
+        >
+          ✕
+        </button>
       </div>
 
       <div class="modal-body">
@@ -15,31 +27,53 @@
           </div>
           <div class="row">
             <div class="col-12 col-lg-6">
-              <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)"
-                (click)="triggerFileInput()">
-                <div class="text-center" style="margin-top: 170px;"
-                  *ngIf="!selectedImage || (!showPreview && !selectedImage)">
-                  Drag & Drop Image Here <br /> or Click to Select
+              <div
+                class="drop-container"
+                (dragover)="onDragOver($event)"
+                (drop)="onDrop($event)"
+                (click)="triggerFileInput()"
+              >
+                <div
+                  class="text-center"
+                  style="margin-top: 170px"
+                  *ngIf="!selectedImage || (!showPreview && !selectedImage)"
+                >
+                  Drag & Drop Image Here <br />
+                  or Click to Select
                 </div>
                 <!-- Show Cropper image -->
-                <img #cropImage id="cropImage" [src]="selectedImage" class="crop-image"
-                  *ngIf="selectedImage && !showPreview" />
+                <img
+                  #cropImage
+                  id="cropImage"
+                  [src]="selectedImage"
+                  class="crop-image"
+                  *ngIf="selectedImage && !showPreview"
+                />
 
                 <!-- Show Cropped Image Preview -->
                 <img [src]="croppedImage" class="crop-image preview-image" *ngIf="showPreview" />
-
               </div>
               <!-- Action Buttons -->
               <div class="mt-3 d-flex justify-content-center gap-2 action-buttons">
                 <!-- DONE (Crop) -->
-                <button type="button" class="btn btn-icon btn-primary" *ngIf="selectedImage && !showPreview"
-                  (click)="onCropDone()" title="Done">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-primary"
+                  *ngIf="selectedImage && !showPreview"
+                  (click)="onCropDone()"
+                  title="Done"
+                >
                   <i class="bi bi-check-circle"></i>
                 </button>
 
                 <!-- EDIT -->
-                <button type="button" class="btn btn-icon btn-warning" *ngIf="selectedImage && editable"
-                  (click)="editImage()" title="Edit">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-warning"
+                  *ngIf="selectedImage && editable"
+                  (click)="editImage()"
+                  title="Edit"
+                >
                   <i class="bi bi-pencil-square"></i>
                 </button>
 
@@ -47,117 +81,152 @@
                 <!-- FILE UPLOAD -->
                 <label class="btn btn-icon btn-secondary upload-btn" title="Upload new Image">
                   <i class="bi bi-upload"></i>
-                  <input type="file" #dropFileInput accept="image/*" (change)="onFileSelected($event)" hidden />
+                  <input
+                    type="file"
+                    #dropFileInput
+                    accept="image/*"
+                    (change)="onFileSelected($event)"
+                    hidden
+                  />
                 </label>
-                <button type="button" class="btn btn-icon btn-success" *ngIf="selectedImage && showPreview"
-                  (click)="DownloadImage()" title="Download">
-                  <i class="bi bi-download"></i>
-                </button><br />
-
+                <button
+                  type="button"
+                  class="btn btn-icon btn-success"
+                  *ngIf="selectedImage && showPreview"
+                  (click)="DownloadImage()"
+                  title="Download"
+                >
+                  <i class="bi bi-download"></i></button
+                ><br />
               </div>
             </div>
             <div class="col-12 col-lg-6">
               <div class="row">
                 <div class="col-6">
                   <label>Person Name<span class="required"></span></label>
-                  <input formControlName="personName" class="form-control form-control-lg text-dark bg-transparent"
+                  <input
+                    formControlName="personName"
+                    class="form-control form-control-lg text-dark bg-transparent"
                     [ngClass]="{
                       'error-border':
                         dayDetailsForm.get('personName')?.touched &&
-                        dayDetailsForm.get('personName')?.invalid
-                    }" />
-                  @if(dayDetailsForm.get('personName')?.touched &&
-                  dayDetailsForm.get('personName')?.invalid){
-                  <div class="text-danger">
-                    @if(dayDetailsForm.get('personName')?.errors?.['required']){
-                    Person Name is required }
-                    @else if(dayDetailsForm.get('personName')?.errors?.['pattern']){
-                    Invalid Person Name }
-                  </div>
+                        dayDetailsForm.get('personName')?.invalid,
+                    }"
+                  />
+                  @if (
+                    dayDetailsForm.get('personName')?.touched &&
+                    dayDetailsForm.get('personName')?.invalid
+                  ) {
+                    <div class="text-danger">
+                      @if (dayDetailsForm.get('personName')?.errors?.['required']) {
+                        Person Name is required
+                      } @else if (dayDetailsForm.get('personName')?.errors?.['pattern']) {
+                        Invalid Person Name
+                      }
+                    </div>
                   }
                 </div>
                 <div class="col">
                   <label>Day Type<span class="required"></span></label>
-                  @if(!occasionTypeList || occasionTypeList.length===0){
-                  <div class="col-12 mt-4">
-                    <div class="alert alert-info text-center" role="alert">
-                      <strong>Accounts not configured.</strong><br />
-                      Please add accounts to manage your expenses and income.
-                      <br>
-                      You can configure your account list from settings page.
+                  @if (!occasionTypeList || occasionTypeList.length === 0) {
+                    <div class="col-12 mt-4">
+                      <div class="alert alert-info text-center" role="alert">
+                        <strong>Accounts not configured.</strong><br />
+                        Please add accounts to manage your expenses and income.
+                        <br />
+                        You can configure your account list from settings page.
+                      </div>
                     </div>
-                  </div>
-                  }
-                  @else{
-                  <select formControlName="occasionTypeId"
-                    class="form-select form-control form-control-lg text-dark bg-transparent styled-select " [ngClass]="{
-                      'error-border':
-                        dayDetailsForm.get('occasionTypeId')?.touched &&
-                        dayDetailsForm.get('occasionTypeId')?.invalid
-                    }">
-                    @for(item of occasionTypeList; track $index){
-                    <option [value]="item.id">
-                      {{ item.configurationName }}
-                    </option>
-                    }@empty{
-                    <option value="">No Occasion Type found, please configure from settings page</option>
+                  } @else {
+                    <select
+                      formControlName="occasionTypeId"
+                      class="form-select form-control form-control-lg text-dark bg-transparent styled-select"
+                      [ngClass]="{
+                        'error-border':
+                          dayDetailsForm.get('occasionTypeId')?.touched &&
+                          dayDetailsForm.get('occasionTypeId')?.invalid,
+                      }"
+                    >
+                      @for (item of occasionTypeList; track $index) {
+                        <option [value]="item.id">
+                          {{ item.configurationName }}
+                        </option>
+                      } @empty {
+                        <option value="">
+                          No Occasion Type found, please configure from settings page
+                        </option>
+                      }
+                    </select>
+                    @if (
+                      dayDetailsForm.get('occasionTypeId')?.touched &&
+                      dayDetailsForm.get('occasionTypeId')?.invalid
+                    ) {
+                      <div class="text-danger">
+                        @if (dayDetailsForm.get('occasionTypeId')?.errors?.['required']) {
+                          Date is required
+                        }
+                      </div>
                     }
-                  </select>
-                  @if(dayDetailsForm.get('occasionTypeId')?.touched &&
-                  dayDetailsForm.get('occasionTypeId')?.invalid){
-                  <div class="text-danger">
-                    @if(dayDetailsForm.get('occasionTypeId')?.errors?.['required']){
-                    Date is required }
-                  </div>
-                  }
                   }
                 </div>
               </div>
               <div class="row mt-4">
                 <div class="col">
                   <label>Choose a date<span class="required"></span></label>
-                  <input id="specialOccasionDate" class="form-control form-control-lg text-dark bg-transparent"
-                    type="date" placeholder="DD/MM/YYYY" appearance="outline" formControlName="specialOccasionDate"
+                  <input
+                    id="specialOccasionDate"
+                    class="form-control form-control-lg text-dark bg-transparent"
+                    type="date"
+                    placeholder="DD/MM/YYYY"
+                    appearance="outline"
+                    formControlName="specialOccasionDate"
                     [ngClass]="{
                       'error-border':
                         dayDetailsForm.get('specialOccasionDate')?.touched &&
-                        dayDetailsForm.get('specialOccasionDate')?.invalid
-                    }" />
-                  @if(dayDetailsForm.get('specialOccasionDate')?.touched &&
-                  dayDetailsForm.get('specialOccasionDate')?.invalid){
-                  <div class="text-danger">
-                    @if(dayDetailsForm.get('specialOccasionDate')?.errors?.['required']){
-                    Date is required }
-                    @else if(dayDetailsForm.get('specialOccasionDate')?.errors?.['pattern']){
-                    Invalid specialOccasionDate }
-                  </div>
+                        dayDetailsForm.get('specialOccasionDate')?.invalid,
+                    }"
+                  />
+                  @if (
+                    dayDetailsForm.get('specialOccasionDate')?.touched &&
+                    dayDetailsForm.get('specialOccasionDate')?.invalid
+                  ) {
+                    <div class="text-danger">
+                      @if (dayDetailsForm.get('specialOccasionDate')?.errors?.['required']) {
+                        Date is required
+                      } @else if (dayDetailsForm.get('specialOccasionDate')?.errors?.['pattern']) {
+                        Invalid specialOccasionDate
+                      }
+                    </div>
                   }
                 </div>
                 <div class="col">
                   <label>Relation </label>
-                  @if(!relationList || relationList.length===0){
-                  <div class="col-12 mt-4">
-                    <div class="alert alert-info text-center" role="alert">
-                      <strong>Relations not configured.</strong><br />
-                      Relations helps you to link contacts when you add Birthdays or anniversaries.
-                      <br>
-                      You can configure your relation types from settings page.
+                  @if (!relationList || relationList.length === 0) {
+                    <div class="col-12 mt-4">
+                      <div class="alert alert-info text-center" role="alert">
+                        <strong>Relations not configured.</strong><br />
+                        Relations helps you to link contacts when you add Birthdays or
+                        anniversaries.
+                        <br />
+                        You can configure your relation types from settings page.
+                      </div>
                     </div>
-                  </div>
-                  }
-                  @else{
-                  <select formControlName="relationId"
-                    class="form-select form-control form-control-lg text-dark bg-transparent styled-select " [ngClass]="{
-                      'error-border':
-                        dayDetailsForm.get('occasionTypeId')?.touched &&
-                        dayDetailsForm.get('occasionTypeId')?.invalid
-                    }">
-                    @for(item of relationList; track $index){
-                    <option [value]="item.id">
-                      {{ item.configurationName }}
-                    </option>
-                    }
-                  </select>
+                  } @else {
+                    <select
+                      formControlName="relationId"
+                      class="form-select form-control form-control-lg text-dark bg-transparent styled-select"
+                      [ngClass]="{
+                        'error-border':
+                          dayDetailsForm.get('occasionTypeId')?.touched &&
+                          dayDetailsForm.get('occasionTypeId')?.invalid,
+                      }"
+                    >
+                      @for (item of relationList; track $index) {
+                        <option [value]="item.id">
+                          {{ item.configurationName }}
+                        </option>
+                      }
+                    </select>
                   }
                 </div>
               </div>
@@ -165,58 +234,75 @@
               <div class="row mt-4">
                 <div class="col">
                   <label>Mobile Number</label>
-                  <input formControlName="mobileNumber" class="form-control form-control-lg text-dark bg-transparent"
+                  <input
+                    formControlName="mobileNumber"
+                    class="form-control form-control-lg text-dark bg-transparent"
                     [ngClass]="{
                       'error-border':
                         dayDetailsForm.get('mobileNumber')?.touched &&
-                        dayDetailsForm.get('mobileNumber')?.invalid
-                    }" />
-                  @if(dayDetailsForm.get('mobileNumber')?.touched &&
-                  dayDetailsForm.get('mobileNumber')?.invalid){
-                  <div class="text-danger">
-                    @if(dayDetailsForm.get('mobileNumber')?.errors?.['required']){
-                    MobileNumber is required }
-                    @else if(dayDetailsForm.get('mobileNumber')?.errors?.['pattern']){
-                    Invalid Mobile Number }
-                  </div>
+                        dayDetailsForm.get('mobileNumber')?.invalid,
+                    }"
+                  />
+                  @if (
+                    dayDetailsForm.get('mobileNumber')?.touched &&
+                    dayDetailsForm.get('mobileNumber')?.invalid
+                  ) {
+                    <div class="text-danger">
+                      @if (dayDetailsForm.get('mobileNumber')?.errors?.['required']) {
+                        MobileNumber is required
+                      } @else if (dayDetailsForm.get('mobileNumber')?.errors?.['pattern']) {
+                        Invalid Mobile Number
+                      }
+                    </div>
                   }
                 </div>
                 <div class="col">
                   <label>Contact Number</label>
-                  <input formControlName="contactNumber" class="form-control form-control-lg text-dark bg-transparent"
+                  <input
+                    formControlName="contactNumber"
+                    class="form-control form-control-lg text-dark bg-transparent"
                     [ngClass]="{
                       'error-border':
                         dayDetailsForm.get('contactNumber')?.touched &&
-                        dayDetailsForm.get('contactNumber')?.invalid
-                    }" />
-                  @if(dayDetailsForm.get('contactNumber')?.touched &&
-                  dayDetailsForm.get('contactNumber')?.invalid){
-                  <div class="text-danger">
-                    @if(dayDetailsForm.get('contactNumber')?.errors?.['required']){
-                    Date is required }
-                    @else if(dayDetailsForm.get('contactNumber')?.errors?.['pattern']){
-                    Invalid Contact Number }
-                  </div>
+                        dayDetailsForm.get('contactNumber')?.invalid,
+                    }"
+                  />
+                  @if (
+                    dayDetailsForm.get('contactNumber')?.touched &&
+                    dayDetailsForm.get('contactNumber')?.invalid
+                  ) {
+                    <div class="text-danger">
+                      @if (dayDetailsForm.get('contactNumber')?.errors?.['required']) {
+                        Date is required
+                      } @else if (dayDetailsForm.get('contactNumber')?.errors?.['pattern']) {
+                        Invalid Contact Number
+                      }
+                    </div>
                   }
                 </div>
               </div>
               <div class="row mt-4">
                 <div class="col">
                   <label>Email Id</label>
-                  <input formControlName="emailId" class="form-control form-control-lg text-dark bg-transparent"
+                  <input
+                    formControlName="emailId"
+                    class="form-control form-control-lg text-dark bg-transparent"
                     [ngClass]="{
                       'error-border':
                         dayDetailsForm.get('emailId')?.touched &&
-                        dayDetailsForm.get('emailId')?.invalid
-                    }" />
-                  @if(dayDetailsForm.get('emailId')?.touched &&
-                  dayDetailsForm.get('emailId')?.invalid){
-                  <div class="text-danger">
-                    @if(dayDetailsForm.get('emailId')?.errors?.['required']){
-                    Email is required }
-                    @else if(dayDetailsForm.get('emailId')?.errors?.['pattern']){
-                    Invalid Email Id }
-                  </div>
+                        dayDetailsForm.get('emailId')?.invalid,
+                    }"
+                  />
+                  @if (
+                    dayDetailsForm.get('emailId')?.touched && dayDetailsForm.get('emailId')?.invalid
+                  ) {
+                    <div class="text-danger">
+                      @if (dayDetailsForm.get('emailId')?.errors?.['required']) {
+                        Email is required
+                      } @else if (dayDetailsForm.get('emailId')?.errors?.['pattern']) {
+                        Invalid Email Id
+                      }
+                    </div>
                   }
                 </div>
                 <div class="col d-flex">
@@ -245,47 +331,77 @@
               <div class="row mt-4">
                 <div class="col">
                   <label>Address of a person</label>
-                  <textarea placeholder="" formControlName="address"
-                    class="form-control form-control-lg text-dark bg-transparent"></textarea>
+                  <textarea
+                    placeholder=""
+                    formControlName="address"
+                    class="form-control form-control-lg text-dark bg-transparent"
+                  ></textarea>
                   <div class="text-danger">
-                    @if(dayDetailsForm.get('address')?.errors?.['required']){
-                    Address is required }
+                    @if (dayDetailsForm.get('address')?.errors?.['required']) {
+                      Address is required
+                    }
                   </div>
                 </div>
               </div>
-              @if(isApprovable && isVerified){
-              <div class="row">
-                <div class="col">
-                  <label>Created By</label>
-                  <input formControlName="createdBy" class="form-control form-control-lg text-dark bg-transparent" />
+              @if (isApprovable && isVerified) {
+                <div class="row">
+                  <div class="col">
+                    <label>Created By</label>
+                    <input
+                      formControlName="createdBy"
+                      class="form-control form-control-lg text-dark bg-transparent"
+                    />
+                  </div>
+                  <div class="col">
+                    <label>Created on</label>
+                    <input
+                      formControlName="createdOn"
+                      class="form-control form-control-lg text-dark bg-transparent"
+                    />
+                  </div>
                 </div>
-                <div class="col">
-                  <label>Created on</label>
-                  <input formControlName="createdOn" class="form-control form-control-lg text-dark bg-transparent" />
+                <div class="row">
+                  <div class="col">
+                    <label>Modified on</label>
+                    <input
+                      formControlName="modifiedOn"
+                      class="form-control form-control-lg text-dark bg-transparent"
+                    />
+                  </div>
+                  <div class="col">
+                    <label>Modified By</label>
+                    <input
+                      formControlName="modifiedBy"
+                      class="form-control form-control-lg text-dark bg-transparent"
+                    />
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <label>Modified on</label>
-                  <input formControlName="modifiedOn" class="form-control form-control-lg text-dark bg-transparent" />
-                </div>
-                <div class="col">
-                  <label>Modified By</label>
-                  <input formControlName="modifiedBy" class="form-control form-control-lg text-dark bg-transparent" />
-                </div>
-              </div>
               }
             </div>
 
             <div class="row mt-4">
               <div class="col-12 col-sm-12">
                 <div class="action d-flex justify-content-end">
-                  <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()"
-                    data-bs-dismiss="modal">
+                  <button
+                    class="btn btn-secondary rounded-button"
+                    type="button"
+                    (click)="closePopup()"
+                    data-bs-dismiss="modal"
+                  >
                     Cancel
                   </button>
-                  <button class="btn btn-primary rounded-button" type="submit"
-                    [disabled]="dayDetailsForm.invalid || !relationList || relationList.length===0 || !occasionTypeList || occasionTypeList.length===0 || isSaving">
+                  <button
+                    class="btn btn-primary rounded-button"
+                    type="submit"
+                    [disabled]="
+                      dayDetailsForm.invalid ||
+                      !relationList ||
+                      relationList.length === 0 ||
+                      !occasionTypeList ||
+                      occasionTypeList.length === 0 ||
+                      isSaving
+                    "
+                  >
                     Save
                   </button>
                 </div>

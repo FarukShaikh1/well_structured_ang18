@@ -1,6 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { HTTP_INTERCEPTORS, HttpClient, HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpErrorResponse,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { HttpInterceptorService } from './http-interceptor.service';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 
@@ -16,23 +22,23 @@ describe('HttpInterceptorService', () => {
     ]);
 
     TestBed.configureTestingModule({
-    imports: [],
-    providers: [
+      imports: [],
+      providers: [
         {
-            provide: HTTP_INTERCEPTORS,
-            useClass: HttpInterceptorService,
-            multi: true,
+          provide: HTTP_INTERCEPTORS,
+          useClass: HttpInterceptorService,
+          multi: true,
         },
         { provide: LocalStorageService, useValue: localStorageServiceSpy },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-});
+      ],
+    });
 
     service = TestBed.inject(HttpClient);
     httpMock = TestBed.inject(HttpTestingController);
     localStorageService = TestBed.inject(
-      LocalStorageService
+      LocalStorageService,
     ) as jasmine.SpyObj<LocalStorageService>;
   });
 
@@ -41,9 +47,7 @@ describe('HttpInterceptorService', () => {
   });
 
   it('should be created', () => {
-    const interceptor: HttpInterceptorService = TestBed.inject(
-      HttpInterceptorService
-    );
+    const interceptor: HttpInterceptorService = TestBed.inject(HttpInterceptorService);
     expect(interceptor).toBeTruthy();
   });
 
@@ -57,9 +61,7 @@ describe('HttpInterceptorService', () => {
 
     const httpRequest = httpMock.expectOne('/test');
     expect(httpRequest.request.headers.has('Authorization')).toBeTrue();
-    expect(httpRequest.request.headers.get('Authorization')).toBe(
-      `Bearer ${mockToken}`
-    );
+    expect(httpRequest.request.headers.get('Authorization')).toBe(`Bearer ${mockToken}`);
   });
 
   it('should handle errors properly', () => {
@@ -68,8 +70,7 @@ describe('HttpInterceptorService', () => {
     service.get('/test').subscribe({
       next: () => fail('should have failed with the 500 error'),
       error: (error: HttpErrorResponse) => {
-        
-        expect(error.message).toContain('500 Server Error'); 
+        expect(error.message).toContain('500 Server Error');
       },
     });
 
@@ -79,5 +80,4 @@ describe('HttpInterceptorService', () => {
       statusText: 'Server Error',
     });
   });
-
 });

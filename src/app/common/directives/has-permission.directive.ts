@@ -5,7 +5,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   inject,
-  effect
+  effect,
 } from '@angular/core';
 import { PermissionService } from '../../services/global/permission.service';
 
@@ -22,7 +22,7 @@ import { PermissionService } from '../../services/global/permission.service';
  */
 @Directive({
   selector: '[hasPermission]',
-  standalone: true
+  standalone: true,
 })
 export class HasPermissionDirective implements OnInit {
   private readonly tpl = inject(TemplateRef<unknown>);
@@ -47,9 +47,7 @@ export class HasPermissionDirective implements OnInit {
   }
 
   private updateView(): void {
-    const permissions = Array.isArray(this.permission)
-      ? this.permission
-      : [this.permission];
+    const permissions = Array.isArray(this.permission) ? this.permission : [this.permission];
 
     const granted =
       this.mode === 'any'

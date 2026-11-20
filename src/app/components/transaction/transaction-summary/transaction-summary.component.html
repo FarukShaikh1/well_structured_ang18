@@ -1,5 +1,4 @@
 <div class="mb-2">
-
   <app-tabulator-grid
     [tableData]="filteredTableData"
     [columnConfig]="columnConfig"
@@ -14,7 +13,7 @@
     (refreshClicked)="refreshData()"
     [allowAdd]="allowAdd"
     (addClicked)="addTransaction()"
-(refreshClicked)="refreshData()"    >
+    (refreshClicked)="refreshData()"
+  >
   </app-tabulator-grid>
-
 </div>

@@ -5,54 +5,48 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges
-} from "@angular/core";
+  SimpleChanges,
+} from '@angular/core';
 
-import { ColumnDefinition } from "tabulator-tables";
+import { ColumnDefinition } from 'tabulator-tables';
 
 import {
   ApplicationConstantHtml,
   ApplicationModules,
   ApplicationTableConstants,
-  NavigationURLs
-} from "../../../../utils/application-constants";
+  NavigationURLs,
+} from '../../../../utils/application-constants';
 
-import { ExpenseFilterRequest } from "../../../interfaces/expense-filter-request";
+import { ExpenseFilterRequest } from '../../../interfaces/expense-filter-request';
 
-import { CacheService } from "../../../services/cache/cache.service";
-import { GlobalService } from "../../../services/global/global.service";
-import { LoaderService } from "../../../services/loader/loader.service";
-import { TransactionService } from "../../../services/transaction/transaction.service";
+import { CacheService } from '../../../services/cache/cache.service';
+import { GlobalService } from '../../../services/global/global.service';
+import { LoaderService } from '../../../services/loader/loader.service';
+import { TransactionService } from '../../../services/transaction/transaction.service';
 
-import { TabulatorGridComponent } from "../../shared/tabulator-grid/tabulator-grid.component";
+import { TabulatorGridComponent } from '../../shared/tabulator-grid/tabulator-grid.component';
 
-import { TransactionFilter } from "./../../../interfaces/transaction-filter.model";
-import { ModulePermission } from "../../../interfaces/module-permission";
+import { TransactionFilter } from './../../../interfaces/transaction-filter.model';
+import { ModulePermission } from '../../../interfaces/module-permission';
 
 @Component({
-  selector: "app-transaction-summary",
+  selector: 'app-transaction-summary',
   standalone: true,
-  imports: [
-    TabulatorGridComponent
-  ],
-  templateUrl: "./transaction-summary.component.html",
-  styleUrls: ["./transaction-summary.component.scss"]
+  imports: [TabulatorGridComponent],
+  templateUrl: './transaction-summary.component.html',
+  styleUrls: ['./transaction-summary.component.scss'],
 })
-export class TransactionSummaryComponent
-  implements OnInit, OnChanges {
-
+export class TransactionSummaryComponent implements OnInit, OnChanges {
   @Input()
   filter!: TransactionFilter;
   @Input()
   allowAdd = true;
 
   @Output()
-  openTransaction =
-    new EventEmitter<string>();
+  openTransaction = new EventEmitter<string>();
 
   @Output()
-  deleteTransactionEvent =
-    new EventEmitter<string>();
+  deleteTransactionEvent = new EventEmitter<string>();
 
   tableData: any[] = [];
 
@@ -62,8 +56,7 @@ export class TransactionSummaryComponent
 
   filterColumns: ColumnDefinition[] = [];
 
-  paginationSize =
-    ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
+  paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
 
   allowCSVExport = true;
   allowPrint = true;
@@ -71,14 +64,23 @@ export class TransactionSummaryComponent
   allowColumnFilters = true;
 
   private initialized = false;
-  expensePermissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
+  expensePermissions: ModulePermission = {
+    view: false,
+    add: false,
+    edit: false,
+    delete: false,
+    download: false,
+    upload: false,
+    approve: false,
+    reject: false,
+  };
 
   constructor(
     private transactionService: TransactionService,
     private cacheService: CacheService,
     private loaderService: LoaderService,
-    public globalService: GlobalService
-  ) { }
+    public globalService: GlobalService,
+  ) {}
 
   ngOnInit(): void {
     this.expensePermissions = this.globalService.getModulePermission(ApplicationModules.DAY);
@@ -90,17 +92,10 @@ export class TransactionSummaryComponent
         this.loadGrid();
       }
     });
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-
-    if (
-      this.initialized &&
-      changes["filter"] &&
-      !changes["filter"].firstChange
-    ) {
-
+    if (this.initialized && changes['filter'] && !changes['filter'].firstChange) {
       this.applyFilters();
     }
   }
@@ -148,22 +143,14 @@ export class TransactionSummaryComponent
   }
 
   loadGrid(): void {
+    this.loaderService.showLoader('Loading transaction summary...');
 
-    this.loaderService.showLoader(
-      "Loading transaction summary..."
-    );
-
-    const cached =
-      this.cacheService.get<any[]>(
-        NavigationURLs.EXPENSE_SUMMARY_LIST
-      );
+    const cached = this.cacheService.get<any[]>(NavigationURLs.EXPENSE_SUMMARY_LIST);
 
     if (cached) {
-
       this.tableData = cached;
 
-      this.filteredTableData =
-        [...cached];
+      this.filteredTableData = [...cached];
 
       this.loadColumnConfiguration();
 
@@ -174,317 +161,221 @@ export class TransactionSummaryComponent
       return;
     }
 
-    const request:
-      ExpenseFilterRequest = {
+    const request: ExpenseFilterRequest = {
       fromDate: this.filter.fromDate,
       toDate: this.filter.toDate,
       minAmount: this.filter.minAmount ?? 0,
       maxAmount: this.filter.maxAmount ?? 0,
-      sourceOrReason:
-        this.filter.sourceOrReason ?? ""
+      sourceOrReason: this.filter.sourceOrReason ?? '',
     };
 
-    this.transactionService
-      .getTransactionSummaryList(request)
-      .subscribe({
+    this.transactionService.getTransactionSummaryList(request).subscribe({
+      next: (res: any) => {
+        this.tableData = res?.data ?? [];
 
-        next: (res: any) => {
+        this.filteredTableData = [...this.tableData];
 
-          this.tableData =
-            res?.data ?? [];
+        const accountData = this.tableData[0]?.accountData;
 
-          this.filteredTableData =
-            [...this.tableData];
+        this.cacheService.set(NavigationURLs.EXPENSE_SUMMARY_LIST, this.tableData);
 
-          const accountData =
-            this.tableData[0]?.accountData;
+        this.cacheService.set(NavigationURLs.EXPENSE_SUMMARY_LIST + '_AccountColumns', accountData);
 
-          this.cacheService.set(
-            NavigationURLs.EXPENSE_SUMMARY_LIST,
-            this.tableData
-          );
+        this.loadColumnConfiguration();
 
-          this.cacheService.set(
-            NavigationURLs.EXPENSE_SUMMARY_LIST +
-            "_AccountColumns",
-            accountData
-          );
+        this.loaderService.hideLoader();
 
-          this.loadColumnConfiguration();
+        this.applyFilters();
+      },
 
-          this.loaderService.hideLoader();
+      error: (error: any) => {
+        console.error('Transaction summary error:', error);
 
-          this.applyFilters();
-        },
-
-        error: (error: any) => {
-
-          console.error(
-            "Transaction summary error:",
-            error
-          );
-
-          this.loaderService.hideLoader();
-        }
-      });
+        this.loaderService.hideLoader();
+      },
+    });
   }
 
   applyFilters(): void {
+    const search = this.filter?.sourceOrReason?.toLowerCase() ?? '';
 
-    const search =
-      this.filter?.sourceOrReason
-        ?.toLowerCase() ?? "";
+    const min = Number(this.filter?.minAmount) || 0;
 
-    const min =
-      Number(this.filter?.minAmount) || 0;
+    const max = Number(this.filter?.maxAmount) || 0;
 
-    const max =
-      Number(this.filter?.maxAmount) || 0;
+    this.filteredTableData = this.tableData.filter((item: any) => {
+      const textMatch =
+        !search ||
+        item.sourceOrReason?.toLowerCase().includes(search) ||
+        item.subCategoryName?.toLowerCase().includes(search) ||
+        item.description?.toLowerCase().includes(search);
 
-    this.filteredTableData =
-      this.tableData.filter((item: any) => {
-        const textMatch =
-          !search ||
-          item.sourceOrReason
-            ?.toLowerCase()
-            .includes(search) ||
-          item.subCategoryName
-            ?.toLowerCase()
-            .includes(search) ||
-          item.description
-            ?.toLowerCase()
-            .includes(search);
+      const accountValues = item.accountData
+        ? Object.values(item.accountData)
+            .map((x: any) => Number(x))
+            .filter((x) => !isNaN(x))
+        : [];
 
-        const accountValues =
-          item.accountData
-            ? Object.values(item.accountData)
-              .map((x: any) => Number(x))
-              .filter(x => !isNaN(x))
-            : [];
+      const minMatch = min === 0 || accountValues.some((x) => x !== 0 && Math.abs(x) >= min);
 
-        const minMatch =
-          min === 0 ||
-          accountValues.some(
-            x =>
-              x !== 0 &&
-              Math.abs(x) >= min
-          );
+      const maxMatch = max === 0 || accountValues.some((x) => x !== 0 && Math.abs(x) <= max);
 
-        const maxMatch =
-          max === 0 ||
-          accountValues.some(
-            x =>
-              x !== 0 &&
-              Math.abs(x) <= max
-          );
-
-        return (
-          textMatch &&
-          minMatch &&
-          maxMatch
-        );
-      });
+      return textMatch && minMatch && maxMatch;
+    });
   }
 
   refreshData(): void {
-
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_SUMMARY_LIST
-    );
+    this.cacheService.clear(NavigationURLs.EXPENSE_SUMMARY_LIST);
 
     this.loadGrid();
   }
 
   loadColumnConfiguration(): void {
-
     this.columnConfig = [
-
       {
-        title: "Transaction Date",
-        field: "transactionDate",
-        sorter: "alphanum",
-        formatter:
-          this.dateFormatter.bind(this),
-        minWidth: 120
+        title: 'Transaction Date',
+        field: 'transactionDate',
+        sorter: 'alphanum',
+        formatter: this.dateFormatter.bind(this),
+        minWidth: 120,
       },
 
       {
-        title: "Category",
-        field: "subCategoryName",
-        sorter: "alphanum",
+        title: 'Category',
+        field: 'subCategoryName',
+        sorter: 'alphanum',
         minWidth: 200,
-        headerFilter: "input"
+        headerFilter: 'input',
       },
 
       {
-        title: "Get From/Paid To",
-        field: "sourceOrReason",
-        sorter: "alphanum",
+        title: 'Get From/Paid To',
+        field: 'sourceOrReason',
+        sorter: 'alphanum',
         minWidth: 150,
-        headerFilter: "input"
+        headerFilter: 'input',
       },
 
       {
-        title: "Description",
-        field: "description",
-        sorter: "alphanum",
+        title: 'Description',
+        field: 'description',
+        sorter: 'alphanum',
         minWidth: 200,
-        headerFilter: "input"
-      }
+        headerFilter: 'input',
+      },
     ];
 
-    const accountColumns =
-      this.cacheService.get<any>(
-        NavigationURLs.EXPENSE_SUMMARY_LIST +
-        "_AccountColumns"
-      );
+    const accountColumns = this.cacheService.get<any>(
+      NavigationURLs.EXPENSE_SUMMARY_LIST + '_AccountColumns',
+    );
 
     if (accountColumns) {
-
-      for (
-        const key of Object.keys(accountColumns)
-      ) {
-
-        if (
-          key
-            .toLowerCase()
-            .includes("category")
-        ) {
+      for (const key of Object.keys(accountColumns)) {
+        if (key.toLowerCase().includes('category')) {
           continue;
         }
 
         this.columnConfig.push({
-
           title: key,
 
-          field:
-            `accountData.${key}`,
+          field: `accountData.${key}`,
 
-          formatter:
-            this.summaryAmountColorFormatter.bind(
-              this
-            ),
+          formatter: this.summaryAmountColorFormatter.bind(this),
 
-          hozAlign: "center",
+          hozAlign: 'center',
 
-          headerHozAlign: "center",
+          headerHozAlign: 'center',
 
-          cssClass: "amount-column",
+          cssClass: 'amount-column',
 
-          bottomCalc: "sum",
+          bottomCalc: 'sum',
 
-          bottomCalcFormatter:
-            this.amountColorFormatter.bind(
-              this
-            ),
+          bottomCalcFormatter: this.amountColorFormatter.bind(this),
 
-          minWidth: 120
+          minWidth: 120,
         });
       }
     }
 
     this.columnConfig.push({
-      title: "",
-      field: "",
+      title: '',
+      field: '',
       minWidth: 50,
       maxWidth: 70,
       formatter: this.globalService.hidebuttonFormatter.bind(this.globalService),
       cellClick: (_e, cell) => {
-        const id = cell.getRow().getData()["transactionGroupId"];
-        this.filteredTableData = this.filteredTableData.filter(item => item.transactionGroupId != id);
+        const id = cell.getRow().getData()['transactionGroupId'];
+        this.filteredTableData = this.filteredTableData.filter(
+          (item) => item.transactionGroupId != id,
+        );
       },
       headerSort: false,
-      print: false
+      print: false,
     });
     this.columnConfig.push({
-      title: "",
-      field: "option",
+      title: '',
+      field: 'option',
       formatter: this.globalService.threeDotsFormatter.bind(this),
-      hozAlign: "center",
+      hozAlign: 'center',
       headerSort: false,
       minWidth: 70,
       maxWidth: 70,
       print: false,
     });
-
   }
 
   dateFormatter(cell: any): string {
     const field = cell.getColumn().getField();
     const value = cell.getRow().getData()[field];
     if (!value) {
-      return "";
+      return '';
     }
-    return new Intl.DateTimeFormat("en-IN").format(new Date(value));
+    return new Intl.DateTimeFormat('en-IN').format(new Date(value));
   }
 
   amountColorFormatter(cell: any): string {
-
-    const value =
-      Number(cell.getValue()) || 0;
+    const value = Number(cell.getValue()) || 0;
 
     if (value === 0) {
-      return "";
+      return '';
     }
 
-    const formatted =
-      new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR"
-      }).format(value);
+    const formatted = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(value);
 
     return `
       <span style="
-        color:${value > 0
-        ? "var(--success-color)"
-        : "var(--danger-color)"};
+        color:${value > 0 ? 'var(--success-color)' : 'var(--danger-color)'};
         font-weight:bold">
         ${formatted}
       </span>
     `;
   }
 
-  summaryAmountColorFormatter(
-    cell: any
-  ): string {
+  summaryAmountColorFormatter(cell: any): string {
+    const value = cell.getValue();
 
-    const value =
-      cell.getValue();
-
-    if (
-      value === null ||
-      value === undefined ||
-      value === 0
-    ) {
-      return "";
+    if (value === null || value === undefined || value === 0) {
+      return '';
     }
 
-    const formatted =
-      new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR"
-      }).format(Number(value));
+    const formatted = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(Number(value));
 
-    const field =
-      cell.getColumn().getField();
+    const field = cell.getColumn().getField();
 
-    const data =
-      cell.getRow().getData();
+    const data = cell.getRow().getData();
 
-    const match =
-      field.match(
-        /accountData\.([^.]+)_Amount/i
-      );
+    const match = field.match(/accountData\.([^.]+)_Amount/i);
 
     if (match) {
+      const category = data.accountData[`${match[1]}_Category`];
 
-      const category =
-        data.accountData[
-        `${match[1]}_Category`
-        ];
-
-      if (category === "Income") {
-
+      if (category === 'Income') {
         return `
           <span style="
             color:var(--success-color);
@@ -494,8 +385,7 @@ export class TransactionSummaryComponent
         `;
       }
 
-      if (category === "Expense") {
-
+      if (category === 'Expense') {
         return `
           <span style="
             color:var(--danger-color);
@@ -507,7 +397,6 @@ export class TransactionSummaryComponent
     }
 
     if (Number(value) > 0) {
-
       return `
         <span style="
           color:var(--success-color);
@@ -527,26 +416,14 @@ export class TransactionSummaryComponent
   }
 
   addTransaction(): void {
-    this.openTransaction.emit("");
+    this.openTransaction.emit('');
   }
 
-  editTransaction(
-    transactionGroupId: string
-  ): void {
-
-    this.openTransaction.emit(
-      transactionGroupId
-    );
+  editTransaction(transactionGroupId: string): void {
+    this.openTransaction.emit(transactionGroupId);
   }
 
-  deleteTransaction(
-    transactionGroupId: string
-  ): void {
-
-    this.deleteTransactionEvent.emit(
-      transactionGroupId
-    );
+  deleteTransaction(transactionGroupId: string): void {
+    this.deleteTransactionEvent.emit(transactionGroupId);
   }
-
-
 }

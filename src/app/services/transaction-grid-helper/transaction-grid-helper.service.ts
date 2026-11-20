@@ -1,41 +1,32 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class TransactionGridHelperService {
-
   formatDate(value: any): string {
-
     if (!value) {
-      return "";
+      return '';
     }
 
-    return new Intl.DateTimeFormat(
-      "en-IN"
-    ).format(new Date(value));
+    return new Intl.DateTimeFormat('en-IN').format(new Date(value));
   }
 
   formatAmount(value: any): string {
-
-    const amount =
-      Number(value) || 0;
+    const amount = Number(value) || 0;
 
     if (amount === 0) {
-      return "";
+      return '';
     }
 
-    const formatted =
-      new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR"
-      }).format(amount);
+    const formatted = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(amount);
 
     return `
       <span style="
-        color:${amount > 0
-          ? "var(--success-color)"
-          : "var(--danger-color)"};
+        color:${amount > 0 ? 'var(--success-color)' : 'var(--danger-color)'};
         font-weight:bold">
         ${formatted}
       </span>
@@ -43,19 +34,16 @@ export class TransactionGridHelperService {
   }
 
   formatDebit(value: any): string {
-
-    const amount =
-      Number(value) || 0;
+    const amount = Number(value) || 0;
 
     if (amount === 0) {
-      return "";
+      return '';
     }
 
-    const formatted =
-      new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR"
-      }).format(amount);
+    const formatted = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(amount);
 
     return `
       <span style="
@@ -67,9 +55,7 @@ export class TransactionGridHelperService {
   }
 
   formatOverSpent(value: any): string {
-
     if (value) {
-
       return `
         <span style="
           color:var(--danger-color);
@@ -88,20 +74,10 @@ export class TransactionGridHelperService {
     `;
   }
 
-  formatSourceOrReason(
-    description: string,
-    sourceOrReason: string
-  ): string {
+  formatSourceOrReason(description: string, sourceOrReason: string): string {
+    const descriptionText = description?.toLowerCase() ?? '';
 
-    const descriptionText =
-      description?.toLowerCase() ?? "";
-
-    if (
-      descriptionText.includes(
-        "emergency"
-      )
-    ) {
-
+    if (descriptionText.includes('emergency')) {
       return `
         <span style="
           color:var(--danger-color);
@@ -111,12 +87,7 @@ export class TransactionGridHelperService {
       `;
     }
 
-    if (
-      descriptionText.includes(
-        "return"
-      )
-    ) {
-
+    if (descriptionText.includes('return')) {
       return `
         <span style="
           color:var(--success-color);
@@ -126,12 +97,7 @@ export class TransactionGridHelperService {
       `;
     }
 
-    if (
-      descriptionText.includes(
-        "recharge"
-      )
-    ) {
-
+    if (descriptionText.includes('recharge')) {
       return `
         <span style="
           color:var(--theme-accent-orange);
@@ -150,37 +116,26 @@ export class TransactionGridHelperService {
     `;
   }
 
-  formatSummaryAmount(
-    value: any,
-    category?: string
-  ): string {
-
-    const amount =
-      Number(value) || 0;
+  formatSummaryAmount(value: any, category?: string): string {
+    const amount = Number(value) || 0;
 
     if (amount === 0) {
-      return "";
+      return '';
     }
 
-    const formatted =
-      new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR"
-      }).format(amount);
+    const formatted = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(amount);
 
-    let cssVariable =
-      amount > 0
-        ? "var(--success-color)"
-        : "var(--danger-color)";
+    let cssVariable = amount > 0 ? 'var(--success-color)' : 'var(--danger-color)';
 
-    if (category === "Income") {
-      cssVariable =
-        "var(--success-color)";
+    if (category === 'Income') {
+      cssVariable = 'var(--success-color)';
     }
 
-    if (category === "Expense") {
-      cssVariable =
-        "var(--danger-color)";
+    if (category === 'Expense') {
+      cssVariable = 'var(--danger-color)';
     }
 
     return `

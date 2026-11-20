@@ -1,109 +1,100 @@
-import { Routes } from "@angular/router";
-import {
-  ApplicationModules,
-  RoutePath,
-  RoutePathTitles
-} from "../utils/application-constants";
+import { Routes } from '@angular/router';
+import { ApplicationModules, RoutePath, RoutePathTitles } from '../utils/application-constants';
 
-import { BudgetComponent } from "./components/budget/budget.component";
-import { CredentialsComponent } from "./components/credentials/credentials.component";
-import { CurrencyCoinComponent } from "./components/currency-coin/currency-coin.component";
-import { DayComponent } from "./components/day/day.component";
-import { DocumentsComponent } from "./components/documents/documents.component";
-import { MyProfileComponent } from "./components/my-profile/my-profile.component";
-import { RoutineComponent } from "./components/routine/routine.component";
-import { SelfDataComponent } from "./components/personal-plans/personal-plans.component";
-import { SettingsComponent } from "./components/settings/settings.component";
-import { TransactionComponent } from "./components/transaction/transaction.component";
+import { BudgetComponent } from './components/budget/budget.component';
+import { CredentialsComponent } from './components/credentials/credentials.component';
+import { CurrencyCoinComponent } from './components/currency-coin/currency-coin.component';
+import { DayComponent } from './components/day/day.component';
+import { DocumentsComponent } from './components/documents/documents.component';
+import { MyProfileComponent } from './components/my-profile/my-profile.component';
+import { RoutineComponent } from './components/routine/routine.component';
+import { SelfDataComponent } from './components/personal-plans/personal-plans.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { TransactionComponent } from './components/transaction/transaction.component';
 
-import { authGuard } from "./guards/auth.guard";
-import { LoginComponent } from "./components/login/login.component";
-import { SiteUnderDevelopmentComponent } from "./components/shared/site-under-development/site-under-development.component";
-import { FoodMenuComponent } from "./components/food-menu/food-menu.component";
-import { SignupComponent } from "./components/sign-up/sign-up.component";
-import { EmailVerificationComponent } from "./components/email-verification/email-verification.component";
-import { OTPVerificationComponent } from "./components/otp-verification/otp-verification.component";
-import { ForgotPasswordComponent } from "./components/forgot-password/forgot-password.component";
-import { MobileMenuComponent } from "./components/mobile-menu/mobile-menu.component";
+import { authGuard } from './guards/auth.guard';
+import { LoginComponent } from './components/login/login.component';
+import { SiteUnderDevelopmentComponent } from './components/shared/site-under-development/site-under-development.component';
+import { FoodMenuComponent } from './components/food-menu/food-menu.component';
+import { SignupComponent } from './components/sign-up/sign-up.component';
+import { EmailVerificationComponent } from './components/email-verification/email-verification.component';
+import { OTPVerificationComponent } from './components/otp-verification/otp-verification.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { MobileMenuComponent } from './components/mobile-menu/mobile-menu.component';
 
 export const routes: Routes = [
   {
-    path: "",
+    path: '',
     redirectTo: RoutePath.HOME,
-    pathMatch: "full"
+    pathMatch: 'full',
   },
   {
     path: RoutePath.HOME,
 
-    loadComponent: () =>
-      import("./components/home/home.component")
-        .then(m => m.HomeComponent),
+    loadComponent: () => import('./components/home/home.component').then((m) => m.HomeComponent),
 
     children: [
-
       // PUBLIC
       {
-        path: "",
+        path: '',
         title: RoutePathTitles.CURRENCY_LIST,
         redirectTo: RoutePath.CURRENCY_LIST,
-        pathMatch: "full"
+        pathMatch: 'full',
       },
       {
         path: RoutePath.CURRENCY_LIST,
         title: RoutePathTitles.CURRENCY_LIST,
-        component: CurrencyCoinComponent
+        component: CurrencyCoinComponent,
       },
 
       {
         path: RoutePath.FOOD_MENU,
         title: RoutePathTitles.FOOD_MENU,
-        component: FoodMenuComponent
+        component: FoodMenuComponent,
       },
 
       {
         path: RoutePath.FAMILY_GRAPH,
         title: RoutePathTitles.FAMILY_GRAPH,
         loadComponent: () =>
-          import("./components/family-graph/family-graph.component")
-            .then(m => m.FamilyGraphComponent)
+          import('./components/family-graph/family-graph.component').then(
+            (m) => m.FamilyGraphComponent,
+          ),
       },
-
 
       // AUTHENTICATED GROUP
       {
-        path: "",
+        path: '',
         canActivateChild: [authGuard],
 
         children: [
-
           {
-            path: "",
+            path: '',
             redirectTo: RoutePath.EXPENSES,
-            pathMatch: "full"
+            pathMatch: 'full',
           },
 
           {
             path: RoutePath.EXPENSES,
             title: RoutePathTitles.EXPENSES,
-            component: TransactionComponent
+            component: TransactionComponent,
           },
 
           {
             path: RoutePath.DAY_LIST,
             title: RoutePathTitles.DAY_LIST,
-            component: DayComponent
+            component: DayComponent,
           },
 
           {
             path: RoutePath.USER_LIST,
             title: RoutePathTitles.USER_LIST,
             loadComponent: () =>
-              import("./components/user-list/user-list.component")
-                .then(m => m.UserListComponent),
+              import('./components/user-list/user-list.component').then((m) => m.UserListComponent),
 
             data: {
-              moduleName: ApplicationModules.USERS
-            }
+              moduleName: ApplicationModules.USERS,
+            },
           },
           // {
           //   path: 'user-registration-approval',
@@ -114,48 +105,49 @@ export const routes: Routes = [
             path: RoutePath.USER_PERMISSIONS,
             title: RoutePathTitles.USER_PERMISSIONS,
             loadComponent: () =>
-              import("./components/user-permission/user-permission.component")
-                .then(m => m.UserPermissionComponent),
+              import('./components/user-permission/user-permission.component').then(
+                (m) => m.UserPermissionComponent,
+              ),
 
             data: {
-              moduleName: ApplicationModules.USER_PERMISSIONS
-            }
+              moduleName: ApplicationModules.USER_PERMISSIONS,
+            },
           },
 
           {
             path: RoutePath.SETTINGS,
             title: RoutePathTitles.SETTINGS,
-            component: SettingsComponent
+            component: SettingsComponent,
           },
 
           {
             path: RoutePath.DOCUMENT,
             title: RoutePathTitles.DOCUMENT,
-            component: DocumentsComponent
+            component: DocumentsComponent,
           },
 
           {
             path: RoutePath.ROUTINE,
             title: RoutePathTitles.ROUTINE,
-            component: RoutineComponent
+            component: RoutineComponent,
           },
 
           {
             path: RoutePath.BUDGET,
             title: RoutePathTitles.BUDGET,
-            component: BudgetComponent
+            component: BudgetComponent,
           },
 
           {
             path: RoutePath.PLANS,
             title: RoutePathTitles.PLANS,
-            component: SelfDataComponent
+            component: SelfDataComponent,
           },
 
           {
             path: RoutePath.CREDENTIALS,
             title: RoutePathTitles.CREDENTIALS,
-            component: CredentialsComponent
+            component: CredentialsComponent,
           },
           // {
           //   path: RoutePath.FOOD_PICKER,
@@ -165,65 +157,65 @@ export const routes: Routes = [
           {
             path: RoutePath.FOOD_MENU,
             title: RoutePathTitles.FOOD_MENU,
-            component: FoodMenuComponent
+            component: FoodMenuComponent,
           },
-
 
           {
             path: RoutePath.NOTIFICATIONS,
             title: RoutePathTitles.NOTIFICATIONS,
             loadComponent: () =>
-              import("./components/notification-list/notification-list.component")
-                .then(m => m.NotificationListComponent)
+              import('./components/notification-list/notification-list.component').then(
+                (m) => m.NotificationListComponent,
+              ),
           },
           {
             path: RoutePath.CHANGE_PASSWORD,
             title: RoutePathTitles.CHANGE_PASSWORD,
             loadComponent: () =>
-              import("./components/change-password/change-password.component")
-                .then(m => m.ChangePasswordComponent)
-          }
-        ]
-      }
-    ]
+              import('./components/change-password/change-password.component').then(
+                (m) => m.ChangePasswordComponent,
+              ),
+          },
+        ],
+      },
+    ],
   },
   {
     path: RoutePath.LOGIN,
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: RoutePath.FORGOT_PASSWORD,
-    component: ForgotPasswordComponent
+    component: ForgotPasswordComponent,
   },
   {
     path: RoutePath.SIGNUP,
-    component: SignupComponent
+    component: SignupComponent,
   },
   {
     path: 'email-verification',
-    component: EmailVerificationComponent
+    component: EmailVerificationComponent,
   },
   {
     path: RoutePath.OTP_VERIFICATION,
-    component: OTPVerificationComponent
+    component: OTPVerificationComponent,
   },
   {
     path: RoutePath.OWNER_PROFILE,
     title: RoutePathTitles.OWNER_PROFILE,
-    component: MyProfileComponent
+    component: MyProfileComponent,
   },
   {
     path: RoutePath.UNDER_DEVELOPMENT,
-    component: SiteUnderDevelopmentComponent
+    component: SiteUnderDevelopmentComponent,
   },
   {
     path: RoutePath.MOBILE_MENU,
-    component: MobileMenuComponent
+    component: MobileMenuComponent,
   },
   {
-    path: "**",
+    path: '**',
     redirectTo: RoutePath.HOME,
-    pathMatch: "full"
+    pathMatch: 'full',
   },
-
-]
+];

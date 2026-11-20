@@ -19,7 +19,7 @@ describe('LoaderService', () => {
     service.isLoading$.subscribe((isLoading) => {
       if (isLoading) {
         expect(isLoading).toBeTrue();
-        done(); 
+        done();
       }
     });
 
@@ -27,14 +27,12 @@ describe('LoaderService', () => {
   });
 
   it('should emit false when hideLoader is called', (done) => {
-    
     service.showLoader();
 
-    
     service.isLoading$.subscribe((isLoading) => {
       if (!isLoading) {
         expect(isLoading).toBeFalse();
-        done(); 
+        done();
       }
     });
 

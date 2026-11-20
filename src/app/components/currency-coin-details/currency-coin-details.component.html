@@ -1,14 +1,29 @@
-<div class="modal fade modal-xl" id="detailsPopup" data-bs-backdrop="static" data-bs-keyboard="false">
+<div
+  class="modal fade modal-xl"
+  id="detailsPopup"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Add Coin</h4>
-        <button #btnCloseDetailsPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal">✕</button>
+        <button
+          #btnCloseDetailsPopup
+          class="btn-close"
+          (click)="closePopup()"
+          data-bs-dismiss="modal"
+        >
+          ✕
+        </button>
       </div>
 
       <div class="modal-body">
-        <form [formGroup]="currencyCoinDetailsForm" (ngSubmit)="submitCurrencyCoinDetails()"
-          enctype="multipart/form-data">
+        <form
+          [formGroup]="currencyCoinDetailsForm"
+          (ngSubmit)="submitCurrencyCoinDetails()"
+          enctype="multipart/form-data"
+        >
           <div class="d-none">
             <label>collectionCoinId</label>
             <input formControlName="collectionCoinId" />
@@ -17,46 +32,77 @@
 
           <div class="row">
             <div class="col-12 col-lg-6">
-              <div class="drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)"
-                (click)="triggerFileInput()">
-                <div class="text-center" style="margin-top: 170px;"
-                  *ngIf="!selectedImage || (!showPreview && !selectedImage)">
-                  Drag & Drop Image Here <br /> or Click to Select
+              <div
+                class="drop-container"
+                (dragover)="onDragOver($event)"
+                (drop)="onDrop($event)"
+                (click)="triggerFileInput()"
+              >
+                <div
+                  class="text-center"
+                  style="margin-top: 170px"
+                  *ngIf="!selectedImage || (!showPreview && !selectedImage)"
+                >
+                  Drag & Drop Image Here <br />
+                  or Click to Select
                 </div>
                 <!-- Show Cropper image -->
-                <img #cropImage id="cropImage" [src]="selectedImage" class="crop-image"
-                  *ngIf="selectedImage && !showPreview" />
+                <img
+                  #cropImage
+                  id="cropImage"
+                  [src]="selectedImage"
+                  class="crop-image"
+                  *ngIf="selectedImage && !showPreview"
+                />
 
                 <!-- Show Cropped Image Preview -->
                 <img [src]="croppedImage" class="crop-image preview-image" *ngIf="showPreview" />
-
               </div>
               <!-- Action Buttons -->
               <div class="mt-3 d-flex justify-content-center gap-2 action-buttons">
                 <!-- DONE (Crop) -->
-                <button type="button" class="btn btn-icon btn-primary" *ngIf="selectedImage && !showPreview"
-                  (click)="onCropDone()" title="Done">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-primary"
+                  *ngIf="selectedImage && !showPreview"
+                  (click)="onCropDone()"
+                  title="Done"
+                >
                   <i class="bi bi-check-circle"></i>
                 </button>
 
                 <!-- EDIT -->
-                <button type="button" class="btn btn-icon btn-warning" *ngIf="selectedImage && !showPreview"
-                  (click)="editImage()" title="Edit">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-warning"
+                  *ngIf="selectedImage && !showPreview"
+                  (click)="editImage()"
+                  title="Edit"
+                >
                   <i class="bi bi-pencil-square"></i>
                 </button>
-
 
                 <!-- FILE UPLOAD -->
                 <label class="btn btn-icon btn-secondary upload-btn" title="Upload new Image">
                   <i class="bi bi-upload"></i>
-                  <input type="file" #dropFileInput accept="image/*" (change)="onFileSelected($event)" hidden />
+                  <input
+                    type="file"
+                    #dropFileInput
+                    accept="image/*"
+                    (change)="onFileSelected($event)"
+                    hidden
+                  />
                 </label>
                 <!-- DOWNLOAD -->
-                <button type="button" class="btn btn-icon btn-success" *ngIf="selectedImage && showPreview"
-                  (click)="DownloadImage()" title="Download">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-success"
+                  *ngIf="selectedImage && showPreview"
+                  (click)="DownloadImage()"
+                  title="Download"
+                >
                   <i class="bi bi-download"></i>
                 </button>
-
               </div>
             </div>
             <hr class="d-lg-none my-4" />
@@ -64,119 +110,168 @@
               <div class="row">
                 <div class="col-6">
                   <label>Coin/NoteName</label>
-                  <input formControlName="coinNoteName" class="form-control form-control-lg text-dark bg-transparent"
+                  <input
+                    formControlName="coinNoteName"
+                    class="form-control form-control-lg text-dark bg-transparent"
                     [ngClass]="{
                       'error-border':
-                        currencyCoinDetailsForm.get('coinNoteName')
-                          ?.touched &&
-                        currencyCoinDetailsForm.get('coinNoteName')
-                          ?.invalid
-                    }" />
-                  @if(currencyCoinDetailsForm.get('coinNoteName')?.touched
-                  &&
-                  currencyCoinDetailsForm.get('coinNoteName')?.invalid){
-                  <div class="text-danger">
-                    @if(currencyCoinDetailsForm.get('coinNoteName')?.errors?.['required']){
-                    Coin/NoteName is required }
-                    @if(currencyCoinDetailsForm.get('coinNoteName')?.errors?.['pattern']){
-                    Invalid Coin/NoteName }
-                  </div>
+                        currencyCoinDetailsForm.get('coinNoteName')?.touched &&
+                        currencyCoinDetailsForm.get('coinNoteName')?.invalid,
+                    }"
+                  />
+                  @if (
+                    currencyCoinDetailsForm.get('coinNoteName')?.touched &&
+                    currencyCoinDetailsForm.get('coinNoteName')?.invalid
+                  ) {
+                    <div class="text-danger">
+                      @if (currencyCoinDetailsForm.get('coinNoteName')?.errors?.['required']) {
+                        Coin/NoteName is required
+                      }
+                      @if (currencyCoinDetailsForm.get('coinNoteName')?.errors?.['pattern']) {
+                        Invalid Coin/NoteName
+                      }
+                    </div>
                   }
                 </div>
                 <div class="col">
                   <label>Coin/NoteType</label>
-                  <select formControlName="collectionCoinType"
-                    class="form-select form-control form-control-lg text-dark bg-transparent styled-select " [ngClass]="{
+                  <select
+                    formControlName="collectionCoinType"
+                    class="form-select form-control form-control-lg text-dark bg-transparent styled-select"
+                    [ngClass]="{
                       'error-border':
-                        currencyCoinDetailsForm.get('collectionCoinType')
-                          ?.touched &&
-                        currencyCoinDetailsForm.get('collectionCoinType')
-                          ?.invalid
-                    }">
-                    @for(item of currencyTypeList; track $index){
-                    <option [value]="item.id">
-                      {{ item.listItemName }}
-                    </option>
+                        currencyCoinDetailsForm.get('collectionCoinType')?.touched &&
+                        currencyCoinDetailsForm.get('collectionCoinType')?.invalid,
+                    }"
+                  >
+                    @for (item of currencyTypeList; track $index) {
+                      <option [value]="item.id">
+                        {{ item.listItemName }}
+                      </option>
                     }
                   </select>
-                  @if(currencyCoinDetailsForm.get('collectionCoinType')?.touched
-                  &&
-                  currencyCoinDetailsForm.get('collectionCoinType')?.invalid){
-                  <div class="text-danger">
-                    @if(currencyCoinDetailsForm.get('collectionCoinType')?.errors?.['required']){
-                    Type is required }
-                  </div>
+                  @if (
+                    currencyCoinDetailsForm.get('collectionCoinType')?.touched &&
+                    currencyCoinDetailsForm.get('collectionCoinType')?.invalid
+                  ) {
+                    <div class="text-danger">
+                      @if (
+                        currencyCoinDetailsForm.get('collectionCoinType')?.errors?.['required']
+                      ) {
+                        Type is required
+                      }
+                    </div>
                   }
                 </div>
               </div>
               <div class="row mt-3">
                 <div class="col-6">
                   <label>Country</label>
-                  <select formControlName="countryId" class="form-select form-control-lg bg-transparent">
-                    @for(item of countryList; track $index){
-                    <option [value]="item.id">
-                      {{ item.country }}
-                    </option>
+                  <select
+                    formControlName="countryId"
+                    class="form-select form-control-lg bg-transparent"
+                  >
+                    @for (item of countryList; track $index) {
+                      <option [value]="item.id">
+                        {{ item.country }}
+                      </option>
                     }
                   </select>
                 </div>
                 <div class="col-6">
                   <label>Printed Year</label>
-                  <input type="text" formControlName="printedYear" class="form-control bg-transparent" />
+                  <input
+                    type="text"
+                    formControlName="printedYear"
+                    class="form-control bg-transparent"
+                  />
                 </div>
-
               </div>
 
               <div class="row mt-3">
                 <div class="col-6">
                   <label>Actual Value</label>
-                  <input type="number" formControlName="actualValue" class="form-control bg-transparent" />
+                  <input
+                    type="number"
+                    formControlName="actualValue"
+                    class="form-control bg-transparent"
+                  />
                 </div>
                 <div class="col-6">
                   <label>Indian Value</label>
-                  <input type="number" formControlName="indianValue" class="form-control bg-transparent" />
+                  <input
+                    type="number"
+                    formControlName="indianValue"
+                    class="form-control bg-transparent"
+                  />
                 </div>
               </div>
 
               <div class="row mt-3">
                 <div class="col-12">
                   <label>Speciality</label>
-                  <textarea formControlName="speciality" rows="3" class="form-control bg-transparent"></textarea>
+                  <textarea
+                    formControlName="speciality"
+                    rows="3"
+                    class="form-control bg-transparent"
+                  ></textarea>
                 </div>
               </div>
 
               <div class="row mt-3">
                 <div class="col-6">
                   <label>Metal Used</label>
-                  <input type="text" formControlName="metalsUsed" class="form-control bg-transparent" />
+                  <input
+                    type="text"
+                    formControlName="metalsUsed"
+                    class="form-control bg-transparent"
+                  />
                 </div>
 
                 <div class="col-6">
                   <label>Coin Weight (g)</label>
-                  <input type="number" formControlName="coinWeightInGrams" class="form-control bg-transparent" />
+                  <input
+                    type="number"
+                    formControlName="coinWeightInGrams"
+                    class="form-control bg-transparent"
+                  />
                 </div>
-
               </div>
               <div class="row mt-3">
                 <div class="col-6">
                   <label>Note Length (mm)</label>
-                  <input type="number" formControlName="lengthOfNote" class="form-control bg-transparent" />
+                  <input
+                    type="number"
+                    formControlName="lengthOfNote"
+                    class="form-control bg-transparent"
+                  />
                 </div>
                 <div class="col-6">
                   <label>Note Breadth (mm)</label>
-                  <input type="number" formControlName="breadthOfNote" class="form-control bg-transparent" />
+                  <input
+                    type="number"
+                    formControlName="breadthOfNote"
+                    class="form-control bg-transparent"
+                  />
                 </div>
               </div>
               <div class="row mt-3">
                 <div class="col-6">
                   <label>Diameter (mm)</label>
-                  <input type="number" formControlName="diameterOfCoin" class="form-control bg-transparent" />
+                  <input
+                    type="number"
+                    formControlName="diameterOfCoin"
+                    class="form-control bg-transparent"
+                  />
                 </div>
-
               </div>
               <div class="mt-3">
                 <label>Description</label>
-                <textarea formControlName="description" rows="5" class="form-control bg-transparent"></textarea>
+                <textarea
+                  formControlName="description"
+                  rows="5"
+                  class="form-control bg-transparent"
+                ></textarea>
               </div>
               <!-- <div class="mt-3">
                 <label>ExtractedText</label>
@@ -186,17 +281,23 @@
                 <label>GeneratedDescription</label>
                 <textarea formControlName="generatedDescription" rows="5" class="form-control bg-transparent"></textarea>
               </div> -->
-
             </div>
             <div class="row mt-4">
               <div class="col-12 col-sm-12">
                 <div class="action d-flex justify-content-end">
-                  <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()"
-                    data-bs-dismiss="modal">
+                  <button
+                    class="btn btn-secondary rounded-button"
+                    type="button"
+                    (click)="closePopup()"
+                    data-bs-dismiss="modal"
+                  >
                     Cancel
                   </button>
-                  <button class="btn btn-primary rounded-button" type="submit"
-                    [disabled]="currencyCoinDetailsForm.invalid || isSaving">
+                  <button
+                    class="btn btn-primary rounded-button"
+                    type="submit"
+                    [disabled]="currencyCoinDetailsForm.invalid || isSaving"
+                  >
                     Save
                   </button>
                 </div>

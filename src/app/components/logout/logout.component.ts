@@ -5,15 +5,18 @@ import { NavigationURLs } from '../../../utils/application-constants';
 
 @Component({
   selector: 'app-logout',
-  standalone:true,
+  standalone: true,
   templateUrl: './logout.component.html',
-  styleUrls: ['./logout.component.scss']
+  styleUrls: ['./logout.component.scss'],
 })
 export class LogoutComponent {
-  constructor(private router: Router, public globalService: GlobalService) { }
+  constructor(
+    private router: Router,
+    public globalService: GlobalService,
+  ) {}
 
-  ngOnInit() {    
-            console.log('logoutComponent 16 Clearing local storage');
+  ngOnInit() {
+    console.log('logoutComponent 16 Clearing local storage');
 
     localStorage.clear();
     this.reload();
@@ -22,5 +25,4 @@ export class LogoutComponent {
   reload() {
     this.globalService.reloadComponent();
   }
-
 }

@@ -3,11 +3,14 @@
     <h2>User Permission</h2>
     <div class="d-flex justify-content-between mb-3">
       <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-5 mb-3">
-        <select id="roleSelect" class="form-select form-control-lg text-dark bg-transparent"
-          (change)="changeUser($event)">
+        <select
+          id="roleSelect"
+          class="form-select form-control-lg text-dark bg-transparent"
+          (change)="changeUser($event)"
+        >
           <option value="">Select User</option>
-          @for(item of userList;track $index){
-          <option value="{{ item.id }}">{{ item.firstName + ' ' +item.lastName }}</option>
+          @for (item of userList; track $index) {
+            <option value="{{ item.id }}">{{ item.firstName + ' ' + item.lastName }}</option>
           }
         </select>
       </div>
@@ -28,50 +31,86 @@
         <th class="permission">Upload</th>
         <th class="permission">Approve</th>
         <th class="permission">Reject</th>
-        @if(permissionModulePermissions.edit || !disableUpdate){
-        <th class="permission"></th>
+        @if (permissionModulePermissions.edit || !disableUpdate) {
+          <th class="permission"></th>
         }
       </tr>
     </thead>
     <tbody>
-      @for(role of rolePageMappingData;track $index) {
-      <tr>
-        <td class="srno">{{ $index + 1 }}</td>
-        <td>{{ role.moduleName }}</td>
-        <td>{{ role?.moduleName }}</td>
-        <td class="permission">
-          <input type="checkbox" [(ngModel)]="role.view" [disabled]="!permissionModulePermissions.edit || disableUpdate" />
-        </td>
-        <td class="permission">
-          <input type="checkbox" [(ngModel)]="role.add" [disabled]="!permissionModulePermissions.edit || disableUpdate" />
-        </td>
-        <td class="permission">
-          <input type="checkbox" [(ngModel)]="role.edit" [disabled]="!permissionModulePermissions.edit ||disableUpdate" />
-        </td>
-        <td class="permission">
-          <input type="checkbox" [(ngModel)]="role.delete" [disabled]="!permissionModulePermissions.edit || disableUpdate" />
-        </td>
-        <td class="permission">
-          <input type="checkbox" [(ngModel)]="role.download" [disabled]="!permissionModulePermissions.edit || disableUpdate" />
-        </td>
-        <td class="permission">
-          <input type="checkbox" [(ngModel)]="role.upload" [disabled]="!permissionModulePermissions.edit || disableUpdate" />
-        </td>
-        <td class="permission">
-          <input type="checkbox" [(ngModel)]="role.approve" [disabled]="!permissionModulePermissions.edit || disableUpdate" />
-        </td>
-        <td class="permission">
-          <input type="checkbox" [(ngModel)]="role.reject" [disabled]="!permissionModulePermissions.edit || disableUpdate" />
-        </td>
-        @if(permissionModulePermissions.edit || !disableUpdate){
-        <td class="permission">
-          <button type="button" class="btn btn-sm btn-success " [disabled]="!permissionModulePermissions.edit || disableUpdate"
-            (click)="updateRoleModulePermission(role)">
-            <i class="fa fa-save"></i>
-          </button>
-        </td>
-        }
-      </tr>
+      @for (role of rolePageMappingData; track $index) {
+        <tr>
+          <td class="srno">{{ $index + 1 }}</td>
+          <td>{{ role.moduleName }}</td>
+          <td>{{ role?.moduleName }}</td>
+          <td class="permission">
+            <input
+              type="checkbox"
+              [(ngModel)]="role.view"
+              [disabled]="!permissionModulePermissions.edit || disableUpdate"
+            />
+          </td>
+          <td class="permission">
+            <input
+              type="checkbox"
+              [(ngModel)]="role.add"
+              [disabled]="!permissionModulePermissions.edit || disableUpdate"
+            />
+          </td>
+          <td class="permission">
+            <input
+              type="checkbox"
+              [(ngModel)]="role.edit"
+              [disabled]="!permissionModulePermissions.edit || disableUpdate"
+            />
+          </td>
+          <td class="permission">
+            <input
+              type="checkbox"
+              [(ngModel)]="role.delete"
+              [disabled]="!permissionModulePermissions.edit || disableUpdate"
+            />
+          </td>
+          <td class="permission">
+            <input
+              type="checkbox"
+              [(ngModel)]="role.download"
+              [disabled]="!permissionModulePermissions.edit || disableUpdate"
+            />
+          </td>
+          <td class="permission">
+            <input
+              type="checkbox"
+              [(ngModel)]="role.upload"
+              [disabled]="!permissionModulePermissions.edit || disableUpdate"
+            />
+          </td>
+          <td class="permission">
+            <input
+              type="checkbox"
+              [(ngModel)]="role.approve"
+              [disabled]="!permissionModulePermissions.edit || disableUpdate"
+            />
+          </td>
+          <td class="permission">
+            <input
+              type="checkbox"
+              [(ngModel)]="role.reject"
+              [disabled]="!permissionModulePermissions.edit || disableUpdate"
+            />
+          </td>
+          @if (permissionModulePermissions.edit || !disableUpdate) {
+            <td class="permission">
+              <button
+                type="button"
+                class="btn btn-sm btn-success"
+                [disabled]="!permissionModulePermissions.edit || disableUpdate"
+                (click)="updateRoleModulePermission(role)"
+              >
+                <i class="fa fa-save"></i>
+              </button>
+            </td>
+          }
+        </tr>
       }
     </tbody>
   </table>

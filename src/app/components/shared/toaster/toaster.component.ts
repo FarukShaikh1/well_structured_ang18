@@ -21,12 +21,17 @@ export class ToasterComponent {
   showStandard(toastText: string) {
     if (this.toasterTemplate) {
       this.toastText = toastText;
-      this.toastService.show({ template: this.toasterTemplate, autohide: true, });
+      this.toastService.show({ template: this.toasterTemplate, autohide: true });
     }
   }
 
   showMessage(toastText: string, result: string, timeout: number = this.timeout) {
     this.toastText = toastText;
-    this.toastService.show({ template: this.toasterTemplate, autohide: true, classname: result === 'success' ? 'bg-success text-light' : 'bg-danger text-light', delay: timeout });
+    this.toastService.show({
+      template: this.toasterTemplate,
+      autohide: true,
+      classname: result === 'success' ? 'bg-success text-light' : 'bg-danger text-light',
+      delay: timeout,
+    });
   }
 }

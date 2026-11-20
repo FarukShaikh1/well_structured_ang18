@@ -1,42 +1,54 @@
 <h1>Pie Chart</h1>
 <div class="row">
-  
   <div class="col-12 col-sm-7 col-md-8 col-lg-6 col-xl-7">
-    <canvas baseChart [type]="'pie'" [data]="pieChartData" [options]="pieChartOptions">
-    </canvas>
+    <canvas baseChart [type]="'pie'" [data]="pieChartData" [options]="pieChartOptions"> </canvas>
   </div>
 
-  
   <div class="col-12 col-sm-5 col-md-4 col-lg-6 col-xl-5">
     <div class="category-toggle">
-      <label class="category-option income" [class.active]="selectedType === 'income'"
-        (click)="toggleCategory('income')">
+      <label
+        class="category-option income"
+        [class.active]="selectedType === 'income'"
+        (click)="toggleCategory('income')"
+      >
         Income
       </label>
-      <label class="category-option expense" [class.active]="selectedType === 'expense'"
-        (click)="toggleCategory('expense')">
+      <label
+        class="category-option expense"
+        [class.active]="selectedType === 'expense'"
+        (click)="toggleCategory('expense')"
+      >
         Expense
       </label>
     </div>
     <div class="maxh-400 overflow-auto">
       <ul class="list-unstyled p-0 m-0 pt-4">
-        @for(label of pieChartData?.labels; track $index) {
-        <li class="mb-1">
-          @if(pieChartData != null && pieChartData != undefined && pieChartData.datasets != null &&
-          pieChartData.datasets[0].backgroundColor != null) {
-          <div class="d-flex align-items-center justify-content-between">
-            <span>
-              <span [style.background-color]="pieChartData?.datasets[0].backgroundColor[$index]" class="legend-swatch"></span>
-              <span class="label-text">
-                {{ label }}
-              </span>
-            </span>
-            <button class="action-buttons" title="Hide" (click)="hideTransaction(label)"><i
-                class="bi bi-dash-lg btn-link"></i></button>
-          </div>
-          }
-        </li>
+        @for (label of pieChartData?.labels; track $index) {
+          <li class="mb-1">
+            @if (
+              pieChartData != null &&
+              pieChartData != undefined &&
+              pieChartData.datasets != null &&
+              pieChartData.datasets[0].backgroundColor != null
+            ) {
+              <div class="d-flex align-items-center justify-content-between">
+                <span>
+                  <span
+                    [style.background-color]="pieChartData?.datasets[0].backgroundColor[$index]"
+                    class="legend-swatch"
+                  ></span>
+                  <span class="label-text">
+                    {{ label }}
+                  </span>
+                </span>
+                <button class="action-buttons" title="Hide" (click)="hideTransaction(label)">
+                  <i class="bi bi-dash-lg btn-link"></i>
+                </button>
+              </div>
+            }
+          </li>
         }
       </ul>
     </div>
   </div>
+</div>

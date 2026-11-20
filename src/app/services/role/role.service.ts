@@ -6,23 +6,25 @@ import { UserPermission } from '../../interfaces/user-permission';
 import { HttpService } from '../rest/http.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RoleService {
-
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService) {}
 
   getAllRoles(): Observable<any> {
     return this.httpService.get(API_URL.GET_ALL_ROLES);
   }
 
   getPermission(userId: string | null): Observable<any> {
-    if (userId == "") {
+    if (userId == '') {
       const localStorageUserId = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
-      if (localStorageUserId != "" && localStorageUserId != undefined && localStorageUserId != "undefined") {
-        userId = localStorageUserId ?? "";
-      }
-      else {
+      if (
+        localStorageUserId != '' &&
+        localStorageUserId != undefined &&
+        localStorageUserId != 'undefined'
+      ) {
+        userId = localStorageUserId ?? '';
+      } else {
         const userString = localStorage.getItem(LocalStorageConstants.USER);
         let user = null;
         if (userString) {

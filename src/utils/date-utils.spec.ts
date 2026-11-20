@@ -1,206 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { TestBed } from '@angular/core/testing';
 import { DatePipe } from '@angular/common';
 import { DateUtils } from './date-utils';
@@ -210,7 +7,7 @@ describe('DateUtils', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [DatePipe]
+      providers: [DatePipe],
     });
     dateUtils = new DateUtils();
   });
@@ -252,14 +49,18 @@ describe('DateUtils', () => {
       const now = new Date();
       const sameYearDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
       expect(dateUtils.formatTimestamp(sameYearDate)).not.toBe('');
-      expect(dateUtils.formatTimestamp(sameYearDate)).toMatch(/^\d{1,2} \w{3} - \d{1,2}:\d{2} (AM|PM)$/);
+      expect(dateUtils.formatTimestamp(sameYearDate)).toMatch(
+        /^\d{1,2} \w{3} - \d{1,2}:\d{2} (AM|PM)$/,
+      );
     });
 
     it('should return the date in "d MMM yyyy - hh:mm a" format when date is in a different year', () => {
       const now = new Date();
       const differentYearDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
       expect(dateUtils.formatTimestamp(differentYearDate)).not.toBe('');
-      expect(dateUtils.formatTimestamp(differentYearDate)).toMatch(/^\d{1,2} \w{3} \d{4} - \d{1,2}:\d{2} (AM|PM)$/);
+      expect(dateUtils.formatTimestamp(differentYearDate)).toMatch(
+        /^\d{1,2} \w{3} \d{4} - \d{1,2}:\d{2} (AM|PM)$/,
+      );
     });
   });
 
@@ -267,35 +68,35 @@ describe('DateUtils', () => {
     it('should return an empty string when date is null', () => {
       expect(dateUtils.timeStampForChat(null)).toBe('');
     });
-  
+
     it('should return an empty string when date is not a valid Date object', () => {
       expect(dateUtils.timeStampForChat('invalid date')).toBe('');
     });
-  
+
     it('should return "Today" when date is today and divider is true', () => {
       const today = new Date();
       expect(dateUtils.timeStampForChat(today, true)).toBe('Today');
     });
-  
+
     it('should return the time in "hh:mm a" format when date is today and divider is false', () => {
       const today = new Date();
       const expectedTime = dateUtils.datePipe.transform(today, 'hh:mm a');
       expect(dateUtils.timeStampForChat(today)).toBe(expectedTime as string);
     });
-  
+
     it('should return "Yesterday" when date is yesterday', () => {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       expect(dateUtils.timeStampForChat(yesterday)).toBe('Yesterday');
     });
-  
+
     it('should return the day name when date is within the last 7 days but not today or yesterday', () => {
       const lastWeek = new Date();
       lastWeek.setDate(lastWeek.getDate() - 3);
       const expectedDay = lastWeek.toLocaleDateString('en-US', { weekday: 'long' });
       expect(dateUtils.timeStampForChat(lastWeek)).toBe(expectedDay);
     });
-  
+
     it('should return the date in "day month year" format when date is from a different year', () => {
       const lastYear = new Date();
       lastYear.setFullYear(lastYear.getFullYear() - 1);
@@ -306,7 +107,7 @@ describe('DateUtils', () => {
       });
       expect(dateUtils.timeStampForChat(lastYear)).toBe(expectedDate);
     });
-  
+
     it('should return the date in "day month" format when date is not today, yesterday, or within the last week', () => {
       const twoWeeksAgo = new Date();
       twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
@@ -322,19 +123,19 @@ describe('DateUtils', () => {
     it('should return null when input is null', () => {
       expect(DateUtils.formatDateString(null)).toBeNull();
     });
-  
+
     it('should return null when input is empty string', () => {
       expect(DateUtils.formatDateString('')).toBeNull();
     });
-  
+
     it('should return null when input is undefined', () => {
       expect(DateUtils.formatDateString(undefined)).toBeNull();
     });
-  
+
     it('should return null when input string is not a valid date', () => {
       expect(DateUtils.formatDateString('invalid date')).toBeNull();
     });
-  
+
     it('should format a valid date string to "YYYY-MM-DD"', () => {
       const dateString = '2022-07-25T14:30:00.000Z';
       const expectedFormattedDate = '2022-07-25';
@@ -348,24 +149,24 @@ describe('DateUtils', () => {
         expect(DateUtils.formatDateStringToYYYYMMDD(null)).toBe('');
         expect(DateUtils.formatDateStringToYYYYMMDD(undefined)).toBe('');
       });
-  
+
       it('should return a formatted date string when input is a valid date string', () => {
         const input = '2022-07-25T14:30:00.000Z';
         const expectedOutput = '2022-07-25';
         expect(DateUtils.formatDateStringToYYYYMMDD(input)).toBe(expectedOutput);
       });
-  
+
       it('should return a formatted date string when input is a valid date string with different date values', () => {
         const input = '1999-12-31T23:59:59.999Z';
         const expectedOutput = '1999-12-31';
         expect(DateUtils.formatDateStringToYYYYMMDD(input)).toBe(expectedOutput);
       });
-  
+
       it('should return an empty string when input is an invalid date string', () => {
         const input = ' invalid date string ';
         expect(DateUtils.formatDateStringToYYYYMMDD(input)).toBe('');
       });
-  
+
       it('should return an empty string when input is a date string without the "T" separator', () => {
         const input = '2022-07-25 14:30:00.000Z';
         expect(DateUtils.formatDateStringToYYYYMMDD(input)).toBe('');

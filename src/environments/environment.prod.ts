@@ -10,13 +10,13 @@ export const environment = {
       authority: 'https://login.microsoftonline.com/ff00942c-81e2-4530-b90f-4e7d35c20644',
       // ⚠️ Must match the redirect URI registered in Azure AD app registration
       redirectUri: 'https://fmscollection.azurewebsites.net/home',
-      postLogoutRedirectUri: 'https://fmscollection.azurewebsites.net'
-    }
+      postLogoutRedirectUri: 'https://fmscollection.azurewebsites.net',
+    },
   },
 
   apiConfig: {
     scopes: ['api://057cdc86-008c-41b0-b766-cdf91b956c92/ReadWrite'],
-    uri: 'https://graph.microsoft.com/v1.0/me'
+    uri: 'https://graph.microsoft.com/v1.0/me',
   },
 
   oktaConfig: {
@@ -25,5 +25,5 @@ export const environment = {
     redirectUri: window.location.origin + '/login/callback',
     scopes: ['openid', 'profile', 'email'],
     pkce: true,
-  }
+  },
 };

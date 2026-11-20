@@ -8,7 +8,7 @@ describe('ToasterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ToasterComponent]
+      imports: [ToasterComponent],
     }).compileComponents();
   });
 
@@ -36,7 +36,6 @@ describe('ToasterComponent', () => {
 
     const toastElement = fixture.debugElement.query(By.css('.toast')).nativeElement;
     expect(toastElement.classList).toContain('bg-success');
-
   }));
 
   it('should show error message', fakeAsync(() => {

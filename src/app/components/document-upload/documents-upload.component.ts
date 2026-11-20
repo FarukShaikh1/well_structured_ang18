@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  Renderer2,
+  SimpleChanges,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SafeUrlPipe } from '../../common/safe-url.pipe';
 import { DocumentItem } from '../../interfaces/document-item';
@@ -11,13 +19,11 @@ import { GlobalService } from '../../services/global/global.service';
 @Component({
   selector: 'app-documents-upload',
   standalone: true,
-  imports: [CommonModule, FormsModule, SafeUrlPipe,],
+  imports: [CommonModule, FormsModule, SafeUrlPipe],
   templateUrl: './documents-upload.component.html',
-  styleUrl: './documents-upload.component.css'
+  styleUrl: './documents-upload.component.css',
 })
-
 export class DocumentsUploadComponent {
-
   @Input() document: any; // null = add, object = edit
   @Output() saved = new EventEmitter<void>();
 
@@ -25,13 +31,14 @@ export class DocumentsUploadComponent {
     id: '',
     file: null,
     documentName: '',
-    keywords: ''
+    keywords: '',
   };
-  isSaving: boolean=false;
-  constructor(private documentService: DocumentService,
-    private renderer: Renderer2, private globalService: GlobalService
-
-  ) { }
+  isSaving: boolean = false;
+  constructor(
+    private documentService: DocumentService,
+    private renderer: Renderer2,
+    private globalService: GlobalService,
+  ) {}
 
   // ngOnChanges() {
   //   if (this.document) {
@@ -63,9 +70,9 @@ export class DocumentsUploadComponent {
 
   openUpload() {
     const modalEl = document.getElementById('uploadModal');
-    const model = document.getElementById("detailsPopup");
+    const model = document.getElementById('detailsPopup');
     if (model) {
-      this.renderer.setStyle(model, "display", "block");
+      this.renderer.setStyle(model, 'display', 'block');
     }
   }
 
@@ -84,15 +91,12 @@ export class DocumentsUploadComponent {
 
     await this.documentService.uploadDocument(formData).toPromise();
 
-
     this.selectedFile = null;
     const modalEl = document.getElementById('uploadModal');
     if (modalEl) (window as any).bootstrap.Modal.getInstance(modalEl)?.hide();
     this.globalService.triggerGridReload(ApplicationModules.DOCUMENT);
     this.isSaving = false;
-
   }
-
 
   save() {
     if (this.isEditMode) {
@@ -100,12 +104,10 @@ export class DocumentsUploadComponent {
         id: this.document.id,
         documentName: this.documentName,
         keywords: this.keywords,
-        file: null
-      }
+        file: null,
+      };
 
-      this.documentService.updateDocument(
-        this.model
-      ).subscribe(() => {
+      this.documentService.updateDocument(this.model).subscribe(() => {
         this.saved.emit();
         this.closeModal();
       });
@@ -114,11 +116,11 @@ export class DocumentsUploadComponent {
         id: null,
         documentName: this.documentName,
         keywords: this.keywords,
-        file: this.selectedFile
-      }
+        file: this.selectedFile,
+      };
 
       // this.documentService.uploadDocument(
-        
+
       // ).subscribe(() => {
       //   this.saved.emit();
       //   this.closeModal();
@@ -134,7 +136,6 @@ export class DocumentsUploadComponent {
     // this.previewUrl = resp.url;
     this.showPreview = true;
   }
-
 
   closePreview() {
     this.showPreview = false;
@@ -154,5 +155,4 @@ export class DocumentsUploadComponent {
       // bsModal?.hide();
     }
   }
-
 }

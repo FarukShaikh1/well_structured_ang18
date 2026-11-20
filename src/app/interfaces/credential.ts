@@ -1,5 +1,5 @@
 export interface Credential {
-  id: string|null;
+  id: string | null;
   userId: string;
   siteName: string;
   siteUrl: string;

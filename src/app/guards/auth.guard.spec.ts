@@ -1,9 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  Router,
-  RouterStateSnapshot,
-  ActivatedRouteSnapshot,
-} from '@angular/router';
+import { Router, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { of } from 'rxjs';
 import { authGuard } from './auth.guard';
 import { GlobalService } from '../../services/global/global.service';
@@ -15,11 +11,8 @@ describe('authGuard', () => {
   let globalServiceSpy: jasmine.SpyObj<GlobalService>;
   let routerSpy: jasmine.SpyObj<Router>;
 
-  
-  const executeGuard = async (
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ) => TestBed.runInInjectionContext(() => authGuard(route, state));
+  const executeGuard = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
+    TestBed.runInInjectionContext(() => authGuard(route, state));
 
   beforeEach(() => {
     const localStorageSpy = jasmine.createSpyObj('LocalStorageService', [
@@ -41,11 +34,9 @@ describe('authGuard', () => {
     });
 
     localStorageServiceSpy = TestBed.inject(
-      LocalStorageService
+      LocalStorageService,
     ) as jasmine.SpyObj<LocalStorageService>;
-    globalServiceSpy = TestBed.inject(
-      GlobalService
-    ) as jasmine.SpyObj<GlobalService>;
+    globalServiceSpy = TestBed.inject(GlobalService) as jasmine.SpyObj<GlobalService>;
     routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
   });
 
@@ -53,10 +44,7 @@ describe('authGuard', () => {
     localStorageServiceSpy.isAuthenticated.and.returnValue(true);
     globalServiceSpy.getUserPermissionData.and.returnValue(of(true));
 
-    const canActivate = await executeGuard(
-      {} as ActivatedRouteSnapshot,
-      {} as RouterStateSnapshot
-    );
+    const canActivate = await executeGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
 
     expect(canActivate).toBeTrue();
     expect(localStorageServiceSpy.setUserAuthorized).toHaveBeenCalledWith(true);
@@ -68,28 +56,18 @@ describe('authGuard', () => {
     localStorageServiceSpy.isAuthenticated.and.returnValue(true);
     globalServiceSpy.getUserPermissionData.and.returnValue(of(false));
 
-    const canActivate = await executeGuard(
-      {} as ActivatedRouteSnapshot,
-      {} as RouterStateSnapshot
-    );
+    const canActivate = await executeGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
 
     expect(canActivate).toBeFalse();
-    expect(localStorageServiceSpy.setUserAuthorized).toHaveBeenCalledWith(
-      false
-    );
+    expect(localStorageServiceSpy.setUserAuthorized).toHaveBeenCalledWith(false);
     expect(globalServiceSpy.reloadComponent).toHaveBeenCalled();
-    expect(routerSpy.navigate).toHaveBeenCalledWith([
-      NavigationURLs.UNAUTHORIZED_PAGE,
-    ]);
+    expect(routerSpy.navigate).toHaveBeenCalledWith([NavigationURLs.UNAUTHORIZED_PAGE]);
   });
 
   it('should deny access if the user is not authenticated', async () => {
     localStorageServiceSpy.isAuthenticated.and.returnValue(false);
 
-    const canActivate = await executeGuard(
-      {} as ActivatedRouteSnapshot,
-      {} as RouterStateSnapshot
-    );
+    const canActivate = await executeGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
 
     expect(canActivate).toBeFalse();
     expect(localStorageServiceSpy.setUserAuthorized).not.toHaveBeenCalled();
@@ -102,14 +80,9 @@ describe('authGuard', () => {
     globalServiceSpy.getUserPermissionData.and.returnValue(of(false));
     globalServiceSpy.getUserPermissionData.and.throwError('Test Error');
 
-    const canActivate = await executeGuard(
-      {} as ActivatedRouteSnapshot,
-      {} as RouterStateSnapshot
-    );
+    const canActivate = await executeGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
 
     expect(canActivate).toBeFalse();
-    expect(routerSpy.navigate).toHaveBeenCalledWith([
-      NavigationURLs.UNAUTHORIZED_PAGE,
-    ]);
+    expect(routerSpy.navigate).toHaveBeenCalledWith([NavigationURLs.UNAUTHORIZED_PAGE]);
   });
 });

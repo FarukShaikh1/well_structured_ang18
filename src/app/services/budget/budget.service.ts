@@ -6,19 +6,15 @@ import { LocalStorageConstants } from '../../../utils/application-constants';
 import { Budget } from '../../interfaces/budget';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BudgetService {
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
   // =========================
   // GET budget by user
   // =========================
   getBudgetByUser() {
-    return this.http.get<Budget[]>(
-      API_URL.GET_BUDGET_BY_USER
-    );
+    return this.http.get<Budget[]>(API_URL.GET_BUDGET_BY_USER);
   }
 
   // =========================
@@ -32,27 +28,20 @@ export class BudgetService {
   // UPDATE budget
   // =========================
   updateBudget(data: Budget) {
-    return this.http.put(
-      API_URL.UPDATE_BUDGET,
-      data
-    );
+    return this.http.put(API_URL.UPDATE_BUDGET, data);
   }
 
   // =========================
   // GET budget details
   // =========================
   getBudgetDetails(budgetId: string) {
-    return this.http.get<Budget>(
-      API_URL.GET_BUDGET_DETAILS + budgetId
-    );
+    return this.http.get<Budget>(API_URL.GET_BUDGET_DETAILS + budgetId);
   }
 
-    // =========================
+  // =========================
   // GET budget details
   // =========================
   deleteBudget(budgetId: string) {
-    return this.http.delete<boolean>(
-      API_URL.DELETE_BUDGET + budgetId
-    );
-  }  
+    return this.http.delete<boolean>(API_URL.DELETE_BUDGET + budgetId);
+  }
 }

@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Network, DataSet } from 'vis-network/standalone';
@@ -93,7 +87,7 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
   private nodes = new DataSet<VisNode>([]);
   private edges = new DataSet<VisEdge>([]);
 
-  constructor(private familyService: FamilyService) { }
+  constructor(private familyService: FamilyService) {}
 
   ngAfterViewInit(): void {
     this.initNetwork();
@@ -113,7 +107,6 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
       const rootId: string = data.rootPersonId || '';
 
       this.renderGraph(nodes, edges, rootId);
-
     } catch (error) {
       console.error('Error parsing FamilyGraph data:', error);
     }
@@ -150,7 +143,7 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
     this.network = new Network(
       this.graphCanvas.nativeElement,
       { nodes: this.nodes, edges: this.edges },
-      options
+      options,
     );
   }
 
@@ -207,11 +200,7 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private renderGraph(
-    nodes: FamilyGraphNode[],
-    edges: FamilyGraphEdge[],
-    rootId: string
-  ): void {
+  private renderGraph(nodes: FamilyGraphNode[], edges: FamilyGraphEdge[], rootId: string): void {
     const visNodes: VisNode[] = nodes.map((n) => ({
       id: n.id,
       label: n.label || `${n.firstName} ${n.lastName}`,
@@ -219,10 +208,10 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
       color: n.isRoot
         ? { background: '#0d6efd', border: '#0a58ca' }
         : n.gender === 'M'
-        ? { background: '#cfe2ff', border: '#6ea8fe' }
-        : n.gender === 'F'
-        ? { background: '#f8d7da', border: '#f1aeb5' }
-        : { background: '#e2e3e5', border: '#adb5bd' },
+          ? { background: '#cfe2ff', border: '#6ea8fe' }
+          : n.gender === 'F'
+            ? { background: '#f8d7da', border: '#f1aeb5' }
+            : { background: '#e2e3e5', border: '#adb5bd' },
       font: { color: n.isRoot ? '#ff0000' : '#343a40' },
     }));
 
@@ -252,8 +241,7 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
           year: 'numeric',
         })
       : 'Unknown';
-    const gender =
-      n.gender === 'M' ? 'Male' : n.gender === 'F' ? 'Female' : 'Unknown';
+    const gender = n.gender === 'M' ? 'Male' : n.gender === 'F' ? 'Female' : 'Unknown';
     return `<b>${n.label}</b><br>DOB: ${dob}<br>Gender: ${gender}<br>Depth: ${n.depth}`;
   }
 

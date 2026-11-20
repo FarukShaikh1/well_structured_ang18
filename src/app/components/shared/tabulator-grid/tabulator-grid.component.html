@@ -7,42 +7,60 @@
         {{ gridName }}
       </h5>
       @if (allowAdd) {
-      <button type="button" class="btn btn-outline-info grid-action-btn" title="Add" (click)="onAddClick()">
-        <i class="fa fa-plus"></i>
-        <span>Add</span>
-      </button>
+        <button
+          type="button"
+          class="btn btn-outline-info grid-action-btn"
+          title="Add"
+          (click)="onAddClick()"
+        >
+          <i class="fa fa-plus"></i>
+          <span>Add</span>
+        </button>
       }
       @if (allowRefresh) {
-      <button type="button" class="btn btn-outline-warning grid-action-btn" title="Refresh data with database"
-        (click)="onRefreshClick()">
-        <i class="fa fa-refresh"></i>
-        <span>Refresh</span>
-      </button>
+        <button
+          type="button"
+          class="btn btn-outline-warning grid-action-btn"
+          title="Refresh data with database"
+          (click)="onRefreshClick()"
+        >
+          <i class="fa fa-refresh"></i>
+          <span>Refresh</span>
+        </button>
       }
 
-      @if(allowCSVExport){
-      <button type="button" class="btn btn-outline-success grid-action-btn" (click)="exportTableData()"
-        title="Export to Excel">
-        <i class="bi bi-file-earmark-excel"></i>
-        <span>Excel</span>
-      </button>
+      @if (allowCSVExport) {
+        <button
+          type="button"
+          class="btn btn-outline-success grid-action-btn"
+          (click)="exportTableData()"
+          title="Export to Excel"
+        >
+          <i class="bi bi-file-earmark-excel"></i>
+          <span>Excel</span>
+        </button>
       }
-      @if(allowPrint){
-      <button type="button" class="btn btn-outline-danger grid-action-btn" (click)="printGrid()"
-        title="Print / Save as PDF">
-        <i class="bi bi-file-earmark-pdf"></i>
-        <span>PDF</span>
-      </button>
+      @if (allowPrint) {
+        <button
+          type="button"
+          class="btn btn-outline-danger grid-action-btn"
+          (click)="printGrid()"
+          title="Print / Save as PDF"
+        >
+          <i class="bi bi-file-earmark-pdf"></i>
+          <span>PDF</span>
+        </button>
       }
     </div>
   </div>
 
   <!-- Tabulator Grid -->
-  <div class="col-12 tabulator-grid-wrapper" #tabulatorGridWrapper id="tabulator-grid-wrapper">
-  </div>
+  <div
+    class="col-12 tabulator-grid-wrapper"
+    #tabulatorGridWrapper
+    id="tabulator-grid-wrapper"
+  ></div>
 </div>
 
-
 <!-- Loader -->
-<app-grid-loader [isLoading]="isLoading" [loadingText]="loadingText">
-</app-grid-loader>
+<app-grid-loader [isLoading]="isLoading" [loadingText]="loadingText"> </app-grid-loader>

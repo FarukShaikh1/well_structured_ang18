@@ -1,30 +1,29 @@
-import { inject } from "@angular/core";
+import { inject } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivateFn,
   Router,
   RouterStateSnapshot,
-} from "@angular/router";
-import { lastValueFrom } from "rxjs";
-import { NavigationURLs } from "../../utils/application-constants";
-import { GlobalService } from "../services/global/global.service";
-import { LocalStorageService } from "../services/local-storage/local-storage.service";
+} from '@angular/router';
+import { lastValueFrom } from 'rxjs';
+import { NavigationURLs } from '../../utils/application-constants';
+import { GlobalService } from '../services/global/global.service';
+import { LocalStorageService } from '../services/local-storage/local-storage.service';
 
 export const authGuard: CanActivateFn = async (
   _route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
+  state: RouterStateSnapshot,
 ) => {
   const localStorageService = inject(LocalStorageService);
   const globalService = inject(GlobalService);
   const router = inject(Router);
 
-  if (state.url.includes("/login/callback")) {
+  if (state.url.includes('/login/callback')) {
     return true;
   }
 
   try {
     if (localStorageService.isAuthenticated()) {
-
       let isAuthorized = localStorageService.isUserAuthorized();
       if (isAuthorized) {
         return true;
@@ -43,7 +42,7 @@ export const authGuard: CanActivateFn = async (
       return false;
     }
   } catch (error) {
-    console.error("Error in authGuard:", error);
+    console.error('Error in authGuard:', error);
     router.navigate([NavigationURLs.UNAUTHORIZED_PAGE]);
     return false;
   }

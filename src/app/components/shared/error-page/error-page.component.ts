@@ -9,9 +9,7 @@ import { LogoutService } from '../../../services/logout/logout.service';
   styleUrl: './error-page.component.css',
 })
 export class ErrorPageComponent {
-  constructor(
-    private logoutService: LogoutService
-  ) { }
+  constructor(private logoutService: LogoutService) {}
 
   backToLogin() {
     this.logoutService.logout();

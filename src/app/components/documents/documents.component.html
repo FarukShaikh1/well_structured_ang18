@@ -1,77 +1,97 @@
 <div class="main-body">
-    <button id="openUploadDocumentButton" type="button" data-bs-toggle="modal" data-bs-target="#uploadModal"
-        style="display:none">
-    </button>
-    <button class="btn btn-primary rounded-button" data-bs-toggle="modal" data-bs-target="#uploadModal">
-        <i class="fa fa-plus"></i>
-        Upload New
-    </button>
-    <div class="row">
-        <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-5 mb-3">
-            <label>Search</label>
-            <input #searchInput [(ngModel)]="searchText" (keyup)="applyFilter()"
-                placeholder="Enter text to find the document"
-                class="form-control form-control-lg text-dark bg-transparent" />
-        </div>
+  <button
+    id="openUploadDocumentButton"
+    type="button"
+    data-bs-toggle="modal"
+    data-bs-target="#uploadModal"
+    style="display: none"
+  ></button>
+  <button
+    class="btn btn-primary rounded-button"
+    data-bs-toggle="modal"
+    data-bs-target="#uploadModal"
+  >
+    <i class="fa fa-plus"></i>
+    Upload New
+  </button>
+  <div class="row">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-5 mb-3">
+      <label>Search</label>
+      <input
+        #searchInput
+        [(ngModel)]="searchText"
+        (keyup)="applyFilter()"
+        placeholder="Enter text to find the document"
+        class="form-control form-control-lg text-dark bg-transparent"
+      />
     </div>
-    <div *ngIf="loading" class="loading">Loading...</div>
+  </div>
+  <div *ngIf="loading" class="loading">Loading...</div>
 
-    <div class="grid">
-        @if(filteredDocumentList && filteredDocumentList.length > 0){
-        <div class="gallery-grid">
-            @for(doc of filteredDocumentList;track $index){
-            <div class="gallery-item">
-                <img [src]="doc.thumbnailPathSasUrl" loading="lazy" class="gallery-img blur-load"
-                    (load)="removeBlur($event)" [alt]="doc.uploadedFileName" />
+  <div class="grid">
+    @if (filteredDocumentList && filteredDocumentList.length > 0) {
+      <div class="gallery-grid">
+        @for (doc of filteredDocumentList; track $index) {
+          <div class="gallery-item">
+            <img
+              [src]="doc.thumbnailPathSasUrl"
+              loading="lazy"
+              class="gallery-img blur-load"
+              (load)="removeBlur($event)"
+              [alt]="doc.uploadedFileName"
+            />
 
-                <div class="gallery-caption">
-                    <h5 [title]="doc.uploadedFileName">{{ doc.uploadedFileName | truncate:20 }}
-                    </h5>
-                    <p style="margin-bottom: 0;" [title]="doc.documentName">{{ doc.documentName|truncate:20 }}</p>
-                    <p style="margin-bottom: 0;" [title]="doc.documentName">{{ doc.documentType }} • {{
-                        humanSize(doc.sizeBytes) }}</p>
-                    <p style="margin-bottom: 0;" [title]="doc.documentName">Uploaded on - {{
-                        DateUtils.formatDateString(doc.uploadedOn) }}</p>
-                    <button (click)="download(doc)" class="btn btn-primary rounded-button">
-                        <i class="fa fa-download"></i>
-                    </button>
+            <div class="gallery-caption">
+              <h5 [title]="doc.uploadedFileName">{{ doc.uploadedFileName | truncate: 20 }}</h5>
+              <p style="margin-bottom: 0" [title]="doc.documentName">
+                {{ doc.documentName | truncate: 20 }}
+              </p>
+              <p style="margin-bottom: 0" [title]="doc.documentName">
+                {{ doc.documentType }} • {{ humanSize(doc.sizeBytes) }}
+              </p>
+              <p style="margin-bottom: 0" [title]="doc.documentName">
+                Uploaded on - {{ DateUtils.formatDateString(doc.uploadedOn) }}
+              </p>
+              <button (click)="download(doc)" class="btn btn-primary rounded-button">
+                <i class="fa fa-download"></i>
+              </button>
 
-                    <button (click)="deleteDocument(doc.id)" class="btn btn-primary rounded-button">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                    <!-- TODO : Need to work on open preview in full screen mode -->
-                    <button class="btn btn-primary" (click)="openPreview(doc)">Open</button>
-                </div>
+              <button (click)="deleteDocument(doc.id)" class="btn btn-primary rounded-button">
+                <i class="fa fa-trash"></i>
+              </button>
+              <!-- TODO : Need to work on open preview in full screen mode -->
+              <button class="btn btn-primary" (click)="openPreview(doc)">Open</button>
             </div>
-            }
-        </div>
-        } @else {
-        <div class="col-12 mt-4">
-            <div class="alert alert-info text-center" role="alert">
-                <strong>You have not uploaded any document yet.</strong><br />
-                You can upload documents to make it available for future reference.
-            </div>
-        </div>
+          </div>
         }
-    </div>
-
-    <!-- Preview Modal -->
-    <div class="modal" *ngIf="showPreview">
-        <div class="modal-backdrop" (click)="closePreview()"></div>
-        <div class="modal-content">
-            <div class="modal-header">
-                <div>{{ previewFileName }}</div>
-                <button (click)="closePreview()">✕</button>
-            </div>
-            <div class="preview-body">
-                <iframe *ngIf="previewUrl" [src]="previewUrl | safeUrl" class="preview-iframe"></iframe>
-            </div>
-            <div class="modal-footer">
-                <!-- <button (click)="download({ id: previewFileName, fileName: previewFileName } as any)">Download</button> -->
-                <!-- <button (click)="closePreview()">Close</button> -->
-            </div>
+      </div>
+    } @else {
+      <div class="col-12 mt-4">
+        <div class="alert alert-info text-center" role="alert">
+          <strong>You have not uploaded any document yet.</strong><br />
+          You can upload documents to make it available for future reference.
         </div>
+      </div>
+    }
+  </div>
+
+  <!-- Preview Modal -->
+  <div class="modal" *ngIf="showPreview">
+    <div class="modal-backdrop" (click)="closePreview()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>{{ previewFileName }}</div>
+        <button (click)="closePreview()">✕</button>
+      </div>
+      <div class="preview-body">
+        <iframe *ngIf="previewUrl" [src]="previewUrl | safeUrl" class="preview-iframe"></iframe>
+      </div>
+      <div class="modal-footer">
+        <!-- <button (click)="download({ id: previewFileName, fileName: previewFileName } as any)">Download</button> -->
+        <!-- <button (click)="closePreview()">Close</button> -->
+      </div>
     </div>
+  </div>
 </div>
 <!-- <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog> -->
 

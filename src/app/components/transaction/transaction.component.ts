@@ -1,13 +1,7 @@
-import { CommonModule } from "@angular/common";
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from "@angular/core";
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import flatpickr from "flatpickr";
+import flatpickr from 'flatpickr';
 
 import {
   ActionConstant,
@@ -15,31 +9,31 @@ import {
   ApplicationModules,
   LocalStorageConstants,
   NavigationURLs,
-  TransactionTabs
-} from "../../../utils/application-constants";
+  TransactionTabs,
+} from '../../../utils/application-constants';
 
-import { DateUtils } from "../../../utils/date-utils";
+import { DateUtils } from '../../../utils/date-utils';
 
-import { CacheService } from "../../services/cache/cache.service";
-import { GlobalService } from "../../services/global/global.service";
-import { LoaderService } from "../../services/loader/loader.service";
-import { TransactionService } from "../../services/transaction/transaction.service";
+import { CacheService } from '../../services/cache/cache.service';
+import { GlobalService } from '../../services/global/global.service';
+import { LoaderService } from '../../services/loader/loader.service';
+import { TransactionService } from '../../services/transaction/transaction.service';
 
-import { ConfirmationDialogComponent } from "../shared/confirmation-dialog/confirmation-dialog.component";
-import { TransactionDetailsComponent } from "./transaction-details/transaction-details.component";
-import { BudgetComponent } from "../budget/budget.component";
+import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
+import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
+import { BudgetComponent } from '../budget/budget.component';
 
-import { TransactionListComponent } from "./transaction-list/transaction-list.component";
-import { TransactionSummaryComponent } from "./transaction-summary/transaction-summary.component";
-import { TransactionBalanceComponent } from "./transaction-balance/transaction-balance.component";
-import { TransactionReportComponent } from "./transaction-report/transaction-report.component";
-import { CategoryWiseReportComponent } from "./category-wise-report/category-wise-report.component";
-import { EmergencyReturnReportComponent } from "./emergency-return-report/emergency-return-report.component";
+import { TransactionListComponent } from './transaction-list/transaction-list.component';
+import { TransactionSummaryComponent } from './transaction-summary/transaction-summary.component';
+import { TransactionBalanceComponent } from './transaction-balance/transaction-balance.component';
+import { TransactionReportComponent } from './transaction-report/transaction-report.component';
+import { CategoryWiseReportComponent } from './category-wise-report/category-wise-report.component';
+import { EmergencyReturnReportComponent } from './emergency-return-report/emergency-return-report.component';
 
-import { TransactionFilter } from "./../../interfaces/transaction-filter.model";
+import { TransactionFilter } from './../../interfaces/transaction-filter.model';
 
 @Component({
-  selector: "app-transaction",
+  selector: 'app-transaction',
   standalone: true,
   imports: [
     CommonModule,
@@ -51,20 +45,19 @@ import { TransactionFilter } from "./../../interfaces/transaction-filter.model";
     EmergencyReturnReportComponent,
     TransactionDetailsComponent,
     ConfirmationDialogComponent,
-    BudgetComponent
+    BudgetComponent,
   ],
-  templateUrl: "./transaction.component.html",
-  styleUrls: ["./transaction.component.scss"]
+  templateUrl: './transaction.component.html',
+  styleUrls: ['./transaction.component.scss'],
 })
 export class TransactionComponent implements OnInit, OnDestroy {
-
-  @ViewChild("searchInput")
+  @ViewChild('searchInput')
   searchInput!: ElementRef<HTMLInputElement>;
 
-  @ViewChild("minInput")
+  @ViewChild('minInput')
   minInput!: ElementRef<HTMLInputElement>;
 
-  @ViewChild("maxInput")
+  @ViewChild('maxInput')
   maxInput!: ElementRef<HTMLInputElement>;
 
   @ViewChild(TransactionDetailsComponent)
@@ -79,7 +72,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
 
   selectedTab: string = TransactionTabs.EXPENSE_LIST;
 
-  transactionGroupId = "";
+  transactionGroupId = '';
 
   lastTransactionDate: Date = new Date();
 
@@ -90,9 +83,9 @@ export class TransactionComponent implements OnInit, OnDestroy {
   filter: TransactionFilter = {
     fromDate: DateUtils.GetDateBeforeDays(30),
     toDate: DateUtils.GetDateBeforeDays(-30),
-    sourceOrReason: "",
+    sourceOrReason: '',
     minAmount: 0,
-    maxAmount: 0
+    maxAmount: 0,
   };
 
   private documentClickHandler!: (event: Event) => void;
@@ -101,34 +94,28 @@ export class TransactionComponent implements OnInit, OnDestroy {
     private transactionService: TransactionService,
     private loaderService: LoaderService,
     private cacheService: CacheService,
-    public globalService: GlobalService
-  ) { }
+    public globalService: GlobalService,
+  ) {}
 
   ngOnInit(): void {
-    this.globalService.reloadGrid$.subscribe(
-      (listName: string) => {
-        if (listName === ApplicationModules.EXPENSES) {
-          this.clearFilters();
-          // Child component reloads itself because
-          // its @Input filter object changes.
-          this.filter = {
-            ...this.filter
-          };
-        }
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.EXPENSES) {
+        this.clearFilters();
+        // Child component reloads itself because
+        // its @Input filter object changes.
+        this.filter = {
+          ...this.filter,
+        };
       }
-    );
+    });
 
-    this.globalService.refreshList$.subscribe(
-      (listName: string) => {
-
-        if (listName === ApplicationModules.EXPENSES) {
-
-          this.filter = {
-            ...this.filter
-          };
-        }
+    this.globalService.refreshList$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.EXPENSES) {
+        this.filter = {
+          ...this.filter,
+        };
       }
-    );
+    });
   }
 
   ngAfterViewInit(): void {
@@ -137,12 +124,8 @@ export class TransactionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
     if (this.documentClickHandler) {
-      document.removeEventListener(
-        "click",
-        this.documentClickHandler
-      );
+      document.removeEventListener('click', this.documentClickHandler);
     }
   }
 
@@ -150,52 +133,40 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * Change active transaction tab.
    */
   goToTab(tab: string): void {
-
     this.activeTab = tab;
     this.selectedTab = tab;
 
     switch (tab) {
-
       case TransactionTabs.EXPENSE_REPORT:
-
-        this.reportType =
-          ApplicationConstants.REPORT_TYPE_SOURCE_WISE;
+        this.reportType = ApplicationConstants.REPORT_TYPE_SOURCE_WISE;
 
         break;
 
       case TransactionTabs.CATEGORY_WISE_REPORT:
-
-        this.reportType =
-          ApplicationConstants.REPORT_TYPE_CATEGORY_WISE;
+        this.reportType = ApplicationConstants.REPORT_TYPE_CATEGORY_WISE;
 
         break;
 
       case TransactionTabs.EMERGENCY_RETURN_REPORT:
-
-        this.reportType =
-          ApplicationConstants.EMERGENCY_RETURN_REPORT;
+        this.reportType = ApplicationConstants.EMERGENCY_RETURN_REPORT;
 
         break;
     }
   }
 
   monthlyBudget(): void {
+    this.activeTab = TransactionTabs.EXPENSE_BUDGET;
 
-    this.activeTab =
-      TransactionTabs.EXPENSE_BUDGET;
-
-    this.selectedTab =
-      TransactionTabs.EXPENSE_BUDGET;
+    this.selectedTab = TransactionTabs.EXPENSE_BUDGET;
   }
 
   /**
    * From date filter.
    */
   filterGridByFromDate(date: string): void {
-
     this.filter = {
       ...this.filter,
-      fromDate: DateUtils.CorrectedDate(date)
+      fromDate: DateUtils.CorrectedDate(date),
     };
 
     this.clearGridCache();
@@ -205,10 +176,9 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * To date filter.
    */
   filterGridByToDate(date: string): void {
-
     this.filter = {
       ...this.filter,
-      toDate: DateUtils.CorrectedDate(date)
+      toDate: DateUtils.CorrectedDate(date),
     };
 
     this.clearGridCache();
@@ -218,14 +188,11 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * Search filter.
    */
   filterGridBySearch(event: Event): void {
-
-    const value =
-      (event.target as HTMLInputElement)?.value
-        ?.toLowerCase() ?? "";
+    const value = (event.target as HTMLInputElement)?.value?.toLowerCase() ?? '';
 
     this.filter = {
       ...this.filter,
-      sourceOrReason: value
+      sourceOrReason: value,
     };
   }
 
@@ -233,13 +200,11 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * Minimum amount filter.
    */
   filterGridByMinAmount(event: Event): void {
-
-    const value =
-      (event.target as HTMLInputElement)?.value ?? "";
+    const value = (event.target as HTMLInputElement)?.value ?? '';
 
     this.filter = {
       ...this.filter,
-      minAmount: Number(value) || 0
+      minAmount: Number(value) || 0,
     };
   }
 
@@ -247,13 +212,11 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * Maximum amount filter.
    */
   filterGridByMaxAmount(event: Event): void {
-
-    const value =
-      (event.target as HTMLInputElement)?.value ?? "";
+    const value = (event.target as HTMLInputElement)?.value ?? '';
 
     this.filter = {
       ...this.filter,
-      maxAmount: Number(value) || 0
+      maxAmount: Number(value) || 0,
     };
   }
 
@@ -261,99 +224,68 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * Refresh current tab.
    */
   refreshData(): void {
+    this.cacheService.clear(NavigationURLs.EXPENSE_LIST);
 
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_LIST
-    );
+    this.cacheService.clear(NavigationURLs.EXPENSE_SUMMARY_LIST);
 
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_SUMMARY_LIST
-    );
+    this.cacheService.clear(NavigationURLs.EXPENSE_BALANCE_LIST);
 
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_BALANCE_LIST
-    );
+    this.cacheService.clear(NavigationURLs.EXPENSE_REPORT);
 
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_REPORT
-    );
+    this.cacheService.clear(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
 
-    this.cacheService.clear(
-      NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT
-    );
-
-    this.cacheService.clear(
-      NavigationURLs.EMERGENCY_RETURN_REPORT
-    );
+    this.cacheService.clear(NavigationURLs.EMERGENCY_RETURN_REPORT);
 
     this.clearFilters();
 
     this.filter = {
-      ...this.filter
+      ...this.filter,
     };
   }
 
   private clearFilters(): void {
-
     this.filter = {
       ...this.filter,
-      sourceOrReason: "",
+      sourceOrReason: '',
       minAmount: 0,
-      maxAmount: 0
+      maxAmount: 0,
     };
 
     if (this.searchInput) {
-      this.searchInput.nativeElement.value = "";
+      this.searchInput.nativeElement.value = '';
     }
 
     if (this.minInput) {
-      this.minInput.nativeElement.value = "";
+      this.minInput.nativeElement.value = '';
     }
 
     if (this.maxInput) {
-      this.maxInput.nativeElement.value = "";
+      this.maxInput.nativeElement.value = '';
     }
   }
 
   private clearGridCache(): void {
+    this.cacheService.clear(NavigationURLs.EXPENSE_LIST);
 
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_LIST
-    );
+    this.cacheService.clear(NavigationURLs.EXPENSE_SUMMARY_LIST);
 
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_SUMMARY_LIST
-    );
+    this.cacheService.clear(NavigationURLs.EXPENSE_BALANCE_LIST);
 
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_BALANCE_LIST
-    );
+    this.cacheService.clear(NavigationURLs.EXPENSE_REPORT);
 
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_REPORT
-    );
-
-    this.cacheService.clear(
-      NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT
-    );
+    this.cacheService.clear(NavigationURLs.CATEGORY_WISE_EXPENSE_REPORT);
   }
 
   /**
    * Open transaction details popup.
    */
   transactionDetails(transactionGroupId: string): void {
-    this.transactionDetailsComponent
-      ?.openDetailsPopup(transactionGroupId);
+    this.transactionDetailsComponent?.openDetailsPopup(transactionGroupId);
 
     setTimeout(() => {
-
-      const button =
-        document.querySelector(
-          "#openDetailsButton"
-        ) as HTMLElement | null;
+      const button = document.querySelector('#openDetailsButton') as HTMLElement | null;
 
       button?.click();
-
     }, 120);
   }
 
@@ -361,17 +293,15 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * Delete transaction.
    */
   deleteTransaction(transactionGroupId: string): void {
-
     if (!transactionGroupId) {
       return;
     }
 
-    this.transactionGroupId =
-      transactionGroupId;
+    this.transactionGroupId = transactionGroupId;
 
     this.confirmationDialog.openConfirmationPopup(
-      "Confirmation",
-      "Are you sure you want to delete this transaction? This action cannot be undone."
+      'Confirmation',
+      'Are you sure you want to delete this transaction? This action cannot be undone.',
     );
   }
 
@@ -379,85 +309,53 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * Confirmation callback.
    */
   handleConfirmResult(isConfirmed: boolean): void {
-
     if (!isConfirmed) {
       return;
     }
 
-    this.loaderService.showLoader(
-      "Deleting transaction..."
-    );
+    this.loaderService.showLoader('Deleting transaction...');
 
-    this.transactionService
-      .deleteTransaction(this.transactionGroupId)
-      .subscribe({
+    this.transactionService.deleteTransaction(this.transactionGroupId).subscribe({
+      next: () => {
+        this.loaderService.hideLoader();
 
-        next: () => {
+        this.refreshData();
+      },
 
-          this.loaderService.hideLoader();
+      error: (error: any) => {
+        console.error('Error deleting transaction:', error);
 
-          this.refreshData();
-        },
-
-        error: (error: any) => {
-
-          console.error(
-            "Error deleting transaction:",
-            error
-          );
-
-          this.loaderService.hideLoader();
-        }
-      });
+        this.loaderService.hideLoader();
+      },
+    });
   }
 
   /**
    * Initialize date pickers.
    */
   private initializeDatePickers(): void {
+    flatpickr('#fromDate', {
+      dateFormat: 'd/m/Y',
 
-    flatpickr("#fromDate", {
+      defaultDate: DateUtils.strFormatToDDMMYYYY(this.filter.fromDate),
 
-      dateFormat: "d/m/Y",
-
-      defaultDate:
-        DateUtils.strFormatToDDMMYYYY(
-          this.filter.fromDate
-        ),
-
-      onChange: (
-        selectedDates,
-        dateStr
-      ) => {
-
-        const value =
-          dateStr ||
-          DateUtils.GetDateBeforeDays(30);
+      onChange: (selectedDates, dateStr) => {
+        const value = dateStr || DateUtils.GetDateBeforeDays(30);
 
         this.filterGridByFromDate(value);
-      }
+      },
     });
 
-    flatpickr("#toDate", {
+    flatpickr('#toDate', {
+      dateFormat: 'd/m/Y',
 
-      dateFormat: "d/m/Y",
+      defaultDate: DateUtils.strFormatToDDMMYYYY(this.filter.toDate),
 
-      defaultDate:
-        DateUtils.strFormatToDDMMYYYY(
-          this.filter.toDate
-        ),
-
-      onChange: (
-        selectedDates,
-        dateStr
-      ) => {
-
-        const value =
-          dateStr ||
-          DateUtils.GetDateBeforeDays(0);
+      onChange: (selectedDates, dateStr) => {
+        const value = dateStr || DateUtils.GetDateBeforeDays(0);
 
         this.filterGridByToDate(value);
-      }
+      },
     });
   }
 
@@ -465,35 +363,20 @@ export class TransactionComponent implements OnInit, OnDestroy {
    * Existing global three-dot menu support.
    */
   private initializeGlobalOptionsMenu(): void {
+    this.documentClickHandler = (event: Event) => {
+      const target = event.target as HTMLElement;
 
-    this.documentClickHandler =
-      (event: Event) => {
+      if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+        event.stopPropagation();
 
-        const target =
-          event.target as HTMLElement;
+        return;
+      }
 
-        if (
-          target.closest(
-            ".OPTIONS_MENU_THREE_DOTS"
-          )
-        ) {
+      const globalMenu = document.getElementById('globalDropdownMenu');
 
-          event.stopPropagation();
+      globalMenu?.remove();
+    };
 
-          return;
-        }
-
-        const globalMenu =
-          document.getElementById(
-            "globalDropdownMenu"
-          );
-
-        globalMenu?.remove();
-      };
-
-    document.addEventListener(
-      "click",
-      this.documentClickHandler
-    );
+    document.addEventListener('click', this.documentClickHandler);
   }
 }

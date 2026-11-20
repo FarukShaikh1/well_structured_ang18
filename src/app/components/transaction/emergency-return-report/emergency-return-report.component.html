@@ -1,5 +1,4 @@
 <div class="mb-2">
-
   <app-tabulator-grid
     [tableData]="filteredTableData"
     [columnConfig]="columnConfig"
@@ -11,7 +10,7 @@
     [allowRefresh]="allowRefresh"
     [allowColumnFilters]="allowColumnFilters"
     [gridName]="'Emergency Return Report'"
-    (refreshClicked)="refreshData()">
+    (refreshClicked)="refreshData()"
+  >
   </app-tabulator-grid>
-
 </div>

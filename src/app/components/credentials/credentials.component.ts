@@ -14,7 +14,7 @@ import { PrintService } from '../../services/print/print.service';
   standalone: true,
   imports: [CommonModule, FormsModule, ToasterComponent, TruncatePipe],
   templateUrl: './credentials.component.html',
-  styleUrls: ['../budget/budget.component.css']
+  styleUrls: ['../budget/budget.component.css'],
 })
 export class CredentialsComponent {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
@@ -39,7 +39,11 @@ export class CredentialsComponent {
   selectedId: string = '';
   searchText: string = '';
 
-  constructor(private credentialService: CredentialService, private configService: ConfigurationService, private printService: PrintService) { }
+  constructor(
+    private credentialService: CredentialService,
+    private configService: ConfigurationService,
+    private printService: PrintService,
+  ) {}
 
   ngOnInit(): void {
     this.loadCredentials();
@@ -48,21 +52,18 @@ export class CredentialsComponent {
     this.hidePassword = !this.hidePassword;
   }
   printCredentials(): void {
-    this.printService.printElement(
-      'print-credentials-print'
-    );
+    this.printService.printElement('print-credentials-print');
   }
 
   loadCredentials() {
-    this.credentialService.getCredentialByUser()
-      .subscribe(res => {
-        res = res.map(a => ({
-          ...a,
-          password: applyPasswordPattern(a.password ?? '')
-        }));
-        this.credentials = res;
-        this.filteredCredentials = res;
-      });
+    this.credentialService.getCredentialByUser().subscribe((res) => {
+      res = res.map((a) => ({
+        ...a,
+        password: applyPasswordPattern(a.password ?? ''),
+      }));
+      this.credentials = res;
+      this.filteredCredentials = res;
+    });
   }
 
   save(model: Credential) {
@@ -71,41 +72,42 @@ export class CredentialsComponent {
       return;
     }
     if (this.isEdit) {
-      if (this.credentials.find(b => b.id === model.id) == undefined) {
+      if (this.credentials.find((b) => b.id === model.id) == undefined) {
         this.toaster.showMessage('Credential entry not found for update', 'error');
         return;
       }
-      this.credentialService.updateCredential(model)
-        .subscribe({
-          next: (res: any) => {
-            this.isEdit = false;
-            this.toaster.showMessage('Credential entry updated successfully', 'success');
-            this.loadCredentials();
-            this.reset();
-          },
-          error: (err) => {
-            console.error('Update failed', err);
-          }
-        });
+      this.credentialService.updateCredential(model).subscribe({
+        next: (res: any) => {
+          this.isEdit = false;
+          this.toaster.showMessage('Credential entry updated successfully', 'success');
+          this.loadCredentials();
+          this.reset();
+        },
+        error: (err) => {
+          console.error('Update failed', err);
+        },
+      });
     } else {
-      if (this.credentials.find(b => b.siteUrl === model.siteUrl && b.userName === model.userName) != undefined) {
+      if (
+        this.credentials.find(
+          (b) => b.siteUrl === model.siteUrl && b.userName === model.userName,
+        ) != undefined
+      ) {
         this.toaster.showMessage('Duplicate credential entry found', 'error');
         return;
       }
       model.id = null;
-      this.credentialService.addCredential(model)
-        .subscribe({
-          next: (res: any) => {
-            this.toaster.showMessage('Credential entry added successfully', 'success');
+      this.credentialService.addCredential(model).subscribe({
+        next: (res: any) => {
+          this.toaster.showMessage('Credential entry added successfully', 'success');
 
-            this.reset();
-            this.loadCredentials();
-
-          },
-          error: (err) => {
-            console.error('Add failed', err);
-          }
-        });
+          this.reset();
+          this.loadCredentials();
+        },
+        error: (err) => {
+          console.error('Add failed', err);
+        },
+      });
     }
   }
 
@@ -130,11 +132,10 @@ export class CredentialsComponent {
   delete(id: string) {
     if (!confirm('Delete this entry?')) return;
 
-    this.credentialService.deleteCredential(id)
-      .subscribe(() => {
-        this.toaster.showMessage('Credential entry deleted successfully', 'success');
-        this.loadCredentials();
-      });
+    this.credentialService.deleteCredential(id).subscribe(() => {
+      this.toaster.showMessage('Credential entry deleted successfully', 'success');
+      this.loadCredentials();
+    });
   }
 
   reset() {
@@ -159,7 +160,7 @@ export class CredentialsComponent {
       const siteUrl = item.siteUrl?.toLowerCase().includes(this.searchText);
       const userName = item.userName?.toLowerCase().includes(this.searchText);
       const notes = item.notes?.toLowerCase().includes(this.searchText);
-      return (siteName || siteUrl || userName || notes);
+      return siteName || siteUrl || userName || notes;
     });
   }
 }

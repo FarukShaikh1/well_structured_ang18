@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CellComponent } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
 import {
@@ -16,7 +10,7 @@ import {
   CollectionTabs,
   DdlConfig,
   NavigationURLs,
-  UIStrings
+  UIStrings,
 } from '../../../utils/application-constants';
 import { TruncatePipe } from '../../common/truncate.pipe';
 import { AssetService } from '../../services/asset/asset.service';
@@ -30,7 +24,7 @@ import { MyProfileComponent } from '../my-profile/my-profile.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
 import {
   PrintColumnDefinition,
-  TabulatorGridComponent
+  TabulatorGridComponent,
 } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { ModulePermission } from '../../interfaces/module-permission';
@@ -46,9 +40,9 @@ import { ModulePermission } from '../../interfaces/module-permission';
     ConfirmationDialogComponent,
     CurrencyCoinDetailsComponent,
     TruncatePipe,
-    MyProfileComponent
+    MyProfileComponent,
   ],
-  styleUrls: ['./currency-coin.component.scss']
+  styleUrls: ['./currency-coin.component.scss'],
 })
 export class CurrencyCoinComponent implements OnInit, OnDestroy {
   @ViewChild(ToasterComponent)
@@ -57,7 +51,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
   currencyCoinDetailsComponent!: CurrencyCoinDetailsComponent;
   @ViewChild(ConfirmationDialogComponent, { static: false })
   confirmationDialog!: ConfirmationDialogComponent;
-  @ViewChild("searchInput")
+  @ViewChild('searchInput')
   searchInput!: ElementRef;
 
   /* =========================================================
@@ -88,7 +82,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      ========================================================= */
   id: string = '';
   assetId: string = '';
-  fullscreenImage: string = "";
+  fullscreenImage: string = '';
 
   /* =========================================================
      TABLE DATA
@@ -119,13 +113,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
   /* =========================================================
     VIEW / TABS
     ========================================================= */
-  public viewMode:
-    | 'grid'
-    | 'gallery'
-    | 'summary'
-    | 'news'
-    | 'owner'
-    = 'gallery';
+  public viewMode: 'grid' | 'gallery' | 'summary' | 'news' | 'owner' = 'gallery';
 
   public selectedTab: string = CollectionTabs.GALLERY_VIEW;
 
@@ -139,11 +127,20 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      ========================================================= */
   currentIndex = 0;
   scale = 1;
-  transformStyle = "scale(1)";
+  transformStyle = 'scale(1)';
   slideInterval: any;
   touchStartX = 0;
   touchEndX = 0;
-  permissions: ModulePermission = { view: false, add: false, edit: false, delete: false, download: false, upload: false, approve: false, reject: false };
+  permissions: ModulePermission = {
+    view: false,
+    add: false,
+    edit: false,
+    delete: false,
+    download: false,
+    upload: false,
+    approve: false,
+    reject: false,
+  };
 
   /* =========================================================
      CONSTRUCTOR
@@ -154,46 +151,33 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
     private localStorageService: LocalStorageService,
     public globalService: GlobalService,
     private cacheService: CacheService,
-    private loaderService: LoaderService
-  ) { }
+    private loaderService: LoaderService,
+  ) {}
 
   /* =========================================================
      INITIALIZATION
      ========================================================= */
   async ngOnInit() {
-    this.loaderService.showLoader(
-      UIStrings.LOADERS.LOADING_CURRENCY_DATA
-    );
+    this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
     this.columnConfiguration();
 
-    this.typeList =
-      this.localStorageService.getCommonListItems(
-        DdlConfig.COIN_TYPES
-      );
+    this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
 
     if (!this.typeList || this.typeList.length === 0) {
       this.globalService.setValuesInLocalStorage();
       setTimeout(() => {
-        this.typeList =
-          this.localStorageService.getCommonListItems(
-            DdlConfig.COIN_TYPES
-          );
+        this.typeList = this.localStorageService.getCommonListItems(DdlConfig.COIN_TYPES);
       }, 1000);
     }
 
-    this.globalService.reloadGrid$.subscribe(
-      (listName: string) => {
-        if (
-          listName ===
-          ApplicationModules.COIN_NOTE_COLLECTION
-        ) {
-          this.loadGrid();
-          this.applyFilters();
-        }
+    this.globalService.reloadGrid$.subscribe((listName: string) => {
+      if (listName === ApplicationModules.COIN_NOTE_COLLECTION) {
+        this.loadGrid();
+        this.applyFilters();
       }
-    );
+    });
 
-    this.globalService.refreshList$.subscribe(() => { });
+    this.globalService.refreshList$.subscribe(() => {});
 
     await this.loadGrid();
     this.LoadSummaryGrid();
@@ -203,8 +187,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      IMAGE BLUR
      ========================================================= */
   removeBlur(event: Event) {
-    const img =
-      event.target as HTMLImageElement;
+    const img = event.target as HTMLImageElement;
     img.classList.remove('blur-load');
   }
 
@@ -212,21 +195,13 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      FULLSCREEN IMAGE
      ========================================================= */
   openFullscreenImage(imageUrl: string) {
-    this.currentIndex =
-      this.filteredCoinList.findIndex(
-        x => x.imagePathSasUrl === imageUrl
-      );
+    this.currentIndex = this.filteredCoinList.findIndex((x) => x.imagePathSasUrl === imageUrl);
 
     if (this.currentIndex === -1) {
       this.currentIndex = 0;
     }
 
-    const modal =
-      new (window as any).bootstrap.Modal(
-        document.getElementById(
-          "imageViewerModal"
-        )
-      );
+    const modal = new (window as any).bootstrap.Modal(document.getElementById('imageViewerModal'));
 
     this.resetZoom();
     modal.show();
@@ -237,9 +212,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
     if (!this.filteredCoinList.length) {
       return;
     }
-    this.currentIndex =
-      (this.currentIndex + 1) %
-      this.filteredCoinList.length;
+    this.currentIndex = (this.currentIndex + 1) % this.filteredCoinList.length;
     this.resetZoom();
   }
 
@@ -248,12 +221,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
       return;
     }
     this.currentIndex =
-      (
-        this.currentIndex -
-        1 +
-        this.filteredCoinList.length
-      ) %
-      this.filteredCoinList.length;
+      (this.currentIndex - 1 + this.filteredCoinList.length) % this.filteredCoinList.length;
     this.resetZoom();
   }
 
@@ -267,50 +235,38 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      ========================================================= */
   zoomIn() {
     this.scale += 0.1;
-    this.transformStyle =
-      `scale(${this.scale})`;
+    this.transformStyle = `scale(${this.scale})`;
   }
-
 
   zoomOut() {
     if (this.scale > 0.2) {
       this.scale -= 0.1;
     }
-    this.transformStyle =
-      `scale(${this.scale})`;
+    this.transformStyle = `scale(${this.scale})`;
   }
 
   resetZoom() {
     this.scale = 0.8;
-    this.transformStyle =
-      "scale(0.8)";
+    this.transformStyle = 'scale(0.8)';
   }
 
   /* =========================================================
      MOBILE SWIPE
      ========================================================= */
   touchStart(event: any) {
-    this.touchStartX =
-      event.changedTouches[0].screenX;
+    this.touchStartX = event.changedTouches[0].screenX;
   }
 
   touchMove(event: any) {
-    this.touchEndX =
-      event.changedTouches[0].screenX;
+    this.touchEndX = event.changedTouches[0].screenX;
   }
 
   touchEnd() {
-    if (
-      this.touchEndX <
-      this.touchStartX - 50
-    ) {
+    if (this.touchEndX < this.touchStartX - 50) {
       this.nextImage();
     }
 
-    if (
-      this.touchEndX >
-      this.touchStartX + 50
-    ) {
+    if (this.touchEndX > this.touchStartX + 50) {
       this.prevImage();
     }
   }
@@ -320,16 +276,14 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      ========================================================= */
   enableKeyboard() {
     document.onkeydown = (e: any) => {
-      if (e.key === "ArrowRight") {
+      if (e.key === 'ArrowRight') {
         this.nextImage();
       }
-      if (e.key === "ArrowLeft") {
+      if (e.key === 'ArrowLeft') {
         this.prevImage();
       }
-      if (e.key === "Escape") {
-        document
-          .getElementById("imageViewerModal")
-          ?.click();
+      if (e.key === 'Escape') {
+        document.getElementById('imageViewerModal')?.click();
       }
     };
   }
@@ -338,11 +292,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      SLIDESHOW
      ========================================================= */
   startSlideshow() {
-    this.slideInterval =
-      setInterval(
-        () => this.nextImage(),
-        3000
-      );
+    this.slideInterval = setInterval(() => this.nextImage(), 3000);
   }
 
   stopSlideshow() {
@@ -354,11 +304,8 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      ========================================================= */
   selectDefaultRareCoins() {
     this.selectedType = [];
-    this.selectedType.push(
-      'Indian Rare Coin'
-    );
-    this.lableForTypeDropDown =
-      'Indian Rare Coin';
+    this.selectedType.push('Indian Rare Coin');
+    this.lableForTypeDropDown = 'Indian Rare Coin';
     this.applyFilters();
   }
 
@@ -366,15 +313,9 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      RELOAD
      ========================================================= */
   async reloadData() {
-    localStorage.removeItem(
-      NavigationURLs.CURRENCY_LIST
-    );
-    localStorage.removeItem(
-      NavigationURLs.CURRENCY_SUMMARY
-    );
-    localStorage.removeItem(
-      NavigationURLs.CURRENCY_GALLERY
-    );
+    localStorage.removeItem(NavigationURLs.CURRENCY_LIST);
+    localStorage.removeItem(NavigationURLs.CURRENCY_SUMMARY);
+    localStorage.removeItem(NavigationURLs.CURRENCY_GALLERY);
 
     this.LoadSummaryGrid();
     await this.loadGrid();
@@ -388,86 +329,82 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
     this.columnConfig = [
       {
         title: UIStrings.COLUMN_TITLES.COIN_NOTE_NAME,
-        field: "coinNoteName",
-        sorter: "alphanum",
+        field: 'coinNoteName',
+        sorter: 'alphanum',
         minWidth: 200,
-        printWidth: "10%",
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search name"
+        printWidth: '10%',
+        headerFilter: 'input',
+        headerFilterPlaceholder: 'Search name',
       },
       {
         title: UIStrings.COLUMN_TITLES.COUNTRY,
-        field: "countryName",
-        sorter: "alphanum",
+        field: 'countryName',
+        sorter: 'alphanum',
         minWidth: 120,
-        printWidth: "10%",
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search country"
+        printWidth: '10%',
+        headerFilter: 'input',
+        headerFilterPlaceholder: 'Search country',
       },
       {
         title: UIStrings.COLUMN_TITLES.REAL_VALUE,
-        field: "actualValue",
-        sorter: "alphanum",
+        field: 'actualValue',
+        sorter: 'alphanum',
         formatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: {
-          symbol: "",
-          precision: 2
+          symbol: '',
+          precision: 2,
         },
         minWidth: 90,
-        printWidth: "10%",
-        headerFilter: "number",
-        headerFilterPlaceholder: "Search by value"
+        printWidth: '10%',
+        headerFilter: 'number',
+        headerFilterPlaceholder: 'Search by value',
       },
       {
         title: UIStrings.COLUMN_TITLES.INDIAN_VALUE,
-        field: "indianValue",
-        sorter: "alphanum",
+        field: 'indianValue',
+        sorter: 'alphanum',
         formatter: this.amountColorFormatter.bind(this),
-        bottomCalc: "sum",
+        bottomCalc: 'sum',
         bottomCalcFormatter: this.amountColorFormatter.bind(this),
         bottomCalcFormatterParams: {
-          symbol: "",
-          precision: 2
+          symbol: '',
+          precision: 2,
         },
         minWidth: 90,
-        printWidth: "10%",
-        headerFilter: "number",
-        headerFilterPlaceholder: "Search by indian value"
+        printWidth: '10%',
+        headerFilter: 'number',
+        headerFilterPlaceholder: 'Search by indian value',
       },
       {
         title: UIStrings.COLUMN_TITLES.OTHER_DETAILS,
-        field: "description",
-        sorter: "alphanum",
+        field: 'description',
+        sorter: 'alphanum',
         minWidth: 200,
-        printWidth: "20%",
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search by description"
+        printWidth: '20%',
+        headerFilter: 'input',
+        headerFilterPlaceholder: 'Search by description',
       },
       {
         title: 'ExtractedText',
-        field: "extractedText",
-        sorter: "alphanum",
+        field: 'extractedText',
+        sorter: 'alphanum',
         minWidth: 200,
-        printWidth: "20%"
+        printWidth: '20%',
       },
       {
-        title: "GeneratedDescription",
-        field: "generatedDescription",
-        sorter: "alphanum",
+        title: 'GeneratedDescription',
+        field: 'generatedDescription',
+        sorter: 'alphanum',
         minWidth: 200,
-        print: false
+        print: false,
       },
       {
         title: UIStrings.COLUMN_TITLES.PIC,
-        field: "thumbnailPath",
-        formatter:
-          this.globalService.blobThumbnailFormatter.bind(
-            this.globalService
-          ),
+        field: 'thumbnailPath',
+        formatter: this.globalService.blobThumbnailFormatter.bind(this.globalService),
         printFormatter: (row: any) => {
-          const thumbnailPath =
-            row["thumbnailPathSasUrl"];
+          const thumbnailPath = row['thumbnailPathSasUrl'];
           if (thumbnailPath) {
             return `
              <div class="print-thumbnail-wrapper">
@@ -477,55 +414,41 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
              </div>
            `;
           }
-          return "";
+          return '';
         },
         cellClick: (e, cell) => {
-          const collectionCoinId =
-            cell.getRow().getData()["id"];
-          this.currencyCoinDetails(
-            collectionCoinId
-          );
+          const collectionCoinId = cell.getRow().getData()['id'];
+          this.currencyCoinDetails(collectionCoinId);
         },
         minWidth: 70,
         maxWidth: 100,
-        printWidth: "10%"
+        printWidth: '10%',
       },
       {
-        title: "",
-        field: "",
+        title: '',
+        field: '',
         minWidth: 50,
         maxWidth: 70,
-        formatter:
-          this.globalService.hidebuttonFormatter.bind(
-            this.globalService
-          ),
+        formatter: this.globalService.hidebuttonFormatter.bind(this.globalService),
         cellClick: (e, cell) => {
-          const collectionCoinId =
-            cell.getRow().getData()["id"];
-          this.hideCollectionCoin(
-            collectionCoinId
-          );
+          const collectionCoinId = cell.getRow().getData()['id'];
+          this.hideCollectionCoin(collectionCoinId);
         },
         headerSort: false,
-        print: false
-      }
+        print: false,
+      },
     ];
 
-
     this.columnConfig.push({
-      title: "",
-      field: "option",
+      title: '',
+      field: 'option',
       minWidth: 50,
       maxWidth: 70,
-      formatter:
-        this.globalService.threeDotsFormatter.bind(
-          this.globalService
-        ),
-      hozAlign: "center",
+      formatter: this.globalService.threeDotsFormatter.bind(this.globalService),
+      hozAlign: 'center',
       headerSort: false,
-      print: false
+      print: false,
     });
-
 
     /* =====================================================
        SUMMARY COLUMNS
@@ -533,84 +456,75 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
     this.summaryTableColumnConfig = [
       {
         title: UIStrings.COLUMN_TITLES.COUNTRY,
-        field: "countryName",
-        sorter: "alphanum",
+        field: 'countryName',
+        sorter: 'alphanum',
         minWidth: 150,
         printAlign: 'left',
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search by country name"
+        headerFilter: 'input',
+        headerFilterPlaceholder: 'Search by country name',
       },
       {
         title: UIStrings.COLUMN_TITLES.CURRENCY,
-        field: "currencyName",
-        sorter: "alphanum",
+        field: 'currencyName',
+        sorter: 'alphanum',
         formatter: (cell) => {
-          const data =
-            cell.getRow().getData();
+          const data = cell.getRow().getData();
           return `${data['currencyCode']} (${data['currencySymbol']}) - ${data['currencyName']}`;
         },
         minWidth: 180,
-        headerFilter: "input",
-        headerFilterPlaceholder: "Search by currency"
+        headerFilter: 'input',
+        headerFilterPlaceholder: 'Search by currency',
       },
       {
         title: UIStrings.COLUMN_TITLES.COINS,
-        field: "numberOfCoins",
-        sorter: "alphanum",
-        headerHozAlign: "center",
-        hozAlign: "center",
+        field: 'numberOfCoins',
+        sorter: 'alphanum',
+        headerHozAlign: 'center',
+        hozAlign: 'center',
         vertAlign: 'middle',
-        bottomCalc: "sum",
+        bottomCalc: 'sum',
         minWidth: 100,
         printAlign: 'center',
-        headerFilter: "number",
-        headerFilterPlaceholder: "Search by number of coins"
+        headerFilter: 'number',
+        headerFilterPlaceholder: 'Search by number of coins',
       },
       {
         title: UIStrings.COLUMN_TITLES.NOTES,
-        field: "numberOfNotes",
-        sorter: "alphanum",
-        headerHozAlign: "center",
-        hozAlign: "center",
-        bottomCalc: "sum",
+        field: 'numberOfNotes',
+        sorter: 'alphanum',
+        headerHozAlign: 'center',
+        hozAlign: 'center',
+        bottomCalc: 'sum',
         minWidth: 100,
         printAlign: 'center',
-        headerFilter: "number",
-        headerFilterPlaceholder: "Search by number of notes"
+        headerFilter: 'number',
+        headerFilterPlaceholder: 'Search by number of notes',
       },
       {
         title: UIStrings.COLUMN_TITLES.TOTAL,
-        field: "total",
-        sorter: "alphanum",
-        headerHozAlign: "center",
-        hozAlign: "center",
-        bottomCalc: "sum",
+        field: 'total',
+        sorter: 'alphanum',
+        headerHozAlign: 'center',
+        hozAlign: 'center',
+        bottomCalc: 'sum',
         minWidth: 120,
         printAlign: 'center',
-        headerFilter: "number",
-        headerFilterPlaceholder: "Search by number of coins & Notes"
+        headerFilter: 'number',
+        headerFilterPlaceholder: 'Search by number of coins & Notes',
       },
       {
-        title: "",
-        field: "",
+        title: '',
+        field: '',
         minWidth: 50,
         maxWidth: 70,
-        formatter:
-          this.globalService.hidebuttonFormatter.bind(
-            this.globalService
-          ),
+        formatter: this.globalService.hidebuttonFormatter.bind(this.globalService),
         cellClick: (e, cell) => {
-          const countryName =
-            cell.getRow().getData()[
-            "countryName"
-            ];
-          this.hideFromSummary(
-            countryName
-          );
+          const countryName = cell.getRow().getData()['countryName'];
+          this.hideFromSummary(countryName);
         },
         headerSort: false,
-        print: false
-      }
+        print: false,
+      },
     ];
   }
 
@@ -618,890 +532,488 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      AFTER VIEW INIT
      ========================================================= */
   ngAfterViewInit() {
-    document.addEventListener(
-      'click',
-      (event: Event) => {
-        const target =
-          event.target as HTMLElement;
+    document.addEventListener('click', (event: Event) => {
+      const target = event.target as HTMLElement;
 
-        if (
-          target.closest(
-            '.OPTIONS_MENU_THREE_DOTS'
-          )
-        ) {
-          const button =
-            target.closest(
-              '.OPTIONS_MENU_THREE_DOTS'
-            ) as HTMLElement;
+      if (target.closest('.OPTIONS_MENU_THREE_DOTS')) {
+        const button = target.closest('.OPTIONS_MENU_THREE_DOTS') as HTMLElement;
 
-          const rowId =
-            button.getAttribute(
-              'data-row-id'
-            );
+        const rowId = button.getAttribute('data-row-id');
 
-          if (rowId) {
-            const rowData =
-              this.tableData.find(
-                row => row['id'] == rowId
-              );
+        if (rowId) {
+          const rowData = this.tableData.find((row) => row['id'] == rowId);
 
+          if (rowData) {
+            const menuOptions = this.generateOptionsMenu(rowData);
 
-            if (rowData) {
-
-              const menuOptions =
-                this.generateOptionsMenu(
-                  rowData
-                );
-
-              this.globalService.showGlobalDropdownMenu(
-                button,
-                menuOptions
-              );
-            }
+            this.globalService.showGlobalDropdownMenu(button, menuOptions);
           }
-
-
-          event.stopPropagation();
-
-        }
-        else {
-
-          const globalMenu =
-            document.getElementById(
-              'globalDropdownMenu'
-            );
-
-          if (globalMenu) {
-            globalMenu.remove();
-          }
-
         }
 
+        event.stopPropagation();
+      } else {
+        const globalMenu = document.getElementById('globalDropdownMenu');
+
+        if (globalMenu) {
+          globalMenu.remove();
+        }
       }
-    );
+    });
   }
-
 
   /* =========================================================
      OPTIONS MENU
      ========================================================= */
 
-  generateOptionsMenu(
-    rowData: Record<string, any>
-  ) {
-
+  generateOptionsMenu(rowData: Record<string, any>) {
     const menu: any[] = [];
 
-
-
     menu.push({
-
-      label:
-        ApplicationConstantHtml.EDIT_LABLE,
+      label: ApplicationConstantHtml.EDIT_LABLE,
 
       action: () => {
-
-        this.currencyCoinDetails(
-          rowData['id']
-        );
-
-      }
-
+        this.currencyCoinDetails(rowData['id']);
+      },
     });
-
 
     menu.push({
-
-      label:
-        ApplicationConstantHtml.DELETE_LABLE,
+      label: ApplicationConstantHtml.DELETE_LABLE,
 
       action: () => {
-
-        this.deleteCurrencyCoin(
-          rowData['id'],
-          rowData['assetId']
-        );
-
-      }
-
+        this.deleteCurrencyCoin(rowData['id'], rowData['assetId']);
+      },
     });
 
-
-    if (
-      !rowData['isVerified']
-    ) {
-
+    if (!rowData['isVerified']) {
       menu.push({
-
-        label:
-          ApplicationConstantHtml.APPROVE_LABLE,
+        label: ApplicationConstantHtml.APPROVE_LABLE,
 
         action: () => {
-
-          this.approveCurrencyCoin(
-            rowData['id']
-          );
-
-        }
-
+          this.approveCurrencyCoin(rowData['id']);
+        },
       });
-
     }
-
 
     return menu;
   }
-
 
   /* =========================================================
      HIDE RECORDS
      ========================================================= */
 
   hideFromSummary(countryName: any) {
-
-    this.filteredSummaryTableData =
-      this.filteredSummaryTableData.filter(
-        (item: any) =>
-          item.countryName != countryName
-      );
+    this.filteredSummaryTableData = this.filteredSummaryTableData.filter(
+      (item: any) => item.countryName != countryName,
+    );
   }
 
-
-  hideCollectionCoin(
-    collectionCoinId: any
-  ) {
-
-    this.filteredTableData =
-      this.filteredTableData.filter(
-        (item: any) =>
-          item.id != collectionCoinId
-      );
+  hideCollectionCoin(collectionCoinId: any) {
+    this.filteredTableData = this.filteredTableData.filter(
+      (item: any) => item.id != collectionCoinId,
+    );
   }
-
 
   /* =========================================================
      LOAD GRID
      ========================================================= */
 
   async loadGrid(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.loading = true;
 
-    return new Promise(
-      (resolve, reject) => {
+      this.loaderService.showLoader(UIStrings.LOADERS.LOADING_CURRENCY_DATA);
 
-        this.loading = true;
+      const cacheKey = NavigationURLs.CURRENCY_LIST;
 
-        this.loaderService.showLoader(
-          UIStrings.LOADERS.LOADING_CURRENCY_DATA
-        );
+      const cachedData = this.cacheService.get<any[]>(cacheKey);
 
+      if (cachedData) {
+        this.tableData = cachedData;
 
-        const cacheKey =
-          NavigationURLs.CURRENCY_LIST;
+        this.filteredTableData = cachedData;
 
+        this.filteredCoinList = cachedData;
 
-        const cachedData =
-          this.cacheService.get<any[]>(
-            cacheKey
-          );
+        this.loaderService.hideLoader();
 
+        resolve();
 
-        if (cachedData) {
+        return;
+      }
 
-          this.tableData = cachedData;
+      this.currencyCoinService.getCurrencyCoinList().subscribe({
+        next: (res: any) => {
+          this.tableData = res.data;
 
-          this.filteredTableData =
-            cachedData;
+          this.filteredTableData = res.data;
 
-          this.filteredCoinList =
-            cachedData;
+          this.filteredCoinList = res.data;
+
+          this.cacheService.set(cacheKey, res.data);
+
+          this.loading = false;
 
           this.loaderService.hideLoader();
 
           resolve();
+        },
 
-          return;
-        }
+        error: (err: any) => {
+          this.loaderService.hideLoader();
 
-
-        this.currencyCoinService
-          .getCurrencyCoinList()
-          .subscribe({
-
-            next: (res: any) => {
-
-              this.tableData =
-                res.data;
-
-              this.filteredTableData =
-                res.data;
-
-              this.filteredCoinList =
-                res.data;
-
-
-              this.cacheService.set(
-                cacheKey,
-                res.data
-              );
-
-
-              this.loading = false;
-
-              this.loaderService.hideLoader();
-
-              resolve();
-
-            },
-
-            error: (err: any) => {
-
-              this.loaderService.hideLoader();
-
-              reject(err);
-
-            }
-
-          });
-
-      }
-    );
+          reject(err);
+        },
+      });
+    });
   }
-
 
   /* =========================================================
      LOAD SUMMARY
      ========================================================= */
 
   LoadSummaryGrid() {
+    const cacheKey = NavigationURLs.CURRENCY_SUMMARY;
 
-    const cacheKey =
-      NavigationURLs.CURRENCY_SUMMARY;
-
-
-    const cachedData =
-      this.cacheService.get<any[]>(
-        cacheKey
-      );
-
+    const cachedData = this.cacheService.get<any[]>(cacheKey);
 
     if (cachedData) {
+      this.summaryTableData = cachedData;
 
-      this.summaryTableData =
-        cachedData;
-
-      this.filteredSummaryTableData =
-        cachedData;
+      this.filteredSummaryTableData = cachedData;
 
       this.loaderService.hideLoader();
 
       return;
     }
 
+    this.loaderService.showLoader('Loading currency summary...');
 
-    this.loaderService.showLoader(
-      'Loading currency summary...'
-    );
+    this.currencyCoinService.getCurrencyCoinSummary().subscribe({
+      next: (res: any) => {
+        this.summaryTableData = res.data;
 
+        this.filteredSummaryTableData = res.data;
 
-    this.currencyCoinService
-      .getCurrencyCoinSummary()
-      .subscribe({
+        this.cacheService.set(cacheKey, res.data);
 
-        next: (res: any) => {
+        this.loaderService.hideLoader();
+      },
 
-          this.summaryTableData =
-            res.data;
-
-          this.filteredSummaryTableData =
-            res.data;
-
-
-          this.cacheService.set(
-            cacheKey,
-            res.data
-          );
-
-
-          this.loaderService.hideLoader();
-
-        },
-
-        error: (error: any) => {
-
-          this.loaderService.hideLoader();
-
-        }
-
-      });
+      error: (error: any) => {
+        this.loaderService.hideLoader();
+      },
+    });
   }
-
 
   /* =========================================================
      AMOUNT FORMATTER
      ========================================================= */
 
-  amountColorFormatter(
-    cell: CellComponent
-  ) {
+  amountColorFormatter(cell: CellComponent) {
+    const columnName = cell.getColumn().getField();
 
-    const columnName =
-      cell.getColumn().getField();
+    const coinData = cell.getRow().getData();
 
-    const coinData =
-      cell.getRow().getData();
+    const columnValue = coinData[columnName];
 
-    const columnValue =
-      coinData[columnName];
-
-
-    const formattedValue =
-      new Intl.NumberFormat(
-        "en-IN",
-        {
-          style: "currency",
-          currency: "INR"
-        }
-      ).format(columnValue);
-
+    const formattedValue = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(columnValue);
 
     if (columnValue > 0) {
-
       return `
         <span style="font-weight:bold">
           ${formattedValue}
         </span>
       `;
-
     }
-
 
     if (columnValue < 0) {
-
       return `
         <span style="font-weight:bold">
           ${formattedValue}
         </span>
       `;
-
     }
-
 
     return `<span></span>`;
   }
-
 
   /* =========================================================
      SEARCH
      ========================================================= */
 
   filterGridSearchText(event: any) {
-
-    this.searchText =
-      event.target.value.toLowerCase();
+    this.searchText = event.target.value.toLowerCase();
 
     this.applyFilters();
   }
-
 
   /* =========================================================
      DETAILS
      ========================================================= */
 
   currencyCoinDetails(data: any) {
-
-    this.currencyCoinDetailsComponent
-      .openDetailsPopup(data);
-
+    this.currencyCoinDetailsComponent.openDetailsPopup(data);
 
     setTimeout(() => {
-
-      const btn =
-        document.querySelector(
-          '#openDetailsButton'
-        ) as HTMLElement | null;
-
+      const btn = document.querySelector('#openDetailsButton') as HTMLElement | null;
 
       if (btn) {
-
         btn.click();
-
+      } else {
+        console.error('openDetailsButton not found');
       }
-      else {
-
-        console.error(
-          'openDetailsButton not found'
-        );
-
-      }
-
     }, 120);
   }
-
 
   /* =========================================================
      APPROVE
      ========================================================= */
 
   approveCurrencyCoin(data: any) {
+    this.currencyCoinService.approveCurrencyCoin(data).subscribe({
+      next: (res: any) => {
+        this.toaster.showMessage('Record Approved Successfully.', 'success');
 
-    this.currencyCoinService
-      .approveCurrencyCoin(data)
-      .subscribe({
+        this.reloadData();
+      },
 
-        next: (res: any) => {
-
-          this.toaster.showMessage(
-            "Record Approved Successfully.",
-            "success"
-          );
-
-          this.reloadData();
-
-        },
-
-        error: (error: any) => {
-
-          this.loaderService.hideLoader();
-
-        }
-
-      });
+      error: (error: any) => {
+        this.loaderService.hideLoader();
+      },
+    });
   }
-
 
   /* =========================================================
      DELETE
      ========================================================= */
 
-  deleteCurrencyCoin(
-    currencyCoinId: string,
-    assetId: string
-  ) {
-
+  deleteCurrencyCoin(currencyCoinId: string, assetId: string) {
     if (currencyCoinId) {
-
       this.id = currencyCoinId;
 
       this.assetId = assetId;
 
-
-      this.confirmationDialog
-        .openConfirmationPopup(
-          "Confirmation",
-          "Are you sure you want to delete this currencyCoin? This action cannot be undone."
-        );
+      this.confirmationDialog.openConfirmationPopup(
+        'Confirmation',
+        'Are you sure you want to delete this currencyCoin? This action cannot be undone.',
+      );
     }
   }
-
 
   /* =========================================================
      CONFIRM DELETE
      ========================================================= */
 
-  handleConfirmResult(
-    isConfirmed: boolean
-  ) {
-
+  handleConfirmResult(isConfirmed: boolean) {
     if (!isConfirmed) {
       return;
     }
 
-
     if (this.assetId) {
-
-      this._assetService
-        .deleteAsset(this.assetId)
-        .subscribe({
-
-          next: (res: any) => {
-
-            this.toaster.showMessage(
-              "asset deleted successfully.",
-              "success"
-            );
-
-          },
-
-          error: (error: any) => {
-
-            this.toaster.showMessage(
-              "Failed to delete the asset.",
-              "error"
-            );
-
-          }
-
-        });
-    }
-
-
-    this.currencyCoinService
-      .deleteCurrencyCoin(this.id)
-      .subscribe({
-
+      this._assetService.deleteAsset(this.assetId).subscribe({
         next: (res: any) => {
-
-          this.toaster.showMessage(
-            "Record Deleted Successfully.",
-            "success"
-          );
-
-          this.reloadData();
-
+          this.toaster.showMessage('asset deleted successfully.', 'success');
         },
 
         error: (error: any) => {
-
-          this.loaderService.hideLoader();
-
-        }
-
+          this.toaster.showMessage('Failed to delete the asset.', 'error');
+        },
       });
+    }
 
+    this.currencyCoinService.deleteCurrencyCoin(this.id).subscribe({
+      next: (res: any) => {
+        this.toaster.showMessage('Record Deleted Successfully.', 'success');
+
+        this.reloadData();
+      },
+
+      error: (error: any) => {
+        this.loaderService.hideLoader();
+      },
+    });
   }
-
 
   /* =========================================================
      FILTERS
      ========================================================= */
 
   applyFilters() {
+    const filtered = this.tableData.filter((item: any) => {
+      const matchesCoinName = item.coinNoteName?.toLowerCase().includes(this.searchText);
 
-    const filtered =
-      this.tableData.filter(
-        (item: any) => {
+      const matchesCountryName = item.countryName?.toLowerCase().includes(this.searchText);
 
-          const matchesCoinName =
-            item.coinNoteName
-              ?.toLowerCase()
-              .includes(this.searchText);
+      const matchesCurrencyType = item.currencyCoinType?.toLowerCase().includes(this.searchText);
 
+      const matchesActulaValue = item.actualValue
+        ?.toString()
+        ?.toLowerCase()
+        .includes(this.searchText);
 
-          const matchesCountryName =
-            item.countryName
-              ?.toLowerCase()
-              .includes(this.searchText);
+      const matchesIndianValue = item.indianValue
+        ?.toString()
+        ?.toLowerCase()
+        .includes(this.searchText);
 
+      const matchesDescription = item.description?.toLowerCase().includes(this.searchText);
 
-          const matchesCurrencyType =
-            item.currencyCoinType
-              ?.toLowerCase()
-              .includes(this.searchText);
+      const matchesGeneratedDescription = item.generatedDescription
+        ?.toLowerCase()
+        .includes(this.searchText);
 
+      const matchesExtractedText = item.extractedText?.toLowerCase().includes(this.searchText);
 
-          const matchesActulaValue =
-            item.actualValue
-              ?.toString()
-              ?.toLowerCase()
-              .includes(this.searchText);
+      const matchesCountry =
+        this.selectedCountry.length === 0 || this.selectedCountry.includes(item.countryName);
 
+      const matchesType =
+        this.selectedType.length === 0 || this.selectedType.includes(item.currencyCoinType);
 
-          const matchesIndianValue =
-            item.indianValue
-              ?.toString()
-              ?.toLowerCase()
-              .includes(this.searchText);
-
-
-          const matchesDescription =
-            item.description
-              ?.toLowerCase()
-              .includes(this.searchText);
-
-
-          const matchesGeneratedDescription =
-            item.generatedDescription
-              ?.toLowerCase()
-              .includes(this.searchText);
-
-
-          const matchesExtractedText =
-            item.extractedText
-              ?.toLowerCase()
-              .includes(this.searchText);
-
-
-          const matchesCountry =
-            this.selectedCountry.length === 0 ||
-            this.selectedCountry.includes(
-              item.countryName
-            );
-
-
-          const matchesType =
-            this.selectedType.length === 0 ||
-            this.selectedType.includes(
-              item.currencyCoinType
-            );
-
-
-          return (
-            matchesCoinName ||
-            matchesCountryName ||
-            matchesActulaValue ||
-            matchesIndianValue ||
-            matchesDescription ||
-            matchesGeneratedDescription ||
-            matchesExtractedText ||
-            matchesCurrencyType
-          )
-            &&
-            matchesCountry
-            &&
-            matchesType;
-
-        }
+      return (
+        (matchesCoinName ||
+          matchesCountryName ||
+          matchesActulaValue ||
+          matchesIndianValue ||
+          matchesDescription ||
+          matchesGeneratedDescription ||
+          matchesExtractedText ||
+          matchesCurrencyType) &&
+        matchesCountry &&
+        matchesType
       );
+    });
 
+    this.filteredTableData = filtered;
 
-    this.filteredTableData =
-      filtered;
-
-    this.filteredCoinList =
-      filtered as any[];
-
+    this.filteredCoinList = filtered as any[];
 
     /* =====================================================
        SUMMARY FILTER
        ===================================================== */
 
-    const filteredSummary =
-      this.summaryTableData.filter(
-        (item: any) => {
+    const filteredSummary = this.summaryTableData.filter((item: any) => {
+      const matchesCountryName = item.countryName?.toLowerCase().includes(this.searchText);
 
-          const matchesCountryName =
-            item.countryName
-              ?.toLowerCase()
-              .includes(this.searchText);
+      const matchesCurrencyName = item.currencyName?.toLowerCase().includes(this.searchText);
 
+      const matchesCurrencyCode = item.currencyCode?.toLowerCase().includes(this.searchText);
 
-          const matchesCurrencyName =
-            item.currencyName
-              ?.toLowerCase()
-              .includes(this.searchText);
+      const matchesCurrencySymbol = item.currencySymbol?.toLowerCase().includes(this.searchText);
 
+      const matchesCoinCount = item.numberOfCoins == this.searchText;
 
-          const matchesCurrencyCode =
-            item.currencyCode
-              ?.toLowerCase()
-              .includes(this.searchText);
+      const matchesNoteCount = item.numberOfNotes == this.searchText;
 
+      const matchesTotalCount = item.total == this.searchText;
 
-          const matchesCurrencySymbol =
-            item.currencySymbol
-              ?.toLowerCase()
-              .includes(this.searchText);
+      const matchesCountry =
+        this.selectedCountry.length === 0 || this.selectedCountry.includes(item.countryName);
 
-
-          const matchesCoinCount =
-            item.numberOfCoins ==
-            this.searchText;
-
-
-          const matchesNoteCount =
-            item.numberOfNotes ==
-            this.searchText;
-
-
-          const matchesTotalCount =
-            item.total ==
-            this.searchText;
-
-
-          const matchesCountry =
-            this.selectedCountry.length === 0 ||
-            this.selectedCountry.includes(
-              item.countryName
-            );
-
-
-          return (
-            matchesCountryName ||
-            matchesCurrencyName ||
-            matchesCurrencyCode ||
-            matchesCurrencySymbol ||
-            matchesCoinCount ||
-            matchesNoteCount ||
-            matchesTotalCount
-          )
-            &&
-            matchesCountry;
-
-        }
+      return (
+        (matchesCountryName ||
+          matchesCurrencyName ||
+          matchesCurrencyCode ||
+          matchesCurrencySymbol ||
+          matchesCoinCount ||
+          matchesNoteCount ||
+          matchesTotalCount) &&
+        matchesCountry
       );
+    });
 
-
-    this.filteredSummaryTableData =
-      filteredSummary;
+    this.filteredSummaryTableData = filteredSummary;
   }
-
 
   /* =========================================================
      TYPE FILTER
      ========================================================= */
 
   toggleAllTypeCheck(event: Event) {
-
-    const checked =
-      (event.target as HTMLInputElement)
-        .checked;
-
+    const checked = (event.target as HTMLInputElement).checked;
 
     if (checked) {
-
-      this.selectedType =
-        this.typeList.map(
-          (m: any) =>
-            m.listItemName
-        );
-
-    }
-    else {
-
+      this.selectedType = this.typeList.map((m: any) => m.listItemName);
+    } else {
       this.selectedType = [];
-
     }
-
 
     this.getTypeDropdownLabel();
 
     this.applyFilters();
   }
 
-
-  toggleTypeCheck(
-    event: Event,
-    typeName: string
-  ) {
-
-    const checked =
-      (event.target as HTMLInputElement)
-        .checked;
-
+  toggleTypeCheck(event: Event, typeName: string) {
+    const checked = (event.target as HTMLInputElement).checked;
 
     if (checked) {
-
-      this.selectedType.push(
-        typeName
-      );
-
+      this.selectedType.push(typeName);
+    } else {
+      this.selectedType = this.selectedType.filter((m) => m !== typeName);
     }
-    else {
-
-      this.selectedType =
-        this.selectedType.filter(
-          (m) =>
-            m !== typeName
-        );
-
-    }
-
 
     this.getTypeDropdownLabel();
 
     this.applyFilters();
   }
-
 
   getTypeDropdownLabel() {
-
-    if (
-      this.selectedType.length === 0
-    ) {
-
-      this.lableForTypeDropDown = "";
-
-    }
-    else if (
-      this.selectedType.length ===
-      this.typeList.length
-    ) {
-
-      this.lableForTypeDropDown =
-        "All";
-
-    }
-    else {
-
-      this.lableForTypeDropDown =
-        this.selectedType.join(", ");
-
+    if (this.selectedType.length === 0) {
+      this.lableForTypeDropDown = '';
+    } else if (this.selectedType.length === this.typeList.length) {
+      this.lableForTypeDropDown = 'All';
+    } else {
+      this.lableForTypeDropDown = this.selectedType.join(', ');
     }
   }
-
 
   /* =========================================================
      TAB CHANGE
      ========================================================= */
 
-  setView(
-    mode:
-      | 'grid'
-      | 'gallery'
-      | 'summary'
-      | 'news'
-      | 'owner'
-  ) {
-
+  setView(mode: 'grid' | 'gallery' | 'summary' | 'news' | 'owner') {
     switch (mode) {
-
       case 'grid':
-
-        this.selectedTab =
-          CollectionTabs.DATA_VIEW;
+        this.selectedTab = CollectionTabs.DATA_VIEW;
 
         break;
-
 
       case 'gallery':
-
-        this.selectedTab =
-          CollectionTabs.GALLERY_VIEW;
+        this.selectedTab = CollectionTabs.GALLERY_VIEW;
 
         break;
-
 
       case 'summary':
-
-        this.selectedTab =
-          CollectionTabs.SUMMARY_VIEW;
+        this.selectedTab = CollectionTabs.SUMMARY_VIEW;
 
         break;
-
 
       case 'news':
-
-        this.selectedTab =
-          CollectionTabs.NEWS_VIEW;
+        this.selectedTab = CollectionTabs.NEWS_VIEW;
 
         break;
-
 
       case 'owner':
-
-        this.selectedTab =
-          CollectionTabs.OWNER_VIEW;
+        this.selectedTab = CollectionTabs.OWNER_VIEW;
 
         break;
-
     }
-
 
     this.viewMode = mode;
   }
-
 
   /* =========================================================
      DESTROY
      ========================================================= */
 
   ngOnDestroy() {
-
     this.loaderService.hideLoader();
 
     this.stopSlideshow();
 
     document.onkeydown = null;
   }
-
 }

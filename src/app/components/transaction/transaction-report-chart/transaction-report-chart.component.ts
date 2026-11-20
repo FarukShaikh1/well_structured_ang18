@@ -10,51 +10,51 @@ import { ApplicationConstants } from '../../../../utils/application-constants';
   standalone: true,
   imports: [CommonModule, NgChartsModule],
   templateUrl: './transaction-report-chart.component.html',
-  styleUrls: ['./transaction-report-chart.component.scss']
+  styleUrls: ['./transaction-report-chart.component.scss'],
 })
 export class TransactionReportChartComponent implements OnChanges {
   @Input() reportData: TransactionReportResponse[] = [];
   @Input() reportType: string = 'sourceWise';
-private getTextColor(): string {
-  const stored = localStorage.getItem('app-theme');
-      const isDarkMode = stored === 'dark';
+  private getTextColor(): string {
+    const stored = localStorage.getItem('app-theme');
+    const isDarkMode = stored === 'dark';
     return isDarkMode ? '#FFFFFF' : '#000000';
   }
   barChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
-    datasets: []
+    datasets: [],
   };
-  barChartWidth = 800; 
+  barChartWidth = 800;
   barChartOptions: ChartOptions<'bar'> = {
-    responsive: false,            // Important: Turn off responsive to control width manually
-    maintainAspectRatio: false,   // Allow flexible height
+    responsive: false, // Important: Turn off responsive to control width manually
+    maintainAspectRatio: false, // Allow flexible height
     plugins: {
       legend: { display: false },
       tooltip: {
         callbacks: {
-          label: (context) => `${context.dataset.label}: ₹${context.parsed.y}`
-        }
-      }
+          label: (context) => `${context.dataset.label}: ₹${context.parsed.y}`,
+        },
+      },
     },
     scales: {
       x: {
         ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: this.getTextColor() },
-        grid: { display: false }
+        grid: { display: false },
       },
       y: {
         beginAtZero: true,
         grid: { display: true },
-          ticks: {
-          color: this.getTextColor()   // ✅ Text color updated
+        ticks: {
+          color: this.getTextColor(), // ✅ Text color updated
         },
-      }
+      },
     },
     datasets: {
       bar: {
-        barThickness: 20,       // ✅ Fixed bar width
-        maxBarThickness: 20
-      }
-    }
+        barThickness: 20, // ✅ Fixed bar width
+        maxBarThickness: 20,
+      },
+    },
   };
 
   ngOnChanges(): void {
@@ -62,13 +62,13 @@ private getTextColor(): string {
 
     var labels;
     if (this.reportType === ApplicationConstants.REPORT_TYPE_CATEGORY_WISE) {
-      labels = this.reportData.map(item => item.categoryName || 'Unknown');
+      labels = this.reportData.map((item) => item.categoryName || 'Unknown');
     } else {
-      labels = this.reportData.map(item => item.sourceOrReason || 'Unknown');
+      labels = this.reportData.map((item) => item.sourceOrReason || 'Unknown');
     }
     // const labels = this.reportData.map(x => x.sourceOrReason || 'Unknown');
-    const takenAmounts = this.reportData.map(x => x.takenAmount || 0);
-    const givenAmounts = this.reportData.map(x => x.givenAmount || 0);
+    const takenAmounts = this.reportData.map((x) => x.takenAmount || 0);
+    const givenAmounts = this.reportData.map((x) => x.givenAmount || 0);
 
     /** Calculate total chart width based on number of labels */
     const widthPerBar = 45; // ✅ Controls how much space each label takes including padding
@@ -78,8 +78,8 @@ private getTextColor(): string {
       labels,
       datasets: [
         { label: 'Income', data: takenAmounts, backgroundColor: '#4CAF50' },
-        { label: 'Expense', data: givenAmounts, backgroundColor: '#F44336' }
-      ]
+        { label: 'Expense', data: givenAmounts, backgroundColor: '#F44336' },
+      ],
     };
   }
 }

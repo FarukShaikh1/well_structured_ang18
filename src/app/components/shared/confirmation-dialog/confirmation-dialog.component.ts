@@ -17,8 +17,7 @@ export class ConfirmationDialogComponent {
   modalInstance: any;
   constructor(private elementRef: ElementRef) {}
   ngAfterViewInit(): void {
-    const modalElement =
-      this.elementRef.nativeElement.querySelector('#confirmationPopup');
+    const modalElement = this.elementRef.nativeElement.querySelector('#confirmationPopup');
     if (modalElement) {
       this.modalInstance = new (window as any).bootstrap.Modal(modalElement, {
         backdrop: 'static',
@@ -27,7 +26,12 @@ export class ConfirmationDialogComponent {
     }
   }
 
-  openConfirmationPopup(title?: string, message?: string, cancelButtonLabel?: string, confirmButtonLabel?: string): void {
+  openConfirmationPopup(
+    title?: string,
+    message?: string,
+    cancelButtonLabel?: string,
+    confirmButtonLabel?: string,
+  ): void {
     const modal = document.getElementById('confirmationPopup');
     if (modal) {
       this.title = title || this.title;

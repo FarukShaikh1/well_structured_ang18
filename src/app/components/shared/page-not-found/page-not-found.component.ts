@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   templateUrl: './page-not-found.component.html',
   standalone: true,
   imports: [],
-  styleUrl: './page-not-found.component.css'
+  styleUrl: './page-not-found.component.css',
 })
-export class PageNotFoundComponent {
-
-}
+export class PageNotFoundComponent {}

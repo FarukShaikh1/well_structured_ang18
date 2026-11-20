@@ -1,5 +1,5 @@
 export interface ConfigurationRequest {
-  id?: string|null;
+  id?: string | null;
   configurationName?: string;
   description?: string;
   displayOrder?: number;

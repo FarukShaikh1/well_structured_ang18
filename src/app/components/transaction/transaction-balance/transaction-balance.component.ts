@@ -1,42 +1,32 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges
-} from "@angular/core";
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
-import { ColumnDefinition } from "tabulator-tables";
+import { ColumnDefinition } from 'tabulator-tables';
 
 import {
   ApplicationModules,
   ApplicationTableConstants,
-  NavigationURLs
-} from "../../../../utils/application-constants";
+  NavigationURLs,
+} from '../../../../utils/application-constants';
 
-import { ExpenseFilterRequest } from "../../../interfaces/expense-filter-request";
+import { ExpenseFilterRequest } from '../../../interfaces/expense-filter-request';
 
-import { CacheService } from "../../../services/cache/cache.service";
-import { GlobalService } from "../../../services/global/global.service";
-import { LoaderService } from "../../../services/loader/loader.service";
-import { TransactionService } from "../../../services/transaction/transaction.service";
+import { CacheService } from '../../../services/cache/cache.service';
+import { GlobalService } from '../../../services/global/global.service';
+import { LoaderService } from '../../../services/loader/loader.service';
+import { TransactionService } from '../../../services/transaction/transaction.service';
 
-import { TabulatorGridComponent } from "../../shared/tabulator-grid/tabulator-grid.component";
+import { TabulatorGridComponent } from '../../shared/tabulator-grid/tabulator-grid.component';
 
-import { TransactionFilter } from "./../../../interfaces/transaction-filter.model";
+import { TransactionFilter } from './../../../interfaces/transaction-filter.model';
 
 @Component({
-  selector: "app-transaction-balance",
+  selector: 'app-transaction-balance',
   standalone: true,
-  imports: [
-    TabulatorGridComponent
-  ],
-  templateUrl: "./transaction-balance.component.html",
-  styleUrls: ["./transaction-balance.component.scss"]
+  imports: [TabulatorGridComponent],
+  templateUrl: './transaction-balance.component.html',
+  styleUrls: ['./transaction-balance.component.scss'],
 })
-export class TransactionBalanceComponent
-  implements OnInit, OnChanges {
-
+export class TransactionBalanceComponent implements OnInit, OnChanges {
   @Input()
   filter!: TransactionFilter;
 
@@ -48,8 +38,7 @@ export class TransactionBalanceComponent
 
   filterColumns: ColumnDefinition[] = [];
 
-  paginationSize =
-    ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
+  paginationSize = ApplicationTableConstants.DEFAULT_RECORDS_PER_PAGE;
 
   allowCSVExport = true;
   allowPrint = true;
@@ -62,11 +51,10 @@ export class TransactionBalanceComponent
     private transactionService: TransactionService,
     private cacheService: CacheService,
     private loaderService: LoaderService,
-    public globalService: GlobalService
-  ) { }
+    public globalService: GlobalService,
+  ) {}
 
   ngOnInit(): void {
-
     this.initialized = true;
 
     this.loadGrid();
@@ -78,34 +66,20 @@ export class TransactionBalanceComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-
-    if (
-      this.initialized &&
-      changes["filter"] &&
-      !changes["filter"].firstChange
-    ) {
-
+    if (this.initialized && changes['filter'] && !changes['filter'].firstChange) {
       this.applyFilters();
     }
   }
 
   loadGrid(): void {
+    this.loaderService.showLoader('Loading balance summary...');
 
-    this.loaderService.showLoader(
-      "Loading balance summary..."
-    );
-
-    const cached =
-      this.cacheService.get<any[]>(
-        NavigationURLs.EXPENSE_BALANCE_LIST
-      );
+    const cached = this.cacheService.get<any[]>(NavigationURLs.EXPENSE_BALANCE_LIST);
 
     if (cached) {
-
       this.tableData = cached;
 
-      this.filteredTableData =
-        [...cached];
+      this.filteredTableData = [...cached];
 
       this.loadColumnConfiguration();
 
@@ -116,270 +90,184 @@ export class TransactionBalanceComponent
       return;
     }
 
-    const request:
-      ExpenseFilterRequest = {
+    const request: ExpenseFilterRequest = {
       fromDate: this.filter.fromDate,
       toDate: this.filter.toDate,
       minAmount: this.filter.minAmount ?? 0,
       maxAmount: this.filter.maxAmount ?? 0,
-      sourceOrReason:
-        this.filter.sourceOrReason ?? ""
+      sourceOrReason: this.filter.sourceOrReason ?? '',
     };
 
-    this.transactionService
-      .getBalanceList(request)
-      .subscribe({
+    this.transactionService.getBalanceList(request).subscribe({
+      next: (res: any) => {
+        this.tableData = res?.data ?? [];
 
-        next: (res: any) => {
+        this.filteredTableData = [...this.tableData];
 
-          this.tableData =
-            res?.data ?? [];
+        this.cacheService.set(NavigationURLs.EXPENSE_BALANCE_LIST, this.tableData);
 
-          this.filteredTableData =
-            [...this.tableData];
+        this.cacheService.set(
+          NavigationURLs.EXPENSE_BALANCE_LIST + '_AccountColumns',
+          this.tableData[0]?.accountData,
+        );
 
-          this.cacheService.set(
-            NavigationURLs.EXPENSE_BALANCE_LIST,
-            this.tableData
-          );
+        this.loadColumnConfiguration();
 
-          this.cacheService.set(
-            NavigationURLs.EXPENSE_BALANCE_LIST +
-            "_AccountColumns",
-            this.tableData[0]?.accountData
-          );
+        this.loaderService.hideLoader();
 
-          this.loadColumnConfiguration();
+        this.applyFilters();
+      },
 
-          this.loaderService.hideLoader();
+      error: (error: any) => {
+        console.error('Balance summary error:', error);
 
-          this.applyFilters();
-        },
-
-        error: (error: any) => {
-
-          console.error(
-            "Balance summary error:",
-            error
-          );
-
-          this.loaderService.hideLoader();
-        }
-      });
+        this.loaderService.hideLoader();
+      },
+    });
   }
 
   applyFilters(): void {
+    const min = Number(this.filter?.minAmount) || 0;
 
-    const min =
-      Number(this.filter?.minAmount) || 0;
+    const max = Number(this.filter?.maxAmount) || 0;
 
-    const max =
-      Number(this.filter?.maxAmount) || 0;
+    this.filteredTableData = this.tableData.filter((item: any) => {
+      const values = item.accountData
+        ? Object.values(item.accountData)
+            .map((x: any) => Number(x))
+            .filter((x) => !isNaN(x))
+        : [];
 
-    this.filteredTableData =
-      this.tableData.filter((item: any) => {
+      const minMatch = min === 0 || values.some((x) => x !== 0 && Math.abs(x) >= min);
 
-        const values =
-          item.accountData
-            ? Object.values(item.accountData)
-              .map((x: any) => Number(x))
-              .filter(x => !isNaN(x))
-            : [];
+      const maxMatch = max === 0 || values.some((x) => x !== 0 && Math.abs(x) <= max);
 
-        const minMatch =
-          min === 0 ||
-          values.some(
-            x =>
-              x !== 0 &&
-              Math.abs(x) >= min
-          );
-
-        const maxMatch =
-          max === 0 ||
-          values.some(
-            x =>
-              x !== 0 &&
-              Math.abs(x) <= max
-          );
-
-        return minMatch && maxMatch;
-      });
+      return minMatch && maxMatch;
+    });
   }
 
   refreshData(): void {
-
-    this.cacheService.clear(
-      NavigationURLs.EXPENSE_BALANCE_LIST
-    );
+    this.cacheService.clear(NavigationURLs.EXPENSE_BALANCE_LIST);
 
     this.loadGrid();
   }
 
   loadColumnConfiguration(): void {
-
     this.columnConfig = [
-
       {
-        title: "Transaction Date",
-        field: "transactionDate",
-        sorter: "alphanum",
-        formatter:
-          this.dateFormatter.bind(this),
-        minWidth: 120
-      }
+        title: 'Transaction Date',
+        field: 'transactionDate',
+        sorter: 'alphanum',
+        formatter: this.dateFormatter.bind(this),
+        minWidth: 120,
+      },
     ];
 
-    const accountColumns =
-      this.cacheService.get<any>(
-        NavigationURLs.EXPENSE_BALANCE_LIST +
-        "_AccountColumns"
-      );
+    const accountColumns = this.cacheService.get<any>(
+      NavigationURLs.EXPENSE_BALANCE_LIST + '_AccountColumns',
+    );
 
     if (accountColumns) {
-
-      for (
-        const key of Object.keys(accountColumns)
-      ) {
-
-        if (
-          key.toLowerCase()
-            .includes("category")
-        ) {
+      for (const key of Object.keys(accountColumns)) {
+        if (key.toLowerCase().includes('category')) {
           continue;
         }
 
         this.columnConfig.push({
-
           title: key,
 
-          field:
-            `accountData.${key}`,
+          field: `accountData.${key}`,
 
-          formatter:
-            this.summaryAmountColorFormatter.bind(
-              this
-            ),
+          formatter: this.summaryAmountColorFormatter.bind(this),
 
-          hozAlign: "center",
+          hozAlign: 'center',
 
-          headerHozAlign: "center",
+          headerHozAlign: 'center',
 
-          cssClass: "amount-column",
+          cssClass: 'amount-column',
 
-          bottomCalc: "sum",
+          bottomCalc: 'sum',
 
-          bottomCalcFormatter:
-            this.amountColorFormatter.bind(
-              this
-            ),
+          bottomCalcFormatter: this.amountColorFormatter.bind(this),
 
-          minWidth: 120
+          minWidth: 120,
         });
       }
     }
 
     this.columnConfig.push({
-
-      title: "",
-      field: "",
+      title: '',
+      field: '',
 
       maxWidth: 70,
 
-      formatter:
-        this.globalService.hidebuttonFormatter.bind(
-          this.globalService
-        ),
+      formatter: this.globalService.hidebuttonFormatter.bind(this.globalService),
 
       cellClick: (_e, cell) => {
+        const date = cell.getRow().getData()['transactionDate'];
 
-        const date =
-          cell.getRow()
-            .getData()["transactionDate"];
-
-        this.filteredTableData =
-          this.filteredTableData.filter(
-            item =>
-              item.transactionDate != date
-          );
+        this.filteredTableData = this.filteredTableData.filter(
+          (item) => item.transactionDate != date,
+        );
       },
 
       headerSort: false,
-      print: false
+      print: false,
     });
   }
 
   dateFormatter(cell: any): string {
+    const field = cell.getColumn().getField();
 
-    const field =
-      cell.getColumn().getField();
-
-    const value =
-      cell.getRow().getData()[field];
+    const value = cell.getRow().getData()[field];
 
     if (!value) {
-      return "";
+      return '';
     }
 
-    return new Intl.DateTimeFormat(
-      "en-IN"
-    ).format(new Date(value));
+    return new Intl.DateTimeFormat('en-IN').format(new Date(value));
   }
 
   amountColorFormatter(cell: any): string {
-
-    const value =
-      Number(cell.getValue()) || 0;
+    const value = Number(cell.getValue()) || 0;
 
     if (value === 0) {
-      return "";
+      return '';
     }
 
-    const formatted =
-      new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR"
-      }).format(value);
+    const formatted = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(value);
 
     return `
       <span style="
-        color:${value > 0
-        ? "var(--success-color)"
-        : "var(--danger-color)"};
+        color:${value > 0 ? 'var(--success-color)' : 'var(--danger-color)'};
         font-weight:bold">
         ${formatted}
       </span>
     `;
   }
 
-  summaryAmountColorFormatter(
-    cell: any
-  ): string {
+  summaryAmountColorFormatter(cell: any): string {
+    const value = cell.getValue();
 
-    const value =
-      cell.getValue();
-
-    if (
-      value === null ||
-      value === undefined
-    ) {
-      return "";
+    if (value === null || value === undefined) {
+      return '';
     }
 
     if (Number(value) === 0) {
-      return "";
+      return '';
     }
 
-    const formatted =
-      new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR"
-      }).format(Number(value));
+    const formatted = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(Number(value));
 
     return `
       <span style="
-        color:${Number(value) > 0
-        ? "var(--success-color)"
-        : "var(--danger-color)"};
+        color:${Number(value) > 0 ? 'var(--success-color)' : 'var(--danger-color)'};
         font-weight:bold">
         ${formatted}
       </span>

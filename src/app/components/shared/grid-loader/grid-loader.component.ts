@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
         <div class="loader-text mt-2">{{ loadingText }}</div>
       </div>
     </div>
-  `
+  `,
 })
 export class GridLoaderComponent {
   @Input() isLoading: boolean = false;

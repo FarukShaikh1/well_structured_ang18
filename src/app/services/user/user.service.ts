@@ -9,7 +9,7 @@ import { HttpService } from '../rest/http.service';
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService) {}
 
   getAllUsers(): Observable<any> {
     return this.httpService.get(API_URL.GET_ALL_USERS);
@@ -51,7 +51,10 @@ export class UserService {
   }
 
   updateUserDetails(userDetailsForm: any): Observable<any> {
-    return this.httpService.post(API_URL.UPDATE_USER + 'updateUserDetails?userId=', userDetailsForm);
+    return this.httpService.post(
+      API_URL.UPDATE_USER + 'updateUserDetails?userId=',
+      userDetailsForm,
+    );
   }
 
   getUserList(): Observable<any> {

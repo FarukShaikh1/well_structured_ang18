@@ -26,7 +26,7 @@ import { SiteUnderDevelopmentComponent } from '../shared/site-under-development/
     ToasterComponent,
     LoaderComponent,
     SiteUnderDevelopmentComponent,
-    NgbCarouselModule
+    NgbCarouselModule,
   ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css',
@@ -43,7 +43,7 @@ export class ForgotPasswordComponent implements OnInit {
     private userService: UserService,
     private loaderService: LoaderService,
     private logoutService: LogoutService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
   ) {
     this.forgotPasswordForm = this.fb.group({
       email: [
@@ -72,10 +72,7 @@ export class ForgotPasswordComponent implements OnInit {
       this.userService.forgotPassword(payload).subscribe({
         next: (response) => {
           if (response.success) {
-            this.toaster.showMessage(
-              Messages.PASSWORD_RESET_LINK_SENT_MSG,
-              'success'
-            );
+            this.toaster.showMessage(Messages.PASSWORD_RESET_LINK_SENT_MSG, 'success');
             setTimeout(() => {
               this.router.navigate([NavigationURLs.LOGIN]);
               this.loaderService.hideLoader();
@@ -89,12 +86,9 @@ export class ForgotPasswordComponent implements OnInit {
           if (error?.error?.errors?.ConfirmPassword) {
             console.error(
               'Could not send password reset link',
-              error?.error?.errors?.ConfirmPassword
-            );
-            this.toaster.showMessage(
               error?.error?.errors?.ConfirmPassword,
-              'error'
             );
+            this.toaster.showMessage(error?.error?.errors?.ConfirmPassword, 'error');
           } else {
             console.error('Could not send password reset link', error);
             this.toaster.showMessage(error?.message, 'error');

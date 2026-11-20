@@ -1,43 +1,32 @@
-import { CommonModule } from "@angular/common";
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
-import { Router } from "@angular/router";
-import { formatDistanceToNow } from "date-fns";
-import { GlobalService } from "../../../services/global/global.service";
-import { LocalStorageService } from "../../../services/local-storage/local-storage.service";
-import { LogoutService } from "../../../services/logout/logout.service";
-import { NotificationService } from "../../../services/notification/notification.service";
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { formatDistanceToNow } from 'date-fns';
+import { GlobalService } from '../../../services/global/global.service';
+import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
+import { LogoutService } from '../../../services/logout/logout.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 import {
   ActionConstant,
   ApplicationConstants,
   ApplicationModules,
   ApplicationRoles,
   NavigationURLs,
-  RoutePathTitles
-} from "../../../../utils/application-constants";
-import { ModuleResponse } from "../../../interfaces/module-response";
-import { SystemNotifications } from "../../../interfaces/system-notifications";
-import { ConfirmBoxComponent } from "../confirm-box/confirm-box.component";
+  RoutePathTitles,
+} from '../../../../utils/application-constants';
+import { ModuleResponse } from '../../../interfaces/module-response';
+import { SystemNotifications } from '../../../interfaces/system-notifications';
+import { ConfirmBoxComponent } from '../confirm-box/confirm-box.component';
 
 @Component({
-  selector: "app-header",
-  templateUrl: "./header.component.html",
-  imports: [
-    CommonModule,
-    ConfirmBoxComponent
-  ],
-  styleUrls: ["./header.component.css"],
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  imports: [CommonModule, ConfirmBoxComponent],
+  styleUrls: ['./header.component.css'],
   standalone: true,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
-  @ViewChild("notificationDropdown")
+  @ViewChild('notificationDropdown')
   notificationDropdown!: ElementRef;
 
   @ViewChild(ConfirmBoxComponent)
@@ -71,25 +60,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   loginDisplay = false;
   alreadyLoggedIn: boolean = true;
-  loggedInUsername: string = "";
-  loggedInUserName: string = "";
-  userNameInitials: string = "";
+  loggedInUsername: string = '';
+  loggedInUserName: string = '';
+  userNameInitials: string = '';
 
   // =========================================
   // Module
   // =========================================
 
-  moduleList: any;// ModuleResponse[] = [];
+  moduleList: any; // ModuleResponse[] = [];
 
   // =========================================
   // Profile
   // =========================================
 
-  profilePicUrl: string =
-    "../../../assets/icons/user1icon.png";
+  profilePicUrl: string = '../../../assets/icons/user1icon.png';
 
-  thumbnailUrl: string = "";
-  ImageUrl: string = "";
+  thumbnailUrl: string = '';
+  ImageUrl: string = '';
 
   // =========================================
   // Other
@@ -102,18 +90,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public localStorageService: LocalStorageService,
     public globalService: GlobalService,
     private logoutService: LogoutService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
   ) {
-
-    this.globalService
-      .getReloadObservable()
-      .subscribe(() => {
-
-        this.alreadyLoggedIn =
-          this.localStorageService.isAuthenticated();
-      });
+    this.globalService.getReloadObservable().subscribe(() => {
+      this.alreadyLoggedIn = this.localStorageService.isAuthenticated();
+    });
   }
-
 
   // =========================================
   // Lifecycle
@@ -124,69 +106,53 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.alreadyLoggedIn = this.localStorageService.isAuthenticated();
     this.loggedInUserName = this.getLoggedInUserName();
     this.userNameInitials = this.getUserNameInitials();
-    this.thumbnailUrl = this.localStorageService.getLoggedInUserData()?.thumbnailPathSasUrl || "";
-    this.ImageUrl = this.localStorageService.getLoggedInUserData()?.imagePathSasUrl || "";
+    this.thumbnailUrl = this.localStorageService.getLoggedInUserData()?.thumbnailPathSasUrl || '';
+    this.ImageUrl = this.localStorageService.getLoggedInUserData()?.imagePathSasUrl || '';
     await this.getModuleList();
   }
 
-
   ngOnDestroy(): void {
-
-    this.loggedInUsername = "";
-
+    this.loggedInUsername = '';
   }
-
 
   // =========================================
   // Module List
   // =========================================
 
   getModuleList() {
-
     this.moduleList = this.localStorageService.getLoggedInUserPermissions() || [];
 
-    this.moduleList = this.moduleList.filter((x: any) => x.route !== "" && x.view);
+    this.moduleList = this.moduleList.filter((x: any) => x.route !== '' && x.view);
 
     let allPermissions = this.localStorageService.getUserPermission();
 
     if (this.moduleList?.length === 0) {
+      this.globalService.getUserPermissionData().subscribe({
+        next: (result) => {
+          console.log('Permission result:', result);
 
-      this.globalService.getUserPermissionData()
-        .subscribe({
-          next: (result) => {
-            console.log("Permission result:", result);
+          this.moduleList = this.localStorageService.getLoggedInUserPermissions() || [];
 
-            this.moduleList = this.localStorageService.getLoggedInUserPermissions() || [];
-
-            this.moduleList = this.moduleList.filter((module: any) => {
-              // Expenses require View + Add
-              if (module.moduleName === RoutePathTitles.EXPENSES) {
-                return (module.view === true && module.add === true);
-              }
-              // Other modules require View
-              return module.view === true;
+          this.moduleList = this.moduleList.filter((module: any) => {
+            // Expenses require View + Add
+            if (module.moduleName === RoutePathTitles.EXPENSES) {
+              return module.view === true && module.add === true;
             }
-            );
-          },
+            // Other modules require View
+            return module.view === true;
+          });
+        },
 
-          error: (error) => {
-            console.error("Permission error:", error);
-          },
+        error: (error) => {
+          console.error('Permission error:', error);
+        },
 
-          complete: () => {
-
-            console.log(
-              "Permission request completed"
-            );
-
-          }
-
-        });
-
+        complete: () => {
+          console.log('Permission request completed');
+        },
+      });
     }
-
   }
-
 
   // =========================================
   // Navigation
@@ -197,16 +163,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * module buttons.
    */
   navigate(route: string): void {
-
-    console.log(
-      "route clicked : ",
-      route
-    );
+    console.log('route clicked : ', route);
 
     this.router.navigate([route]);
-
   }
-
 
   /**
    * Opens the dedicated mobile menu page.
@@ -214,462 +174,233 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * This is used only on screens smaller than md.
    */
   openMobileMenu(): void {
-
-    this.router.navigate([
-      NavigationURLs.MOBILE_MENU
-    ]);
-
+    this.router.navigate([NavigationURLs.MOBILE_MENU]);
   }
-
 
   isActiveMenu(route: string): boolean {
-
     return this.router.url.includes(route);
-
   }
-
 
   // =========================================
   // Login
   // =========================================
 
-  setLoginDisplay() {
-
-  }
-
+  setLoginDisplay() {}
 
   isUserAuthorized(): boolean {
-
-    return this.localStorageService
-      .isUserAuthorized();
-
+    return this.localStorageService.isUserAuthorized();
   }
-
 
   // =========================================
   // Profile
   // =========================================
 
   goToProfilePage() {
-
-    this.router.navigate([
-      NavigationURLs.USER_PROFILE
-    ]);
-
+    this.router.navigate([NavigationURLs.USER_PROFILE]);
   }
-
 
   goToChangePasswordPage() {
-
-    this.router.navigate([
-      NavigationURLs.CHANGE_PASSWORD
-    ]);
-
+    this.router.navigate([NavigationURLs.CHANGE_PASSWORD]);
   }
-
 
   // =========================================
   // Logout
   // =========================================
 
   logout() {
-
-    this.confirmationPopupComponent
-      .openConfirmModal(
-        "Confirmation",
-        "Are you sure you want to log out?"
-      );
-
+    this.confirmationPopupComponent.openConfirmModal(
+      'Confirmation',
+      'Are you sure you want to log out?',
+    );
   }
 
-
   handleConfirmResult(result: any) {
-
     if (result) {
-
       this.notificationsCount = 0;
 
       this.logoutService.logout();
-
     }
-
   }
-
 
   // =========================================
   // Notification
   // =========================================
 
   showNotificationIcon(): boolean {
-
-    if (
-      (this.alreadyLoggedIn ||
-        this.loginDisplay) &&
-      this.isUserAuthorized()
-    ) {
-
+    if ((this.alreadyLoggedIn || this.loginDisplay) && this.isUserAuthorized()) {
       return true;
-
     }
 
     return false;
-
   }
-
 
   showSettingsIcon(): boolean {
-
-    if (
-      (this.alreadyLoggedIn ||
-        this.loginDisplay) &&
-      this.isUserAuthorized()
-    ) {
-
+    if ((this.alreadyLoggedIn || this.loginDisplay) && this.isUserAuthorized()) {
       return true;
-
     }
 
     return false;
-
   }
-
 
   showLogoutButton(): boolean {
-
-    if (
-      this.alreadyLoggedIn ||
-      this.loginDisplay
-    ) {
-
+    if (this.alreadyLoggedIn || this.loginDisplay) {
       return true;
-
     }
 
     return false;
-
   }
-
 
   fetchAllSystemNotifications() {
-
     this.notificationService
-      .getAllNotifications(
-        this.NOTIFICATION_INITIAL_PAGE_NO,
-        this.NOTIFICATION_INITIAL_PAGE_SIZE
-      )
+      .getAllNotifications(this.NOTIFICATION_INITIAL_PAGE_NO, this.NOTIFICATION_INITIAL_PAGE_SIZE)
       .subscribe((notifications) => {
-
         if (notifications.data.data) {
+          this.notifications = notifications.data.data
+            .sort(
+              (
+                a: {
+                  createdOn: string | number | Date;
+                },
+                b: {
+                  createdOn: string | number | Date;
+                },
+              ) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime(),
+            )
+            .slice(0, ApplicationConstants.NUMBER_OF_TOP_SYSTEM_NOTIFICATIONS_TO_SHOW);
 
-          this.notifications =
-            notifications.data.data
-              .sort(
-                (
-                  a: {
-                    createdOn:
-                    string |
-                    number |
-                    Date
-                  },
-                  b: {
-                    createdOn:
-                    string |
-                    number |
-                    Date
-                  }
-                ) =>
-                  new Date(
-                    b.createdOn
-                  ).getTime() -
-                  new Date(
-                    a.createdOn
-                  ).getTime()
-              )
-              .slice(
-                0,
-                ApplicationConstants
-                  .NUMBER_OF_TOP_SYSTEM_NOTIFICATIONS_TO_SHOW
-              );
+          this.notificationTotalUnreadCount = notifications.data.unreadNotificationCount;
 
-
-          this.notificationTotalUnreadCount =
-            notifications
-              .data
-              .unreadNotificationCount;
-
-
-          this.notificationService
-            .updateUnreadNotificationCount(
-              this.notificationTotalUnreadCount
-            );
-
+          this.notificationService.updateUnreadNotificationCount(this.notificationTotalUnreadCount);
         }
-
       });
-
   }
-
 
   toggleSystemNotificationList() {
-
-    this.showNotificationList =
-      !this.showNotificationList;
-
+    this.showNotificationList = !this.showNotificationList;
   }
-
 
   closeSystemNotificationList() {
-
     this.showNotificationList = false;
-
   }
 
-
-  @HostListener(
-    "document:click",
-    ["$event.target"]
-  )
-  onClickOutside(
-    targetElement: HTMLElement
-  ) {
-
+  @HostListener('document:click', ['$event.target'])
+  onClickOutside(targetElement: HTMLElement) {
     if (
       this.notificationDropdown &&
-      !this.notificationDropdown.nativeElement
-        .contains(targetElement)
+      !this.notificationDropdown.nativeElement.contains(targetElement)
     ) {
-
       this.closeSystemNotificationList();
-
     }
-
   }
 
-
-  markSystemNotificationAsRead(
-    notification: SystemNotifications
-  ) {
-
-    if (
-      notification.hasRead ||
-      notification.isLoading
-    ) {
-
+  markSystemNotificationAsRead(notification: SystemNotifications) {
+    if (notification.hasRead || notification.isLoading) {
       return;
-
     }
-
 
     notification.isLoading = true;
 
+    this.notificationService.markAsRead(notification.notificationId).subscribe({
+      next: () => {
+        this.fetchAllSystemNotifications();
 
-    this.notificationService
-      .markAsRead(
-        notification.notificationId
-      )
-      .subscribe({
+        notification.isLoading = false;
+      },
 
-        next: () => {
+      error: (err) => {
+        notification.isLoading = false;
 
-          this.fetchAllSystemNotifications();
-
-          notification.isLoading = false;
-
-        },
-
-        error: (err) => {
-
-          notification.isLoading = false;
-
-          console.error(
-            `Failed to mark notification as read: ${err.message}`
-          );
-
-        }
-
-      });
-
+        console.error(`Failed to mark notification as read: ${err.message}`);
+      },
+    });
   }
-
 
   viewAllSystemNotifications() {
-
-    this.router.navigate([
-      NavigationURLs.ALL_NOTIFICATIONS
-    ]);
+    this.router.navigate([NavigationURLs.ALL_NOTIFICATIONS]);
 
     this.closeSystemNotificationList();
-
   }
-
 
   getRelativeTime(createdOn: Date): string {
-
-    return formatDistanceToNow(
-      createdOn,
-      {
-        addSuffix: true
-      }
-    );
-
+    return formatDistanceToNow(createdOn, {
+      addSuffix: true,
+    });
   }
-
 
   // =========================================
   // User Information
   // =========================================
 
   getLoggedInUserName(): string {
-
-    return this.localStorageService
-      .getLoggedInUserData()
-      ?.userName;
-
+    return this.localStorageService.getLoggedInUserData()?.userName;
   }
-
 
   getLoggedInUser(): string {
-
-    return this.localStorageService
-      .getLoggedInUserData();
-
+    return this.localStorageService.getLoggedInUserData();
   }
-
 
   getUserNameInitials(): string {
-
     const fullName =
-      this.localStorageService
-        .getLoggedInUserData()
-        ?.firstName +
-      " " +
-      this.localStorageService
-        .getLoggedInUserData()
-        ?.lastName;
-
+      this.localStorageService.getLoggedInUserData()?.firstName +
+      ' ' +
+      this.localStorageService.getLoggedInUserData()?.lastName;
 
     if (!fullName) {
-
-      return "";
-
+      return '';
     }
 
-
-    const nameParts =
-      fullName
-        .split(" ")
-        .filter(
-          (part) => part.trim()
-        );
-
+    const nameParts = fullName.split(' ').filter((part) => part.trim());
 
     if (nameParts.length === 1) {
-
-      return nameParts[0][0]
-        .toUpperCase();
-
+      return nameParts[0][0].toUpperCase();
     }
-
 
     if (nameParts.length >= 2) {
+      const firstInitial = nameParts[0][0];
 
-      const firstInitial =
-        nameParts[0][0];
+      const secondInitial = nameParts[1][0];
 
-      const secondInitial =
-        nameParts[1][0];
-
-      return (
-        firstInitial +
-        secondInitial
-      ).toUpperCase();
-
+      return (firstInitial + secondInitial).toUpperCase();
     }
 
-
-    return "";
-
+    return '';
   }
-
 
   // =========================================
   // Existing Navigation Methods
   // =========================================
 
   clientList() {
-
-    this.router.navigate([
-      NavigationURLs.CLIENT_LIST
-    ]);
-
+    this.router.navigate([NavigationURLs.CLIENT_LIST]);
   }
-
 
   navigateToExpenseList() {
-
-    this.router.navigate([
-      NavigationURLs.EXPENSE_LIST
-    ]);
-
+    this.router.navigate([NavigationURLs.EXPENSE_LIST]);
   }
-
 
   navigateToExpenseSummaryList() {
-
-    this.router.navigate([
-      NavigationURLs.EXPENSE_SUMMARY_LIST
-    ]);
-
+    this.router.navigate([NavigationURLs.EXPENSE_SUMMARY_LIST]);
   }
-
 
   navigateToDayList() {
-
-    this.router.navigate([
-      NavigationURLs.DAY_LIST
-    ]);
-
+    this.router.navigate([NavigationURLs.DAY_LIST]);
   }
-
 
   navigateToUserList() {
-
-    this.router.navigate([
-      NavigationURLs.USER_LIST
-    ]);
-
+    this.router.navigate([NavigationURLs.USER_LIST]);
   }
-
 
   navigateToCurrencyList() {
-
-    this.router.navigate([
-      NavigationURLs.CURRENCY_LIST
-    ]);
-
+    this.router.navigate([NavigationURLs.CURRENCY_LIST]);
   }
-
 
   navigateToUserPermissions() {
-
-    this.router.navigate([
-      NavigationURLs.ROLE_MODULE_MAPPING
-    ]);
-
+    this.router.navigate([NavigationURLs.ROLE_MODULE_MAPPING]);
   }
-
 
   goToPrograms() {
-
-    this.router.navigate([
-      NavigationURLs.PROGRAMS
-    ]);
-
+    this.router.navigate([NavigationURLs.PROGRAMS]);
   }
 
-
-  navigateToChatSystem() {
-
-  }
-
+  navigateToChatSystem() {}
 }

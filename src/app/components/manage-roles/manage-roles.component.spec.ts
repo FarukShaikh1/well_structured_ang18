@@ -8,7 +8,7 @@ describe('ManageRolesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ManageRolesComponent]
+      declarations: [ManageRolesComponent],
     });
     fixture = TestBed.createComponent(ManageRolesComponent);
     component = fixture.componentInstance;

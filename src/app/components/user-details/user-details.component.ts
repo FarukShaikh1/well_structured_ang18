@@ -1,17 +1,11 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  Input,
-  Renderer2,
-  ViewChild
-} from '@angular/core';
+import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import * as forms from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ApplicationConstants,
   ApplicationModules,
-  Messages
+  Messages,
 } from '../../../utils/application-constants';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
@@ -41,21 +35,25 @@ export class UserDetailsComponent {
     public globalService: GlobalService,
     private roleService: RoleService,
     private loaderService: LoaderService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
   ) {
     this.userForm = this.fb.group({
       id: [''],
-      userName: ['', [Validators.required, Validators.pattern(/^(?!\s+$).+/),],],
+      userName: ['', [Validators.required, Validators.pattern(/^(?!\s+$).+/)]],
       firstName: ['', [Validators.pattern(/^(?!\s+$).+/)]],
-      lastName: ['', [Validators.pattern(/^(?!\s+$).+/),],],
-      mobileNumber: ['', [Validators.pattern(/^(?!\s+$).+/),],],
-      emailAddress: ['', [Validators.required, Validators.pattern(ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_USERNAME),],],
+      lastName: ['', [Validators.pattern(/^(?!\s+$).+/)]],
+      mobileNumber: ['', [Validators.pattern(/^(?!\s+$).+/)]],
+      emailAddress: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_USERNAME),
+        ],
+      ],
       isLocked: [false, [Validators.required]],
       roleId: ['', [Validators.required]],
     });
   }
-
-
 
   openUserDetailsPopup(id: string) {
     this.getRoleList();
@@ -80,8 +78,7 @@ export class UserDetailsComponent {
   }
 
   trimAllFields() {
-    
-    Object.keys(this.userForm.controls).forEach(key => {
+    Object.keys(this.userForm.controls).forEach((key) => {
       const control = this.userForm.get(key);
       if (control && typeof control.value === 'string') {
         control.setValue(control.value.trim());
@@ -99,8 +96,6 @@ export class UserDetailsComponent {
     const formValue = this.userForm.value;
     const payload = { ...formValue };
 
-
-
     this.userService.updateUser(payload).subscribe(this.handleApiResponse());
   }
 
@@ -109,10 +104,8 @@ export class UserDetailsComponent {
       next: (result: any) => {
         if (result.success) {
           this.toaster.showMessage(result?.message, 'success', 8000);
-          this.renderer
-            .selectRootElement(this.btnCloseUserPopup?.nativeElement)
-            .click();
-          
+          this.renderer.selectRootElement(this.btnCloseUserPopup?.nativeElement).click();
+
           this.loaderService.hideLoader();
           this.globalService.triggerGridReload(ApplicationModules.USERS);
         } else {

@@ -1,18 +1,12 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  Input,
-  Renderer2,
-  ViewChild
-} from '@angular/core';
+import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import * as forms from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ActionConstant,
   ApplicationModules,
   DdlConfig,
-  Messages
+  Messages,
 } from '../../../utils/application-constants';
 import { ConfigurationRequest } from '../../interfaces/configuration-request';
 import { ConfigurationService } from '../../services/configuration/configuration.service';
@@ -28,7 +22,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
   styleUrl: './configuration-details.component.css',
 })
 export class ConfigurationDetailsComponent {
-  @ViewChild("btnCloseConfigPopup") btnCloseConfigPopup!: ElementRef;
+  @ViewChild('btnCloseConfigPopup') btnCloseConfigPopup!: ElementRef;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
   @Input() tableData: Record<string, unknown>[] | undefined;
   @Input() selectedUserId: string = '';
@@ -41,7 +35,7 @@ export class ConfigurationDetailsComponent {
     configurationName: '',
     description: '',
     displayOrder: 0,
-    selectedUserId: ''
+    selectedUserId: '',
   };
   currentConfig: string = '';
   ActionConstant = ActionConstant;
@@ -51,16 +45,15 @@ export class ConfigurationDetailsComponent {
     private configurationService: ConfigurationService,
     public globalService: GlobalService,
     private loaderService: LoaderService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
   ) {
     this.configForm = this.fb.group({
       id: [''],
-      configurationName: ['', [Validators.required, Validators.pattern(/^(?!\s+$).+/),],],
-      configurationDescription: ['', [Validators.required, Validators.pattern(/^(?!\s+$).+/),],],
-      displaySequence: ['', [Validators.pattern(/^(?!\s+$).+/),],],
+      configurationName: ['', [Validators.required, Validators.pattern(/^(?!\s+$).+/)]],
+      configurationDescription: ['', [Validators.required, Validators.pattern(/^(?!\s+$).+/)]],
+      displaySequence: ['', [Validators.pattern(/^(?!\s+$).+/)]],
     });
   }
-
 
   openDetailsPopup(id: string, config: string) {
     this.currentConfig = config;
@@ -101,8 +94,7 @@ export class ConfigurationDetailsComponent {
     this.loaderService.showLoader();
     if (this.configurationRequest.id) {
       this.updateConfigDetails(this.configurationRequest, config);
-    }
-    else {
+    } else {
       this.configurationRequest.id = null;
       this.addConfigDetails(this.configurationRequest, config);
     }
@@ -111,20 +103,17 @@ export class ConfigurationDetailsComponent {
   addConfigDetails(request: ConfigurationRequest, config: string) {
     this.configurationService.addConfiguration(request, config).subscribe({
       next: (res: any) => {
-
-        this.toaster.showMessage(res?.message, res.success ? "success" : "error");
+        this.toaster.showMessage(res?.message, res.success ? 'success' : 'error');
         this.loaderService.hideLoader();
         if (res.success) {
           this.removeDdlConfigFromLocalStorage();
-          this.renderer
-            .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
-            .click();
+          this.renderer.selectRootElement(this.btnCloseConfigPopup?.nativeElement).click();
           this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
         }
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
-        this.toaster.showMessage("Some issue is in Add the data.", "error");
+        this.toaster.showMessage('Some issue is in Add the data.', 'error');
         return;
       },
     });
@@ -133,19 +122,17 @@ export class ConfigurationDetailsComponent {
   updateConfigDetails(request: ConfigurationRequest, config: string) {
     this.configurationService.updateConfiguration(request, config).subscribe({
       next: (res: any) => {
-        this.toaster.showMessage(res.message, res.success ? "success" : "error");
+        this.toaster.showMessage(res.message, res.success ? 'success' : 'error');
         this.loaderService.hideLoader();
         if (res.success) {
           this.removeDdlConfigFromLocalStorage();
-          this.renderer
-            .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
-            .click();
+          this.renderer.selectRootElement(this.btnCloseConfigPopup?.nativeElement).click();
           this.globalService.triggerGridReload(ApplicationModules.SETTINGS);
         }
       },
       error: (error: any) => {
         this.loaderService.hideLoader();
-        this.toaster.showMessage("Some issue is in update the data.", "error");
+        this.toaster.showMessage('Some issue is in update the data.', 'error');
         return;
       },
     });
@@ -157,16 +144,13 @@ export class ConfigurationDetailsComponent {
     localStorage.removeItem(DdlConfig.RELATIONS);
     localStorage.removeItem(DdlConfig.TRANSACTION_CATEGORY);
     localStorage.removeItem(DdlConfig.ACCOUNTS);
-
   }
   handleApiResponse() {
     return {
       next: (result: any) => {
         if (result.success) {
           this.toaster.showMessage(result?.message, 'success', 8000);
-          this.renderer
-            .selectRootElement(this.btnCloseConfigPopup?.nativeElement)
-            .click();
+          this.renderer.selectRootElement(this.btnCloseConfigPopup?.nativeElement).click();
 
           this.loaderService.hideLoader();
           this.globalService.triggerGridReload(ApplicationModules.USERS);

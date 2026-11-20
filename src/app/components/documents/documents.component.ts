@@ -2,7 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ActionConstant, ApplicationModules, NavigationURLs } from '../../../utils/application-constants';
+import {
+  ActionConstant,
+  ApplicationModules,
+  NavigationURLs,
+} from '../../../utils/application-constants';
 import { DateUtils } from '../../../utils/date-utils';
 import { SafeUrlPipe } from '../../common/safe-url.pipe';
 import { TruncatePipe } from '../../common/truncate.pipe';
@@ -16,11 +20,19 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [CommonModule, FormsModule, SafeUrlPipe, DocumentsUploadComponent, TruncatePipe, ConfirmationDialogComponent, ToasterComponent,SiteUnderDevelopmentComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SafeUrlPipe,
+    DocumentsUploadComponent,
+    TruncatePipe,
+    ConfirmationDialogComponent,
+    ToasterComponent,
+    SiteUnderDevelopmentComponent,
+  ],
   templateUrl: './documents.component.html',
-  styleUrl: './documents.component.css'
+  styleUrl: './documents.component.css',
 })
-
 export class DocumentsComponent {
   @ViewChild(DocumentsUploadComponent) uploadComponent!: DocumentsUploadComponent;
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
@@ -28,11 +40,11 @@ export class DocumentsComponent {
   @ViewChild(ConfirmationDialogComponent, { static: false })
   confirmationDialog!: ConfirmationDialogComponent;
   docId: any;
-  constructor(private documentService: DocumentService,
+  constructor(
+    private documentService: DocumentService,
     public globalService: GlobalService,
     private router: Router,
-  ) { }
-
+  ) {}
 
   userId = ''; // populate from authentication token or parent component
   documentList: any;
@@ -59,7 +71,6 @@ export class DocumentsComponent {
         this.loadDocuments();
       }
     });
-
   }
 
   async loadDocuments() {
@@ -72,7 +83,7 @@ export class DocumentsComponent {
         },
         error: (error: any) => {
           console.error('Error fetching documents', error);
-        }
+        },
       });
     } finally {
       this.loading = false;
@@ -84,10 +95,11 @@ export class DocumentsComponent {
       this.filteredDocumentList = this.documentList;
       return;
     }
-    this.filteredDocumentList = this.documentList.filter((doc: any) =>
-      doc.uploadedFileName?.toLowerCase().includes(this.searchText.toLowerCase()) ||
-      doc.documentName?.toLowerCase().includes(this.searchText.toLowerCase()) ||
-      doc.keywords?.toLowerCase().includes(this.searchText.toLowerCase())
+    this.filteredDocumentList = this.documentList.filter(
+      (doc: any) =>
+        doc.uploadedFileName?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        doc.documentName?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        doc.keywords?.toLowerCase().includes(this.searchText.toLowerCase()),
     );
   }
 
@@ -95,23 +107,23 @@ export class DocumentsComponent {
     this.loadDocuments();
   }
 
-selectedDocument: any = null;
+  selectedDocument: any = null;
 
-openNewDocument() {
-  this.selectedDocument = null; // ADD mode
-}
+  openNewDocument() {
+    this.selectedDocument = null; // ADD mode
+  }
 
-editDocument(doc: any) {
-  this.selectedDocument = { ...doc }; // EDIT mode
-}
+  editDocument(doc: any) {
+    this.selectedDocument = { ...doc }; // EDIT mode
+  }
 
-onDocumentSaved() {
-  this.loadDocuments(); // reload list
-}
+  onDocumentSaved() {
+    this.loadDocuments(); // reload list
+  }
 
   async openPreview(doc: any) {
-        this.router.navigate([NavigationURLs.UNDER_DEVELOPMENT]);
-    
+    this.router.navigate([NavigationURLs.UNDER_DEVELOPMENT]);
+
     // this.previewFileName = doc.uploadedFileName;
     // this.previewContentType = doc.contentType;
 
@@ -133,18 +145,17 @@ onDocumentSaved() {
   // }
 
   async download(doc: any) {
-    await this.documentService
-      .getDownloadUrl(doc.id, doc.uploadedFileName).subscribe({
-        next: (response: any) => {
-          const url = response.data;
-          console.log('url : ', url);
+    await this.documentService.getDownloadUrl(doc.id, doc.uploadedFileName).subscribe({
+      next: (response: any) => {
+        const url = response.data;
+        console.log('url : ', url);
 
-          this.triggerBrowserDownload(url, doc.uploadedFileName);
-        },
-        error: (error: any) => {
-          console.error('Error fetching download URL', error);
-        }
-      });
+        this.triggerBrowserDownload(url, doc.uploadedFileName);
+      },
+      error: (error: any) => {
+        console.error('Error fetching download URL', error);
+      },
+    });
   }
 
   async deleteDocument(docId: any) {
@@ -161,16 +172,13 @@ onDocumentSaved() {
 
   handleConfirmResult(isConfirmed: boolean) {
     if (isConfirmed) {
-
-      this.documentService
-        .deleteDocument(this.docId).subscribe({
-          next: (res: any) => {
-            this.toaster.showMessage("Record Deleted Successfully.", "success");
-            this.loadDocuments();
-          },
-          error: (error: any) => {
-          },
-        });
+      this.documentService.deleteDocument(this.docId).subscribe({
+        next: (res: any) => {
+          this.toaster.showMessage('Record Deleted Successfully.', 'success');
+          this.loadDocuments();
+        },
+        error: (error: any) => {},
+      });
     }
   }
   private triggerBrowserDownload(url: string, filename: string) {
@@ -193,13 +201,16 @@ onDocumentSaved() {
     img.classList.remove('blur-load');
   }
 
-
   // utility to show human-readable size
   humanSize(bytes: number) {
     if (!bytes) return '-';
     const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-    let i = 0; let value = bytes;
-    while (value >= 1024 && i < units.length - 1) { value /= 1024; i++; }
+    let i = 0;
+    let value = bytes;
+    while (value >= 1024 && i < units.length - 1) {
+      value /= 1024;
+      i++;
+    }
     return `${value.toFixed(1)} ${units[i]}`;
   }
 }

@@ -30,16 +30,11 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    LoaderComponent,
-    ToasterComponent
-  ],
+  imports: [ReactiveFormsModule, LoaderComponent, ToasterComponent],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.css',
 })
 export class ChangePasswordComponent implements OnInit {
-
   @ViewChild(ToasterComponent)
   toaster!: ToasterComponent;
 
@@ -66,55 +61,37 @@ export class ChangePasswordComponent implements OnInit {
     private loaderService: LoaderService,
     public globalService: GlobalService,
     private localStorageService: LocalStorageService,
-    private logoutService: LogoutService
+    private logoutService: LogoutService,
   ) {}
 
   ngOnInit(): void {
+    const loggedInUser = this.localStorageService.getLoggedInUserData();
 
-    const loggedInUser =
-      this.localStorageService.getLoggedInUserData();
+    this.hasPasswordExpired = loggedInUser?.hasPasswordExpired ?? false;
 
-    this.hasPasswordExpired =
-      loggedInUser?.hasPasswordExpired ?? false;
+    this.userFullName = loggedInUser?.userName ?? '';
 
-    this.userFullName =
-      loggedInUser?.userName ?? '';
-
-    this.userId =
-      loggedInUser?.id;
+    this.userId = loggedInUser?.id;
 
     this.changePasswordForm = this.fb.group(
       {
-        oldPassword: [
-          '',
-          [Validators.required]
-        ],
+        oldPassword: ['', [Validators.required]],
 
         newPassword: [
           '',
           [
             Validators.required,
-            Validators.minLength(
-              ApplicationConstants.MIN_LENGTH_PASSWORD
-            ),
-            Validators.pattern(
-              ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_PASSWORD
-            ),
-            this.passwordNotContainingName(this.userFullName)
-          ]
+            Validators.minLength(ApplicationConstants.MIN_LENGTH_PASSWORD),
+            Validators.pattern(ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_PASSWORD),
+            this.passwordNotContainingName(this.userFullName),
+          ],
         ],
 
-        confirmPassword: [
-          '',
-          [Validators.required]
-        ]
+        confirmPassword: ['', [Validators.required]],
       },
       {
-        validators: [
-          this.passwordMatchValidator(),
-          this.passwordNotSameValidator()
-        ]
-      }
+        validators: [this.passwordMatchValidator(), this.passwordNotSameValidator()],
+      },
     );
   }
 
@@ -123,10 +100,9 @@ export class ChangePasswordComponent implements OnInit {
   // ============================
 
   getPasswordLengthMessage(): string {
-
     return Messages.PASSWORD_LENGTH_MSG.replace(
       '{0}',
-      ApplicationConstants.MIN_LENGTH_PASSWORD.toString()
+      ApplicationConstants.MIN_LENGTH_PASSWORD.toString(),
     );
   }
 
@@ -135,27 +111,16 @@ export class ChangePasswordComponent implements OnInit {
   // ============================
 
   passwordMatchValidator(): ValidatorFn {
+    return (form: AbstractControl): ValidationErrors | null => {
+      const newPassword = form.get('newPassword')?.value;
 
-    return (
-      form: AbstractControl
-    ): ValidationErrors | null => {
+      const confirmPassword = form.get('confirmPassword')?.value;
 
-      const newPassword =
-        form.get('newPassword')?.value;
-
-      const confirmPassword =
-        form.get('confirmPassword')?.value;
-
-      if (
-        !newPassword ||
-        !confirmPassword
-      ) {
+      if (!newPassword || !confirmPassword) {
         return null;
       }
 
-      return newPassword === confirmPassword
-        ? null
-        : { passwordMismatch: true };
+      return newPassword === confirmPassword ? null : { passwordMismatch: true };
     };
   }
 
@@ -164,27 +129,16 @@ export class ChangePasswordComponent implements OnInit {
   // ============================
 
   passwordNotSameValidator(): ValidatorFn {
+    return (form: AbstractControl): ValidationErrors | null => {
+      const oldPassword = form.get('oldPassword')?.value;
 
-    return (
-      form: AbstractControl
-    ): ValidationErrors | null => {
+      const newPassword = form.get('newPassword')?.value;
 
-      const oldPassword =
-        form.get('oldPassword')?.value;
-
-      const newPassword =
-        form.get('newPassword')?.value;
-
-      if (
-        !oldPassword ||
-        !newPassword
-      ) {
+      if (!oldPassword || !newPassword) {
         return null;
       }
 
-      return oldPassword === newPassword
-        ? { sameAsOld: true }
-        : null;
+      return oldPassword === newPassword ? { sameAsOld: true } : null;
     };
   }
 
@@ -192,40 +146,28 @@ export class ChangePasswordComponent implements OnInit {
   // PASSWORD SHOULD NOT CONTAIN NAME
   // ============================
 
-  passwordNotContainingName(
-    fullname: string
-  ): ValidatorFn {
-
+  passwordNotContainingName(fullname: string): ValidatorFn {
     if (!fullname) {
       return () => null;
     }
 
     const nameParts = fullname
       .split(' ')
-      .map(x => x.trim())
-      .filter(x => x.length > 0);
+      .map((x) => x.trim())
+      .filter((x) => x.length > 0);
 
-    return (
-      control: AbstractControl
-    ): ValidationErrors | null => {
-
-      const password =
-        control.value || '';
+    return (control: AbstractControl): ValidationErrors | null => {
+      const password = control.value || '';
 
       if (!password) {
         return null;
       }
 
-      const containsNamePart =
-        nameParts.some(part =>
-          password
-            .toLowerCase()
-            .includes(part.toLowerCase())
-        );
+      const containsNamePart = nameParts.some((part) =>
+        password.toLowerCase().includes(part.toLowerCase()),
+      );
 
-      return containsNamePart
-        ? { nameContains: true }
-        : null;
+      return containsNamePart ? { nameContains: true } : null;
     };
   }
 
@@ -236,62 +178,47 @@ export class ChangePasswordComponent implements OnInit {
   onSubmit(): void {
     if (this.changePasswordForm.invalid) {
       this.changePasswordForm.markAllAsTouched();
-      this.toaster.showMessage(
-        'Please correct the validation errors.',
-        'error'
-      );
+      this.toaster.showMessage('Please correct the validation errors.', 'error');
       return;
     }
 
     this.processing = true;
     this.loaderService.showLoader();
     const payload: ChangePassword = {
-      oldPassword:
-      this.changePasswordForm.value.oldPassword,
-      newPassword:
-        this.changePasswordForm.value.newPassword,
-      userId:
-        this.userId,
-      modifiedBy:
-        this.userId
+      oldPassword: this.changePasswordForm.value.oldPassword,
+      newPassword: this.changePasswordForm.value.newPassword,
+      userId: this.userId,
+      modifiedBy: this.userId,
     };
 
-    this.userService.changePassword(payload)
-      .subscribe({
-        next: (response) => {
-          this.processing = false;
-          if (response?.success) {
-            this.toaster.showMessage(
-             response?.message ||
-             'Password changed successfully. Please login again.',
-             'success',
-              5000
-           );
-            setTimeout(() => {
-              this.loaderService.hideLoader();
-              this.logout();
-            }, 3500);
-          } else {
-            this.loaderService.hideLoader();
-            this.toaster.showMessage(
-             response?.message ||
-              'Unable to change password.',
-              'error'
-            );
-          }
-        },
-
-        error: (error: any) => {
-          this.processing = false;
-          this.loaderService.hideLoader();
+    this.userService.changePassword(payload).subscribe({
+      next: (response) => {
+        this.processing = false;
+        if (response?.success) {
           this.toaster.showMessage(
-           error?.error?.message ||
-            error?.error?.error ||
-            'Error in changing password.',
-            'error'
+            response?.message || 'Password changed successfully. Please login again.',
+            'success',
+            5000,
           );
+          setTimeout(() => {
+            this.loaderService.hideLoader();
+            this.logout();
+          }, 3500);
+        } else {
+          this.loaderService.hideLoader();
+          this.toaster.showMessage(response?.message || 'Unable to change password.', 'error');
         }
-      });
+      },
+
+      error: (error: any) => {
+        this.processing = false;
+        this.loaderService.hideLoader();
+        this.toaster.showMessage(
+          error?.error?.message || error?.error?.error || 'Error in changing password.',
+          'error',
+        );
+      },
+    });
   }
 
   // ============================
@@ -299,14 +226,10 @@ export class ChangePasswordComponent implements OnInit {
   // ============================
 
   navigateToHome(): void {
-
-    this.router.navigate([
-      NavigationURLs.HOME
-    ]);
+    this.router.navigate([NavigationURLs.HOME]);
   }
 
   logout(): void {
-
     this.logoutService.logout();
   }
 
@@ -327,18 +250,12 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   get isPasswordMismatch(): boolean {
-
     return (
-      this.changePasswordForm.hasError('passwordMismatch') &&
-      !!this.confirmPasswordControl?.value
+      this.changePasswordForm.hasError('passwordMismatch') && !!this.confirmPasswordControl?.value
     );
   }
 
   get isSameAsOldPassword(): boolean {
-
-    return (
-      this.changePasswordForm.hasError('sameAsOld') &&
-      !!this.newPasswordControl?.value
-    );
+    return this.changePasswordForm.hasError('sameAsOld') && !!this.newPasswordControl?.value;
   }
 }

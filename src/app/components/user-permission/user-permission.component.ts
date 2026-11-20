@@ -25,16 +25,23 @@ export class UserPermissionComponent implements OnInit {
   disableUpdate: boolean = false;
   cacheKey: string = 'UserPermissions';
   selectedUserId: string = '';
-  permissionModulePermissions:any;
-  constructor(private userService: UserService, private roleService: RoleService, private loaderService: LoaderService, private cacheService: CacheService,
-    public globalService: GlobalService) { }
+  permissionModulePermissions: any;
+  constructor(
+    private userService: UserService,
+    private roleService: RoleService,
+    private loaderService: LoaderService,
+    private cacheService: CacheService,
+    public globalService: GlobalService,
+  ) {}
 
   ngOnInit() {
-    this.permissionModulePermissions = this.globalService.getModulePermission(ApplicationModules.USER_PERMISSIONS);
+    this.permissionModulePermissions = this.globalService.getModulePermission(
+      ApplicationModules.USER_PERMISSIONS,
+    );
     this.loaderService.showLoader();
     this.getUserList();
     this.disableUpdate = true;
-    this.getPermission("");
+    this.getPermission('');
   }
 
   changeUser(event: Event) {
@@ -45,10 +52,9 @@ export class UserPermissionComponent implements OnInit {
 
     if (!this.selectedUserId || this.selectedUserId === 'select') {
       this.disableUpdate = true;
-      this.getPermission("");
+      this.getPermission('');
       this.loaderService.hideLoader();
-    }
-    else {
+    } else {
       this.disableUpdate = false;
       this.getPermission(this.selectedUserId);
       this.loaderService.hideLoader();
@@ -92,7 +98,7 @@ export class UserPermissionComponent implements OnInit {
         console.error('Error fetching role data', error);
         this.toaster.showMessage(error?.message, 'error');
         this.loaderService.hideLoader();
-      }
+      },
     });
   }
 
@@ -113,18 +119,12 @@ export class UserPermissionComponent implements OnInit {
 
     this.roleService.updateUserPermission(updatedData).subscribe(
       () => {
-        this.toaster.showMessage(
-          Messages.ROLE_MODULE_MAPPING_UPDATED_SUCCESSFULLY,
-          'success'
-        );
+        this.toaster.showMessage(Messages.ROLE_MODULE_MAPPING_UPDATED_SUCCESSFULLY, 'success');
       },
       (error) => {
-        console.error(
-          Messages.ERROR_IN_FETCH_ROLE_MODULE_MAPPINGS,
-          error
-        );
+        console.error(Messages.ERROR_IN_FETCH_ROLE_MODULE_MAPPINGS, error);
         this.toaster.showMessage('Failed to update.', 'error');
-      }
+      },
     );
   }
 }

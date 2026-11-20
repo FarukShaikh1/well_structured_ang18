@@ -41,14 +41,14 @@ export class PermissionService {
    * Returns true if the user has ALL of the given permissions.
    */
   hasAllPermissions(permissions: string[]): boolean {
-    return permissions.every(p => this.hasPermission(p));
+    return permissions.every((p) => this.hasPermission(p));
   }
 
   /**
    * Returns true if the user has ANY of the given permissions.
    */
   hasAnyPermission(permissions: string[]): boolean {
-    return permissions.some(p => this.hasPermission(p));
+    return permissions.some((p) => this.hasPermission(p));
   }
 
   /** Clears permissions on logout. */

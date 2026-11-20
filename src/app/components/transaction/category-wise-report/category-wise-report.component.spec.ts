@@ -8,9 +8,8 @@ describe('CategoryWiseReportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CategoryWiseReportComponent]
-    })
-    .compileComponents();
+      imports: [CategoryWiseReportComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CategoryWiseReportComponent);
     component = fixture.componentInstance;

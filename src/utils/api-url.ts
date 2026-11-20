@@ -1,13 +1,12 @@
-import { environment } from "../environments/environment";
+import { environment } from '../environments/environment';
 
 const serverUrl = environment.serverUrl;
 const apiPrefix = environment.apiPrefix;
 
 export const API_URL = {
-
-  ATTACHMENT: "../../../assets/project-attachments/",
-  COLLECTIONCOINS: "collection_coins",
-  BIRTHDAYPERSONPIC: "birthday_person_pic",
+  ATTACHMENT: '../../../assets/project-attachments/',
+  COLLECTIONCOINS: 'collection_coins',
+  BIRTHDAYPERSONPIC: 'birthday_person_pic',
 
   GET_ASSET_DETAILS: `${serverUrl}${apiPrefix}/asset/`,
   DELETE_ASSET: `${serverUrl}${apiPrefix}/asset`,
@@ -43,7 +42,6 @@ export const API_URL = {
   // GET_TRANSACTION_CATEGORY_LIST: `${serverUrl}${apiPrefix}/transaction/GetTransactionSuggestionList`,
   GET_AVAIL_AMOUNT: `${serverUrl}${apiPrefix}/transaction/getAvailAmount`,
 
-
   GET_COMMON_LIST_ITEMS: `${serverUrl}${apiPrefix}/commonList/items/`,
   GET_COUNTRY_LIST: `${serverUrl}${apiPrefix}/commonList/countries`,
   GET_USER_PERMISSIONS: `${serverUrl}${apiPrefix}/user/permissions/`,
@@ -66,7 +64,6 @@ export const API_URL = {
   GET_CONFIG_DELETE: `${serverUrl}${apiPrefix}/settings/DeleteConfig`,
   GET_CONFIG_DEACTIVATE: `${serverUrl}${apiPrefix}/settings/DeactiveConfig`,
 
-
   REGISTER_USER: `${serverUrl}${apiPrefix}/auth/register`,
   RESET_PASSWORD: `${serverUrl}${apiPrefix}/user/reset-password`,
 
@@ -78,7 +75,6 @@ export const API_URL = {
   CHANGE_PASSWORD: `${serverUrl}${apiPrefix}/user/change-password`,
   FORGOT_PASSWORD: `${serverUrl}${apiPrefix}/user/forgotpassword`,
   UPDATE_USER: `${serverUrl}${apiPrefix}/user/updateUserDetails?userId=`,
-
 
   GET_DOCUMENT_List: `${serverUrl}${apiPrefix}/document`,
   GET_DOCUMENT_DOWNLOAD_SAS_URL: `${serverUrl}${apiPrefix}/document/download-url/`,
@@ -111,7 +107,7 @@ export const API_URL = {
   // FAMILY GRAPH
   // =========================
   FAMILY_SEARCH: `${serverUrl}${apiPrefix}/family/search`,
-  FAMILY_GRAPH: `${serverUrl}${apiPrefix}/family`,          // /{personId}/graph
+  FAMILY_GRAPH: `${serverUrl}${apiPrefix}/family`, // /{personId}/graph
   FAMILY_PERSON_ADD: `${serverUrl}${apiPrefix}/family/person`,
   FAMILY_PERSON_UPDATE: `${serverUrl}${apiPrefix}/family/person`,
   FAMILY_RELATIONSHIP_ADD: `${serverUrl}${apiPrefix}/family/relationship`,
@@ -126,7 +122,6 @@ export const API_URL = {
   UPDATE_FOOD_MENU: `${serverUrl}${apiPrefix}/FoodMenu`,
   GET_FOOD_MENU_DETAILS: `${serverUrl}${apiPrefix}/FoodMenu/`,
   DELETE_FOOD_MENU: `${serverUrl}${apiPrefix}/FoodMenu/`,
-
 
   REGISTER: `${serverUrl}${apiPrefix}/UserRegistration`,
   VERIFY_EMAIL: `${serverUrl}${apiPrefix}/UserRegistration/VerifyEmail`,

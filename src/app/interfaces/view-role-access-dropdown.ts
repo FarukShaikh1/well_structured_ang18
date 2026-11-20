@@ -1,4 +1,4 @@
 export interface ViewRoleAccessDropDownResponse {
-    id: string;
-    roleAccess: string;
-  }
+  id: string;
+  roleAccess: string;
+}

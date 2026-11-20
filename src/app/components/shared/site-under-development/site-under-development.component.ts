@@ -9,10 +9,11 @@ import { LogoutService } from '../../../services/logout/logout.service';
   standalone: true,
   imports: [],
   templateUrl: './site-under-development.component.html',
-  styleUrl: './site-under-development.component.css'
+  styleUrl: './site-under-development.component.css',
 })
 export class SiteUnderDevelopmentComponent {
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     public localStorageService: LocalStorageService,
     private logoutService: LogoutService,
   ) {

@@ -12,7 +12,6 @@ describe('LocalStorageService', () => {
   });
 
   afterEach(() => {
-
     localStorage.clear();
   });
 

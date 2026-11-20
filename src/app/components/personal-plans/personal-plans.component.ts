@@ -18,12 +18,12 @@ import { GlobalService } from '../../services/global/global.service';
     RoutineComponent,
     BudgetComponent,
     CredentialsComponent,
-    FoodMenuComponent
+    FoodMenuComponent,
   ],
 
   templateUrl: './personal-plans.component.html',
 
-  styleUrl: './personal-plans.component.css'
+  styleUrl: './personal-plans.component.css',
 })
 export class SelfDataComponent implements OnInit {
   foodMenuModulePermissions: any;
@@ -31,31 +31,31 @@ export class SelfDataComponent implements OnInit {
   monthlyBudgetModulePermissions: any;
   credentialModulePermissions: any;
 
-  constructor(private globalService: GlobalService) {
-  }
+  constructor(private globalService: GlobalService) {}
 
   ngOnInit() {
-    this.foodMenuModulePermissions = this.globalService.getModulePermission(ApplicationModules.FOOD_MENU);
-    this.dailyRoutineModulePermissions = this.globalService.getModulePermission(ApplicationModules.DAILY_ROUTINE);
-    this.monthlyBudgetModulePermissions = this.globalService.getModulePermission(ApplicationModules.MONTHLY_BUDGET);
-    this.credentialModulePermissions = this.globalService.getModulePermission(ApplicationModules.CREDENTIALS);
-
+    this.foodMenuModulePermissions = this.globalService.getModulePermission(
+      ApplicationModules.FOOD_MENU,
+    );
+    this.dailyRoutineModulePermissions = this.globalService.getModulePermission(
+      ApplicationModules.DAILY_ROUTINE,
+    );
+    this.monthlyBudgetModulePermissions = this.globalService.getModulePermission(
+      ApplicationModules.MONTHLY_BUDGET,
+    );
+    this.credentialModulePermissions = this.globalService.getModulePermission(
+      ApplicationModules.CREDENTIALS,
+    );
   }
   /**
    * Active tab
    */
   activeTab: 'routine' | 'budget' | 'credentials' | 'food-menu' = 'food-menu';
 
-
   /**
    * Change active tab
    */
-  setActiveTab(
-    tab: 'routine' | 'budget' | 'credentials' | 'food-menu'
-  ): void {
-
+  setActiveTab(tab: 'routine' | 'budget' | 'credentials' | 'food-menu'): void {
     this.activeTab = tab;
-
   }
-
 }

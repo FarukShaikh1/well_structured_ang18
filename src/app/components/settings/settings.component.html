@@ -1,97 +1,157 @@
 <div class="app-tabs-container">
-    <div class="d-flex gap-2" style="flex-wrap: wrap;">
-        @if(isSuperAdmin)
-        {
-        <div class="col-8 col-sm-8 col-md-6 col-lg-6 col-xl-5 mb-3">
-            <select id="roleSelect" class="form-select form-control-lg text-dark bg-transparent"
-                (change)="changeUser($event)">
-                <option value="">Select User</option>
-                @for(item of userList;track $index){
-                <option value="{{ item.id }}">{{ item.firstName + ' ' +item.lastName }}</option>
-                }
-            </select>
-        </div>
-        }
-        <button id="openConfigDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#configDetailsPopup"
-            style="display: none">
-        </button>
-    </div>
+  <div class="d-flex gap-2" style="flex-wrap: wrap">
+    @if (isSuperAdmin) {
+      <div class="col-8 col-sm-8 col-md-6 col-lg-6 col-xl-5 mb-3">
+        <select
+          id="roleSelect"
+          class="form-select form-control-lg text-dark bg-transparent"
+          (change)="changeUser($event)"
+        >
+          <option value="">Select User</option>
+          @for (item of userList; track $index) {
+            <option value="{{ item.id }}">{{ item.firstName + ' ' + item.lastName }}</option>
+          }
+        </select>
+      </div>
+    }
+    <button
+      id="openConfigDetailsButton"
+      type="button"
+      data-bs-toggle="modal"
+      data-bs-target="#configDetailsPopup"
+      style="display: none"
+    ></button>
+  </div>
 
-    <!-- Tabs -->
-    <div class="app-tabs">
-        @if(accountModulePermissions.view){
-        <button type="button" class="app-tab" [class.active]="activeTab === 'accounts'"
-            (click)="activeTab = 'accounts'">
-            <i class="bi bi-person-check"></i>
-            <span>Accounts</span>
-        </button>
-        }
-        @if(occasionTypePermissions.view){
-        <button type="button" class="app-tab" [class.active]="activeTab === 'occasionType'"
-            (click)="activeTab = 'occasionType'">
-            <i class="bi bi-people"></i>
-            <span>Occasion Type</span>
-        </button>
-        }
-        @if(relationsPermissions.view){
-        <button type="button" class="app-tab" [class.active]="activeTab === 'relations'"
-            (click)="activeTab = 'relations'">
-            <i class="bi bi-shield-lock"></i>
-            <span>Relations</span>
-        </button>
-        }
-        @if(transactionCategoriesPermissions.view){
-        <button type="button" class="app-tab" [class.active]="activeTab === 'transactionCategories'"
-            (click)="activeTab = 'transactionCategories'">
-            <i class="bi bi-shield-lock"></i>
-            <span>Transaction Categories</span>
-        </button>
-        }
-    </div>
+  <!-- Tabs -->
+  <div class="app-tabs">
+    @if (accountModulePermissions.view) {
+      <button
+        type="button"
+        class="app-tab"
+        [class.active]="activeTab === 'accounts'"
+        (click)="activeTab = 'accounts'"
+      >
+        <i class="bi bi-person-check"></i>
+        <span>Accounts</span>
+      </button>
+    }
+    @if (occasionTypePermissions.view) {
+      <button
+        type="button"
+        class="app-tab"
+        [class.active]="activeTab === 'occasionType'"
+        (click)="activeTab = 'occasionType'"
+      >
+        <i class="bi bi-people"></i>
+        <span>Occasion Type</span>
+      </button>
+    }
+    @if (relationsPermissions.view) {
+      <button
+        type="button"
+        class="app-tab"
+        [class.active]="activeTab === 'relations'"
+        (click)="activeTab = 'relations'"
+      >
+        <i class="bi bi-shield-lock"></i>
+        <span>Relations</span>
+      </button>
+    }
+    @if (transactionCategoriesPermissions.view) {
+      <button
+        type="button"
+        class="app-tab"
+        [class.active]="activeTab === 'transactionCategories'"
+        (click)="activeTab = 'transactionCategories'"
+      >
+        <i class="bi bi-shield-lock"></i>
+        <span>Transaction Categories</span>
+      </button>
+    }
+  </div>
 
-
-    <!-- Tab Content -->
-    <div class="app-tab-content">
-
-        <!-- Available Users -->
-        @if (activeTab === 'accounts' && accountModulePermissions.view) {
-        <app-tabulator-grid [tableData]="filteredAccountTableData" [columnConfig]="accountColumnConfig"
-            [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
-            [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isAccountGridLoading"
-            [loadingText]="'Loading accounts...'" [allowAdd]="allowAdd"
-            (addClicked)="openDetailsPopup('',UserConfig.ACCOUNT)" [allowRefresh]="allowRefresh"
-            (refreshClicked)="refreshData()" [gridName]="UserConfig.ACCOUNT">
-        </app-tabulator-grid>
-        }
-        @if (activeTab === 'occasionType' && occasionTypePermissions.view) {
-        <app-tabulator-grid [tableData]="filteredOccasionTypeTableData" [columnConfig]="occasionTypeColumnConfig"
-            [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
-            [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isOccasionTypeGridLoading"
-            [loadingText]="'Loading occasion types...'" [allowAdd]="allowAdd"
-            (addClicked)="openDetailsPopup('',UserConfig.OCCASION_TYPE)" [allowRefresh]="allowRefresh"
-            (refreshClicked)="refreshData()" [gridName]="UserConfig.OCCASION_TYPE">
-        </app-tabulator-grid>
-        }
-        @if (activeTab === 'relations' && relationsPermissions.view) {
-        <app-tabulator-grid [tableData]="filteredRelationTableData" [columnConfig]="relationColumnConfig"
-            [height]="'320px'" [paginationSize]="paginationSize" [filterColumns]="filterColumns"
-            [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint" [isLoading]="isRelationGridLoading"
-            [loadingText]="'Loading relations...'" [allowAdd]="allowAdd"
-            (addClicked)="openDetailsPopup('',UserConfig.RELATION)" [allowRefresh]="allowRefresh"
-            (refreshClicked)="refreshData()" [gridName]="UserConfig.RELATION">
-        </app-tabulator-grid>
-        }
-        @if (activeTab === 'transactionCategories' && transactionCategoriesPermissions.view) {
-        <app-tabulator-grid [tableData]="filteredTransactionCategoryTableData"
-            [columnConfig]="transactionCategoryColumnConfig" [height]="'320px'" [paginationSize]="paginationSize"
-            [filterColumns]="filterColumns" [allowCSVExport]="allowCSVExport" [allowPrint]="allowPrint"
-            [isLoading]="isTransactionCategoryGridLoading" [loadingText]="'Loading transactionsubcategorys...'"
-            [allowAdd]="allowAdd" (addClicked)="openDetailsPopup('',UserConfig.TRANSACTION_CATEGORY)"
-            [allowRefresh]="allowRefresh" (refreshClicked)="refreshData()" [gridName]="UserConfig.TRANSACTION_CATEGORY">
-        </app-tabulator-grid>
-        }
-        <app-configuration-details [selectedUserId]="selectedUserId"></app-configuration-details>
-        <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
-        <app-toaster></app-toaster>
-    </div>
+  <!-- Tab Content -->
+  <div class="app-tab-content">
+    <!-- Available Users -->
+    @if (activeTab === 'accounts' && accountModulePermissions.view) {
+      <app-tabulator-grid
+        [tableData]="filteredAccountTableData"
+        [columnConfig]="accountColumnConfig"
+        [height]="'320px'"
+        [paginationSize]="paginationSize"
+        [filterColumns]="filterColumns"
+        [allowCSVExport]="allowCSVExport"
+        [allowPrint]="allowPrint"
+        [isLoading]="isAccountGridLoading"
+        [loadingText]="'Loading accounts...'"
+        [allowAdd]="allowAdd"
+        (addClicked)="openDetailsPopup('', UserConfig.ACCOUNT)"
+        [allowRefresh]="allowRefresh"
+        (refreshClicked)="refreshData()"
+        [gridName]="UserConfig.ACCOUNT"
+      >
+      </app-tabulator-grid>
+    }
+    @if (activeTab === 'occasionType' && occasionTypePermissions.view) {
+      <app-tabulator-grid
+        [tableData]="filteredOccasionTypeTableData"
+        [columnConfig]="occasionTypeColumnConfig"
+        [height]="'320px'"
+        [paginationSize]="paginationSize"
+        [filterColumns]="filterColumns"
+        [allowCSVExport]="allowCSVExport"
+        [allowPrint]="allowPrint"
+        [isLoading]="isOccasionTypeGridLoading"
+        [loadingText]="'Loading occasion types...'"
+        [allowAdd]="allowAdd"
+        (addClicked)="openDetailsPopup('', UserConfig.OCCASION_TYPE)"
+        [allowRefresh]="allowRefresh"
+        (refreshClicked)="refreshData()"
+        [gridName]="UserConfig.OCCASION_TYPE"
+      >
+      </app-tabulator-grid>
+    }
+    @if (activeTab === 'relations' && relationsPermissions.view) {
+      <app-tabulator-grid
+        [tableData]="filteredRelationTableData"
+        [columnConfig]="relationColumnConfig"
+        [height]="'320px'"
+        [paginationSize]="paginationSize"
+        [filterColumns]="filterColumns"
+        [allowCSVExport]="allowCSVExport"
+        [allowPrint]="allowPrint"
+        [isLoading]="isRelationGridLoading"
+        [loadingText]="'Loading relations...'"
+        [allowAdd]="allowAdd"
+        (addClicked)="openDetailsPopup('', UserConfig.RELATION)"
+        [allowRefresh]="allowRefresh"
+        (refreshClicked)="refreshData()"
+        [gridName]="UserConfig.RELATION"
+      >
+      </app-tabulator-grid>
+    }
+    @if (activeTab === 'transactionCategories' && transactionCategoriesPermissions.view) {
+      <app-tabulator-grid
+        [tableData]="filteredTransactionCategoryTableData"
+        [columnConfig]="transactionCategoryColumnConfig"
+        [height]="'320px'"
+        [paginationSize]="paginationSize"
+        [filterColumns]="filterColumns"
+        [allowCSVExport]="allowCSVExport"
+        [allowPrint]="allowPrint"
+        [isLoading]="isTransactionCategoryGridLoading"
+        [loadingText]="'Loading transactionsubcategorys...'"
+        [allowAdd]="allowAdd"
+        (addClicked)="openDetailsPopup('', UserConfig.TRANSACTION_CATEGORY)"
+        [allowRefresh]="allowRefresh"
+        (refreshClicked)="refreshData()"
+        [gridName]="UserConfig.TRANSACTION_CATEGORY"
+      >
+      </app-tabulator-grid>
+    }
+    <app-configuration-details [selectedUserId]="selectedUserId"></app-configuration-details>
+    <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
+    <app-toaster></app-toaster>
+  </div>
 </div>

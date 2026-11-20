@@ -1,22 +1,28 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
-import { Router } from "@angular/router";
-import { Observable, of, Subject } from "rxjs";
-import { catchError, map } from "rxjs/operators";
-import { CellComponent } from "tabulator-tables";
-import { API_URL } from "../../../utils/api-url";
-import { DBConstants, DdlConfig, LocalStorageConstants, NavigationURLs, UserConfig } from "../../../utils/application-constants";
-import { ModuleResponse } from "../../interfaces/module-response";
-import { ConfigurationService } from "../configuration/configuration.service";
-import { LocalStorageService } from "../local-storage/local-storage.service";
-import { RoleService } from "../role/role.service";
-import { FamilyService } from "../family/family.service";
-import { ModulePermission } from "../../interfaces/module-permission";
-import { PermissionService } from "../permission/permission.service";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { CellComponent } from 'tabulator-tables';
+import { API_URL } from '../../../utils/api-url';
+import {
+  DBConstants,
+  DdlConfig,
+  LocalStorageConstants,
+  NavigationURLs,
+  UserConfig,
+} from '../../../utils/application-constants';
+import { ModuleResponse } from '../../interfaces/module-response';
+import { ConfigurationService } from '../configuration/configuration.service';
+import { LocalStorageService } from '../local-storage/local-storage.service';
+import { RoleService } from '../role/role.service';
+import { FamilyService } from '../family/family.service';
+import { ModulePermission } from '../../interfaces/module-permission';
+import { PermissionService } from '../permission/permission.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class GlobalService {
   constructor(
@@ -26,17 +32,14 @@ export class GlobalService {
     private roleService: RoleService,
     private familyService: FamilyService,
     private permissionService: PermissionService,
-    private router: Router
-
-  ) { }
+    private router: Router,
+  ) {}
 
   private reloadComponentSubject = new Subject<void>();
   private reloadBannerOnSubject = new Subject<void>();
 
-
   private reloadGridSubject = new Subject<string>();
   private applyFilterSubject = new Subject<string>();
-
 
   reloadGrid$ = this.reloadGridSubject.asObservable();
   refreshList$ = this.applyFilterSubject.asObservable();
@@ -79,25 +82,24 @@ export class GlobalService {
   }
 
   getUserPermissionData(): Observable<boolean> {
-    return this.roleService.getPermission("").pipe(
+    return this.roleService.getPermission('').pipe(
       map((result) => {
         if (result.success) {
           this.localStorageService.setUserPermission(result.data);
           if (result.data.length > 0) {
             const user = this.localStorageService.getLoggedInUserData();
             // user.role = result.roleName;
-            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify(user));
             return true;
           }
         }
         return false;
       }),
       catchError((error: any) => {
-        console.error("Error fetching role data", error?.message);
+        console.error('Error fetching role data', error?.message);
         return of(false);
-      })
+      }),
     );
-
 
     // return this.roleService.getPermission("").pipe(
     //   map((result) => {
@@ -121,7 +123,12 @@ export class GlobalService {
 
   getCurrentRoute(): string {
     const tree = this.router.parseUrl(this.router.url);
-    return tree.root.children['primary']?.segments.map(it => it.path)?.join('/')?.toLowerCase() || '';
+    return (
+      tree.root.children['primary']?.segments
+        .map((it) => it.path)
+        ?.join('/')
+        ?.toLowerCase() || ''
+    );
   }
 
   getConfigList(config: string) {
@@ -137,7 +144,7 @@ export class GlobalService {
         route: m.route,
         isVisible: true,
         displayOrder: m.displayOrder ?? 0,
-        iconClass: m.iconClass || ''
+        iconClass: m.iconClass || '',
       }));
   }
 
@@ -150,27 +157,20 @@ export class GlobalService {
     return false;
   }
 
-
   formatMessage(message: string, ...values: any[]): string {
-    return message.replace(/{(\d+)}/g, (match, index) => values[index] || "");
+    return message.replace(/{(\d+)}/g, (match, index) => values[index] || '');
   }
-
 
   uniqueNameValidator(clientNames: string[]): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const name = control.value?.trim().toLowerCase();
-      const isDuplicate = clientNames.some(
-        (existingName) => existingName.toLowerCase() === name
-      );
+      const isDuplicate = clientNames.some((existingName) => existingName.toLowerCase() === name);
       return isDuplicate ? { nameExists: true } : null;
     };
   }
 
   getCommonListItems(commonListId: String) {
-    const params = new HttpParams().set(
-      "commonListId",
-      commonListId.toString()
-    );
+    const params = new HttpParams().set('commonListId', commonListId.toString());
     return this.http.get(API_URL.GET_COMMON_LIST_ITEMS + commonListId.toString());
   }
 
@@ -179,10 +179,9 @@ export class GlobalService {
   }
 
   trimAllFields(form: any) {
-
     Object.keys(form?.controls).forEach((key) => {
       const control = form?.get(key);
-      if (key !== 'picture' && control && typeof control.value === "string") {
+      if (key !== 'picture' && control && typeof control.value === 'string') {
         control.setValue(control.value.trim());
       }
     });
@@ -283,7 +282,7 @@ export class GlobalService {
 
   thumbnailFormatter(cell: CellComponent) {
     const rowData = cell.getRow().getData();
-    let thumbnailPath = rowData["thumbnailPath"];
+    let thumbnailPath = rowData['thumbnailPath'];
     if (thumbnailPath) {
       thumbnailPath = API_URL.ATTACHMENT + thumbnailPath;
       return `
@@ -291,33 +290,33 @@ export class GlobalService {
         <img src="${thumbnailPath}" class="thumbnail-img" />
       </div>`;
     }
-    const imagePath = rowData["imagePath"];
+    const imagePath = rowData['imagePath'];
     if (imagePath) {
       return `
       <div class="thumbnail-wrapper">
         <i class="bi bi-person-circle fs-3" style="color: var(--theme-primary);"></i>
       </div>`;
     }
-    return "";
+    return '';
   }
 
   blobThumbnailFormatter(cell: CellComponent) {
     const rowData = cell.getRow().getData();
-    let thumbnailPath = rowData["thumbnailPathSasUrl"];
+    let thumbnailPath = rowData['thumbnailPathSasUrl'];
     if (thumbnailPath) {
       return `
       <div class="thumbnail-wrapper">
         <img src="${thumbnailPath}" class="thumbnail-img" />
       </div>`;
     }
-    const imagePath = rowData["imagePath"];
+    const imagePath = rowData['imagePath'];
     if (imagePath) {
       return `
       <div class="thumbnail-wrapper">
         <i class="bi bi-person-circle fs-3" style="color: var(--theme-primary);"></i>
       </div>`;
     }
-    return "";
+    return '';
   }
   isValidGuid(value: string) {
     const guidPattern =
@@ -326,20 +325,19 @@ export class GlobalService {
   }
 
   isEmptyGuid(value: string) {
-    const guidPattern =
-      /^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/;
+    const guidPattern = /^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/;
     return guidPattern.test(value);
   }
 
   public setValuesInLocalStorage() {
     const userString = localStorage.getItem(LocalStorageConstants.USER);
-    let userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || "";
+    let userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
     let user = null;
     if (userString) {
       user = JSON.parse(userString);
     }
-    if (userId == "" || userId == "undefined") {
-      userId = user?.id ?? user?.userId ?? "";
+    if (userId == '' || userId == 'undefined') {
+      userId = user?.id ?? user?.userId ?? '';
     }
 
     localStorage.setItem(LocalStorageConstants.USERID, userId);
@@ -351,30 +349,34 @@ export class GlobalService {
 
   public setConfigValuesInLocalStorage() {
     const userString = localStorage.getItem(LocalStorageConstants.USER);
-    let userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || "";
+    let userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
     let user = null;
     if (userString) {
       user = JSON.parse(userString);
     }
-    if (userId == "" || userId == "undefined") {
-      userId = user?.id ?? user?.userId ?? "";
+    if (userId == '' || userId == 'undefined') {
+      userId = user?.id ?? user?.userId ?? '';
     }
 
     this.setConfigToLocalStorage(userId, UserConfig.ACCOUNT, DdlConfig.ACCOUNTS);
     this.setConfigToLocalStorage(userId, UserConfig.RELATION, DdlConfig.RELATIONS);
     this.setConfigToLocalStorage(userId, UserConfig.OCCASION_TYPE, DdlConfig.OCCASION_TYPES);
-    this.setConfigToLocalStorage(userId, UserConfig.TRANSACTION_CATEGORY, DdlConfig.TRANSACTION_CATEGORY);
+    this.setConfigToLocalStorage(
+      userId,
+      UserConfig.TRANSACTION_CATEGORY,
+      DdlConfig.TRANSACTION_CATEGORY,
+    );
   }
 
   public setFamilyInLocalStorage() {
     const userString = localStorage.getItem(LocalStorageConstants.USER);
-    let userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || "";
+    let userId = localStorage.getItem(LocalStorageConstants.USERID)?.toString() || '';
     let user = null;
     if (userString) {
       user = JSON.parse(userString);
     }
-    if (userId == "" || userId == "undefined") {
-      userId = user?.id ?? user?.userId ?? "";
+    if (userId == '' || userId == 'undefined') {
+      userId = user?.id ?? user?.userId ?? '';
     }
     if (user?.firstName) {
       this.setFamilyToLocalStorage(user?.firstName);
@@ -384,7 +386,6 @@ export class GlobalService {
   setFamilyToLocalStorage(text: string) {
     this.familyService.searchPersons(text.trim()).subscribe({
       next: (res: any) => {
-
         const id = res?.data[0]?.personId;
 
         this.familyService.getGraph(id, 20).subscribe({
@@ -395,13 +396,11 @@ export class GlobalService {
             console.error('Error fetching family graph', error);
           },
         });
-
       },
       error: () => {
         localStorage.setItem('FamilyGraph', JSON.stringify([]));
       },
     });
-
   }
 
   setConfigToLocalStorage(id: string, config: string, DdlConfig: string) {
@@ -414,7 +413,6 @@ export class GlobalService {
       },
     });
   }
-
 
   setCountryListToLocalStorage() {
     this.getCountryList().subscribe({
@@ -439,5 +437,3 @@ export class GlobalService {
     });
   }
 }
-
-

@@ -1,23 +1,25 @@
-import { Component, OnDestroy, ViewChild } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
-import { ApplicationRoles, LocalStorageConstants, NavigationURLs, OtpConfig } from "../../../utils/application-constants";
-import { GlobalService } from "../../services/global/global.service";
-import { LoaderService } from "../../services/loader/loader.service";
-import { LocalStorageService } from "../../services/local-storage/local-storage.service";
-import { RoleService } from "../../services/role/role.service";
-import { UserService } from "../../services/user/user.service";
-import { ToasterComponent } from "../shared/toaster/toaster.component";
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import {
+  ApplicationRoles,
+  LocalStorageConstants,
+  NavigationURLs,
+  OtpConfig,
+} from '../../../utils/application-constants';
+import { GlobalService } from '../../services/global/global.service';
+import { LoaderService } from '../../services/loader/loader.service';
+import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import { RoleService } from '../../services/role/role.service';
+import { UserService } from '../../services/user/user.service';
+import { ToasterComponent } from '../shared/toaster/toaster.component';
 
 @Component({
-  selector: "app-login",
+  selector: 'app-login',
   standalone: true,
-  imports: [
-    ReactiveFormsModule, ToasterComponent
-
-  ],
-  templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.scss"],
+  imports: [ReactiveFormsModule, ToasterComponent],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnDestroy {
   @ViewChild(ToasterComponent) toaster!: ToasterComponent;
@@ -48,14 +50,14 @@ export class LoginComponent implements OnDestroy {
     public globalService: GlobalService,
     public roleService: RoleService,
     private loaderService: LoaderService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
   ) {
     this.loginForm = this.fb.group({
-      userName: "farukshaikh908@gmail.com",
-      password: "Faruk@0701",
+      userName: 'farukshaikh908@gmail.com',
+      password: 'Faruk@0701',
     });
   }
-  parameters = "";
+  parameters = '';
 
   data: any;
 
@@ -63,12 +65,12 @@ export class LoginComponent implements OnDestroy {
     this.isLoginClicked = true;
     this.loaderService.showLoader('Checking details...');
 
-    if (this.loginForm.value["userName"] != null && this.loginForm.value["userName"].length <= 0) {
+    if (this.loginForm.value['userName'] != null && this.loginForm.value['userName'].length <= 0) {
       this.loaderService.hideLoader();
       this.isLoginClicked = false;
       return;
     }
-    if (this.loginForm.value["password"].length <= 0) {
+    if (this.loginForm.value['password'].length <= 0) {
       this.loaderService.hideLoader();
       this.isLoginClicked = false;
       return;
@@ -77,7 +79,9 @@ export class LoginComponent implements OnDestroy {
       next: (res: any) => {
         this.isLoginClicked = false;
         if (res.success) {
-          this.loaderService.showLoader('Please wait we are setting up some things for better performance...');
+          this.loaderService.showLoader(
+            'Please wait we are setting up some things for better performance...',
+          );
           this.data = res.data;
           if (!this.data) {
             localStorage.clear();
@@ -85,27 +89,29 @@ export class LoginComponent implements OnDestroy {
             return;
           }
           this.globalService.getUserPermissionData();
-          
-          if (this.data != null && this.data?.userName != null && this.data?.userName?.length > 0
-          ) {
+
+          if (this.data != null && this.data?.userName != null && this.data?.userName?.length > 0) {
             if (this.data.isOtpRequired) {
               localStorage.setItem(LocalStorageConstants.USERID, this.data.userId);
               localStorage.setItem(LocalStorageConstants.USERNAME, this.data.userName);
               localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
-              localStorage.setItem(LocalStorageConstants.OTP_EXPIRES_ON, (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString());
+              localStorage.setItem(
+                LocalStorageConstants.OTP_EXPIRES_ON,
+                (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString(),
+              );
               this.loaderService.hideLoader();
               if (res.statusCode == 200) {
                 this.router.navigate([NavigationURLs.OTP_VERIFICATION]);
               }
-            }
-            else {
+            } else {
               localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
               localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'true');
               this.loaderService.hideLoader();
-              if (this.data.roleName?.toLowerCase() === ApplicationRoles.SUPER_ADMIN.toLowerCase()) {
+              if (
+                this.data.roleName?.toLowerCase() === ApplicationRoles.SUPER_ADMIN.toLowerCase()
+              ) {
                 this.router.navigate([NavigationURLs.USER_LIST]);
-              }
-              else {
+              } else {
                 this.router.navigate([NavigationURLs.FOOD_MENU]);
               }
               // ✅ Defer heavy/non-blocking operations
@@ -116,8 +122,7 @@ export class LoginComponent implements OnDestroy {
                 console.log('✅ Background localStorage setup done');
               }, 100);
             }
-          }
-          else {
+          } else {
             this.toaster.showMessage(res.message, res.success ? 'success' : 'error');
             this.loaderService.hideLoader();
           }
@@ -129,7 +134,7 @@ export class LoginComponent implements OnDestroy {
       error: (err: any) => {
         this.isLoginClicked = false;
         this.loaderService.hideLoader();
-      }
+      },
     });
   }
 
@@ -144,6 +149,4 @@ export class LoginComponent implements OnDestroy {
   ngOnDestroy() {
     this.loaderService.hideLoader();
   }
-
 }
-

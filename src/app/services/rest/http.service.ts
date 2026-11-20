@@ -1,9 +1,4 @@
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpParams,
-  HttpResponse,
-} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -13,11 +8,7 @@ import { Observable } from 'rxjs';
 export class HttpService {
   constructor(private http: HttpClient) {}
 
-  get<T>(
-    url: string,
-    params?: HttpParams,
-    headers?: HttpHeaders
-  ): Observable<T> {
+  get<T>(url: string, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
     return this.http.get<T>(url, { params, headers });
   }
 
@@ -37,27 +28,21 @@ export class HttpService {
     return this.http.patch<T>(url, body, { headers });
   }
 
-  
-  postFormData<T>(
-    url: string,
-    formData: FormData,
-    headers?: HttpHeaders
-  ): Observable<T> {
-    
+  postFormData<T>(url: string, formData: FormData, headers?: HttpHeaders): Observable<T> {
     const options = headers ? { headers } : {};
     return this.http.post<T>(url, formData, options);
   }
-  
+
   downloadBlob(
     url: string,
     params?: HttpParams,
-    headers?: HttpHeaders
+    headers?: HttpHeaders,
   ): Observable<HttpResponse<Blob>> {
     return this.http.get<Blob>(url, {
       params,
       headers,
-      observe: 'response', 
-      responseType: 'blob' as 'json', 
+      observe: 'response',
+      responseType: 'blob' as 'json',
     });
   }
   downloadReport(url: string): Observable<HttpResponse<Blob>> {

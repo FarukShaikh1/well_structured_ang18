@@ -22,18 +22,15 @@ export class SignalRService {
     createdOn: new Date(),
     isMessageRead: false,
   };
-  public MessageSent$: BehaviorSubject<ChatMessage> =
-    new BehaviorSubject<ChatMessage>(this.chatMessage);
-  public MessageReceived$: BehaviorSubject<ChatMessage> =
-    new BehaviorSubject<ChatMessage>(this.chatMessage);
-  public userList$: BehaviorSubject<ChatUser[]> = new BehaviorSubject<
-    ChatUser[]
-  >([]);
-  public chatHistory$: BehaviorSubject<ChatMessage[]> = new BehaviorSubject<
-    ChatMessage[]
-  >([]);
-  public unreadMessageCount$: BehaviorSubject<number> =
-    new BehaviorSubject<number>(0);
+  public MessageSent$: BehaviorSubject<ChatMessage> = new BehaviorSubject<ChatMessage>(
+    this.chatMessage,
+  );
+  public MessageReceived$: BehaviorSubject<ChatMessage> = new BehaviorSubject<ChatMessage>(
+    this.chatMessage,
+  );
+  public userList$: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
+  public chatHistory$: BehaviorSubject<ChatMessage[]> = new BehaviorSubject<ChatMessage[]>([]);
+  public unreadMessageCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   public senderId: string = '';
   public receiverId: string = '';
@@ -46,7 +43,7 @@ export class SignalRService {
 
   constructor(
     private chatService: ChatService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
   ) {
     const loggedInUser = localStorageService.getLoggedInUserData();
 
@@ -75,56 +72,47 @@ export class SignalRService {
             'Hub Connection started, connectionId is :',
             this.hubConnection.connectionId,
             '      and userId is : ',
-            userId
-          )
+            userId,
+          ),
         )
         .catch((err) => {
           if (this.startConnectionCount < 5) {
             this.startConnectionCount++;
-            console.log(
-              'Error while starting connection retrying in 5 seconds: ' + err
-            );
-            setTimeout(() => this.startConnection(userId), 5000); 
+            console.log('Error while starting connection retrying in 5 seconds: ' + err);
+            setTimeout(() => this.startConnection(userId), 5000);
           }
         });
     }
 
-    
     this.hubConnection.on('ReceiveUserList', (userList: any) => {
-      this.userList$.next(userList); 
+      this.userList$.next(userList);
     });
 
-    
     this.hubConnection.on('NotificationCount', (count) => {
-      this.unreadMessageCount$.next(count); 
+      this.unreadMessageCount$.next(count);
     });
 
-    
     this.hubConnection.on('MessageSent', (message, userList) => {
       this.MessageSent$.next(message);
       this.userList$.next(userList);
     });
 
-    
     this.hubConnection.on('MessageReceived', (message, userList) => {
       this.MessageReceived$.next(message);
       this.userList$.next(userList);
     });
 
-    
     this.hubConnection.on('MessageOpened', (chatHistory, userList) => {
-      this.chatHistory$.next(chatHistory); 
-      this.userList$.next(userList); 
+      this.chatHistory$.next(chatHistory);
+      this.userList$.next(userList);
     });
   }
 
-  
   @HostListener('window:beforeunload', ['$event'])
   async closeConnection() {
     await this.hubConnection.stop();
   }
 
-  
   async getUserList() {
     if (!this.hubConnection.connectionId) {
       await this.startConnection('');
@@ -132,12 +120,12 @@ export class SignalRService {
     try {
       await this.hubConnection.invoke(
         'GetUserList',
-        this.localStorageService.getLoggedInUserData().userId
+        this.localStorageService.getLoggedInUserData().userId,
       );
     } catch (error) {
       if (this.startConnectionCount < 5) {
         this.startConnectionCount++;
-        setTimeout(() => this.getUserList(), 5000); 
+        setTimeout(() => this.getUserList(), 5000);
       }
     }
   }
@@ -149,22 +137,18 @@ export class SignalRService {
     try {
       await this.hubConnection.invoke(
         'GetNotificationCountForUnreadChats',
-        this.localStorageService.getLoggedInUserData()?.userId
+        this.localStorageService.getLoggedInUserData()?.userId,
       );
     } catch (error) {
       if (this.GetNotificationCount < 5) {
         this.GetNotificationCount++;
-        setTimeout(() => this.getUnreadChatCountForNotification(), 3000); 
+        setTimeout(() => this.getUnreadChatCountForNotification(), 3000);
       }
     }
   }
 
   async sendMessage(chatMessage: AddChatDto) {
-    if (
-      !chatMessage.receiverId ||
-      !chatMessage.message ||
-      !chatMessage.messageTypeId
-    ) {
+    if (!chatMessage.receiverId || !chatMessage.message || !chatMessage.messageTypeId) {
       return;
     }
 
@@ -175,15 +159,12 @@ export class SignalRService {
       await this.hubConnection.invoke(
         'SendChatMessage',
         chatMessage,
-        this.localStorageService.getLoggedInUserData().userId
+        this.localStorageService.getLoggedInUserData().userId,
       );
-    } catch (error) {
-      
-    }
+    } catch (error) {}
     this.message = '';
   }
 
-  
   async messageOpened(userId: string, openedByUserId: string) {
     if (!this.hubConnection.connectionId) {
       await this.startConnection('');
@@ -191,7 +172,7 @@ export class SignalRService {
     try {
       await this.hubConnection.invoke('MessageOpened', userId, openedByUserId);
     } catch (error) {
-      setTimeout(() => this.messageOpened(userId, openedByUserId), 5); 
+      setTimeout(() => this.messageOpened(userId, openedByUserId), 5);
     }
   }
 }

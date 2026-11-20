@@ -8,9 +8,8 @@ describe('DailyFoodPickerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DailyFoodPickerComponent]
-    })
-    .compileComponents();
+      imports: [DailyFoodPickerComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DailyFoodPickerComponent);
     component = fixture.componentInstance;

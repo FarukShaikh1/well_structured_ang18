@@ -12,7 +12,6 @@
 //     document.body.classList.add('rto-home-page');
 //   }
 
-  
 //   ngOnDestroy(): void {
 //     document.body.classList.remove('rto-home-page');
 //   }

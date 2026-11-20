@@ -8,9 +8,8 @@ describe('OTPVerificationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OTPVerificationComponent]
-    })
-    .compileComponents();
+      imports: [OTPVerificationComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OTPVerificationComponent);
     component = fixture.componentInstance;

@@ -17,19 +17,21 @@ describe('SignalRService', () => {
     mockLocalStorageService = jasmine.createSpyObj('LocalStorageService', ['getLoggedInUserData']);
     mockHubConnection = jasmine.createSpyObj('HubConnection', ['start', 'stop', 'on', 'invoke']);
 
-    mockLocalStorageService.getLoggedInUserData.and.returnValue({ userId: '905703c5-6929-411e-a2ab-860f982690f9' });
- 
- mockHubConnectionBuilder = jasmine.createSpyObj('HubConnectionBuilder', ['withUrl', 'build']);
- mockHubConnectionBuilder.withUrl.and.returnValue(mockHubConnectionBuilder); 
- mockHubConnectionBuilder.build.and.returnValue(mockHubConnection); 
+    mockLocalStorageService.getLoggedInUserData.and.returnValue({
+      userId: '905703c5-6929-411e-a2ab-860f982690f9',
+    });
+
+    mockHubConnectionBuilder = jasmine.createSpyObj('HubConnectionBuilder', ['withUrl', 'build']);
+    mockHubConnectionBuilder.withUrl.and.returnValue(mockHubConnectionBuilder);
+    mockHubConnectionBuilder.build.and.returnValue(mockHubConnection);
 
     TestBed.configureTestingModule({
       providers: [
         SignalRService,
         { provide: ChatService, useValue: mockChatService },
         { provide: LocalStorageService, useValue: mockLocalStorageService },
-        { provide: signalR.HubConnectionBuilder, useValue: mockHubConnectionBuilder }
-      ]
+        { provide: signalR.HubConnectionBuilder, useValue: mockHubConnectionBuilder },
+      ],
     });
 
     service = TestBed.inject(SignalRService);
@@ -42,136 +44,12 @@ describe('SignalRService', () => {
   it('should initialize the hub connection with correct URL', () => {
     mockLocalStorageService.getLoggedInUserData.and.returnValue({ userId: '123' });
 
-    
     service = new SignalRService(mockChatService, mockLocalStorageService);
 
-    
     expect(mockHubConnectionBuilder.withUrl).toHaveBeenCalledWith(
       API_URL.CHAT_URL + '?userId=123',
-      jasmine.any(Object) 
+      jasmine.any(Object),
     );
     expect(mockHubConnectionBuilder.build).toHaveBeenCalled();
   });
-
-  
-  
-  
-
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-
 });

@@ -5,19 +5,15 @@ import { LocalStorageConstants } from '../../../utils/application-constants';
 import { Routine } from '../../interfaces/routine';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RoutineService {
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
   // =========================
   // GET routine by user
   // =========================
   getRoutineByUser() {
-    return this.http.get<Routine[]>(
-      API_URL.GET_ROUTINE_BY_USER
-    );
+    return this.http.get<Routine[]>(API_URL.GET_ROUTINE_BY_USER);
   }
 
   // =========================
@@ -31,27 +27,20 @@ export class RoutineService {
   // UPDATE routine
   // =========================
   updateRoutine(data: Routine) {
-    return this.http.put(
-      API_URL.UPDATE_ROUTINE,
-      data
-    );
+    return this.http.put(API_URL.UPDATE_ROUTINE, data);
   }
 
   // =========================
   // GET routine details
   // =========================
   getRoutineDetails(routineId: string) {
-    return this.http.get<Routine>(
-      API_URL.UPDATE_ROUTINE + routineId
-    );
+    return this.http.get<Routine>(API_URL.UPDATE_ROUTINE + routineId);
   }
 
-      // =========================
+  // =========================
   // GET routine details
   // =========================
   deleteRoutine(routineId: string) {
-    return this.http.delete<boolean>(
-      API_URL.DELETE_ROUTINE + routineId
-    );
+    return this.http.delete<boolean>(API_URL.DELETE_ROUTINE + routineId);
   }
 }
