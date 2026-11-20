@@ -180,10 +180,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
         personName: res['personName'],
         occasionTypeId: res['dayTypeId'],
         relationId: res['relationId'],
-        specialOccasionDate: this.datepipe.transform(
-          res['specialOccasionDate'],
-          ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT,
-        ),
+        specialOccasionDate: this.datepipe.transform(res['specialOccasionDate'], ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
         mobileNumber: res['mobileNumber'],
         contactNumber: res['contactNumber'],
         emailId: res['emailId'],
@@ -211,9 +208,7 @@ export class DayDetailsComponent implements OnInit, OnDestroy {
 
     this.specialOccasionRequest = {
       id: this.dayDetailsForm.value['specialOccasionId'] ?? null,
-      specialOccasionDate: DateUtils.CorrectedDate(
-        this.dayDetailsForm.value['specialOccasionDate'],
-      ),
+      specialOccasionDate: DateUtils.CorrectedDate(this.dayDetailsForm.value['specialOccasionDate']),
       personName: this.dayDetailsForm.value['personName'],
       occasionTypeId: this.dayDetailsForm.value['occasionTypeId'],
       relationId: this.dayDetailsForm.value['relationId'],

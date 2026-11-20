@@ -1,12 +1,7 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  ApplicationRoles,
-  LocalStorageConstants,
-  NavigationURLs,
-  OtpConfig,
-} from '../../../utils/application-constants';
+import { ApplicationRoles, LocalStorageConstants, NavigationURLs, OtpConfig } from '../../../utils/application-constants';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
@@ -79,9 +74,7 @@ export class LoginComponent implements OnDestroy {
       next: (res: any) => {
         this.isLoginClicked = false;
         if (res.success) {
-          this.loaderService.showLoader(
-            'Please wait we are setting up some things for better performance...',
-          );
+          this.loaderService.showLoader('Please wait we are setting up some things for better performance...');
           this.data = res.data;
           if (!this.data) {
             localStorage.clear();
@@ -95,10 +88,7 @@ export class LoginComponent implements OnDestroy {
               localStorage.setItem(LocalStorageConstants.USERID, this.data.userId);
               localStorage.setItem(LocalStorageConstants.USERNAME, this.data.userName);
               localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'false');
-              localStorage.setItem(
-                LocalStorageConstants.OTP_EXPIRES_ON,
-                (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString(),
-              );
+              localStorage.setItem(LocalStorageConstants.OTP_EXPIRES_ON, (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString());
               this.loaderService.hideLoader();
               if (res.statusCode == 200) {
                 this.router.navigate([NavigationURLs.OTP_VERIFICATION]);
@@ -107,9 +97,7 @@ export class LoginComponent implements OnDestroy {
               localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(this.data));
               localStorage.setItem(LocalStorageConstants.IS_LOGGED_IN, 'true');
               this.loaderService.hideLoader();
-              if (
-                this.data.roleName?.toLowerCase() === ApplicationRoles.SUPER_ADMIN.toLowerCase()
-              ) {
+              if (this.data.roleName?.toLowerCase() === ApplicationRoles.SUPER_ADMIN.toLowerCase()) {
                 this.router.navigate([NavigationURLs.USER_LIST]);
               } else {
                 this.router.navigate([NavigationURLs.FOOD_MENU]);

@@ -51,10 +51,7 @@ export class UserService {
   }
 
   updateUserDetails(userDetailsForm: any): Observable<any> {
-    return this.httpService.post(
-      API_URL.UPDATE_USER + 'updateUserDetails?userId=',
-      userDetailsForm,
-    );
+    return this.httpService.post(API_URL.UPDATE_USER + 'updateUserDetails?userId=', userDetailsForm);
   }
 
   getUserList(): Observable<any> {

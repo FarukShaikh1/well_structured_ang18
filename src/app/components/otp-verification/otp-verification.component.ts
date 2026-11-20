@@ -4,11 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import {
-  LocalStorageConstants,
-  NavigationURLs,
-  OtpConfig,
-} from '../../../utils/application-constants';
+import { LocalStorageConstants, NavigationURLs, OtpConfig } from '../../../utils/application-constants';
 import { SendOtpRequest, VerifyOtpRequest } from '../../interfaces/otp-request ';
 import { UserLoginRequest } from '../../interfaces/user-login-request';
 import { GlobalService } from '../../services/global/global.service';
@@ -78,10 +74,7 @@ export class OTPVerificationComponent implements OnInit, AfterViewInit, OnDestro
 
     for (let i = 0; i < OtpConfig.NumberOfOtpDigits; i++) {
       const controlName = `otp${i}`;
-      this.otpForm.addControl(
-        controlName,
-        new FormControl('', [Validators.required, Validators.pattern('[0-9]')]),
-      );
+      this.otpForm.addControl(controlName, new FormControl('', [Validators.required, Validators.pattern('[0-9]')]));
       this.controlNames.push(controlName);
     }
     this.startOtpTimer();
@@ -226,18 +219,11 @@ export class OTPVerificationComponent implements OnInit, AfterViewInit, OnDestro
     this.otpService.sendOtp(this.sendOtpRequest).subscribe({
       next: (result: any) => {
         if (result.success) {
-          localStorage.setItem(
-            LocalStorageConstants.OTP_EXPIRES_ON,
-            (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString(),
-          );
+          localStorage.setItem(LocalStorageConstants.OTP_EXPIRES_ON, (Date.now() + OtpConfig.OTP_EXPIRES_IN_MINUTES * 60 * 1000).toString());
           this.focucToInput();
           this.startOtpTimer();
           this.loaderService.hideLoader();
-          this.toaster.showMessage(
-            'An OTP has been sent to your registered email ID',
-            'success',
-            5000,
-          );
+          this.toaster.showMessage('An OTP has been sent to your registered email ID', 'success', 5000);
         } else {
           this.toaster.showMessage(`${result?.message}`, 'error', 6000);
           this.loaderService.hideLoader();

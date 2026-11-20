@@ -1,13 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  Renderer2,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SafeUrlPipe } from '../../common/safe-url.pipe';
 import { DocumentItem } from '../../interfaces/document-item';

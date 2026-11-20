@@ -17,11 +17,7 @@
                 </div>
                 <div class="small text-muted">
                   {{ getRelativeTime(notification.createdOn) }}
-                  <span
-                    *ngIf="notification.isLoading"
-                    class="spinner-border spinner-border-sm ml-2 notification-spinner"
-                    role="status"
-                  ></span>
+                  <span *ngIf="notification.isLoading" class="spinner-border spinner-border-sm ml-2 notification-spinner" role="status"></span>
                 </div>
               </div>
             </div>
@@ -32,12 +28,7 @@
   </ng-container>
 
   <div class="text-center mt-4 mb-4">
-    <button
-      *ngIf="hasMoreDown && !isLoadingInitialPage"
-      class="btn notification-view-more-button"
-      [disabled]="isLoading"
-      (click)="onViewMore()"
-    >
+    <button *ngIf="hasMoreDown && !isLoadingInitialPage" class="btn notification-view-more-button" [disabled]="isLoading" (click)="onViewMore()">
       {{ isLoading ? 'Loading...' : 'View More' }}
     </button>
   </div>

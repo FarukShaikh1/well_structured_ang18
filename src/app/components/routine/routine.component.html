@@ -4,19 +4,8 @@
     <h2 class="w-100 mt-2">Routine Management</h2>
     <div class="grid-actions">
       <div class="d-flex align-items-center gap-2">
-        <input
-          type="text"
-          placeholder="Search"
-          (keyup)="search($event)"
-          class="form-control form-control-lg"
-          style="max-width: 300px"
-        />
-        <button
-          type="button"
-          class="btn btn-outline-danger grid-action-btn"
-          (click)="printRoutine()"
-          title="Print / Save as PDF"
-        >
+        <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg" style="max-width: 300px" />
+        <button type="button" class="btn btn-outline-danger grid-action-btn" (click)="printRoutine()" title="Print / Save as PDF">
           <i class="bi bi-file-earmark-pdf"></i>
           <span>PDF</span>
         </button>
@@ -62,9 +51,7 @@
           <div class="d-flex gap-2 justify-content-center">
             @if (selectedId === r.id && isEdit) {
               <button (click)="save(r)" title="Save" class="btn btn-outline-success">💾</button>
-              <button (click)="reset()" title="Cancel" class="btn btn-outline-warning">
-                <i class="bi bi-reset"></i>✖
-              </button>
+              <button (click)="reset()" title="Cancel" class="btn btn-outline-warning"><i class="bi bi-reset"></i>✖</button>
             } @else {
               <button (click)="edit(r)" class="btn btn-outline-warning">
                 <i class="bi bi-pencil"></i>
@@ -89,30 +76,15 @@
     <table class="print-hide w-100">
       <tr>
         <td>
-          <input
-            type="time"
-            placeholder="From Time"
-            [(ngModel)]="model.fromTime"
-            class="form-control form-control-lg text-dark bg-transparent"
-          />
+          <input type="time" placeholder="From Time" [(ngModel)]="model.fromTime" class="form-control form-control-lg text-dark bg-transparent" />
         </td>
         <td>
-          <input
-            type="time"
-            placeholder="To Time"
-            [(ngModel)]="model.toTime"
-            class="form-control form-control-lg text-dark bg-transparent"
-          />
+          <input type="time" placeholder="To Time" [(ngModel)]="model.toTime" class="form-control form-control-lg text-dark bg-transparent" />
         </td>
       </tr>
       <tr>
         <td>
-          <input
-            type="text"
-            placeholder="Task"
-            [(ngModel)]="model.task"
-            class="form-control form-control-lg text-dark bg-transparent"
-          />
+          <input type="text" placeholder="Task" [(ngModel)]="model.task" class="form-control form-control-lg text-dark bg-transparent" />
         </td>
         <td>
           <input

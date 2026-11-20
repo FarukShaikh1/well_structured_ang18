@@ -171,11 +171,7 @@ export class NotificationListComponent implements OnInit {
       this.purgeData();
     }
 
-    if (
-      scrollBottom > document.documentElement.scrollHeight - threshold &&
-      this.hasMoreDown &&
-      !this.isLoading
-    ) {
+    if (scrollBottom > document.documentElement.scrollHeight - threshold && this.hasMoreDown && !this.isLoading) {
       const nextPage = Math.min(...this.pagesInMemory) + 1;
       this.loadPage(nextPage);
       this.purgeData();

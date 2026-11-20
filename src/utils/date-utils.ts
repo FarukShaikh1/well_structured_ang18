@@ -174,12 +174,7 @@ export class DateUtils {
     return DateUtils.IstDate(date);
   }
 
-  static checkDateFilter(
-    occasionDateString: string,
-    isToday: boolean,
-    isYesterday: boolean,
-    isTomorrow: boolean,
-  ): boolean {
+  static checkDateFilter(occasionDateString: string, isToday: boolean, isYesterday: boolean, isTomorrow: boolean): boolean {
     if (!occasionDateString) return false;
 
     const occasionDate = new Date(occasionDateString);
@@ -200,8 +195,7 @@ export class DateUtils {
     // Check if month + day matches
     const isTodayMatch = isToday && occDay === today.getDate() && occMonth === today.getMonth();
 
-    const isYesterdayMatch =
-      isYesterday && occDay === yDay.getDate() && occMonth === yDay.getMonth();
+    const isYesterdayMatch = isYesterday && occDay === yDay.getDate() && occMonth === yDay.getMonth();
 
     const isTomorrowMatch = isTomorrow && occDay === tom.getDate() && occMonth === tom.getMonth();
 

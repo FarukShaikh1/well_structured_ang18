@@ -22,12 +22,8 @@ export class SignalRService {
     createdOn: new Date(),
     isMessageRead: false,
   };
-  public MessageSent$: BehaviorSubject<ChatMessage> = new BehaviorSubject<ChatMessage>(
-    this.chatMessage,
-  );
-  public MessageReceived$: BehaviorSubject<ChatMessage> = new BehaviorSubject<ChatMessage>(
-    this.chatMessage,
-  );
+  public MessageSent$: BehaviorSubject<ChatMessage> = new BehaviorSubject<ChatMessage>(this.chatMessage);
+  public MessageReceived$: BehaviorSubject<ChatMessage> = new BehaviorSubject<ChatMessage>(this.chatMessage);
   public userList$: BehaviorSubject<ChatUser[]> = new BehaviorSubject<ChatUser[]>([]);
   public chatHistory$: BehaviorSubject<ChatMessage[]> = new BehaviorSubject<ChatMessage[]>([]);
   public unreadMessageCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
@@ -47,9 +43,7 @@ export class SignalRService {
   ) {
     const loggedInUser = localStorageService.getLoggedInUserData();
 
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(API_URL.CHAT_URL + '?userId=' + loggedInUser?.userId)
-      .build();
+    this.hubConnection = new signalR.HubConnectionBuilder().withUrl(API_URL.CHAT_URL + '?userId=' + loggedInUser?.userId).build();
 
     this.hubConnection.onclose(() => {
       this.closeConnection();
@@ -67,14 +61,7 @@ export class SignalRService {
       }
       this.hubConnection
         .start()
-        .then(() =>
-          console.log(
-            'Hub Connection started, connectionId is :',
-            this.hubConnection.connectionId,
-            '      and userId is : ',
-            userId,
-          ),
-        )
+        .then(() => console.log('Hub Connection started, connectionId is :', this.hubConnection.connectionId, '      and userId is : ', userId))
         .catch((err) => {
           if (this.startConnectionCount < 5) {
             this.startConnectionCount++;
@@ -118,10 +105,7 @@ export class SignalRService {
       await this.startConnection('');
     }
     try {
-      await this.hubConnection.invoke(
-        'GetUserList',
-        this.localStorageService.getLoggedInUserData().userId,
-      );
+      await this.hubConnection.invoke('GetUserList', this.localStorageService.getLoggedInUserData().userId);
     } catch (error) {
       if (this.startConnectionCount < 5) {
         this.startConnectionCount++;
@@ -135,10 +119,7 @@ export class SignalRService {
       await this.startConnection('');
     }
     try {
-      await this.hubConnection.invoke(
-        'GetNotificationCountForUnreadChats',
-        this.localStorageService.getLoggedInUserData()?.userId,
-      );
+      await this.hubConnection.invoke('GetNotificationCountForUnreadChats', this.localStorageService.getLoggedInUserData()?.userId);
     } catch (error) {
       if (this.GetNotificationCount < 5) {
         this.GetNotificationCount++;
@@ -156,11 +137,7 @@ export class SignalRService {
       await this.startConnection('');
     }
     try {
-      await this.hubConnection.invoke(
-        'SendChatMessage',
-        chatMessage,
-        this.localStorageService.getLoggedInUserData().userId,
-      );
+      await this.hubConnection.invoke('SendChatMessage', chatMessage, this.localStorageService.getLoggedInUserData().userId);
     } catch (error) {}
     this.message = '';
   }

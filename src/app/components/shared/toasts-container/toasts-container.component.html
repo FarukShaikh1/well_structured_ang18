@@ -9,17 +9,8 @@
   >
     <div class="text-white d-flex justify-content-between">
       <ng-template [ngTemplateOutlet]="toast.template"></ng-template>
-      <button
-        type="button"
-        class="btn-close text-white"
-        aria-label="Close"
-        (click)="toastService.remove(toast)"
-      ></button>
+      <button type="button" class="btn-close text-white" aria-label="Close" (click)="toastService.remove(toast)"></button>
     </div>
-    <div
-      class="toast-progress"
-      [style.animationDuration]="toast.delay + 'ms'"
-      (animationend)="onProgressAnimationEnd(toast)"
-    ></div>
+    <div class="toast-progress" [style.animationDuration]="toast.delay + 'ms'" (animationend)="onProgressAnimationEnd(toast)"></div>
   </ngb-toast>
 }

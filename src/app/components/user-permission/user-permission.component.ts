@@ -35,9 +35,7 @@ export class UserPermissionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.permissionModulePermissions = this.globalService.getModulePermission(
-      ApplicationModules.USER_PERMISSIONS,
-    );
+    this.permissionModulePermissions = this.globalService.getModulePermission(ApplicationModules.USER_PERMISSIONS);
     this.loaderService.showLoader();
     this.getUserList();
     this.disableUpdate = true;

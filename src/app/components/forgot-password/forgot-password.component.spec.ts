@@ -41,9 +41,7 @@ describe('ForgotPasswordComponent', () => {
   it('should show loader and call forgotPassword on valid form submission', fakeAsync(() => {
     const spyLoaderShow = spyOn(loaderService, 'showLoader').and.callThrough();
     const spyLoaderHide = spyOn(loaderService, 'hideLoader').and.callThrough();
-    const spyUserService = spyOn(userService, 'forgotPassword').and.returnValue(
-      of({ success: true }),
-    );
+    const spyUserService = spyOn(userService, 'forgotPassword').and.returnValue(of({ success: true }));
     const spyToaster = spyOn(component.toaster, 'showMessage').and.callThrough();
     const spyRouter = spyOn(component['router'], 'navigate').and.callThrough();
 
@@ -74,9 +72,7 @@ describe('ForgotPasswordComponent', () => {
     const errorResponse = {
       error: { errors: { ConfirmPassword: 'Error sending password reset link' } },
     };
-    const spyUserService = spyOn(userService, 'forgotPassword').and.returnValue(
-      throwError(errorResponse),
-    );
+    const spyUserService = spyOn(userService, 'forgotPassword').and.returnValue(throwError(errorResponse));
     const spyToaster = spyOn(component.toaster, 'showMessage').and.callThrough();
 
     component.forgotPasswordForm.controls['email'].setValue('test@example.com');
@@ -97,9 +93,7 @@ describe('ForgotPasswordComponent', () => {
 
   it('should show error message if response indicates failure', () => {
     const spyLoaderHide = spyOn(loaderService, 'hideLoader').and.callThrough();
-    const spyUserService = spyOn(userService, 'forgotPassword').and.returnValue(
-      of({ success: false, message: 'Failed to send reset link' }),
-    );
+    const spyUserService = spyOn(userService, 'forgotPassword').and.returnValue(of({ success: false, message: 'Failed to send reset link' }));
     const spyToaster = spyOn(component.toaster, 'showMessage').and.callThrough();
 
     component.forgotPasswordForm.controls['email'].setValue('test@example.com');
@@ -114,19 +108,14 @@ describe('ForgotPasswordComponent', () => {
     const spyLoaderHide = spyOn(loaderService, 'hideLoader').and.callThrough();
     const spyConsoleError = spyOn(console, 'error').and.callThrough();
     const errorResponse = { message: 'Network error' };
-    const spyUserService = spyOn(userService, 'forgotPassword').and.returnValue(
-      throwError(() => errorResponse),
-    );
+    const spyUserService = spyOn(userService, 'forgotPassword').and.returnValue(throwError(() => errorResponse));
     const spyToaster = spyOn(component.toaster, 'showMessage').and.callThrough();
 
     component.forgotPasswordForm.controls['email'].setValue('test@example.com');
     component.onSubmit();
 
     expect(spyUserService).toHaveBeenCalledWith({ email: 'test@example.com' });
-    expect(spyConsoleError).toHaveBeenCalledWith(
-      'Could not send password reset link',
-      errorResponse,
-    );
+    expect(spyConsoleError).toHaveBeenCalledWith('Could not send password reset link', errorResponse);
     expect(spyToaster).toHaveBeenCalledWith('Network error', 'error');
     expect(spyLoaderHide).toHaveBeenCalled();
   });

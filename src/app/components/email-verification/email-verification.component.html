@@ -5,9 +5,7 @@
     <h2>Email Verification</h2>
 
     @if (!isVerified) {
-      <p class="verification-message">
-        We have sent a verification OTP to your registered email address.
-      </p>
+      <p class="verification-message">We have sent a verification OTP to your registered email address.</p>
 
       <p class="verification-message">Please enter the 6-digit OTP to verify your email.</p>
       <p class="verification-message">Or follow the instructions from the email.</p>
@@ -35,13 +33,9 @@
           Verify Email
         }
       </button>
-      <button type="button" class="clear-button" [disabled]="isLoading" (click)="clearOtp()">
-        Clear
-      </button>
+      <button type="button" class="clear-button" [disabled]="isLoading" (click)="clearOtp()">Clear</button>
       <div class="text-center mt-3">
-        <button type="button" class="btn text-link back-btn" (click)="logout()">
-          Back to login
-        </button>
+        <button type="button" class="btn text-link back-btn" (click)="logout()">Back to login</button>
       </div>
     } @else {
       <div class="success-section">

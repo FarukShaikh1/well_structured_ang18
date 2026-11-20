@@ -2,12 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import * as forms from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  ActionConstant,
-  ApplicationModules,
-  DdlConfig,
-  Messages,
-} from '../../../utils/application-constants';
+import { ActionConstant, ApplicationModules, DdlConfig, Messages } from '../../../utils/application-constants';
 import { ConfigurationRequest } from '../../interfaces/configuration-request';
 import { ConfigurationService } from '../../services/configuration/configuration.service';
 import { GlobalService } from '../../services/global/global.service';

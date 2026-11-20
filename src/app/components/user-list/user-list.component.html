@@ -2,45 +2,25 @@
   <!-- Tabs -->
   <div class="app-tabs">
     @if (pendingApprovalsModulePermissions.view) {
-      <button
-        type="button"
-        class="app-tab"
-        [class.active]="activeTab === 'approval'"
-        (click)="activeTab = 'approval'"
-      >
+      <button type="button" class="app-tab" [class.active]="activeTab === 'approval'" (click)="activeTab = 'approval'">
         <i class="bi bi-person-check"></i>
         <span>Pending Approval</span>
       </button>
     }
     @if (activeUserModulePermissions.view) {
-      <button
-        type="button"
-        class="app-tab"
-        [class.active]="activeTab === 'users'"
-        (click)="activeTab = 'users'"
-      >
+      <button type="button" class="app-tab" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">
         <i class="bi bi-people"></i>
         <span>Active Users</span>
       </button>
     }
     @if (permissionModulePermissions.view) {
-      <button
-        type="button"
-        class="app-tab"
-        [class.active]="activeTab === 'permissions'"
-        (click)="activeTab = 'permissions'"
-      >
+      <button type="button" class="app-tab" [class.active]="activeTab === 'permissions'" (click)="activeTab = 'permissions'">
         <i class="bi bi-shield-lock"></i>
         <span>User Permissions</span>
       </button>
     }
     @if (settingsModulePermissions.view) {
-      <button
-        type="button"
-        class="app-tab"
-        [class.active]="activeTab === 'settings'"
-        (click)="activeTab = 'settings'"
-      >
+      <button type="button" class="app-tab" [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">
         <i class="bi bi-shield-lock"></i>
         <span>Settings</span>
       </button>
@@ -100,18 +80,6 @@
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"> </app-confirmation-dialog>
 
 <!-- Hidden modal buttons -->
-<button
-  id="openDayDetailsButton"
-  type="button"
-  data-bs-toggle="modal"
-  data-bs-target="#detailsPopup"
-  style="display: none"
-></button>
+<button id="openDayDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup" style="display: none"></button>
 
-<button
-  id="openUserDetailsButton"
-  type="button"
-  data-bs-toggle="modal"
-  data-bs-target="#userDetailsPopup"
-  style="display: none"
-></button>
+<button id="openUserDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#userDetailsPopup" style="display: none"></button>

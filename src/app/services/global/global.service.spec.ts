@@ -14,10 +14,7 @@ describe('GlobalService', () => {
   let router: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    const localStorageSpy = jasmine.createSpyObj('LocalStorageService', [
-      'setUserPermission',
-      'getUserPermission',
-    ]);
+    const localStorageSpy = jasmine.createSpyObj('LocalStorageService', ['setUserPermission', 'getUserPermission']);
 
     const roleServiceSpy = jasmine.createSpyObj('RoleService', ['getModulesMappedToLoggedinUser']);
 
@@ -33,9 +30,7 @@ describe('GlobalService', () => {
     });
 
     service = TestBed.inject(GlobalService);
-    localStorageService = TestBed.inject(
-      LocalStorageService,
-    ) as jasmine.SpyObj<LocalStorageService>;
+    localStorageService = TestBed.inject(LocalStorageService) as jasmine.SpyObj<LocalStorageService>;
     roleService = TestBed.inject(RoleService) as jasmine.SpyObj<RoleService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
   });
@@ -109,9 +104,7 @@ describe('GlobalService', () => {
   });
 
   it('should handle error in getRolePageMappingData and return false', () => {
-    roleService.getLoggedInUserPermissions.and.returnValue(
-      of({ data: null }).pipe(catchError(() => of(false))),
-    );
+    roleService.getLoggedInUserPermissions.and.returnValue(of({ data: null }).pipe(catchError(() => of(false))));
 
     service.getUserPermissionData().subscribe((result) => {
       expect(result).toBeFalse();

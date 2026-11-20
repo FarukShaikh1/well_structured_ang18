@@ -49,18 +49,14 @@ describe('DateUtils', () => {
       const now = new Date();
       const sameYearDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
       expect(dateUtils.formatTimestamp(sameYearDate)).not.toBe('');
-      expect(dateUtils.formatTimestamp(sameYearDate)).toMatch(
-        /^\d{1,2} \w{3} - \d{1,2}:\d{2} (AM|PM)$/,
-      );
+      expect(dateUtils.formatTimestamp(sameYearDate)).toMatch(/^\d{1,2} \w{3} - \d{1,2}:\d{2} (AM|PM)$/);
     });
 
     it('should return the date in "d MMM yyyy - hh:mm a" format when date is in a different year', () => {
       const now = new Date();
       const differentYearDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
       expect(dateUtils.formatTimestamp(differentYearDate)).not.toBe('');
-      expect(dateUtils.formatTimestamp(differentYearDate)).toMatch(
-        /^\d{1,2} \w{3} \d{4} - \d{1,2}:\d{2} (AM|PM)$/,
-      );
+      expect(dateUtils.formatTimestamp(differentYearDate)).toMatch(/^\d{1,2} \w{3} \d{4} - \d{1,2}:\d{2} (AM|PM)$/);
     });
   });
 

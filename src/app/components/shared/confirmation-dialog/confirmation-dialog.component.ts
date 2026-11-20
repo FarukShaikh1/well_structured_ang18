@@ -26,12 +26,7 @@ export class ConfirmationDialogComponent {
     }
   }
 
-  openConfirmationPopup(
-    title?: string,
-    message?: string,
-    cancelButtonLabel?: string,
-    confirmButtonLabel?: string,
-  ): void {
+  openConfirmationPopup(title?: string, message?: string, cancelButtonLabel?: string, confirmButtonLabel?: string): void {
     const modal = document.getElementById('confirmationPopup');
     if (modal) {
       this.title = title || this.title;

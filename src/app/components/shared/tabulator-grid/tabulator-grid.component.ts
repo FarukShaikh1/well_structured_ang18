@@ -1,14 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CellComponent, ColumnDefinition, TabulatorFull } from 'tabulator-tables';
 import { CommonModule } from '@angular/common';
@@ -224,9 +214,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
   }
 
   private updatePaginationVisibility(): void {
-    const paginationElement = this.wrapperDiv.nativeElement.querySelector(
-      '.tabulator-paginator',
-    ) as HTMLElement;
+    const paginationElement = this.wrapperDiv.nativeElement.querySelector('.tabulator-paginator') as HTMLElement;
     if (paginationElement) {
       if (this.tableData && this.tableData.length > 0) {
         paginationElement.style.display = 'block';
@@ -249,12 +237,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
       return value.toLocaleDateString();
     }
 
-    return String(value)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+    return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
   }
   exportTableData() {
     this.myTable?.download('csv', 'table-data.csv');
@@ -266,9 +249,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
     }
 
     const printableColumns: PrintColumnDefinition[] =
-      (this.columnConfig as PrintColumnDefinition[] | undefined)?.filter(
-        (column) => column.print !== false,
-      ) ?? [];
+      (this.columnConfig as PrintColumnDefinition[] | undefined)?.filter((column) => column.print !== false) ?? [];
 
     if (printableColumns.length === 0) {
       return;
@@ -479,9 +460,7 @@ export class TabulatorGridComponent implements OnChanges, OnDestroy {
         .filter(([_key, value]) => typeof value !== 'function')
         .map(([_key, value]) => value);
 
-      return actualValues.some((val) =>
-        String(val).toLowerCase().includes(searchText.toLowerCase()),
-      );
+      return actualValues.some((val) => String(val).toLowerCase().includes(searchText.toLowerCase()));
     });
   }
 

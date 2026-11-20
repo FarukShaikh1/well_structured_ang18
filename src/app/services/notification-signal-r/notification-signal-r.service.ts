@@ -40,9 +40,7 @@ export class NotificationSignalRService {
         .catch((err) => {
           if (this.startConnectionCount < 5) {
             this.startConnectionCount++;
-            console.log(
-              'Error while starting notification signalr connection retrying in 5 seconds: ' + err,
-            );
+            console.log('Error while starting notification signalr connection retrying in 5 seconds: ' + err);
             setTimeout(() => this.startConnection(userId), 5000);
           }
         });

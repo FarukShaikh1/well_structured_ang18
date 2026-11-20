@@ -19,17 +19,10 @@
     </a>
 
     <!-- Mobile: click to call -->
-    <a class="contact-item" [href]="'tel:' + profile.contact.mobile">
-      📞 {{ profile.contact.mobile }}
-    </a>
+    <a class="contact-item" [href]="'tel:' + profile.contact.mobile"> 📞 {{ profile.contact.mobile }} </a>
 
     <!-- WhatsApp -->
-    <a
-      class="contact-item"
-      target="_blank"
-      rel="noopener noreferrer"
-      [href]="'https://wa.me/' + profile.contact.whatsapp"
-    >
+    <a class="contact-item" target="_blank" rel="noopener noreferrer" [href]="'https://wa.me/' + profile.contact.whatsapp">
       <img src="assets/icons/32px-WhatsApp.svg.png" style="width: 20px" /> WhatsApp
     </a>
 
@@ -46,14 +39,7 @@
     </a>
 
     <!-- LinkedIn -->
-    <a
-      class="contact-item"
-      target="_blank"
-      rel="noopener noreferrer"
-      [href]="profile.contact.linkedin"
-    >
-      🔗 LinkedIn
-    </a>
+    <a class="contact-item" target="_blank" rel="noopener noreferrer" [href]="profile.contact.linkedin"> 🔗 LinkedIn </a>
   </div>
 </header>
 
@@ -95,9 +81,7 @@
   <div class="experience pb-2" *ngFor="let e of profile.experience">
     <div class="exp-top">
       <div class="company">{{ e.company }}</div>
-      <div class="meta">
-        {{ e.role }} &nbsp;|&nbsp; {{ e.duration }} &nbsp;|&nbsp; {{ e.location }}
-      </div>
+      <div class="meta">{{ e.role }} &nbsp;|&nbsp; {{ e.duration }} &nbsp;|&nbsp; {{ e.location }}</div>
     </div>
     <ul class="bulleted-list">
       <li *ngFor="let b of e.bullets">{{ b }}</li>

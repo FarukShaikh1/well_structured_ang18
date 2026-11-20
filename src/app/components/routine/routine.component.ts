@@ -44,9 +44,7 @@ export class RoutineComponent implements OnInit {
     this.service.getRoutineByUser().subscribe((res) => {
       this.routines = res;
       this.filteredRoutines = res;
-      this.filteredRoutines.forEach(
-        (r) => (r.duration = this.calculateDurationInMinutes(r.fromTime, r.toTime)),
-      );
+      this.filteredRoutines.forEach((r) => (r.duration = this.calculateDurationInMinutes(r.fromTime, r.toTime)));
     });
   }
 
@@ -135,10 +133,7 @@ export class RoutineComponent implements OnInit {
         this.reset();
       });
     } else {
-      if (
-        this.routines.find((r) => r.fromTime === row.fromTime && r.toTime === row.toTime) !=
-        undefined
-      ) {
+      if (this.routines.find((r) => r.fromTime === row.fromTime && r.toTime === row.toTime) != undefined) {
         this.toaster.showMessage('Same routine timing entry found', 'error');
         return;
       }

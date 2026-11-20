@@ -1,33 +1,10 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { of, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
-import {
-  ApplicationConstants,
-  ApplicationModules,
-  DdlConfig,
-  LocalStorageConstants,
-  NavigationURLs,
-} from '../../../../utils/application-constants';
+import { ApplicationConstants, ApplicationModules, DdlConfig, LocalStorageConstants, NavigationURLs } from '../../../../utils/application-constants';
 import { DateUtils } from '../../../../utils/date-utils';
 import { TransactionRequest } from '../../../interfaces/transaction-request';
 import { GlobalService } from '../../../services/global/global.service';
@@ -143,10 +120,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.getTransactionDetails(transactionGroupId);
     } else {
       this.transactionDetailsForm.controls['transactionDate'].patchValue(
-        this.datepipe.transform(
-          this.lastTransactionDate,
-          ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT,
-        ),
+        this.datepipe.transform(this.lastTransactionDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
       );
       this.loaderService.hideLoader();
     }
@@ -243,10 +217,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   getListValues() {
-    this.sourceOrReasonList = this.extractUniqueCapitalized(
-      this.commonSuggestionList,
-      'sourceOrReason',
-    );
+    this.sourceOrReasonList = this.extractUniqueCapitalized(this.commonSuggestionList, 'sourceOrReason');
     this.purposeList = this.extractUniqueCapitalized(this.commonSuggestionList, 'purpose');
     this.descriptionList = this.extractUniqueCapitalized(this.commonSuggestionList, 'description');
   }
@@ -293,9 +264,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   onSourceReasonChange(inputValue: string): void {
     const filteredList = this.commonSuggestionList.filter(
       (option: any) =>
-        option?.sourceOrReason &&
-        option.sourceOrReason.trim() !== '' &&
-        option.sourceOrReason.toLowerCase().includes(inputValue?.toLowerCase()),
+        option?.sourceOrReason && option.sourceOrReason.trim() !== '' && option.sourceOrReason.toLowerCase().includes(inputValue?.toLowerCase()),
     );
 
     this.filteredSourceOrReasonList = this.extractUniqueCapitalized(filteredList, 'sourceOrReason');
@@ -388,10 +357,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   patchValues(res: any) {
     this.transactionDetailsForm.patchValue({
       transactionGroupId: res.transactionGroupId,
-      transactionDate: this.datepipe.transform(
-        res.transactionDate,
-        ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT,
-      ),
+      transactionDate: this.datepipe.transform(res.transactionDate, ApplicationConstants.GLOBAL_NUMERIC_DATE_FORMAT),
       sourceOrReason: res.sourceOrReason,
       purpose: res.purpose,
       transactionCategoryId: res.subCategoryId,
@@ -454,15 +420,12 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   private ensureDescription() {
     if (!this.transactionDetailsForm.value['description']) {
-      this.transactionDetailsForm.value['description'] =
-        this.transactionDetailsForm.value['purpose'];
+      this.transactionDetailsForm.value['description'] = this.transactionDetailsForm.value['purpose'];
     }
   }
 
   private correctTransactionDate() {
-    this.transactionDetailsForm.value['transactionDate'] = DateUtils.CorrectedDate(
-      this.transactionDetailsForm.value['transactionDate'],
-    );
+    this.transactionDetailsForm.value['transactionDate'] = DateUtils.CorrectedDate(this.transactionDetailsForm.value['transactionDate']);
   }
 
   private validateAccountEntries(): string | null {
@@ -473,9 +436,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       const hasCategory = category !== null && category !== undefined && category !== 0;
 
       if (hasAmount && !hasCategory) {
-        return `Please select transaction category for ${
-          acc.configurationName || 'Unknown Account'
-        }`;
+        return `Please select transaction category for ${acc.configurationName || 'Unknown Account'}`;
       }
     }
     return null;
@@ -562,10 +523,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     }
 
     const filtered = this.commonSuggestionList.filter(
-      (option: any) =>
-        option?.[key] &&
-        option[key].trim() !== '' &&
-        option[key].toLowerCase().includes(inputValue.toLowerCase()),
+      (option: any) => option?.[key] && option[key].trim() !== '' && option[key].toLowerCase().includes(inputValue.toLowerCase()),
     );
 
     return Array.from(

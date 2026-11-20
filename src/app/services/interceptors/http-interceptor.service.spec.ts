@@ -1,12 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import {
-  HTTP_INTERCEPTORS,
-  HttpClient,
-  HttpErrorResponse,
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpInterceptorService } from './http-interceptor.service';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 
@@ -16,10 +10,7 @@ describe('HttpInterceptorService', () => {
   let localStorageService: jasmine.SpyObj<LocalStorageService>;
 
   beforeEach(() => {
-    const localStorageServiceSpy = jasmine.createSpyObj('LocalStorageService', [
-      'getLoggedInUserData',
-      'isSsoLogin',
-    ]);
+    const localStorageServiceSpy = jasmine.createSpyObj('LocalStorageService', ['getLoggedInUserData', 'isSsoLogin']);
 
     TestBed.configureTestingModule({
       imports: [],
@@ -37,9 +28,7 @@ describe('HttpInterceptorService', () => {
 
     service = TestBed.inject(HttpClient);
     httpMock = TestBed.inject(HttpTestingController);
-    localStorageService = TestBed.inject(
-      LocalStorageService,
-    ) as jasmine.SpyObj<LocalStorageService>;
+    localStorageService = TestBed.inject(LocalStorageService) as jasmine.SpyObj<LocalStorageService>;
   });
 
   afterEach(() => {

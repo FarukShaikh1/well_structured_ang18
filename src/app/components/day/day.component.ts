@@ -19,10 +19,7 @@ import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 import { DayDetailsComponent } from '../day-details/day-details.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import {
-  PrintColumnDefinition,
-  TabulatorGridComponent,
-} from '../shared/tabulator-grid/tabulator-grid.component';
+import { PrintColumnDefinition, TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { AssetService } from '../../services/asset/asset.service';
 import { ModulePermission } from '../../interfaces/module-permission';
@@ -38,14 +35,7 @@ export interface Task {
   standalone: true,
   templateUrl: './day.component.html',
   styleUrls: ['./day.component.scss'],
-  imports: [
-    TabulatorGridComponent,
-    FormsModule,
-    CommonModule,
-    DayDetailsComponent,
-    ConfirmationDialogComponent,
-    ToasterComponent,
-  ],
+  imports: [TabulatorGridComponent, FormsModule, CommonModule, DayDetailsComponent, ConfirmationDialogComponent, ToasterComponent],
   providers: [DatePipe],
 })
 export class DayComponent implements OnInit, OnDestroy {
@@ -388,10 +378,7 @@ export class DayComponent implements OnInit, OnDestroy {
     if (birthdayId) {
       this.id = birthdayId;
       this.assetId = assetId;
-      this.confirmationDialog.openConfirmationPopup(
-        'Confirmation',
-        'Are you sure you want to delete this record? This action cannot be undone.',
-      );
+      this.confirmationDialog.openConfirmationPopup('Confirmation', 'Are you sure you want to delete this record? This action cannot be undone.');
     }
   }
 
@@ -595,26 +582,14 @@ export class DayComponent implements OnInit, OnDestroy {
       const dateText = item.date?.toLowerCase().includes(this.searchText);
       const mobileNumber = item.mobileNumber?.toLowerCase().includes(this.searchText);
 
-      const month = item.specialOccasionDate
-        ? new Date(item.specialOccasionDate).getMonth() + 1
-        : null;
+      const month = item.specialOccasionDate ? new Date(item.specialOccasionDate).getMonth() + 1 : null;
 
-      const matchesMonth =
-        this.selectedMonths.length === 0 ||
-        (month !== null && this.selectedMonthsIds.includes(month));
+      const matchesMonth = this.selectedMonths.length === 0 || (month !== null && this.selectedMonthsIds.includes(month));
 
-      const matchesOccasionType =
-        this.selectedOccasionType.length === 0 || this.selectedOccasionType.includes(item.dayType);
+      const matchesOccasionType = this.selectedOccasionType.length === 0 || this.selectedOccasionType.includes(item.dayType);
 
-      const matchesRelationType =
-        this.selectedRelationType.length === 0 ||
-        this.selectedRelationType.includes(item.relationShipName);
-      const matchesDateFilter = DateUtils.checkDateFilter(
-        item.specialOccasionDate,
-        this.isToday,
-        this.isYesterday,
-        this.isTomorrow,
-      );
+      const matchesRelationType = this.selectedRelationType.length === 0 || this.selectedRelationType.includes(item.relationShipName);
+      const matchesDateFilter = DateUtils.checkDateFilter(item.specialOccasionDate, this.isToday, this.isYesterday, this.isTomorrow);
 
       return (
         (matchesName || email || address || dateText || mobileNumber) &&

@@ -1,10 +1,4 @@
-import {
-  HttpErrorResponse,
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
-} from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -35,8 +29,7 @@ export class ErrorInterceptorService implements HttpInterceptor {
 
   private resolveMessage(error: HttpErrorResponse): string {
     // Server-provided message from RFC 7807 Problem Details
-    const serverDetail: string | undefined =
-      error.error?.detail ?? error.error?.message ?? error.error?.title;
+    const serverDetail: string | undefined = error.error?.detail ?? error.error?.message ?? error.error?.title;
 
     if (serverDetail) return serverDetail;
 

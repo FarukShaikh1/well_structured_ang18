@@ -3,14 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">{{ this.currentConfig }} Details</h4>
-        <button
-          #btnCloseConfigPopup
-          class="btn-close"
-          (click)="closePopup()"
-          data-bs-dismiss="modal"
-        >
-          ✕
-        </button>
+        <button #btnCloseConfigPopup class="btn-close" (click)="closePopup()" data-bs-dismiss="modal">✕</button>
       </div>
 
       <div class="modal-body">
@@ -24,19 +17,9 @@
               formControlName="configurationName"
               [placeholder]="'Enter ' + currentConfig + ' name'"
             />
-            <div
-              *ngIf="
-                configForm.get('configurationName')?.touched &&
-                configForm.get('configurationName')?.invalid
-              "
-              class="text-danger"
-            >
-              <small *ngIf="configForm.get('configurationName')?.errors?.['required']">
-                Configuration Name is required.
-              </small>
-              <small *ngIf="configForm.get('configurationName')?.errors?.['pattern']">
-                Configuration Name cannot be empty or whitespace.
-              </small>
+            <div *ngIf="configForm.get('configurationName')?.touched && configForm.get('configurationName')?.invalid" class="text-danger">
+              <small *ngIf="configForm.get('configurationName')?.errors?.['required']"> Configuration Name is required. </small>
+              <small *ngIf="configForm.get('configurationName')?.errors?.['pattern']"> Configuration Name cannot be empty or whitespace. </small>
             </div>
           </div>
 
@@ -50,61 +33,27 @@
               rows="3"
             ></textarea>
             <div
-              *ngIf="
-                configForm.get('configurationDescription')?.touched &&
-                configForm.get('configurationDescription')?.invalid
-              "
+              *ngIf="configForm.get('configurationDescription')?.touched && configForm.get('configurationDescription')?.invalid"
               class="text-danger"
             >
-              <small *ngIf="configForm.get('configurationDescription')?.errors?.['required']">
-                Description is required.
-              </small>
-              <small *ngIf="configForm.get('configurationDescription')?.errors?.['pattern']">
-                Description cannot be empty or whitespace.
-              </small>
+              <small *ngIf="configForm.get('configurationDescription')?.errors?.['required']"> Description is required. </small>
+              <small *ngIf="configForm.get('configurationDescription')?.errors?.['pattern']"> Description cannot be empty or whitespace. </small>
             </div>
           </div>
 
           <div class="form-group pt-4">
             <label for="displaySequence">Display Sequence</label>
-            <input
-              type="number"
-              id="displaySequence"
-              class="form-control"
-              formControlName="displaySequence"
-              placeholder="Enter display sequence"
-            />
-            <div
-              *ngIf="
-                configForm.get('displaySequence')?.touched &&
-                configForm.get('displaySequence')?.invalid
-              "
-              class="text-danger"
-            >
-              <small *ngIf="configForm.get('displaySequence')?.errors?.['pattern']">
-                Display Sequence cannot be only whitespace.
-              </small>
+            <input type="number" id="displaySequence" class="form-control" formControlName="displaySequence" placeholder="Enter display sequence" />
+            <div *ngIf="configForm.get('displaySequence')?.touched && configForm.get('displaySequence')?.invalid" class="text-danger">
+              <small *ngIf="configForm.get('displaySequence')?.errors?.['pattern']"> Display Sequence cannot be only whitespace. </small>
             </div>
           </div>
 
           <div class="row mt-4">
             <div class="col-12 col-sm-12">
               <div class="action d-flex justify-content-end">
-                <button
-                  class="btn btn-secondary rounded-button"
-                  type="button"
-                  (click)="closePopup()"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-                <button
-                  class="btn btn-primary rounded-button"
-                  type="submit"
-                  [disabled]="configForm.invalid"
-                >
-                  Save
-                </button>
+                <button class="btn btn-secondary rounded-button" type="button" (click)="closePopup()" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary rounded-button" type="submit" [disabled]="configForm.invalid">Save</button>
               </div>
             </div>
           </div>

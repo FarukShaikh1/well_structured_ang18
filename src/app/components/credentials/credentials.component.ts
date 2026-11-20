@@ -88,11 +88,7 @@ export class CredentialsComponent {
         },
       });
     } else {
-      if (
-        this.credentials.find(
-          (b) => b.siteUrl === model.siteUrl && b.userName === model.userName,
-        ) != undefined
-      ) {
+      if (this.credentials.find((b) => b.siteUrl === model.siteUrl && b.userName === model.userName) != undefined) {
         this.toaster.showMessage('Duplicate credential entry found', 'error');
         return;
       }

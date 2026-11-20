@@ -4,19 +4,8 @@
     <h2 class="w-100 mt-2">Budget Management</h2>
     <div class="grid-actions">
       <div class="d-flex align-items-center gap-2">
-        <input
-          type="text"
-          placeholder="Search"
-          (keyup)="search($event)"
-          class="form-control form-control-lg"
-          style="max-width: 300px"
-        />
-        <button
-          type="button"
-          class="btn btn-outline-danger grid-action-btn"
-          (click)="printBudget()"
-          title="Print / Save as PDF"
-        >
+        <input type="text" placeholder="Search" (keyup)="search($event)" class="form-control form-control-lg" style="max-width: 300px" />
+        <button type="button" class="btn btn-outline-danger grid-action-btn" (click)="printBudget()" title="Print / Save as PDF">
           <i class="bi bi-file-earmark-pdf"></i>
           <span>PDF</span>
         </button>
@@ -37,26 +26,14 @@
       <tr *ngFor="let b of filteredBudgets">
         <td>
           @if (selectedId === b.id && isEdit) {
-            <input
-              type="text"
-              placeholder="Pay To"
-              [(ngModel)]="model.payTo"
-              class="form-control form-control-lg"
-              style="width: auto"
-            />
+            <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo" class="form-control form-control-lg" style="width: auto" />
           } @else {
             {{ b.payTo }}
           }
         </td>
         <td>
           @if (selectedId === b.id && isEdit) {
-            <input
-              type="text"
-              placeholder="Purpose"
-              [(ngModel)]="model.purpose"
-              class="form-control form-control-lg"
-              style="width: auto"
-            />
+            <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose" class="form-control form-control-lg" style="width: auto" />
           } @else {
             {{ b.purpose }}
           }
@@ -64,11 +41,7 @@
 
         <td>
           @if (selectedId === b.id && isEdit) {
-            <select
-              [(ngModel)]="model.categoryId"
-              class="form-select form-control form-control-lg"
-              style="width: auto"
-            >
+            <select [(ngModel)]="model.categoryId" class="form-select form-control form-control-lg" style="width: auto">
               <option value="">Select Category</option>
               <option *ngFor="let c of categories" [value]="c.id">
                 {{ c.configurationName }}
@@ -80,13 +53,7 @@
         </td>
         <td class="amount">
           @if (selectedId === b.id && isEdit) {
-            <input
-              type="number"
-              placeholder="Amount"
-              [(ngModel)]="model.amount"
-              class="form-control form-control-lg"
-              style="width: auto"
-            />
+            <input type="number" placeholder="Amount" [(ngModel)]="model.amount" class="form-control form-control-lg" style="width: auto" />
           } @else {
             {{ b.amount }}
           }
@@ -119,28 +86,15 @@
     <table class="print-hide w-100">
       <tr>
         <td>
-          <input
-            type="text"
-            placeholder="Pay To"
-            [(ngModel)]="model.payTo"
-            class="form-control form-control-lg text-dark bg-transparent"
-          />
+          <input type="text" placeholder="Pay To" [(ngModel)]="model.payTo" class="form-control form-control-lg text-dark bg-transparent" />
         </td>
         <td>
-          <input
-            type="text"
-            placeholder="Purpose"
-            [(ngModel)]="model.purpose"
-            class="form-control form-control-lg text-dark bg-transparent"
-          />
+          <input type="text" placeholder="Purpose" [(ngModel)]="model.purpose" class="form-control form-control-lg text-dark bg-transparent" />
         </td>
       </tr>
       <tr>
         <td>
-          <select
-            [(ngModel)]="model.categoryId"
-            class="form-select form-control form-control-lg text-dark bg-transparent"
-          >
+          <select [(ngModel)]="model.categoryId" class="form-select form-control form-control-lg text-dark bg-transparent">
             <option value="">Select Category</option>
             <option *ngFor="let c of categories" [value]="c.id">
               {{ c.configurationName }}
@@ -148,12 +102,7 @@
           </select>
         </td>
         <td>
-          <input
-            type="number"
-            placeholder="Amount"
-            [(ngModel)]="model.amount"
-            class="form-control form-control-lg text-dark bg-transparent"
-          />
+          <input type="number" placeholder="Amount" [(ngModel)]="model.amount" class="form-control form-control-lg text-dark bg-transparent" />
         </td>
       </tr>
       <tr>

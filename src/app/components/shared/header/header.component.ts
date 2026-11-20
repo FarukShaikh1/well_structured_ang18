@@ -208,10 +208,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // =========================================
 
   logout() {
-    this.confirmationPopupComponent.openConfirmModal(
-      'Confirmation',
-      'Are you sure you want to log out?',
-    );
+    this.confirmationPopupComponent.openConfirmModal('Confirmation', 'Are you sure you want to log out?');
   }
 
   handleConfirmResult(result: any) {
@@ -285,10 +282,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event.target'])
   onClickOutside(targetElement: HTMLElement) {
-    if (
-      this.notificationDropdown &&
-      !this.notificationDropdown.nativeElement.contains(targetElement)
-    ) {
+    if (this.notificationDropdown && !this.notificationDropdown.nativeElement.contains(targetElement)) {
       this.closeSystemNotificationList();
     }
   }
@@ -340,10 +334,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getUserNameInitials(): string {
-    const fullName =
-      this.localStorageService.getLoggedInUserData()?.firstName +
-      ' ' +
-      this.localStorageService.getLoggedInUserData()?.lastName;
+    const fullName = this.localStorageService.getLoggedInUserData()?.firstName + ' ' + this.localStorageService.getLoggedInUserData()?.lastName;
 
     if (!fullName) {
       return '';

@@ -33,11 +33,7 @@ export class HttpService {
     return this.http.post<T>(url, formData, options);
   }
 
-  downloadBlob(
-    url: string,
-    params?: HttpParams,
-    headers?: HttpHeaders,
-  ): Observable<HttpResponse<Blob>> {
+  downloadBlob(url: string, params?: HttpParams, headers?: HttpHeaders): Observable<HttpResponse<Blob>> {
     return this.http.get<Blob>(url, {
       params,
       headers,

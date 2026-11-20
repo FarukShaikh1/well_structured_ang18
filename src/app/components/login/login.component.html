@@ -27,53 +27,21 @@
             class="form-control btn-middle"
             placeholder="Enter Password"
           />
-          <button
-            tabindex="3"
-            type="button"
-            class="btn-right"
-            (click)="hideNewPassword = !hideNewPassword"
-          >
+          <button tabindex="3" type="button" class="btn-right" (click)="hideNewPassword = !hideNewPassword">
             <i [class]="hideNewPassword ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
           </button>
         </div>
       </div>
       <div class="col-12 text-center mt-4">
-        <button
-          tabindex="4"
-          type="submit"
-          [disabled]="isLoginClicked"
-          class="btn btn-primary rounded-button"
-          id="BtnLogin"
-        >
-          Login
-        </button>
-        <button
-          tabindex="5"
-          type="button"
-          class="btn btn-primary rounded-button"
-          (click)="navigate(NavigationURLs.CURRENCY_LIST)"
-        >
+        <button tabindex="4" type="submit" [disabled]="isLoginClicked" class="btn btn-primary rounded-button" id="BtnLogin">Login</button>
+        <button tabindex="5" type="button" class="btn btn-primary rounded-button" (click)="navigate(NavigationURLs.CURRENCY_LIST)">
           Continue Without Login
         </button>
       </div>
       <div class="text-center mt-3">
-        <button
-          tabindex="6"
-          type="button"
-          class="btn text-link back-btn"
-          (click)="navigate(NavigationURLs.FORGOT_PASSWORD)"
-        >
-          Forgot Password
-        </button>
+        <button tabindex="6" type="button" class="btn text-link back-btn" (click)="navigate(NavigationURLs.FORGOT_PASSWORD)">Forgot Password</button>
         |
-        <button
-          tabindex="7"
-          type="button"
-          class="btn text-link back-btn"
-          (click)="navigate(NavigationURLs.SIGNUP)"
-        >
-          New Here, Sign Up
-        </button>
+        <button tabindex="7" type="button" class="btn text-link back-btn" (click)="navigate(NavigationURLs.SIGNUP)">New Here, Sign Up</button>
       </div>
     </div>
   </form>

@@ -1,16 +1,6 @@
 <div class="main-body">
-  <button
-    id="openUploadDocumentButton"
-    type="button"
-    data-bs-toggle="modal"
-    data-bs-target="#uploadModal"
-    style="display: none"
-  ></button>
-  <button
-    class="btn btn-primary rounded-button"
-    data-bs-toggle="modal"
-    data-bs-target="#uploadModal"
-  >
+  <button id="openUploadDocumentButton" type="button" data-bs-toggle="modal" data-bs-target="#uploadModal" style="display: none"></button>
+  <button class="btn btn-primary rounded-button" data-bs-toggle="modal" data-bs-target="#uploadModal">
     <i class="fa fa-plus"></i>
     Upload New
   </button>
@@ -46,12 +36,8 @@
               <p style="margin-bottom: 0" [title]="doc.documentName">
                 {{ doc.documentName | truncate: 20 }}
               </p>
-              <p style="margin-bottom: 0" [title]="doc.documentName">
-                {{ doc.documentType }} • {{ humanSize(doc.sizeBytes) }}
-              </p>
-              <p style="margin-bottom: 0" [title]="doc.documentName">
-                Uploaded on - {{ DateUtils.formatDateString(doc.uploadedOn) }}
-              </p>
+              <p style="margin-bottom: 0" [title]="doc.documentName">{{ doc.documentType }} • {{ humanSize(doc.sizeBytes) }}</p>
+              <p style="margin-bottom: 0" [title]="doc.documentName">Uploaded on - {{ DateUtils.formatDateString(doc.uploadedOn) }}</p>
               <button (click)="download(doc)" class="btn btn-primary rounded-button">
                 <i class="fa fa-download"></i>
               </button>

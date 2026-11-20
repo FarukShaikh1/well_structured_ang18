@@ -63,9 +63,7 @@
 
         <div class="hero-buttons1">
           <button class="whatsapp1">
-            <a class="contact-item" style="color: #fff" href="site-under-development">
-              Our Services
-            </a>
+            <a class="contact-item" style="color: #fff" href="site-under-development"> Our Services </a>
           </button>
           <button class="whatsapp1">
             <a
@@ -75,9 +73,7 @@
               rel="noopener noreferrer"
               [href]="'https://wa.me/' + contact.whatsapp + '?text=' + encodedMessage"
             >
-              <img src="assets/icons/32px-WhatsApp.svg.png" class="wa-icon" /><span>{{
-                contact.whatsapp
-              }}</span>
+              <img src="assets/icons/32px-WhatsApp.svg.png" class="wa-icon" /><span>{{ contact.whatsapp }}</span>
             </a>
           </button>
         </div>
@@ -94,9 +90,7 @@
     <div class="container1">
       <h2>OUR RTO SERVICES</h2>
 
-      <p class="section-subtitle1">
-        A complete range of services related to your vehicle and driving licence
-      </p>
+      <p class="section-subtitle1">A complete range of services related to your vehicle and driving licence</p>
 
       <div class="service-grid1">
         @for (item of services; track $index) {
@@ -214,10 +208,7 @@
       <div class="review-card1">
         <div class="stars1">★★★★★</div>
 
-        <p>
-          “Great experience! My RC transfer was completed within 3 days. Very professional and
-          supportive team.”
-        </p>
+        <p>“Great experience! My RC transfer was completed within 3 days. Very professional and supportive team.”</p>
 
         <strong> – Rahul Sharma </strong>
       </div>
@@ -229,10 +220,7 @@
     <div class="container1 footer-grid1">
       <div>
         <h3>ABOUT US</h3>
-        <p>
-          RTO Solutions is a trusted RTO service provider offering all vehicle and driving related
-          services.
-        </p>
+        <p>RTO Solutions is a trusted RTO service provider offering all vehicle and driving related services.</p>
       </div>
       <div>
         <h3>QUICK LINKS</h3>
@@ -248,16 +236,9 @@
           <a class="contact-item" [href]="'tel:' + contact.mobile"> 📞{{ contact.mobile }} </a>
         </p>
         <p>
-          <a
-            class="contact-item"
-            target="_blank"
-            rel="noopener noreferrer"
-            [href]="'https://wa.me/' + contact.whatsapp + '?text=' + encodedMessage"
-          >
+          <a class="contact-item" target="_blank" rel="noopener noreferrer" [href]="'https://wa.me/' + contact.whatsapp + '?text=' + encodedMessage">
             <div class="wa-row">
-              <img src="assets/icons/32px-WhatsApp.svg.png" class="wa-icon" /><span>{{
-                contact.whatsapp
-              }}</span>
+              <img src="assets/icons/32px-WhatsApp.svg.png" class="wa-icon" /><span>{{ contact.whatsapp }}</span>
             </div>
           </a>
         </p>

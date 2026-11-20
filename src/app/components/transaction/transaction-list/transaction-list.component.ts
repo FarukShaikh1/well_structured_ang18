@@ -1,21 +1,8 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 import { ColumnDefinition } from 'tabulator-tables';
 
-import {
-  ApplicationConstantHtml,
-  ApplicationModules,
-  ApplicationTableConstants,
-  NavigationURLs,
-} from '../../../../utils/application-constants';
+import { ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, NavigationURLs } from '../../../../utils/application-constants';
 
 import { ExpenseFilterRequest } from '../../../interfaces/expense-filter-request';
 
@@ -183,21 +170,11 @@ export class TransactionListComponent implements OnInit, OnChanges {
       const source = item.sourceOrReason?.toLowerCase() ?? '';
       const category = item.subCategoryName?.toLowerCase() ?? '';
       const description = item.description?.toLowerCase() ?? '';
-      const textMatch =
-        !search ||
-        source.includes(search) ||
-        category.includes(search) ||
-        description.includes(search);
+      const textMatch = !search || source.includes(search) || category.includes(search) || description.includes(search);
       const expense = Number(item.expense) || 0;
       const income = Number(item.income) || 0;
-      const minMatch =
-        min === 0 ||
-        (expense !== 0 && Math.abs(expense) >= min) ||
-        (income !== 0 && Math.abs(income) >= min);
-      const maxMatch =
-        max === 0 ||
-        (expense !== 0 && Math.abs(expense) <= max) ||
-        (income !== 0 && Math.abs(income) <= max);
+      const minMatch = min === 0 || (expense !== 0 && Math.abs(expense) >= min) || (income !== 0 && Math.abs(income) >= min);
+      const maxMatch = max === 0 || (expense !== 0 && Math.abs(expense) <= max) || (income !== 0 && Math.abs(income) <= max);
       return textMatch && minMatch && maxMatch;
     });
   }
@@ -217,6 +194,7 @@ export class TransactionListComponent implements OnInit, OnChanges {
 
   deleteTransaction(transactionGroupId: string): void {
     this.deleteTransactionEvent.emit(transactionGroupId);
+    this.globalService.triggerGridReload(ApplicationModules.EXPENSES);
   }
 
   loadColumnConfiguration(): void {
@@ -298,9 +276,7 @@ export class TransactionListComponent implements OnInit, OnChanges {
         formatter: this.globalService.hidebuttonFormatter.bind(this.globalService),
         cellClick: (_e, cell) => {
           const id = cell.getRow().getData()['transactionGroupId'];
-          this.filteredTableData = this.filteredTableData.filter(
-            (item) => item.transactionGroupId != id,
-          );
+          this.filteredTableData = this.filteredTableData.filter((item) => item.transactionGroupId != id);
         },
         headerSort: false,
         print: false,

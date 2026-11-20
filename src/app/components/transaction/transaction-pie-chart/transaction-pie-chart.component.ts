@@ -46,9 +46,7 @@ export class TransactionPieChartComponent implements OnChanges {
     const isIncome = this.selectedType === 'income';
 
     const filteredData = this.parsedReportData.filter(
-      (item) =>
-        (isIncome ? item.takenAmount !== 0 : item.givenAmount !== 0) &&
-        item.takenAmount !== item.givenAmount,
+      (item) => (isIncome ? item.takenAmount !== 0 : item.givenAmount !== 0) && item.takenAmount !== item.givenAmount,
     );
     var labels;
     if (this.reportType === ApplicationConstants.REPORT_TYPE_CATEGORY_WISE) {
@@ -56,9 +54,7 @@ export class TransactionPieChartComponent implements OnChanges {
     } else {
       labels = filteredData.map((item) => item.sourceOrReason || 'Unknown');
     }
-    const amounts = isIncome
-      ? filteredData.map((x) => x.takenAmount || 0)
-      : filteredData.map((x) => x.givenAmount || 0);
+    const amounts = isIncome ? filteredData.map((x) => x.takenAmount || 0) : filteredData.map((x) => x.givenAmount || 0);
 
     this.colorIndex = 60000;
     const colors = labels.map(() => this.getSequentialColor());

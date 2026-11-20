@@ -1,10 +1,4 @@
-import {
-  HttpErrorResponse,
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
-} from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
@@ -51,10 +45,7 @@ export class HttpInterceptorService implements HttpInterceptor {
    * When a 401 arrives, attempt a single token refresh.
    * All other requests queued during refresh are replayed after new token is received.
    */
-  private handle401(
-    request: HttpRequest<unknown>,
-    next: HttpHandler,
-  ): Observable<HttpEvent<unknown>> {
+  private handle401(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (this.isRefreshing) {
       // Wait for the ongoing refresh to complete, then replay
       return this.refreshToken$.pipe(
@@ -99,9 +90,7 @@ export class HttpInterceptorService implements HttpInterceptor {
   }
 
   private isAuthEndpoint(url: string): boolean {
-    return (
-      url.includes('/user/login') || url.includes('/user/refresh-token') || url.includes('/otp/')
-    );
+    return url.includes('/user/login') || url.includes('/user/refresh-token') || url.includes('/otp/');
   }
 
   private logout(): void {

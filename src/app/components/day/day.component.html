@@ -172,11 +172,7 @@
                 <div class="subtasks">
                   <div *ngFor="let sub of task.subtasks; let i = index">
                     <label>
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="sub.completed"
-                        (change)="onSubtaskChange()"
-                      />
+                      <input type="checkbox" [(ngModel)]="sub.completed" (change)="onSubtaskChange()" />
                       {{ sub.name }}
                     </label>
                   </div>
@@ -213,10 +209,4 @@
 
 <app-confirmation-dialog (outputAction)="handleConfirmResult($event)"></app-confirmation-dialog>
 <app-toaster></app-toaster>
-<button
-  id="openDetailsButton"
-  type="button"
-  data-bs-toggle="modal"
-  data-bs-target="#detailsPopup"
-  style="display: none"
-></button>
+<button id="openDetailsButton" type="button" data-bs-toggle="modal" data-bs-target="#detailsPopup" style="display: none"></button>

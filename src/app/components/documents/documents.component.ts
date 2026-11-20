@@ -2,11 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  ActionConstant,
-  ApplicationModules,
-  NavigationURLs,
-} from '../../../utils/application-constants';
+import { ActionConstant, ApplicationModules, NavigationURLs } from '../../../utils/application-constants';
 import { DateUtils } from '../../../utils/date-utils';
 import { SafeUrlPipe } from '../../common/safe-url.pipe';
 import { TruncatePipe } from '../../common/truncate.pipe';

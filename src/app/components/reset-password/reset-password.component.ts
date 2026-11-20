@@ -1,14 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -68,9 +60,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
     this.route.queryParamMap.subscribe((params) => {
       this.token = params.get('token') ? decodeURIComponent(params.get('token') as string) : null;
       this.email = params.get('email') ? decodeURIComponent(params.get('email') as string) : null;
-      const resetPasswordParam = params.get('iswelcome')
-        ? decodeURIComponent(params.get('iswelcome') as string)
-        : '';
+      const resetPasswordParam = params.get('iswelcome') ? decodeURIComponent(params.get('iswelcome') as string) : '';
       this.personName = params.get('name') ? decodeURIComponent(params.get('name') as string) : '';
 
       if (resetPasswordParam === 'true') {
@@ -109,10 +99,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
 
   getPasswordLengthMessage(): string {
-    return Messages.PASSWORD_LENGTH_MSG.replace(
-      '{0}',
-      ApplicationConstants.MIN_LENGTH_PASSWORD.toString(),
-    );
+    return Messages.PASSWORD_LENGTH_MSG.replace('{0}', ApplicationConstants.MIN_LENGTH_PASSWORD.toString());
   }
 
   passwordMatchValidator(form: FormGroup) {
@@ -146,9 +133,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit {
         return null;
       }
 
-      const containsNamePart = nameParts.some((part) =>
-        password.toLowerCase().includes(part.toLowerCase()),
-      );
+      const containsNamePart = nameParts.some((part) => password.toLowerCase().includes(part.toLowerCase()));
 
       return containsNamePart ? { nameContains: true } : null;
     };

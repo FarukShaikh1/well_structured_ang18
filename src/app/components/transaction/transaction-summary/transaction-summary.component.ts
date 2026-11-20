@@ -1,21 +1,8 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 import { ColumnDefinition } from 'tabulator-tables';
 
-import {
-  ApplicationConstantHtml,
-  ApplicationModules,
-  ApplicationTableConstants,
-  NavigationURLs,
-} from '../../../../utils/application-constants';
+import { ApplicationConstantHtml, ApplicationModules, ApplicationTableConstants, NavigationURLs } from '../../../../utils/application-constants';
 
 import { ExpenseFilterRequest } from '../../../interfaces/expense-filter-request';
 
@@ -265,9 +252,7 @@ export class TransactionSummaryComponent implements OnInit, OnChanges {
       },
     ];
 
-    const accountColumns = this.cacheService.get<any>(
-      NavigationURLs.EXPENSE_SUMMARY_LIST + '_AccountColumns',
-    );
+    const accountColumns = this.cacheService.get<any>(NavigationURLs.EXPENSE_SUMMARY_LIST + '_AccountColumns');
 
     if (accountColumns) {
       for (const key of Object.keys(accountColumns)) {
@@ -305,9 +290,7 @@ export class TransactionSummaryComponent implements OnInit, OnChanges {
       formatter: this.globalService.hidebuttonFormatter.bind(this.globalService),
       cellClick: (_e, cell) => {
         const id = cell.getRow().getData()['transactionGroupId'];
-        this.filteredTableData = this.filteredTableData.filter(
-          (item) => item.transactionGroupId != id,
-        );
+        this.filteredTableData = this.filteredTableData.filter((item) => item.transactionGroupId != id);
       },
       headerSort: false,
       print: false,
@@ -425,5 +408,6 @@ export class TransactionSummaryComponent implements OnInit, OnChanges {
 
   deleteTransaction(transactionGroupId: string): void {
     this.deleteTransactionEvent.emit(transactionGroupId);
+    this.globalService.triggerGridReload(ApplicationModules.EXPENSES);
   }
 }

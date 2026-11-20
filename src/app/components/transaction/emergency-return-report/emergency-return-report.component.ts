@@ -168,9 +168,7 @@ export class EmergencyReturnReportComponent implements OnInit {
         cellClick: (_e, cell) => {
           const source = cell.getRow().getData()['sourceOrReason'];
 
-          this.filteredTableData = this.filteredTableData.filter(
-            (item) => item.sourceOrReason != source,
-          );
+          this.filteredTableData = this.filteredTableData.filter((item) => item.sourceOrReason != source);
         },
 
         headerSort: false,

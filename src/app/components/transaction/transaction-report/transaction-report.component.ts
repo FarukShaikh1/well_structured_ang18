@@ -2,11 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 
 import { ColumnDefinition } from 'tabulator-tables';
 
-import {
-  ApplicationConstants,
-  ApplicationTableConstants,
-  NavigationURLs,
-} from '../../../../utils/application-constants';
+import { ApplicationConstants, ApplicationTableConstants, NavigationURLs } from '../../../../utils/application-constants';
 
 import { ExpenseFilterRequest } from '../../../interfaces/expense-filter-request';
 
@@ -136,14 +132,9 @@ export class TransactionReportComponent implements OnInit, OnChanges {
     const max = Number(this.filter?.maxAmount) || 0;
 
     this.filteredTableData = this.tableData.filter((item: any) => {
-      const textMatch =
-        !search ||
-        item.sourceOrReason?.toLowerCase().includes(search) ||
-        item.description?.toLowerCase().includes(search);
+      const textMatch = !search || item.sourceOrReason?.toLowerCase().includes(search) || item.description?.toLowerCase().includes(search);
 
-      const amounts = [item.givenAmount, item.totalAmount, item.takenAmount]
-        .map((x) => Number(x))
-        .filter((x) => !isNaN(x));
+      const amounts = [item.givenAmount, item.totalAmount, item.takenAmount].map((x) => Number(x)).filter((x) => !isNaN(x));
 
       const minMatch = min === 0 || amounts.some((x) => x !== 0 && Math.abs(x) >= min);
 
@@ -242,9 +233,7 @@ export class TransactionReportComponent implements OnInit, OnChanges {
         cellClick: (_e, cell) => {
           const source = cell.getRow().getData()['sourceOrReason'];
 
-          this.filteredTableData = this.filteredTableData.filter(
-            (item) => item.sourceOrReason != source,
-          );
+          this.filteredTableData = this.filteredTableData.filter((item) => item.sourceOrReason != source);
 
           this.transactionReports = [...this.filteredTableData];
         },

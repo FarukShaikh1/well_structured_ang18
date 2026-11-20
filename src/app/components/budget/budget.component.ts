@@ -61,11 +61,9 @@ export class BudgetComponent implements OnInit {
   }
 
   loadCategories() {
-    this.configService
-      .getActiveConfigList(this.userId, UserConfig.TRANSACTION_CATEGORY)
-      .subscribe((res: any) => {
-        this.categories = res?.data;
-      });
+    this.configService.getActiveConfigList(this.userId, UserConfig.TRANSACTION_CATEGORY).subscribe((res: any) => {
+      this.categories = res?.data;
+    });
   }
 
   save() {
@@ -90,11 +88,7 @@ export class BudgetComponent implements OnInit {
         },
       });
     } else {
-      if (
-        this.budgets.find(
-          (b) => b.payTo === this.model.payTo && b.categoryId === this.model.categoryId,
-        ) != undefined
-      ) {
+      if (this.budgets.find((b) => b.payTo === this.model.payTo && b.categoryId === this.model.categoryId) != undefined) {
         this.toaster.showMessage('Duplicate budget entry found', 'error');
         return;
       }

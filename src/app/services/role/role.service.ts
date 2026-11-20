@@ -18,11 +18,7 @@ export class RoleService {
   getPermission(userId: string | null): Observable<any> {
     if (userId == '') {
       const localStorageUserId = localStorage.getItem(LocalStorageConstants.USERID)?.toString();
-      if (
-        localStorageUserId != '' &&
-        localStorageUserId != undefined &&
-        localStorageUserId != 'undefined'
-      ) {
+      if (localStorageUserId != '' && localStorageUserId != undefined && localStorageUserId != 'undefined') {
         userId = localStorageUserId ?? '';
       } else {
         const userString = localStorage.getItem(LocalStorageConstants.USER);

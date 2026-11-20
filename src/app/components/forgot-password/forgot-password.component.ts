@@ -4,11 +4,7 @@ import * as forms from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
-import {
-  ApplicationConstants,
-  Messages,
-  NavigationURLs,
-} from '../../../utils/application-constants';
+import { ApplicationConstants, Messages, NavigationURLs } from '../../../utils/application-constants';
 import { LoaderService } from '../../services/loader/loader.service';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 import { LogoutService } from '../../services/logout/logout.service';
@@ -20,14 +16,7 @@ import { SiteUnderDevelopmentComponent } from '../shared/site-under-development/
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [
-    CommonModule,
-    forms.ReactiveFormsModule,
-    ToasterComponent,
-    LoaderComponent,
-    SiteUnderDevelopmentComponent,
-    NgbCarouselModule,
-  ],
+  imports: [CommonModule, forms.ReactiveFormsModule, ToasterComponent, LoaderComponent, SiteUnderDevelopmentComponent, NgbCarouselModule],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css',
 })
@@ -84,10 +73,7 @@ export class ForgotPasswordComponent implements OnInit {
         },
         error: (error: any) => {
           if (error?.error?.errors?.ConfirmPassword) {
-            console.error(
-              'Could not send password reset link',
-              error?.error?.errors?.ConfirmPassword,
-            );
+            console.error('Could not send password reset link', error?.error?.errors?.ConfirmPassword);
             this.toaster.showMessage(error?.error?.errors?.ConfirmPassword, 'error');
           } else {
             console.error('Could not send password reset link', error);

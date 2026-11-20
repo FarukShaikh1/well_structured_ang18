@@ -1,21 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import {
-  ApplicationConstants,
-  ApplicationRoles,
-  Messages,
-  NavigationURLs,
-} from '../../../utils/application-constants';
+import { ApplicationConstants, ApplicationRoles, Messages, NavigationURLs } from '../../../utils/application-constants';
 
 import { ChangePassword } from '../../interfaces/change-password';
 import { GlobalService } from '../../services/global/global.service';
@@ -100,10 +87,7 @@ export class ChangePasswordComponent implements OnInit {
   // ============================
 
   getPasswordLengthMessage(): string {
-    return Messages.PASSWORD_LENGTH_MSG.replace(
-      '{0}',
-      ApplicationConstants.MIN_LENGTH_PASSWORD.toString(),
-    );
+    return Messages.PASSWORD_LENGTH_MSG.replace('{0}', ApplicationConstants.MIN_LENGTH_PASSWORD.toString());
   }
 
   // ============================
@@ -163,9 +147,7 @@ export class ChangePasswordComponent implements OnInit {
         return null;
       }
 
-      const containsNamePart = nameParts.some((part) =>
-        password.toLowerCase().includes(part.toLowerCase()),
-      );
+      const containsNamePart = nameParts.some((part) => password.toLowerCase().includes(part.toLowerCase()));
 
       return containsNamePart ? { nameContains: true } : null;
     };
@@ -195,11 +177,7 @@ export class ChangePasswordComponent implements OnInit {
       next: (response) => {
         this.processing = false;
         if (response?.success) {
-          this.toaster.showMessage(
-            response?.message || 'Password changed successfully. Please login again.',
-            'success',
-            5000,
-          );
+          this.toaster.showMessage(response?.message || 'Password changed successfully. Please login again.', 'success', 5000);
           setTimeout(() => {
             this.loaderService.hideLoader();
             this.logout();
@@ -213,10 +191,7 @@ export class ChangePasswordComponent implements OnInit {
       error: (error: any) => {
         this.processing = false;
         this.loaderService.hideLoader();
-        this.toaster.showMessage(
-          error?.error?.message || error?.error?.error || 'Error in changing password.',
-          'error',
-        );
+        this.toaster.showMessage(error?.error?.message || error?.error?.error || 'Error in changing password.', 'error');
       },
     });
   }
@@ -250,9 +225,7 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   get isPasswordMismatch(): boolean {
-    return (
-      this.changePasswordForm.hasError('passwordMismatch') && !!this.confirmPasswordControl?.value
-    );
+    return this.changePasswordForm.hasError('passwordMismatch') && !!this.confirmPasswordControl?.value;
   }
 
   get isSameAsOldPassword(): boolean {

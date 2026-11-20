@@ -108,10 +108,7 @@ export class SignupComponent {
       next: (res: any) => {
         this.isSubmitting = false;
 
-        this.toaster.showMessage(
-          'Registration submitted successfully. Please verify your email.',
-          'success',
-        );
+        this.toaster.showMessage('Registration submitted successfully. Please verify your email.', 'success');
 
         // Assuming API returns registrationId
         const registrationId = res?.registrationId || res;

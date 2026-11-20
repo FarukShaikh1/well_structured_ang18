@@ -20,23 +20,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              class="h-20px"
-              *ngFor="let item of rolesDataSource; index as i"
-              (onclick)="rowClicked(item.roleName)"
-            >
+            <tr class="h-20px" *ngFor="let item of rolesDataSource; index as i" (onclick)="rowClicked(item.roleName)">
               <td></td>
               <td data-label="Sr.No.">{{ i + 1 }}</td>
               <td data-label="">{{ item.roleName }}</td>
               <td data-label="">{{ item.RoleDescription }}</td>
               <td class="action-buttons">
-                <button
-                  span-button
-                  color="warn"
-                  (click)="deleteRole(item.RoleId)"
-                  class="td-action"
-                  title="Delete item"
-                >
+                <button span-button color="warn" (click)="deleteRole(item.RoleId)" class="td-action" title="Delete item">
                   <span> delete</span>
                 </button>
               </td>
@@ -45,9 +35,7 @@
         </table>
         @if (rolesDataSource != null) {
           <div class="pagination-holder">
-            <div class="results-info">
-              Showing {{ itemcount() }} Out Of {{ rolesDataSource.length }} results
-            </div>
+            <div class="results-info">Showing {{ itemcount() }} Out Of {{ rolesDataSource.length }} results</div>
             <div class="form-field ms-3">
               <label for="pageSizeSelect"> Items per page:</label>
               <select id="pageSizeSelect">

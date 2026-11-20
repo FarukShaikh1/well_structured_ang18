@@ -1,12 +1,4 @@
-import {
-  Directive,
-  Input,
-  OnInit,
-  TemplateRef,
-  ViewContainerRef,
-  inject,
-  effect,
-} from '@angular/core';
+import { Directive, Input, OnInit, TemplateRef, ViewContainerRef, inject, effect } from '@angular/core';
 import { PermissionService } from '../../services/global/permission.service';
 
 /**
@@ -50,9 +42,7 @@ export class HasPermissionDirective implements OnInit {
     const permissions = Array.isArray(this.permission) ? this.permission : [this.permission];
 
     const granted =
-      this.mode === 'any'
-        ? this.permissionService.hasAnyPermission(permissions)
-        : this.permissionService.hasAllPermissions(permissions);
+      this.mode === 'any' ? this.permissionService.hasAnyPermission(permissions) : this.permissionService.hasAllPermissions(permissions);
 
     if (granted && !this.hasView) {
       this.vcr.createEmbeddedView(this.tpl);

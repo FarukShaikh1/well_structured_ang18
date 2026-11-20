@@ -15,14 +15,8 @@ describe('authGuard', () => {
     TestBed.runInInjectionContext(() => authGuard(route, state));
 
   beforeEach(() => {
-    const localStorageSpy = jasmine.createSpyObj('LocalStorageService', [
-      'isAuthenticated',
-      'setUserAuthorized',
-    ]);
-    const globalSpy = jasmine.createSpyObj('GlobalService', [
-      'getRolePageMappingData',
-      'reloadComponent',
-    ]);
+    const localStorageSpy = jasmine.createSpyObj('LocalStorageService', ['isAuthenticated', 'setUserAuthorized']);
+    const globalSpy = jasmine.createSpyObj('GlobalService', ['getRolePageMappingData', 'reloadComponent']);
     const routerMock = jasmine.createSpyObj('Router', ['navigate']);
 
     TestBed.configureTestingModule({
@@ -33,9 +27,7 @@ describe('authGuard', () => {
       ],
     });
 
-    localStorageServiceSpy = TestBed.inject(
-      LocalStorageService,
-    ) as jasmine.SpyObj<LocalStorageService>;
+    localStorageServiceSpy = TestBed.inject(LocalStorageService) as jasmine.SpyObj<LocalStorageService>;
     globalServiceSpy = TestBed.inject(GlobalService) as jasmine.SpyObj<GlobalService>;
     routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
   });

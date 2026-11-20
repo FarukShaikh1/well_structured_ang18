@@ -1,16 +1,10 @@
-<header
-  class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm position-sticky top-0 z-3 print-hide"
->
+<header class="d-flex justify-content-between align-items-center p-2 public-page-bg shadow-sm position-sticky top-0 z-3 print-hide">
   <!-- Left side: Welcome / User Name -->
   <div class="d-flex align-items-center flex-shrink-0">
     @if (alreadyLoggedIn) {
       <div>
         Hello
-        {{
-          localStorageService.getLoggedInUserData()?.firstName +
-            ' ' +
-            localStorageService.getLoggedInUserData()?.lastName
-        }}!
+        {{ localStorageService.getLoggedInUserData()?.firstName + ' ' + localStorageService.getLoggedInUserData()?.lastName }}!
       </div>
     } @else {
       Welcome to FMS Collection
@@ -24,21 +18,8 @@
       <!-- MOBILE MENU BUTTON (< md) -->
       <!-- ========================================= -->
 
-      <button
-        class="btn border shadow-sm d-md-none ms-2"
-        type="button"
-        (click)="openMobileMenu()"
-        aria-label="Open navigation menu"
-      >
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-        >
+      <button class="btn border shadow-sm d-md-none ms-2" type="button" (click)="openMobileMenu()" aria-label="Open navigation menu">
+        <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M2 4h12M2 8h12M2 12h12" />
         </svg>
       </button>
@@ -79,9 +60,7 @@
             >
               <i class="bi bi-bell fs-5"></i>
               @if (notificationTotalUnreadCount > 0) {
-                <span
-                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                >
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                   {{ notificationTotalUnreadCount }}
                 </span>
               }
@@ -93,19 +72,10 @@
               aria-labelledby="notificationDropdown"
               style="min-width: 320px; max-height: 400px; overflow-y: auto; right: 0; left: auto"
             >
-              <li
-                class="dropdown-header d-flex justify-content-between align-items-center sticky-top bg-white"
-              >
+              <li class="dropdown-header d-flex justify-content-between align-items-center sticky-top bg-white">
                 <strong>Notifications</strong>
 
-                <button
-                  type="button"
-                  class="btn-close"
-                  aria-label="Close"
-                  (click)="closeSystemNotificationList()"
-                >
-                  ✕
-                </button>
+                <button type="button" class="btn-close" aria-label="Close" (click)="closeSystemNotificationList()">✕</button>
               </li>
 
               <li>
@@ -117,11 +87,7 @@
               } @else {
                 @for (notification of notifications; track $index) {
                   <li>
-                    <a
-                      class="dropdown-item d-flex flex-column"
-                      href="javascript:void(0)"
-                      (click)="markSystemNotificationAsRead(notification)"
-                    >
+                    <a class="dropdown-item d-flex flex-column" href="javascript:void(0)" (click)="markSystemNotificationAsRead(notification)">
                       <div>
                         {{ notification.notificationMessage }}
                       </div>
@@ -138,13 +104,7 @@
                 </li>
 
                 <li class="text-center">
-                  <button
-                    type="button"
-                    class="dropdown-item text-primary fw-semibold"
-                    (click)="viewAllSystemNotifications()"
-                  >
-                    View All
-                  </button>
+                  <button type="button" class="dropdown-item text-primary fw-semibold" (click)="viewAllSystemNotifications()">View All</button>
                 </li>
               }
             </ul>
@@ -157,21 +117,10 @@
       <!-- ========================================= -->
 
       <div class="dropdown flex-shrink-0 me-2">
-        <button
-          class="btn p-0"
-          type="button"
-          id="dropdownMenuButton"
-          data-bs-toggle="dropdown"
-          data-bs-auto-close="true"
-        >
+        <button class="btn p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" data-bs-auto-close="true">
           <div class="profile-circle">
             @if (thumbnailUrl && thumbnailUrl.length > 0) {
-              <img
-                [src]="thumbnailUrl"
-                class="profile-circle"
-                alt="Profile"
-                [alt]="userNameInitials"
-              />
+              <img [src]="thumbnailUrl" class="profile-circle" alt="Profile" [alt]="userNameInitials" />
             } @else {
               <span title="{{ loggedInUserName }}">
                 {{ userNameInitials }}
@@ -189,42 +138,26 @@
           </li>
 
           <li>
-            <a
-              class="dropdown-item"
-              (click)="logout()"
-              data-bs-toggle="modal"
-              data-bs-target="#confirmBox"
-            >
+            <a class="dropdown-item" (click)="logout()" data-bs-toggle="modal" data-bs-target="#confirmBox">
               <i class="bi bi-box-arrow-right"></i>
               &nbsp;Log Out
             </a>
           </li>
         </ul>
       </div>
-
     } @else {
       <!-- ========================================= -->
       <!-- PUBLIC HEADER -->
       <!-- ========================================= -->
 
       <div class="grid-actions">
-        <button
-          type="button"
-          class="btn btn-outline-success grid-action-btn"
-          (click)="navigate(NavigationURLs.SIGNUP)"
-          title="SIGN UP"
-        >
+        <button type="button" class="btn btn-outline-success grid-action-btn" (click)="navigate(NavigationURLs.SIGNUP)" title="SIGN UP">
           <i class="bi bi-file-earmark-excel"></i>
 
           <span>SIGN UP</span>
         </button>
 
-        <button
-          type="button"
-          class="btn btn-outline-success grid-action-btn"
-          (click)="navigate(NavigationURLs.LOGIN)"
-          title="LOGIN"
-        >
+        <button type="button" class="btn btn-outline-success grid-action-btn" (click)="navigate(NavigationURLs.LOGIN)" title="LOGIN">
           <i class="bi bi-file-earmark-pdf"></i>
 
           <span>LOGIN</span>

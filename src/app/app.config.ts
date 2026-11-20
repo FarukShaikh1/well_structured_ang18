@@ -1,9 +1,4 @@
-import {
-  HTTP_INTERCEPTORS,
-  provideHttpClient,
-  withFetch,
-  withInterceptorsFromDi,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig, ErrorHandler, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -19,13 +14,7 @@ import {
   MsalInterceptorConfiguration,
   MsalService,
 } from '@azure/msal-angular';
-import {
-  BrowserCacheLocation,
-  InteractionType,
-  IPublicClientApplication,
-  LogLevel,
-  PublicClientApplication,
-} from '@azure/msal-browser';
+import { BrowserCacheLocation, InteractionType, IPublicClientApplication, LogLevel, PublicClientApplication } from '@azure/msal-browser';
 import { OktaAuthModule } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { environment } from '../environments/environment';

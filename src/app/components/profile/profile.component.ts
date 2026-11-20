@@ -49,47 +49,27 @@ export class ProfileComponent {
 
   onCheckboxChange() {
     if (this.profileForm.controls['userNameCheckbox'].value) {
-      this.profileForm.controls['userName'].patchValue(
-        this.profileForm.controls['emailAddress'].value,
-      );
+      this.profileForm.controls['userName'].patchValue(this.profileForm.controls['emailAddress'].value);
       this.readonly = true;
     } else this.readonly = true;
   }
   updateProfile() {
-    if (
-      this.profileForm.value['userName'] != null &&
-      this.profileForm.value['userName'].length <= 0
-    ) {
+    if (this.profileForm.value['userName'] != null && this.profileForm.value['userName'].length <= 0) {
       return;
     }
-    if (
-      this.profileForm.value['emailAddress'] != null &&
-      this.profileForm.value['emailAddress'].length <= 0
-    ) {
+    if (this.profileForm.value['emailAddress'] != null && this.profileForm.value['emailAddress'].length <= 0) {
       return;
     }
-    if (
-      this.profileForm.value['firstName'] != null &&
-      this.profileForm.value['firstName'].length <= 0
-    ) {
+    if (this.profileForm.value['firstName'] != null && this.profileForm.value['firstName'].length <= 0) {
       return;
     }
-    if (
-      this.profileForm.value['mobileNumber'] != null &&
-      this.profileForm.value['mobileNumber'].length <= 0
-    ) {
+    if (this.profileForm.value['mobileNumber'] != null && this.profileForm.value['mobileNumber'].length <= 0) {
       return;
     }
-    if (
-      this.profileForm.value['roleName'] != null &&
-      this.profileForm.value['roleName'].length <= 0
-    ) {
+    if (this.profileForm.value['roleName'] != null && this.profileForm.value['roleName'].length <= 0) {
       return;
     }
-    if (
-      this.profileForm.value['password'] != null &&
-      this.profileForm.value['password'].length <= 0
-    ) {
+    if (this.profileForm.value['password'] != null && this.profileForm.value['password'].length <= 0) {
       return;
     }
     this.userService.updateUserDetails(this.profileForm.value).subscribe((result) => {

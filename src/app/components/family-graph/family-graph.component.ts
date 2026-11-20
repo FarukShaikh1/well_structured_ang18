@@ -140,11 +140,7 @@ export class FamilyGraphComponent implements AfterViewInit, OnDestroy {
       layout: { improvedLayout: true },
     };
 
-    this.network = new Network(
-      this.graphCanvas.nativeElement,
-      { nodes: this.nodes, edges: this.edges },
-      options,
-    );
+    this.network = new Network(this.graphCanvas.nativeElement, { nodes: this.nodes, edges: this.edges }, options);
   }
 
   // ── Main search ───────────────────────────────────────────────────────────

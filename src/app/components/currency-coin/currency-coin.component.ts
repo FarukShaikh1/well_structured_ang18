@@ -22,10 +22,7 @@ import { LocalStorageService } from '../../services/local-storage/local-storage.
 import { CurrencyCoinDetailsComponent } from '../currency-coin-details/currency-coin-details.component';
 import { MyProfileComponent } from '../my-profile/my-profile.component';
 import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confirmation-dialog.component';
-import {
-  PrintColumnDefinition,
-  TabulatorGridComponent,
-} from '../shared/tabulator-grid/tabulator-grid.component';
+import { PrintColumnDefinition, TabulatorGridComponent } from '../shared/tabulator-grid/tabulator-grid.component';
 import { ToasterComponent } from '../shared/toaster/toaster.component';
 import { ModulePermission } from '../../interfaces/module-permission';
 
@@ -220,8 +217,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
     if (!this.filteredCoinList.length) {
       return;
     }
-    this.currentIndex =
-      (this.currentIndex - 1 + this.filteredCoinList.length) % this.filteredCoinList.length;
+    this.currentIndex = (this.currentIndex - 1 + this.filteredCoinList.length) % this.filteredCoinList.length;
     this.resetZoom();
   }
 
@@ -602,15 +598,11 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
      ========================================================= */
 
   hideFromSummary(countryName: any) {
-    this.filteredSummaryTableData = this.filteredSummaryTableData.filter(
-      (item: any) => item.countryName != countryName,
-    );
+    this.filteredSummaryTableData = this.filteredSummaryTableData.filter((item: any) => item.countryName != countryName);
   }
 
   hideCollectionCoin(collectionCoinId: any) {
-    this.filteredTableData = this.filteredTableData.filter(
-      (item: any) => item.id != collectionCoinId,
-    );
+    this.filteredTableData = this.filteredTableData.filter((item: any) => item.id != collectionCoinId);
   }
 
   /* =========================================================
@@ -849,29 +841,19 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
 
       const matchesCurrencyType = item.currencyCoinType?.toLowerCase().includes(this.searchText);
 
-      const matchesActulaValue = item.actualValue
-        ?.toString()
-        ?.toLowerCase()
-        .includes(this.searchText);
+      const matchesActulaValue = item.actualValue?.toString()?.toLowerCase().includes(this.searchText);
 
-      const matchesIndianValue = item.indianValue
-        ?.toString()
-        ?.toLowerCase()
-        .includes(this.searchText);
+      const matchesIndianValue = item.indianValue?.toString()?.toLowerCase().includes(this.searchText);
 
       const matchesDescription = item.description?.toLowerCase().includes(this.searchText);
 
-      const matchesGeneratedDescription = item.generatedDescription
-        ?.toLowerCase()
-        .includes(this.searchText);
+      const matchesGeneratedDescription = item.generatedDescription?.toLowerCase().includes(this.searchText);
 
       const matchesExtractedText = item.extractedText?.toLowerCase().includes(this.searchText);
 
-      const matchesCountry =
-        this.selectedCountry.length === 0 || this.selectedCountry.includes(item.countryName);
+      const matchesCountry = this.selectedCountry.length === 0 || this.selectedCountry.includes(item.countryName);
 
-      const matchesType =
-        this.selectedType.length === 0 || this.selectedType.includes(item.currencyCoinType);
+      const matchesType = this.selectedType.length === 0 || this.selectedType.includes(item.currencyCoinType);
 
       return (
         (matchesCoinName ||
@@ -910,8 +892,7 @@ export class CurrencyCoinComponent implements OnInit, OnDestroy {
 
       const matchesTotalCount = item.total == this.searchText;
 
-      const matchesCountry =
-        this.selectedCountry.length === 0 || this.selectedCountry.includes(item.countryName);
+      const matchesCountry = this.selectedCountry.length === 0 || this.selectedCountry.includes(item.countryName);
 
       return (
         (matchesCountryName ||

@@ -299,10 +299,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
 
     this.transactionGroupId = transactionGroupId;
 
-    this.confirmationDialog.openConfirmationPopup(
-      'Confirmation',
-      'Are you sure you want to delete this transaction? This action cannot be undone.',
-    );
+    this.confirmationDialog.openConfirmationPopup('Confirmation', 'Are you sure you want to delete this transaction? This action cannot be undone.');
   }
 
   /**

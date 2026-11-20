@@ -12,12 +12,7 @@ describe('RoleService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [],
-      providers: [
-        RoleService,
-        HttpService,
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-      ],
+      providers: [RoleService, HttpService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
     });
     service = TestBed.inject(RoleService);
     httpMock = TestBed.inject(HttpTestingController);

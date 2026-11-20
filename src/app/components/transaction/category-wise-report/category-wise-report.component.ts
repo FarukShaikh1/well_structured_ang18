@@ -2,11 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 
 import { ColumnDefinition } from 'tabulator-tables';
 
-import {
-  ApplicationConstants,
-  ApplicationTableConstants,
-  NavigationURLs,
-} from '../../../../utils/application-constants';
+import { ApplicationConstants, ApplicationTableConstants, NavigationURLs } from '../../../../utils/application-constants';
 
 import { ExpenseFilterRequest } from '../../../interfaces/expense-filter-request';
 
@@ -142,9 +138,7 @@ export class CategoryWiseReportComponent implements OnInit, OnChanges {
         item.categoryName?.toLowerCase().includes(search) ||
         item.description?.toLowerCase().includes(search);
 
-      const amounts = [item.givenAmount, item.totalAmount, item.takenAmount]
-        .map((x) => Number(x))
-        .filter((x) => !isNaN(x));
+      const amounts = [item.givenAmount, item.totalAmount, item.takenAmount].map((x) => Number(x)).filter((x) => !isNaN(x));
 
       const minMatch = min === 0 || amounts.some((x) => x !== 0 && Math.abs(x) >= min);
 
@@ -281,9 +275,7 @@ export class CategoryWiseReportComponent implements OnInit, OnChanges {
         cellClick: (_e, cell) => {
           const category = cell.getRow().getData()['categoryName'];
 
-          this.filteredTableData = this.filteredTableData.filter(
-            (item) => item.categoryName != category,
-          );
+          this.filteredTableData = this.filteredTableData.filter((item) => item.categoryName != category);
 
           this.categoryWiseReportResponse = [...this.filteredTableData];
         },

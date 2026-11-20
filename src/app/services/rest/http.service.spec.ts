@@ -1,12 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpService } from './http.service';
-import {
-  HttpHeaders,
-  HttpParams,
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from '@angular/common/http';
+import { HttpHeaders, HttpParams, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('HttpService', () => {
   let service: HttpService;
@@ -15,11 +10,7 @@ describe('HttpService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [],
-      providers: [
-        HttpService,
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-      ],
+      providers: [HttpService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
     });
     service = TestBed.inject(HttpService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -40,10 +31,7 @@ describe('HttpService', () => {
 
     service.get(url, params, headers).subscribe();
 
-    const req = httpMock.expectOne(
-      (request) =>
-        request.url === url && request.params.has('key') && request.headers.has('Authorization'),
-    );
+    const req = httpMock.expectOne((request) => request.url === url && request.params.has('key') && request.headers.has('Authorization'));
 
     expect(req.request.method).toBe('GET');
     req.flush({});
@@ -56,9 +44,7 @@ describe('HttpService', () => {
 
     service.post(url, requestBody, headers).subscribe();
 
-    const req = httpMock.expectOne(
-      (request) => request.url === url && request.headers.has('Authorization'),
-    );
+    const req = httpMock.expectOne((request) => request.url === url && request.headers.has('Authorization'));
 
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(requestBody);
@@ -72,9 +58,7 @@ describe('HttpService', () => {
 
     service.put(url, requestBody, headers).subscribe();
 
-    const req = httpMock.expectOne(
-      (request) => request.url === url && request.headers.has('Authorization'),
-    );
+    const req = httpMock.expectOne((request) => request.url === url && request.headers.has('Authorization'));
 
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual(requestBody);
@@ -87,9 +71,7 @@ describe('HttpService', () => {
 
     service.delete(url, headers).subscribe();
 
-    const req = httpMock.expectOne(
-      (request) => request.url === url && request.headers.has('Authorization'),
-    );
+    const req = httpMock.expectOne((request) => request.url === url && request.headers.has('Authorization'));
 
     expect(req.request.method).toBe('DELETE');
     req.flush({});

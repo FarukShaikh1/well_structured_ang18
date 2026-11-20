@@ -244,12 +244,7 @@ export class FoodMenuComponent implements OnInit {
       return;
     }
 
-    if (
-      !this.model.breakfast &&
-      !this.model.lunch &&
-      !this.model.eveningBreakfast &&
-      !this.model.dinner
-    ) {
+    if (!this.model.breakfast && !this.model.lunch && !this.model.eveningBreakfast && !this.model.dinner) {
       this.toaster.showMessage('Please select at least one meal', 'error');
 
       return;

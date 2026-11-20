@@ -23,13 +23,8 @@ describe('GlobalErrorHandlerService', () => {
 
     service.handleError(error);
 
-    expect(console.error).toHaveBeenCalledWith(
-      'GlobalErrorHandlerService: An error occurred:',
-      error,
-    );
-    expect(window.alert).toHaveBeenCalledWith(
-      'GlobalErrorHandlerService: An error occurred: ' + error,
-    );
+    expect(console.error).toHaveBeenCalledWith('GlobalErrorHandlerService: An error occurred:', error);
+    expect(window.alert).toHaveBeenCalledWith('GlobalErrorHandlerService: An error occurred: ' + error);
   });
 
   it('should log and alert on error (Error object)', () => {
@@ -40,13 +35,8 @@ describe('GlobalErrorHandlerService', () => {
 
     service.handleError(error);
 
-    expect(console.error).toHaveBeenCalledWith(
-      'GlobalErrorHandlerService: An error occurred:',
-      error,
-    );
-    expect(window.alert).toHaveBeenCalledWith(
-      'GlobalErrorHandlerService: An error occurred: ' + error,
-    );
+    expect(console.error).toHaveBeenCalledWith('GlobalErrorHandlerService: An error occurred:', error);
+    expect(window.alert).toHaveBeenCalledWith('GlobalErrorHandlerService: An error occurred: ' + error);
   });
 
   it('should log and alert on error (Custom object)', () => {
@@ -57,13 +47,8 @@ describe('GlobalErrorHandlerService', () => {
 
     service.handleError(error);
 
-    expect(console.error).toHaveBeenCalledWith(
-      'GlobalErrorHandlerService: An error occurred:',
-      error,
-    );
-    expect(window.alert).toHaveBeenCalledWith(
-      'GlobalErrorHandlerService: An error occurred: ' + error,
-    );
+    expect(console.error).toHaveBeenCalledWith('GlobalErrorHandlerService: An error occurred:', error);
+    expect(window.alert).toHaveBeenCalledWith('GlobalErrorHandlerService: An error occurred: ' + error);
   });
 
   it('should handle null or undefined errors gracefully', () => {
@@ -73,19 +58,9 @@ describe('GlobalErrorHandlerService', () => {
     service.handleError(null);
     service.handleError(undefined);
 
-    expect(console.error).toHaveBeenCalledWith(
-      'GlobalErrorHandlerService: An error occurred:',
-      null,
-    );
-    expect(console.error).toHaveBeenCalledWith(
-      'GlobalErrorHandlerService: An error occurred:',
-      undefined,
-    );
-    expect(window.alert).toHaveBeenCalledWith(
-      'GlobalErrorHandlerService: An error occurred: ' + null,
-    );
-    expect(window.alert).toHaveBeenCalledWith(
-      'GlobalErrorHandlerService: An error occurred: ' + undefined,
-    );
+    expect(console.error).toHaveBeenCalledWith('GlobalErrorHandlerService: An error occurred:', null);
+    expect(console.error).toHaveBeenCalledWith('GlobalErrorHandlerService: An error occurred:', undefined);
+    expect(window.alert).toHaveBeenCalledWith('GlobalErrorHandlerService: An error occurred: ' + null);
+    expect(window.alert).toHaveBeenCalledWith('GlobalErrorHandlerService: An error occurred: ' + undefined);
   });
 });

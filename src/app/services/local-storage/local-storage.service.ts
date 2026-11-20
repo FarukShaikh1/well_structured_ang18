@@ -22,9 +22,7 @@ export class LocalStorageService {
   }
 
   getLoggedInUserData(): any {
-    return localStorage.getItem(LocalStorageConstants.USER)
-      ? JSON.parse(localStorage.getItem(LocalStorageConstants.USER) || '{}')
-      : null;
+    return localStorage.getItem(LocalStorageConstants.USER) ? JSON.parse(localStorage.getItem(LocalStorageConstants.USER) || '{}') : null;
   }
 
   isAuthenticated(): boolean {
@@ -103,9 +101,7 @@ export class LocalStorageService {
   }
 
   isOktaAuthenticated() {
-    const user = localStorage.getItem('okta-token-storage')
-      ? JSON.parse(localStorage.getItem('okta-token-storage') || '{}')
-      : null;
+    const user = localStorage.getItem('okta-token-storage') ? JSON.parse(localStorage.getItem('okta-token-storage') || '{}') : null;
 
     if (!user) {
       return false;

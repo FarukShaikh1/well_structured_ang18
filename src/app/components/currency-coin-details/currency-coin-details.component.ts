@@ -3,12 +3,7 @@ import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import Cropper from 'cropperjs';
 import { API_URL } from '../../../utils/api-url';
-import {
-  ActionConstant,
-  ApplicationModules,
-  DdlConfig,
-  NavigationURLs,
-} from '../../../utils/application-constants';
+import { ActionConstant, ApplicationModules, DdlConfig, NavigationURLs } from '../../../utils/application-constants';
 import { CoinNoteCollectionRequest } from '../../interfaces/coin-note-collection-request';
 import { AssetService } from '../../services/asset/asset.service';
 import { CurrencyCoinService } from '../../services/currency-coin/currency-coin.service';
@@ -158,14 +153,10 @@ export class CurrencyCoinDetailsComponent implements OnInit {
   patchValues(res: any) {
     if (res != undefined) {
       this.currencyCoinDetailsForm.controls['collectionCoinId'].patchValue(res['id']);
-      this.currencyCoinDetailsForm.controls['collectionCoinType'].patchValue(
-        res['collectionCurrencyTypeId'],
-      );
+      this.currencyCoinDetailsForm.controls['collectionCoinType'].patchValue(res['collectionCurrencyTypeId']);
       this.currencyCoinDetailsForm.controls['coinNoteName'].patchValue(res['coinNoteName']);
       this.currencyCoinDetailsForm.controls['countryId'].patchValue(res['countryId']);
-      this.currencyCoinDetailsForm.controls['coinWeightInGrams'].patchValue(
-        res['coinWeightInGrams'],
-      );
+      this.currencyCoinDetailsForm.controls['coinWeightInGrams'].patchValue(res['coinWeightInGrams']);
       this.currencyCoinDetailsForm.controls['actualValue'].patchValue(res['actualValue']);
       this.currencyCoinDetailsForm.controls['indianValue'].patchValue(res['indianValue']);
       this.currencyCoinDetailsForm.controls['printedYear'].patchValue(res['printedYear']);
@@ -175,9 +166,7 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       this.currencyCoinDetailsForm.controls['breadthOfNote'].patchValue(res['breadthOfNote']);
       this.currencyCoinDetailsForm.controls['description'].patchValue(res['description']);
       this.currencyCoinDetailsForm.controls['extractedText'].patchValue(res['extractedText']);
-      this.currencyCoinDetailsForm.controls['generatedDescription'].patchValue(
-        res['generatedDescription'],
-      );
+      this.currencyCoinDetailsForm.controls['generatedDescription'].patchValue(res['generatedDescription']);
 
       this.currencyCoinDetailsForm.controls['metalsUsed'].patchValue(res['metalsUsed']);
       this.currencyCoinDetailsForm.controls['picture'].patchValue(res['image']);
@@ -284,33 +273,24 @@ export class CurrencyCoinDetailsComponent implements OnInit {
       const formData = new FormData();
       formData.append('file', this.selectedImageFile);
 
-      this._assetService
-        .uploadImage(
-          this.currencyCoinDetailsForm.value['assetId'],
-          API_URL.COLLECTIONCOINS,
-          formData,
-        )
-        .subscribe({
-          next: (res: any) => {
-            if (
-              this.currencyCoinDetailsForm.value['assetId'] == null ||
-              this.currencyCoinDetailsForm.value['assetId'] == undefined
-            ) {
-              this.currencyCoinDetailsForm.value['assetId'] = res.data;
-              this.coinNoteCollectionRequest.assetId = res.data;
+      this._assetService.uploadImage(this.currencyCoinDetailsForm.value['assetId'], API_URL.COLLECTIONCOINS, formData).subscribe({
+        next: (res: any) => {
+          if (this.currencyCoinDetailsForm.value['assetId'] == null || this.currencyCoinDetailsForm.value['assetId'] == undefined) {
+            this.currencyCoinDetailsForm.value['assetId'] = res.data;
+            this.coinNoteCollectionRequest.assetId = res.data;
 
-              this.addOrUpdateCurrencyCoinDetails();
-            } else {
-              this.isSaving = false;
-            }
-            this.loaderService.hideLoader();
-          },
-          error: (error: any) => {
+            this.addOrUpdateCurrencyCoinDetails();
+          } else {
             this.isSaving = false;
-            this.toaster.showMessage(error?.message, 'error');
-            this.loaderService.hideLoader();
-          },
-        });
+          }
+          this.loaderService.hideLoader();
+        },
+        error: (error: any) => {
+          this.isSaving = false;
+          this.toaster.showMessage(error?.message, 'error');
+          this.loaderService.hideLoader();
+        },
+      });
     } else {
       this.addOrUpdateCurrencyCoinDetails();
     }

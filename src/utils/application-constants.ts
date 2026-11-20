@@ -6,8 +6,7 @@ export const ApplicationConstants = {
 
   MIN_LENGTH_PASSWORD: 8,
   MAX_LENGTH_PASSWORD: 15,
-  PATTERN_REQUIRED_CHARS_IN_PASSWORD:
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*. ]{8,}$',
+  PATTERN_REQUIRED_CHARS_IN_PASSWORD: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*. ]{8,}$',
   DISALLOWED_CHARS_IN_PASSWORD: [' ', '#', '(', ')', '-', '_', '+', '{', '}'],
   SCREEN_SIZE_SM: 576,
   PATTERN_REQUIRED_CHARS_IN_NAME: '^(?=.*[a-zA-Z])[a-zA-Z \\-_]+$',
@@ -263,8 +262,7 @@ export const Messages = {
     'Password must include at least one digit, one uppercase letter, one lowercase letter, and one special character(!@#$%^&*).',
   PASSWORD_MUST_NOT_INCLUDE_MSG: "Password must not contain user's firstname or lastname.",
 
-  PASSWORD_RESET_LINK_SENT_MSG:
-    'If the email is registered, a link has been sent to the provided email address.',
+  PASSWORD_RESET_LINK_SENT_MSG: 'If the email is registered, a link has been sent to the provided email address.',
   PASSWORD_LENGTH_MSG: 'Password must be minimum {0} characters long.',
   OLD_NEW_PASSWORD_SAME: 'Current password and new password cannot be the same.',
 
@@ -278,8 +276,7 @@ export const Messages = {
   LOCATION_VALIDATION_MSG: 'Please enter a valid location.',
   UNABLE_TO_LOAD_THE_DATA: 'Unable to load the data. Please try again later.',
 
-  NAME_VALIDATION_MSG:
-    'Name can only contain alphabetic characters, underscores (_), hyphens (-), and spaces.',
+  NAME_VALIDATION_MSG: 'Name can only contain alphabetic characters, underscores (_), hyphens (-), and spaces.',
 
   UNABLE_TO_LOAD_EXPENSES: 'Unable to load expense list',
 
@@ -294,8 +291,7 @@ export const Messages = {
   DOCUMENT_UPDATED_SUCCESS: 'Document details updated successfully.',
   ERROR_IN_FETCH_DOCUMENT: 'Unable to load document data. Please try again later.',
 
-  DOCUMENT_NAME_VALIDATION_MSG:
-    'Document Name can only contain alphabetic characters, underscores (_), hyphens (-), and spaces.',
+  DOCUMENT_NAME_VALIDATION_MSG: 'Document Name can only contain alphabetic characters, underscores (_), hyphens (-), and spaces.',
   ERROR_IN_FETCH_DOCUMENT_DATA: 'Error fetching document data',
   ERROR_IN_LOAD_DOCUMENTS: 'Unable to load document list',
 
@@ -304,8 +300,7 @@ export const Messages = {
   REPORT_UPDATED_SUCCESS: 'Report details updated successfully.',
   ERROR_IN_FETCH_REPORT: 'Unable to load report data. Please try again later.',
 
-  REPORT_NAME_VALIDATION_MSG:
-    'Report Name can only contain alphabetic characters, underscores (_), hyphens (-), and spaces.',
+  REPORT_NAME_VALIDATION_MSG: 'Report Name can only contain alphabetic characters, underscores (_), hyphens (-), and spaces.',
   ERROR_IN_FETCH_REPORT_DATA: 'Error fetching report data',
   ERROR_IN_LOAD_REPORTS: 'Unable to load report list',
   UNIQUE_NAME_VALIDATION_MSG: 'This Expense Name already exists. Please enter a unique name.',
@@ -324,15 +319,11 @@ export const Messages = {
   DOCUMENT_SUBMISSION_UNEXPECTED_ERROR: 'An unexpected error occurred. Please try again.',
 
   ROLE_ACCESS_FETCH_NOT_FOUND: 'Role access data not found.',
-  ROLE_ACCESS_FETCH_SERVER_ERROR:
-    'Server error: Unable to fetch role access data. Please try again later.',
-  ROLE_ACCESS_FETCH_UNEXPECTED_ERROR:
-    'An unexpected error occurred while fetching role access data.',
+  ROLE_ACCESS_FETCH_SERVER_ERROR: 'Server error: Unable to fetch role access data. Please try again later.',
+  ROLE_ACCESS_FETCH_UNEXPECTED_ERROR: 'An unexpected error occurred while fetching role access data.',
 
-  SAMPLE_FORM_IDENTIFIER_FETCH_SERVER_ERROR:
-    'Server error: Unable to fetch sample form identifiers. Please try again later.',
-  SAMPLE_FORM_IDENTIFIER_FETCH_UNEXPECTED_ERROR:
-    'An unexpected error occurred while fetching sample form identifiers.',
+  SAMPLE_FORM_IDENTIFIER_FETCH_SERVER_ERROR: 'Server error: Unable to fetch sample form identifiers. Please try again later.',
+  SAMPLE_FORM_IDENTIFIER_FETCH_UNEXPECTED_ERROR: 'An unexpected error occurred while fetching sample form identifiers.',
 
   REMOVE_DOCUMENT_BAD_REQUEST: 'Bad request: Unable to process your request.',
   REMOVE_DOCUMENT_UNAUTHORIZED: 'Unauthorized: Please log in to continue.',
@@ -343,13 +334,10 @@ export const Messages = {
   USER_REACTIVATED_SUCCESS: 'User reactivated successfully.',
   ERROR_IN_DEACTIVATING_USER: 'Error in deactivating user.',
 
-  USER_EXPENSE_ASSOCIATION_EXISTS:
-    "Can't add the expense representative, as the expense representative is added to the other expense.",
+  USER_EXPENSE_ASSOCIATION_EXISTS: "Can't add the expense representative, as the expense representative is added to the other expense.",
 
-  SAVE_AS_DRAFT_CONFIRMATION_MSG:
-    'Are you sure you want to save this as a draft and close on this step?',
-  DEACTIVATE_USER_BY_ADMIN:
-    'This user cannot be added as they have been deactivated by the Platform Admin.',
+  SAVE_AS_DRAFT_CONFIRMATION_MSG: 'Are you sure you want to save this as a draft and close on this step?',
+  DEACTIVATE_USER_BY_ADMIN: 'This user cannot be added as they have been deactivated by the Platform Admin.',
 };
 
 export const ApplicationModules = {

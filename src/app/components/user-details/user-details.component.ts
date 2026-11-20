@@ -2,11 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import * as forms from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  ApplicationConstants,
-  ApplicationModules,
-  Messages,
-} from '../../../utils/application-constants';
+import { ApplicationConstants, ApplicationModules, Messages } from '../../../utils/application-constants';
 import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { RoleService } from '../../services/role/role.service';
@@ -43,13 +39,7 @@ export class UserDetailsComponent {
       firstName: ['', [Validators.pattern(/^(?!\s+$).+/)]],
       lastName: ['', [Validators.pattern(/^(?!\s+$).+/)]],
       mobileNumber: ['', [Validators.pattern(/^(?!\s+$).+/)]],
-      emailAddress: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_USERNAME),
-        ],
-      ],
+      emailAddress: ['', [Validators.required, Validators.pattern(ApplicationConstants.PATTERN_REQUIRED_CHARS_IN_USERNAME)]],
       isLocked: [false, [Validators.required]],
       roleId: ['', [Validators.required]],
     });

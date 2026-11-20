@@ -20,10 +20,7 @@ export class AssetService {
 
   uploadImage(assetId: string, documentType: string, file: any): Observable<any> {
     if (assetId) {
-      return this.http.post(
-        API_URL.UPLOAD_IMAGE + 'assetId=' + assetId + '&documentType=' + documentType,
-        file,
-      );
+      return this.http.post(API_URL.UPLOAD_IMAGE + 'assetId=' + assetId + '&documentType=' + documentType, file);
     } else {
       return this.http.post(API_URL.UPLOAD_IMAGE + 'documentType=' + documentType, file);
     }

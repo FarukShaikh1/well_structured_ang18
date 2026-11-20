@@ -23,13 +23,7 @@ import { ToasterComponent } from '../shared/toaster/toaster.component';
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [
-    CommonModule,
-    TabulatorGridComponent,
-    ConfigurationDetailsComponent,
-    ConfirmationDialogComponent,
-    ToasterComponent,
-  ],
+  imports: [CommonModule, TabulatorGridComponent, ConfigurationDetailsComponent, ConfirmationDialogComponent, ToasterComponent],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
 })
@@ -115,18 +109,10 @@ export class SettingsComponent {
   ) {}
 
   ngOnInit() {
-    this.accountModulePermissions = this.globalService.getModulePermission(
-      ApplicationModules.ACCOUNTS,
-    );
-    this.occasionTypePermissions = this.globalService.getModulePermission(
-      ApplicationModules.OCCASION_TYPES,
-    );
-    this.relationsPermissions = this.globalService.getModulePermission(
-      ApplicationModules.RELATIONS,
-    );
-    this.transactionCategoriesPermissions = this.globalService.getModulePermission(
-      ApplicationModules.TRANSACTION_CATEGORIES,
-    );
+    this.accountModulePermissions = this.globalService.getModulePermission(ApplicationModules.ACCOUNTS);
+    this.occasionTypePermissions = this.globalService.getModulePermission(ApplicationModules.OCCASION_TYPES);
+    this.relationsPermissions = this.globalService.getModulePermission(ApplicationModules.RELATIONS);
+    this.transactionCategoriesPermissions = this.globalService.getModulePermission(ApplicationModules.TRANSACTION_CATEGORIES);
     var data = this.localStorageService.getLoggedInUserData();
     this.selectedUserId = data?.id;
     if (data.roleName === 'Super Admin') {
@@ -155,28 +141,20 @@ export class SettingsComponent {
         const rowId = button.getAttribute('data-row-id');
         if (rowId) {
           const accountRowData = this.accountTableData.find((row) => row['id'] == rowId);
-          const categoryRowData = this.transactionCategoryTableData.find(
-            (row) => row['id'] == rowId,
-          );
+          const categoryRowData = this.transactionCategoryTableData.find((row) => row['id'] == rowId);
           const relationRowData = this.relationTableData.find((row) => row['id'] == rowId);
           const OccasionTypeRowData = this.occasionTypeTableData.find((row) => row['id'] == rowId);
           if (accountRowData) {
             const menuOptions = this.generateOptionsMenu(accountRowData, UserConfig.ACCOUNT);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           } else if (categoryRowData) {
-            const menuOptions = this.generateOptionsMenu(
-              categoryRowData,
-              UserConfig.TRANSACTION_CATEGORY,
-            );
+            const menuOptions = this.generateOptionsMenu(categoryRowData, UserConfig.TRANSACTION_CATEGORY);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           } else if (relationRowData) {
             const menuOptions = this.generateOptionsMenu(relationRowData, UserConfig.RELATION);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           } else if (OccasionTypeRowData) {
-            const menuOptions = this.generateOptionsMenu(
-              OccasionTypeRowData,
-              UserConfig.OCCASION_TYPE,
-            );
+            const menuOptions = this.generateOptionsMenu(OccasionTypeRowData, UserConfig.OCCASION_TYPE);
             this.globalService.showGlobalDropdownMenu(button, menuOptions);
           }
         }
@@ -486,11 +464,9 @@ export class SettingsComponent {
   }
 
   hideTransactionCategory(userId: any) {
-    this.filteredTransactionCategoryTableData = this.filteredTransactionCategoryTableData.filter(
-      (item: any) => {
-        return item.id != userId;
-      },
-    );
+    this.filteredTransactionCategoryTableData = this.filteredTransactionCategoryTableData.filter((item: any) => {
+      return item.id != userId;
+    });
   }
 
   hideRelation(userId: any) {
@@ -527,32 +503,27 @@ export class SettingsComponent {
     if (id) {
       this.selectedId = id;
       this.selectedConfig = config;
-      this.confirmationDialog.openConfirmationPopup(
-        'Confirmation',
-        'Are you sure you want to delete? This action cannot be undone.',
-      );
+      this.confirmationDialog.openConfirmationPopup('Confirmation', 'Are you sure you want to delete? This action cannot be undone.');
     }
   }
 
   handleConfirmResult(isConfirmed: boolean) {
     if (isConfirmed) {
       this.loaderService.showLoader('Deleting ...');
-      this.configurationService
-        .deleteConfiguration(this.selectedId, this.selectedConfig)
-        .subscribe({
-          next: (res: any) => {
-            this.toaster.showMessage(res.message, res.success ? 'success' : 'error');
-            this.loaderService.hideLoader();
-            if (res.success) {
-              localStorage.removeItem(this.selectedConfig);
-              this.loadConfigGrid(this.selectedUserId, this.selectedConfig);
-            }
-          },
-          error: (error: any) => {
-            console.error('error : ', error);
-            this.loaderService.hideLoader();
-          },
-        });
+      this.configurationService.deleteConfiguration(this.selectedId, this.selectedConfig).subscribe({
+        next: (res: any) => {
+          this.toaster.showMessage(res.message, res.success ? 'success' : 'error');
+          this.loaderService.hideLoader();
+          if (res.success) {
+            localStorage.removeItem(this.selectedConfig);
+            this.loadConfigGrid(this.selectedUserId, this.selectedConfig);
+          }
+        },
+        error: (error: any) => {
+          console.error('error : ', error);
+          this.loaderService.hideLoader();
+        },
+      });
     }
   }
 

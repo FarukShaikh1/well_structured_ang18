@@ -5,12 +5,7 @@
       <label style="width: 10%; padding-top: 15px">SBI Account</label>
       <div appearance="outline" style="width: 20%">
         <label>Choose a date</label>
-        <input
-          [value]="expenseDateValueSbi"
-          appearance="outline"
-          formControlName="expenseDateSbi"
-          (dateChange)="dateChange($event, 'sbi')"
-        />
+        <input [value]="expenseDateValueSbi" appearance="outline" formControlName="expenseDateSbi" (dateChange)="dateChange($event, 'sbi')" />
         <div>MM/DD/YYYY</div>
         <div matIconSuffix></div>
         <div #pickerSbi startView="month"></div>
@@ -33,19 +28,11 @@
       </div>
       <div appearance="outline" style="width: 20%">
         <label>Available in record</label>
-        <input
-          [value]="availableBalanceSbi"
-          formControlName="availableBalanceSbi"
-          readonly="readonly"
-        />
+        <input [value]="availableBalanceSbi" formControlName="availableBalanceSbi" readonly="readonly" />
       </div>
       <div appearance="outline" style="width: 20%">
         <label>Available in your hand</label>
-        <input
-          formControlName="availableInHandSbi"
-          (keydown)="globalService.validateAmount($event)"
-          (focusout)="calculateAmount($event, 'sbi')"
-        />
+        <input formControlName="availableInHandSbi" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event, 'sbi')" />
       </div>
       <div appearance="outline" style="width: 20%">
         <label>You spent/gain</label>
@@ -57,12 +44,7 @@
       <label style="width: 10%; padding-top: 15px">CBI Account</label>
       <div appearance="outline" style="width: 20%">
         <label>Choose a date</label>
-        <input
-          [value]="expenseDateValueCbi"
-          appearance="outline"
-          formControlName="expenseDateCbi"
-          (dateChange)="dateChange($event, 'cbi')"
-        />
+        <input [value]="expenseDateValueCbi" appearance="outline" formControlName="expenseDateCbi" (dateChange)="dateChange($event, 'cbi')" />
         <div>MM/DD/YYYY</div>
         <div matIconSuffix></div>
         <div #pickerCbi startView="month"></div>
@@ -85,19 +67,11 @@
       </div>
       <div appearance="outline" style="width: 20%">
         <label>Available in record</label>
-        <input
-          [value]="availableBalanceCbi"
-          formControlName="availableBalanceCbi"
-          readonly="readonly"
-        />
+        <input [value]="availableBalanceCbi" formControlName="availableBalanceCbi" readonly="readonly" />
       </div>
       <div appearance="outline" style="width: 20%">
         <label>Available in your hand</label>
-        <input
-          formControlName="availableInHandCbi"
-          (keydown)="globalService.validateAmount($event)"
-          (focusout)="calculateAmount($event, 'cbi')"
-        />
+        <input formControlName="availableInHandCbi" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event, 'cbi')" />
       </div>
       <div appearance="outline" style="width: 20%">
         <label>You spent/gain</label>
@@ -109,12 +83,7 @@
       <label style="width: 10%; padding-top: 15px">Cash Amount</label>
       <div appearance="outline" style="width: 20%">
         <label>Choose a date</label>
-        <input
-          [value]="expenseDateValueCash"
-          appearance="outline"
-          formControlName="expenseDateCash"
-          (dateChange)="dateChange($event, 'cash')"
-        />
+        <input [value]="expenseDateValueCash" appearance="outline" formControlName="expenseDateCash" (dateChange)="dateChange($event, 'cash')" />
         <div>MM/DD/YYYY</div>
         <div matIconSuffix></div>
         <div #pickerCash startView="month"></div>
@@ -137,19 +106,11 @@
       </div>
       <div appearance="outline" style="width: 20%">
         <label>Available in record</label>
-        <input
-          [value]="availableBalanceCash"
-          formControlName="availableBalanceCash"
-          readonly="readonly"
-        />
+        <input [value]="availableBalanceCash" formControlName="availableBalanceCash" readonly="readonly" />
       </div>
       <div appearance="outline" style="width: 20%">
         <label>Available in your hand</label>
-        <input
-          formControlName="availableInHandCash"
-          (keydown)="globalService.validateAmount($event)"
-          (focusout)="calculateAmount($event, 'cash')"
-        />
+        <input formControlName="availableInHandCash" (keydown)="globalService.validateAmount($event)" (focusout)="calculateAmount($event, 'cash')" />
       </div>
       <div appearance="outline" style="width: 20%">
         <label>You spent/gain</label>
@@ -161,12 +122,7 @@
       <label style="width: 10%; padding-top: 15px">Other Account</label>
       <div appearance="outline" style="width: 20%">
         <label>Choose a date</label>
-        <input
-          [value]="expenseDateValueOther"
-          appearance="outline"
-          formControlName="expenseDateOther"
-          (dateChange)="dateChange($event, 'other')"
-        />
+        <input [value]="expenseDateValueOther" appearance="outline" formControlName="expenseDateOther" (dateChange)="dateChange($event, 'other')" />
         <div>MM/DD/YYYY</div>
         <div matIconSuffix></div>
         <div #pickerOther startView="month"></div>
@@ -189,11 +145,7 @@
       </div>
       <div appearance="outline" style="width: 20%">
         <label>Available in record</label>
-        <input
-          [value]="availableBalanceOther"
-          formControlName="availableBalanceOther"
-          readonly="readonly"
-        />
+        <input [value]="availableBalanceOther" formControlName="availableBalanceOther" readonly="readonly" />
       </div>
       <div appearance="outline" style="width: 20%">
         <label>Available in your hand</label>

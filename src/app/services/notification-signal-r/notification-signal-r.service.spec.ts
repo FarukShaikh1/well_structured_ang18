@@ -33,10 +33,7 @@ describe('SignalRService', () => {
   it('should initialize the hub connection with correct URL', () => {
     mockLocalStorageService.getLoggedInUserData.and.returnValue({ userId: '123' });
 
-    expect(mockHubConnectionBuilder.withUrl).toHaveBeenCalledWith(
-      API_URL.CHAT_URL + '?userId=123',
-      jasmine.any(Object),
-    );
+    expect(mockHubConnectionBuilder.withUrl).toHaveBeenCalledWith(API_URL.CHAT_URL + '?userId=123', jasmine.any(Object));
     expect(mockHubConnectionBuilder.build).toHaveBeenCalled();
   });
 });

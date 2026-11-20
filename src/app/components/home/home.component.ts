@@ -5,12 +5,7 @@ import { GlobalService } from '../../services/global/global.service';
 import { LoaderService } from '../../services/loader/loader.service';
 
 import { RouterModule } from '@angular/router';
-import {
-  ActionConstant,
-  ApplicationModules,
-  ApplicationRoles,
-  NavigationURLs,
-} from '../../../utils/application-constants';
+import { ActionConstant, ApplicationModules, ApplicationRoles, NavigationURLs } from '../../../utils/application-constants';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 import { NotificationService } from '../../services/notification/notification.service';
 import { HeaderComponent } from '../shared/header/header.component';

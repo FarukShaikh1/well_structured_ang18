@@ -6,13 +6,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CellComponent } from 'tabulator-tables';
 import { API_URL } from '../../../utils/api-url';
-import {
-  DBConstants,
-  DdlConfig,
-  LocalStorageConstants,
-  NavigationURLs,
-  UserConfig,
-} from '../../../utils/application-constants';
+import { DBConstants, DdlConfig, LocalStorageConstants, NavigationURLs, UserConfig } from '../../../utils/application-constants';
 import { ModuleResponse } from '../../interfaces/module-response';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { LocalStorageService } from '../local-storage/local-storage.service';
@@ -319,8 +313,7 @@ export class GlobalService {
     return '';
   }
   isValidGuid(value: string) {
-    const guidPattern =
-      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+    const guidPattern = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
     return guidPattern.test(value);
   }
 
@@ -361,11 +354,7 @@ export class GlobalService {
     this.setConfigToLocalStorage(userId, UserConfig.ACCOUNT, DdlConfig.ACCOUNTS);
     this.setConfigToLocalStorage(userId, UserConfig.RELATION, DdlConfig.RELATIONS);
     this.setConfigToLocalStorage(userId, UserConfig.OCCASION_TYPE, DdlConfig.OCCASION_TYPES);
-    this.setConfigToLocalStorage(
-      userId,
-      UserConfig.TRANSACTION_CATEGORY,
-      DdlConfig.TRANSACTION_CATEGORY,
-    );
+    this.setConfigToLocalStorage(userId, UserConfig.TRANSACTION_CATEGORY, DdlConfig.TRANSACTION_CATEGORY);
   }
 
   public setFamilyInLocalStorage() {

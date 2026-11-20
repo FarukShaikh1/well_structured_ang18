@@ -12,9 +12,7 @@ export class PermissionService {
   getModulePermission(moduleName: string): ModulePermission {
     const permissions = this.localStorageService.getUserPermission() ?? [];
 
-    const permission = permissions.find(
-      (x) => x.moduleName?.toLowerCase() === moduleName?.toLowerCase(),
-    );
+    const permission = permissions.find((x) => x.moduleName?.toLowerCase() === moduleName?.toLowerCase());
 
     return {
       view: permission?.view ?? false,

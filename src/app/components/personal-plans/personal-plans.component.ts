@@ -13,13 +13,7 @@ import { GlobalService } from '../../services/global/global.service';
 
   standalone: true,
 
-  imports: [
-    CommonModule,
-    RoutineComponent,
-    BudgetComponent,
-    CredentialsComponent,
-    FoodMenuComponent,
-  ],
+  imports: [CommonModule, RoutineComponent, BudgetComponent, CredentialsComponent, FoodMenuComponent],
 
   templateUrl: './personal-plans.component.html',
 
@@ -34,18 +28,10 @@ export class SelfDataComponent implements OnInit {
   constructor(private globalService: GlobalService) {}
 
   ngOnInit() {
-    this.foodMenuModulePermissions = this.globalService.getModulePermission(
-      ApplicationModules.FOOD_MENU,
-    );
-    this.dailyRoutineModulePermissions = this.globalService.getModulePermission(
-      ApplicationModules.DAILY_ROUTINE,
-    );
-    this.monthlyBudgetModulePermissions = this.globalService.getModulePermission(
-      ApplicationModules.MONTHLY_BUDGET,
-    );
-    this.credentialModulePermissions = this.globalService.getModulePermission(
-      ApplicationModules.CREDENTIALS,
-    );
+    this.foodMenuModulePermissions = this.globalService.getModulePermission(ApplicationModules.FOOD_MENU);
+    this.dailyRoutineModulePermissions = this.globalService.getModulePermission(ApplicationModules.DAILY_ROUTINE);
+    this.monthlyBudgetModulePermissions = this.globalService.getModulePermission(ApplicationModules.MONTHLY_BUDGET);
+    this.credentialModulePermissions = this.globalService.getModulePermission(ApplicationModules.CREDENTIALS);
   }
   /**
    * Active tab

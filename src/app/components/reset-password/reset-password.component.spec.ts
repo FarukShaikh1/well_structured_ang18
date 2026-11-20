@@ -148,9 +148,7 @@ describe('ResetPasswordComponent', () => {
       const spyToaster = spyOn(component.toaster, 'showMessage').and.callThrough();
       const spyLoaderShow = spyOn(loaderService, 'showLoader').and.callThrough();
       const spyLoaderHide = spyOn(loaderService, 'hideLoader').and.callThrough();
-      mockUserService.resetPassword.and.returnValue(
-        of({ success: false, message: 'Password reset failed' }),
-      );
+      mockUserService.resetPassword.and.returnValue(of({ success: false, message: 'Password reset failed' }));
 
       component.onSubmit();
 

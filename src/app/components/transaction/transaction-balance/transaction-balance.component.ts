@@ -2,11 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 
 import { ColumnDefinition } from 'tabulator-tables';
 
-import {
-  ApplicationModules,
-  ApplicationTableConstants,
-  NavigationURLs,
-} from '../../../../utils/application-constants';
+import { ApplicationModules, ApplicationTableConstants, NavigationURLs } from '../../../../utils/application-constants';
 
 import { ExpenseFilterRequest } from '../../../interfaces/expense-filter-request';
 
@@ -106,10 +102,7 @@ export class TransactionBalanceComponent implements OnInit, OnChanges {
 
         this.cacheService.set(NavigationURLs.EXPENSE_BALANCE_LIST, this.tableData);
 
-        this.cacheService.set(
-          NavigationURLs.EXPENSE_BALANCE_LIST + '_AccountColumns',
-          this.tableData[0]?.accountData,
-        );
+        this.cacheService.set(NavigationURLs.EXPENSE_BALANCE_LIST + '_AccountColumns', this.tableData[0]?.accountData);
 
         this.loadColumnConfiguration();
 
@@ -163,9 +156,7 @@ export class TransactionBalanceComponent implements OnInit, OnChanges {
       },
     ];
 
-    const accountColumns = this.cacheService.get<any>(
-      NavigationURLs.EXPENSE_BALANCE_LIST + '_AccountColumns',
-    );
+    const accountColumns = this.cacheService.get<any>(NavigationURLs.EXPENSE_BALANCE_LIST + '_AccountColumns');
 
     if (accountColumns) {
       for (const key of Object.keys(accountColumns)) {
@@ -206,9 +197,7 @@ export class TransactionBalanceComponent implements OnInit, OnChanges {
       cellClick: (_e, cell) => {
         const date = cell.getRow().getData()['transactionDate'];
 
-        this.filteredTableData = this.filteredTableData.filter(
-          (item) => item.transactionDate != date,
-        );
+        this.filteredTableData = this.filteredTableData.filter((item) => item.transactionDate != date);
       },
 
       headerSort: false,

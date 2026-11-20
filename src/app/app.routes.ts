@@ -56,10 +56,7 @@ export const routes: Routes = [
       {
         path: RoutePath.FAMILY_GRAPH,
         title: RoutePathTitles.FAMILY_GRAPH,
-        loadComponent: () =>
-          import('./components/family-graph/family-graph.component').then(
-            (m) => m.FamilyGraphComponent,
-          ),
+        loadComponent: () => import('./components/family-graph/family-graph.component').then((m) => m.FamilyGraphComponent),
       },
 
       // AUTHENTICATED GROUP
@@ -89,8 +86,7 @@ export const routes: Routes = [
           {
             path: RoutePath.USER_LIST,
             title: RoutePathTitles.USER_LIST,
-            loadComponent: () =>
-              import('./components/user-list/user-list.component').then((m) => m.UserListComponent),
+            loadComponent: () => import('./components/user-list/user-list.component').then((m) => m.UserListComponent),
 
             data: {
               moduleName: ApplicationModules.USERS,
@@ -104,10 +100,7 @@ export const routes: Routes = [
           {
             path: RoutePath.USER_PERMISSIONS,
             title: RoutePathTitles.USER_PERMISSIONS,
-            loadComponent: () =>
-              import('./components/user-permission/user-permission.component').then(
-                (m) => m.UserPermissionComponent,
-              ),
+            loadComponent: () => import('./components/user-permission/user-permission.component').then((m) => m.UserPermissionComponent),
 
             data: {
               moduleName: ApplicationModules.USER_PERMISSIONS,
@@ -163,18 +156,12 @@ export const routes: Routes = [
           {
             path: RoutePath.NOTIFICATIONS,
             title: RoutePathTitles.NOTIFICATIONS,
-            loadComponent: () =>
-              import('./components/notification-list/notification-list.component').then(
-                (m) => m.NotificationListComponent,
-              ),
+            loadComponent: () => import('./components/notification-list/notification-list.component').then((m) => m.NotificationListComponent),
           },
           {
             path: RoutePath.CHANGE_PASSWORD,
             title: RoutePathTitles.CHANGE_PASSWORD,
-            loadComponent: () =>
-              import('./components/change-password/change-password.component').then(
-                (m) => m.ChangePasswordComponent,
-              ),
+            loadComponent: () => import('./components/change-password/change-password.component').then((m) => m.ChangePasswordComponent),
           },
         ],
       },

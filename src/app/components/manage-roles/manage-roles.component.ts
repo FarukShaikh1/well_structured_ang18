@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { UserService } from '../../services/user/user.service';
 import { GlobalService } from '../../services/global/global.service';
 import { HttpClient } from '@angular/common/http';
 import { RoleService } from '../../services/role/role.service';
@@ -13,9 +12,9 @@ interface TreeNode {
 
 @Component({
   selector: 'app-manage-roles',
-  standalone:true,
+  standalone: true,
   templateUrl: './manage-roles.component.html',
-  styleUrls: ['./manage-roles.component.scss']
+  styleUrls: ['./manage-roles.component.scss'],
 })
 export class ManageRolesComponent {
   displayedRoleColumns: string[] = ['roleId', 'roleName', 'description', 'delete'];
@@ -32,34 +31,28 @@ export class ManageRolesComponent {
   itemsPerPage = 5;
   key: string = '';
 
-  constructor(private roleService: RoleService, public globalService: GlobalService,
-      private _httpClient: HttpClient
-  ) {
-  }
+  constructor(
+    private roleService: RoleService,
+    public globalService: GlobalService,
+    private _httpClient: HttpClient,
+  ) {}
 
   ngOnInit() {
     this.getRoleList();
   }
 
   getRoleList() {
-    this.roleService.getAllRoles().subscribe((res:any) => {
+    this.roleService.getAllRoles().subscribe((res: any) => {
       this.rolesDataSource = res.data;
-    },
-    )
+    });
   }
-  editRole(roleId: number) {
-
-  }
-  deleteRole(roleId: number) {
-
-  }
-  rowClicked(value: string) {
-
-  }
+  editRole(roleId: number) {}
+  deleteRole(roleId: number) {}
+  rowClicked(value: string) {}
   itemcount(): string {
     const recordsPerPage = this.itemsPerPage;
     const totalRecords = this.rolesDataSource?.length;
-    const currentPage = this.page; 
+    const currentPage = this.page;
 
     let startRecord = (currentPage - 1) * recordsPerPage + 1;
     startRecord = this.rolesDataSource?.length > 0 ? startRecord : 0;
@@ -73,50 +66,39 @@ export class ManageRolesComponent {
     const target = event.currentTarget;
     const classList = target.classList;
 
-    if (
-      !classList.contains('bi-arrow-up') &&
-      !classList.contains('bi-arrow-down')
-    ) {
-      
+    if (!classList.contains('bi-arrow-up') && !classList.contains('bi-arrow-down')) {
       classList.add('bi-arrow-up');
       this.sortDir = 1;
     } else if (classList.contains('bi-arrow-up')) {
-      
       classList.remove('bi-arrow-up');
       classList.add('bi-arrow-down');
       this.sortDir = -1;
     } else {
-      classList.remove('bi-arrow-up', 'bi-arrow-down'); 
-      this.sortDir = 0; 
+      classList.remove('bi-arrow-up', 'bi-arrow-down');
+      this.sortDir = 0;
     }
 
-    this.sortarr(column); 
+    this.sortarr(column);
   }
   sortarr(key: string) {
     if (this.key === key) {
       if (this.reverse) {
-        
         this.reverse = false;
       } else {
-        
         this.reverse = true;
       }
     } else {
-      
       this.key = key;
       this.reverse = false;
     }
 
-    
     if (!this.reverse) {
-      
       this.rolesDataSource.sort((a: any, b: any) => {
         const valueA = a[key]?.toLowerCase();
         const valueB = b[key]?.toLowerCase();
         return valueA.localeCompare(valueB);
       });
     } else {
-      
       this.rolesDataSource.sort((a: any, b: any) => {
         const valueA = a[key]?.toLowerCase();
         const valueB = b[key]?.toLowerCase();
@@ -127,11 +109,9 @@ export class ManageRolesComponent {
     this.sortClickCount++;
 
     if (this.sortClickCount === 3) {
-      
-      this.sortClickCount = 0; 
+      this.sortClickCount = 0;
     }
   }
-
 
   nodes: TreeNode[] = [
     {
@@ -140,8 +120,8 @@ export class ManageRolesComponent {
       indeterminate: false,
       children: [
         { label: 'Child 1.1', checked: false, indeterminate: false },
-        { label: 'Child 1.2', checked: false, indeterminate: false }
-      ]
+        { label: 'Child 1.2', checked: false, indeterminate: false },
+      ],
     },
     {
       label: 'Parent 2',
@@ -149,16 +129,16 @@ export class ManageRolesComponent {
       indeterminate: false,
       children: [
         { label: 'Child 2.1', checked: false, indeterminate: false },
-        { label: 'Child 2.2', checked: false, indeterminate: false }
-      ]
-    }
+        { label: 'Child 2.2', checked: false, indeterminate: false },
+      ],
+    },
   ];
 
   onParentChange(node: TreeNode) {
     node.checked = !node.checked;
     node.indeterminate = false;
     if (node.children) {
-      node.children.forEach(child => {
+      node.children.forEach((child) => {
         child.checked = node.checked;
       });
     }
@@ -166,11 +146,9 @@ export class ManageRolesComponent {
 
   onChildChange(parent: TreeNode, child: TreeNode) {
     child.checked = !child.checked;
-    const allChecked = parent.children!.every(c => c.checked);
-    const noneChecked = parent.children!.every(c => !c.checked);
+    const allChecked = parent.children!.every((c) => c.checked);
+    const noneChecked = parent.children!.every((c) => !c.checked);
     parent.checked = allChecked;
     parent.indeterminate = !allChecked && !noneChecked;
   }
-
-
 }

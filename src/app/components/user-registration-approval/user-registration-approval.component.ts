@@ -274,24 +274,19 @@ export class UserRegistrationApprovalComponent implements OnInit {
       return;
     }
     this.isProcessing = true;
-    this.registrationService
-      .rejectRegistration(this.selectedRegistration.id, this.rejectionReason.trim())
-      .subscribe({
-        next: (res: any) => {
-          this.isProcessing = false;
-          this.toaster.showMessage(
-            res?.message || 'User registration rejected successfully.',
-            'success',
-          );
-          this.closeReject();
-          this.loadRegistrations();
-        },
-        error: (err: any) => {
-          this.isProcessing = false;
-          console.error('Rejection failed', err);
-          this.toaster.showMessage(err?.error?.error || 'Failed to reject user.', 'error');
-        },
-      });
+    this.registrationService.rejectRegistration(this.selectedRegistration.id, this.rejectionReason.trim()).subscribe({
+      next: (res: any) => {
+        this.isProcessing = false;
+        this.toaster.showMessage(res?.message || 'User registration rejected successfully.', 'success');
+        this.closeReject();
+        this.loadRegistrations();
+      },
+      error: (err: any) => {
+        this.isProcessing = false;
+        console.error('Rejection failed', err);
+        this.toaster.showMessage(err?.error?.error || 'Failed to reject user.', 'error');
+      },
+    });
   }
 
   // =========================================================  // DATE FORMAT  // =========================================================
